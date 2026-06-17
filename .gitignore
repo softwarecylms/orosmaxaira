@@ -44,3 +44,11 @@ logs
 # OS
 Thumbs.db
 .vercel
+
+# test + screenshot artifacts
+test-results
+playwright-report
+.shots
+
+# raw source images (originals kept locally; only optimized .webp are committed)
+public/images/home/_raw

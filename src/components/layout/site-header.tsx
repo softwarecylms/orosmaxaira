@@ -1,215 +1,162 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { headers } from 'next/headers'
-import type { Header as HeaderGlobal, SiteSetting } from '@/payload-types'
-import { LinkButton } from '@/components/ui/button'
-import { MobileNav, type NavItem } from '@/components/layout/mobile-nav'
-import { NavDropdown } from '@/components/layout/nav-dropdown'
-import { HeaderScrollBackdrop } from '@/components/layout/header-scroll-backdrop'
-import { cn, mediaSrc } from '@/lib/utils'
+import { Phone, ChevronDown, User, Heart, ShoppingBag, Truck } from 'lucide-react'
+import { retrieveCart } from '@/lib/medusa/actions'
+import { formatPrice } from '@/lib/medusa/prices'
+import {
+  NAV,
+  ADOPT_LINK,
+  CONTACT,
+} from '@/components/home/home-content'
+import { HeaderSearch } from './header-search'
+import { HeaderMobile } from './header-mobile'
 
 type SiteHeaderProps = {
-  header: HeaderGlobal | null | undefined
-  settings: SiteSetting | null | undefined
+  header?: unknown
+  settings?: unknown
   variant?: 'default' | 'dark'
 }
 
-const fallbackNav: NavItem[] = [
-  { label: 'Home', href: '/', newTab: false },
-  { label: 'About', href: '/about', newTab: false },
-  { label: 'Services', href: '/services', newTab: false },
-  { label: 'Blog', href: '/blog', newTab: false },
-  { label: 'Contact', href: '/contact', newTab: false },
-]
-
-function isActive(pathname: string, href: string) {
-  if (href === '/' || href === '#') return pathname === '/'
-  return pathname.startsWith(href)
-}
-
-function isNavItemActive(pathname: string, item: NavItem) {
-  if (item.children?.length) {
-    return item.children.some((child) => isActive(pathname, child.href)) || isActive(pathname, item.href)
-  }
-  return isActive(pathname, item.href)
-}
-
-function ServicesChevron({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 8 8"
-      className={className}
-      aria-hidden="true"
-      fill="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M1.12 1.70667L4 4.58667L6.88 1.70667L8 2.29333L4 6.29333L0 2.29333L1.12 1.70667Z" />
-    </svg>
-  )
-}
-
-function mapHeaderNav(header: HeaderGlobal | null | undefined): NavItem[] {
-  if (!header?.nav?.length) return fallbackNav
-
-  return header.nav.map((entry) => {
-    const link = entry.link
-    const children = (entry.children ?? [])
-      .map((child) => {
-        const childLink = child.link
-        return {
-          label: childLink?.label ?? '',
-          href: childLink?.href ?? '#',
-          newTab: childLink?.newTab ?? false,
-        }
-      })
-      .filter((child) => child.label && child.href)
-
-    return {
-      label: link?.label ?? '',
-      href: link?.href ?? '#',
-      newTab: link?.newTab ?? false,
-      children: children.length ? children : undefined,
-    }
-  })
-}
-
-export async function SiteHeader({ header, settings, variant = 'default' }: SiteHeaderProps) {
-  const pathname = (await headers()).get('x-pathname') ?? '/'
-  const items = mapHeaderNav(header)
-  const isDark = variant === 'dark'
-
-  const logoUrl = mediaSrc(settings?.logo)
-  const callback = (settings as { callbackCta?: { label?: string; href?: string } } | null)
-    ?.callbackCta
-  const callbackHref = callback?.href ?? '/contact'
-  const callbackLabel = callback?.label ?? 'Request a callback'
+/**
+ * OROS MACHAIRA header (Figma 156:1218): announcement bar + utility row
+ * (search, phone, language, account, wishlist, cart) + nav row. Search /
+ * language / wishlist are visual stubs; the cart pill reads the live Medusa cart.
+ */
+export async function SiteHeader(_props: SiteHeaderProps) {
+  const cart = await retrieveCart().catch(() => null)
+  const currency = cart?.currency_code ?? cart?.region?.currency_code ?? 'eur'
+  const total = formatPrice(cart?.total ?? 0, currency, 'en-US')
+  const count = cart?.items?.reduce((n, i) => n + (i.quantity ?? 0), 0) ?? 0
 
   return (
-    <header
-      className={cn('sticky top-0 z-40', isDark ? 'pt-2 md:pt-3' : 'pt-5 md:pt-[22px]')}
-    >
-      {isDark ? <HeaderScrollBackdrop /> : null}
+    <header data-testid="site-header" className="sticky top-0 z-40 bg-white">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded-full focus:bg-foreground focus:px-4 focus:py-2 focus:text-background"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded-full focus:bg-foreground focus:px-4 focus:py-2 focus:text-white"
       >
-        Skip to content
+        Μετάβαση στο περιεχόμενο
       </a>
 
-      <div className="container-page">
-        <div
-          className={cn(
-            'relative mx-auto grid max-w-[1282px] grid-cols-[auto_1fr_auto] items-center px-5 md:px-8 lg:px-10',
-            isDark
-              ? 'h-[68px]'
-              : 'h-[78px] rounded-[50px] bg-white shadow-[0_8px_40px_-24px_rgba(20,20,20,0.15)]',
-          )}
-        >
-          <Link
-            href="/"
-            className="flex shrink-0 items-center justify-self-start"
-            aria-label="Home"
-          >
-            {logoUrl ? (
-              <Image
-                src={logoUrl}
-                alt={settings?.siteName ?? 'Logo'}
-                width={171}
-                height={33}
-                priority
-                className={cn(
-                  'h-[33px] w-[171px] max-w-none',
-                  isDark && 'brightness-0 invert',
-                )}
-              />
-            ) : (
-              <span
-                className={cn(
-                  'font-display text-[22px] font-bold tracking-tight',
-                  isDark ? 'text-white' : 'text-foreground',
-                )}
-              >
-                {settings?.siteName ?? 'Your Brand'}
-              </span>
-            )}
+      {/* Announcement bar */}
+      <div className="flex h-[46px] items-center justify-center gap-2 bg-accent px-4 text-white">
+        <Truck className="size-4 shrink-0" aria-hidden="true" />
+        <p className="text-center text-[13px] leading-[21px] md:text-[14px]">
+          <span className="font-display text-[15px] font-bold">ΔΩΡΕΑΝ </span>
+          αποστολή σε όλες τις παραγγελίες άνω των €70
+        </p>
+      </div>
+
+      <div className="container-wide">
+        {/* Utility row */}
+        <div className="flex items-center justify-between gap-6 border-b border-border py-[15px]">
+          <Link href="/" aria-label="Όρος Μαχαιρά — Αρχική" className="shrink-0">
+            <Image
+              src="/images/home/logo.svg"
+              alt="Όρος Μαχαιρά"
+              width={165}
+              height={59}
+              priority
+              className="h-[42px] w-auto lg:h-[59px]"
+            />
           </Link>
 
-          <nav
-            aria-label="Primary"
-            className="hidden items-center justify-center gap-8 justify-self-center md:flex"
-          >
-            {items.map((item) => {
-              const active = isNavItemActive(pathname, item)
+          {/* Desktop utilities */}
+          <div className="hidden items-center gap-5 lg:flex">
+            <HeaderSearch className="w-[300px] xl:w-[463px]" />
 
-              if (item.children?.length) {
-                return (
-                  <NavDropdown
-                    key={`${item.label}-${item.href}`}
-                    label={item.label}
-                    children={item.children}
-                    active={active}
-                    pathname={pathname}
-                    isDark={isDark}
-                    chevron={
-                      <ServicesChevron
-                        className={cn(
-                          'ml-0.5 size-2 shrink-0',
-                          active
-                            ? 'text-white/90'
-                            : isDark
-                              ? 'text-white/60'
-                              : 'text-foreground/70',
-                        )}
-                      />
-                    }
-                  />
-                )
-              }
-
-              return (
-                <Link
-                  key={`${item.label}-${item.href}`}
-                  href={item.href}
-                  target={item.newTab ? '_blank' : undefined}
-                  rel={item.newTab ? 'noopener noreferrer' : undefined}
-                  className={cn(
-                    'inline-flex h-[42px] items-center justify-center gap-1.5 text-[15.9px] font-medium leading-[26.4px] transition-colors',
-                    active
-                      ? isDark
-                        ? 'text-white'
-                        : 'min-w-[82px] rounded-[40px] bg-accent px-5 text-white'
-                      : isDark
-                        ? 'text-white/65 hover:text-white'
-                        : 'text-foreground hover:text-foreground/80',
-                  )}
-                >
-                  {item.label}
-                </Link>
-              )
-            })}
-          </nav>
-
-          <div className="flex items-center justify-self-end">
-            <LinkButton
-              href={callbackHref}
-              size="sm"
-              variant="primary"
-              withIcon
-              className={cn(
-                'hidden h-[42px] min-w-[227px] rounded-[40px] px-7 text-[17px] font-semibold md:inline-flex',
-                isDark && 'bg-white text-[#09090b] hover:bg-white/90',
-              )}
+            <a
+              href={CONTACT.phoneHref}
+              className="flex h-[47px] items-center justify-center gap-2.5 whitespace-nowrap rounded-[8px] border border-paper px-4 text-[14px] text-foreground transition-colors hover:border-accent"
             >
-              {callbackLabel}
-            </LinkButton>
-            <MobileNav
-              items={items}
-              pathname={pathname}
-              callbackHref={callbackHref}
-              callbackLabel={callbackLabel}
+              <Phone className="size-5 text-accent" aria-hidden="true" />
+              {CONTACT.phone}
+            </a>
+
+            <button
+              type="button"
+              className="flex items-center gap-1 text-[17px] text-foreground"
+              aria-label="Επιλογή γλώσσας"
+            >
+              ΕΛ <ChevronDown className="size-3" aria-hidden="true" />
+            </button>
+
+            <span className="h-9 w-px bg-border" aria-hidden="true" />
+
+            <button type="button" aria-label="Λογαριασμός" className="text-foreground hover:text-accent">
+              <User className="size-6" aria-hidden="true" />
+            </button>
+
+            <button
+              type="button"
+              aria-label="Λίστα επιθυμιών"
+              className="relative text-foreground hover:text-accent"
+            >
+              <Heart className="size-6" aria-hidden="true" />
+              <span className="absolute -right-1.5 -top-1 flex size-[15px] items-center justify-center rounded-full bg-accent text-[10px] font-medium text-white">
+                0
+              </span>
+            </button>
+
+            <span className="h-9 w-px bg-border" aria-hidden="true" />
+
+            <Link
+              href="/cart"
+              data-testid="header-cart"
+              className="flex items-center gap-3 text-foreground hover:text-accent"
+            >
+              <span className="relative">
+                <ShoppingBag className="size-6" aria-hidden="true" />
+                <span className="absolute -right-1.5 -top-1 flex size-[15px] items-center justify-center rounded-full bg-accent text-[10px] font-medium text-white">
+                  {count}
+                </span>
+              </span>
+              <span className="text-[17px]">{total}</span>
+            </Link>
+          </div>
+
+          {/* Mobile utilities */}
+          <div className="flex items-center gap-4 lg:hidden">
+            <Link href="/cart" data-testid="header-cart" className="relative text-foreground">
+              <ShoppingBag className="size-6" aria-hidden="true" />
+              {count > 0 && (
+                <span className="absolute -right-1.5 -top-1 flex size-[15px] items-center justify-center rounded-full bg-accent text-[10px] font-medium text-white">
+                  {count}
+                </span>
+              )}
+            </Link>
+            <HeaderMobile
+              nav={NAV}
+              adopt={ADOPT_LINK}
+              phone={{ label: CONTACT.phone, href: CONTACT.phoneHref }}
             />
           </div>
         </div>
+
+        {/* Nav row */}
+        <nav
+          className="hidden items-center justify-between py-3.5 lg:flex"
+          aria-label="Κύρια πλοήγηση"
+        >
+          <ul className="flex items-center gap-[39px]">
+            {NAV.map((item) => (
+              <li key={item.label}>
+                <Link
+                  href={item.href}
+                  className="flex items-center gap-1.5 text-[17px] text-foreground transition-colors hover:text-accent"
+                >
+                  {item.label}
+                  {item.children ? <ChevronDown className="size-3 text-muted" aria-hidden="true" /> : null}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Link
+            href={ADOPT_LINK.href}
+            className="text-[17px] text-foreground transition-colors hover:text-accent"
+          >
+            🐝 {ADOPT_LINK.label}
+          </Link>
+        </nav>
       </div>
     </header>
   )

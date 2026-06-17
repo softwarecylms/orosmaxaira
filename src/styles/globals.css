@@ -1,40 +1,45 @@
-@import url('https://fonts.googleapis.com/css2?family=Momo+Trust+Display&display=swap');
 @import 'tailwindcss';
 
 @theme {
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Momo Trust Display', var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 
-  --color-background: #fcf2f0;
-  --color-foreground: #1d1d1f;
-  --color-muted: #51565a;
+  /* OROS MACHAIRA — honey brand palette (from Figma) */
+  --color-background: #ffffff;
+  --color-foreground: #231f20;
+  --color-muted: #888888;
   --color-card: #ffffff;
-  --color-card-foreground: #1d1d1f;
-  --color-surface-dark: #111518;
+  --color-card-foreground: #231f20;
+  --color-surface-dark: #231f20;
   --color-surface-dark-foreground: #ffffff;
-  --color-border: rgba(252, 242, 240, 1);
-  --color-border-strong: rgba(17, 21, 24, 0.12);
-  --color-accent: #ab16b8;
+  --color-border: #e1e1e1;
+  --color-border-strong: rgba(35, 31, 32, 0.12);
+  --color-accent: #f1ac10;
   --color-accent-foreground: #ffffff;
-  --color-accent-soft: #fdf2ff;
-  --color-pink: #fadbdf;
-  --color-peach: #ffe2c9;
-  --color-purple: #ab16b8;
+  --color-accent-soft: #fef6e5;
+  --color-pink: #fef6e5;
+  --color-peach: #ffe9c2;
+  --color-purple: #f1ac10;
 
-  /* Gitness-inspired warm palette for dark hero */
-  --color-night: #060607;
-  --color-night-soft: #0c0b0d;
-  --color-cream: #f0e6dd;
-  --color-cream-soft: #d8cfc6;
-  --color-warm-accent: #f5c5a1;
-  --color-warm-glow: #c97a4a;
+  /* Honey surfaces */
+  --color-cream: #fef6e5;          /* light/cream cards & soft sections */
+  --color-cream-soft: #f6ecd6;     /* slightly deeper cream */
+  --color-offwhite: #f7f7f8;       /* category-card background */
+  --color-gold: #f1ac10;           /* accent alias for clarity */
+  --color-gold-strong: #d99500;    /* hover / darker gold */
 
-  /* Huly-inspired light palette for off-white sections that break up the dark */
-  --color-paper: #f6f6f6;          /* off-white section background */
+  /* Dark accents retained for any dark UI (warmed to brand) */
+  --color-night: #231f20;
+  --color-night-soft: #2c2728;
+  --color-warm-accent: #f1ac10;
+  --color-warm-glow: #f5c87a;
+
+  /* Light neutrals (kept for blocks that still reference them) */
+  --color-paper: #f7f7f8;          /* off-white section background */
   --color-paper-soft: #ececec;     /* card divider / subtle borders on light */
-  --color-ink: #0a0910;            /* primary text on light */
+  --color-ink: #231f20;            /* primary text on light */
   --color-ink-soft: #4a4a52;       /* secondary text on light */
-  --color-ink-muted: #8a8a92;      /* tertiary text on light */
+  --color-ink-muted: #888888;      /* tertiary text on light */
 
   --radius-card: 1.25rem;
   --radius-pill: 9999px;
@@ -116,6 +121,40 @@
 
   @media (min-width: 768px) {
     padding-inline: 2rem;
+  }
+}
+
+/* Wider container for the bespoke home page. Content area resolves to 1680px
+   (Figma), so at a 1920 viewport the gutters land at the design's 120px. */
+@utility container-wide {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  max-width: 109rem; /* 1680 content + 2 × 2rem padding */
+
+  @media (min-width: 768px) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Edge-to-edge marquee that ignores the page gutter. */
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.home-marquee {
+  animation: marquee-x 32s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-marquee {
+    animation: none;
+    transform: none;
   }
 }
 

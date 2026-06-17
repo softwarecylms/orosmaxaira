@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from 'next'
-import { Plus_Jakarta_Sans } from 'next/font/google'
+import { Gabarito, Inter } from 'next/font/google'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
-import { FooterCTA } from '@/components/layout/footer-cta'
 import { OrganizationSchema } from '@/components/seo/organization-schema'
 import { MotionReady } from '@/components/motion/motion-ready'
 import { getSiteSettings, getHeader, getFooter } from '@/lib/cms'
@@ -18,15 +17,24 @@ import '@/styles/globals.css'
 // resolves it for every route under this layout in one place.
 export const dynamic = 'force-dynamic'
 
-const sans = Plus_Jakarta_Sans({
-  subsets: ['latin'],
+// Inter (body) carries the Greek subset; Gabarito (display) is latin-only, so
+// Greek headings fall through to Inter via the --font-display chain in globals.
+const sans = Inter({
+  subsets: ['latin', 'greek'],
   variable: '--font-sans',
   display: 'swap',
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['400', '500', '600', '700'],
+})
+
+const display = Gabarito({
+  subsets: ['latin', 'latin-ext'],
+  variable: '--font-display',
+  display: 'swap',
+  weight: ['600', '700'],
 })
 
 export const viewport: Viewport = {
-  themeColor: '#1A1A1A',
+  themeColor: '#F1AC10',
   width: 'device-width',
   initialScale: 1,
 }
@@ -34,15 +42,15 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
-    default: 'Your Brand — Tagline goes here',
-    template: '%s | Your Brand',
+    default: 'Όρος Μαχαιρά — Αυθεντικό Κυπριακό Μέλι',
+    template: '%s | Όρος Μαχαιρά',
   },
   description:
-    'One-sentence description of this site for search engines and social cards. Replace per project.',
+    '100% ανεπεξέργαστο μέλι από τα άνθη και τα βότανα του Μαχαιρά. Βραβευμένο μέλι, υδρόμελο, βασιλικός πολτός και φυσικά καλλυντικά.',
   openGraph: {
     type: 'website',
-    siteName: 'Your Brand',
-    locale: 'en_US',
+    siteName: 'Όρος Μαχαιρά',
+    locale: 'el_GR',
   },
   twitter: { card: 'summary_large_image' },
   robots: { index: true, follow: true },
@@ -60,12 +68,11 @@ export default async function FrontendLayout({
   ])
 
   return (
-    <html lang="en" className={sans.variable}>
+    <html lang="el" className={`${sans.variable} ${display.variable}`}>
       <body className="bg-background text-foreground antialiased">
         <MotionReady>
           <SiteHeader header={header} settings={settings} variant="default" />
           <main id="main">{children}</main>
-          <FooterCTA settings={settings} />
           <SiteFooter footer={footer} settings={settings} variant="default" />
           <OrganizationSchema settings={settings} />
         </MotionReady>
