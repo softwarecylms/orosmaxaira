@@ -1,0 +1,3 @@
+# The Medusa backend (top-level medusa/) deploys to Railway, not Vercel.
+# Leading slash anchors to repo root so it does NOT match src/lib/medusa/.
+/medusa
