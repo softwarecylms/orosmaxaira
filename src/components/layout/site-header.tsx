@@ -3,13 +3,11 @@ import Image from 'next/image'
 import { Phone, ChevronDown, User, Heart, ShoppingBag, Truck } from 'lucide-react'
 import { retrieveCart } from '@/lib/medusa/actions'
 import { formatPrice } from '@/lib/medusa/prices'
-import {
-  NAV,
-  ADOPT_LINK,
-  CONTACT,
-} from '@/components/home/home-content'
+import { NAV, ADOPT_LINK, CONTACT, MEGA_MENU } from '@/components/home/home-content'
 import { HeaderSearch } from './header-search'
 import { HeaderMobile } from './header-mobile'
+import { HeaderNav } from './header-nav'
+import { HeaderScrollShadow } from './header-scroll-shadow'
 
 type SiteHeaderProps = {
   header?: unknown
@@ -29,7 +27,11 @@ export async function SiteHeader(_props: SiteHeaderProps) {
   const count = cart?.items?.reduce((n, i) => n + (i.quantity ?? 0), 0) ?? 0
 
   return (
-    <header data-testid="site-header" className="sticky top-0 z-40 bg-white">
+    <header
+      data-testid="site-header"
+      className="sticky top-0 z-40 bg-white transition-shadow duration-300 data-[scrolled=true]:shadow-[0_6px_24px_-14px_rgba(35,31,32,0.22)]"
+    >
+      <HeaderScrollShadow />
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded-full focus:bg-foreground focus:px-4 focus:py-2 focus:text-white"
@@ -132,31 +134,8 @@ export async function SiteHeader(_props: SiteHeaderProps) {
           </div>
         </div>
 
-        {/* Nav row */}
-        <nav
-          className="hidden items-center justify-between py-3.5 lg:flex"
-          aria-label="Κύρια πλοήγηση"
-        >
-          <ul className="flex items-center gap-[39px]">
-            {NAV.map((item) => (
-              <li key={item.label}>
-                <Link
-                  href={item.href}
-                  className="flex items-center gap-1.5 text-[17px] text-foreground transition-colors hover:text-accent"
-                >
-                  {item.label}
-                  {item.children ? <ChevronDown className="size-3 text-muted" aria-hidden="true" /> : null}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <Link
-            href={ADOPT_LINK.href}
-            className="text-[17px] text-foreground transition-colors hover:text-accent"
-          >
-            🐝 {ADOPT_LINK.label}
-          </Link>
-        </nav>
+        {/* Nav row with the Προϊόντα mega menu */}
+        <HeaderNav nav={NAV} adopt={ADOPT_LINK} mega={MEGA_MENU} />
       </div>
     </header>
   )

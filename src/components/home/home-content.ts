@@ -30,6 +30,51 @@ export const NAV: { label: string; href: string; children?: { label: string; hre
 export const ADOPT_LINK: Cta = { label: 'Υιοθετώ μια κυψέλη', href: '/adopt' }
 export const READ_MORE = 'Δείτε περισσότερα'
 
+/** Mega menu shown on hover of "Προϊόντα" (Figma 305:2612). */
+export type MegaColumn = {
+  title: string
+  href: string
+  links: { label: string; href: string }[]
+}
+export const MEGA_MENU: MegaColumn[] = [
+  {
+    title: 'Μέλι',
+    href: '/shop',
+    links: [
+      { label: 'Μέλι Ανθέων', href: '/shop' },
+      { label: 'Άβραστο (άθερμο) Μέλι Ανθέων', href: '/shop' },
+      { label: 'Θυμαρίσιο Μέλι', href: '/shop' },
+    ],
+  },
+  {
+    title: 'Προϊόντα Μέλισσας',
+    href: '/shop',
+    links: [
+      { label: 'Υδρόμελο', href: '/shop' },
+      { label: 'Βασιλικός πολτός', href: '/shop' },
+      { label: 'Μέλι με Φυστίκια', href: '/shop' },
+    ],
+  },
+  {
+    title: 'Φυσικά Καλλυντικά',
+    href: '/shop',
+    links: [
+      { label: 'Κρέμα Σώματος', href: '/shop' },
+      { label: 'Φυσική Κηραλοιφή Προσώπου', href: '/shop' },
+      { label: 'Βάλσαμο για τα Χείλη', href: '/shop' },
+    ],
+  },
+  {
+    title: 'Πακέτα δώρων',
+    href: '/shop',
+    links: [
+      { label: 'Nourish Care Gift Set', href: '/shop' },
+      { label: 'Everyday Care Duo Gift Set', href: '/shop' },
+      { label: 'Balance Care Gift Set', href: '/shop' },
+    ],
+  },
+]
+
 export const ANNOUNCEMENT =
   'ΔΩΡΕΑΝ αποστολή σε όλες τις παραγγελίες άνω των €70'
 

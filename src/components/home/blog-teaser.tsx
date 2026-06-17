@@ -41,7 +41,7 @@ export function BlogTeaser() {
                 <span className="rounded-[20px] bg-accent px-[11px] py-[5px] text-[14px] leading-[21px] text-white">
                   {BLOG.badge}
                 </span>
-                <h3 className="text-[22px] font-medium leading-[26.4px] text-foreground">
+                <h3 className="text-[22px] font-medium leading-[26.4px] text-foreground transition-colors group-hover:text-accent">
                   {BLOG.featured.title}
                 </h3>
                 <p className="text-[17px] leading-[24px] text-muted">{BLOG.featured.excerpt}</p>
@@ -84,7 +84,7 @@ export function BlogTeaser() {
                     <span className="rounded-[20px] bg-accent px-[11px] py-[5px] text-[13px] leading-[13px] text-white">
                       {BLOG.badge}
                     </span>
-                    <h3 className="text-[17px] font-semibold leading-[24px] text-foreground">
+                    <h3 className="text-[17px] font-semibold leading-[24px] text-foreground transition-colors group-hover:text-accent">
                       {item.title}
                     </h3>
                   </div>
