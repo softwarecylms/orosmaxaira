@@ -10,6 +10,14 @@ import { siteUrl } from '@/lib/seo'
 
 import '@/styles/globals.css'
 
+// The shared SiteHeader reads the request pathname via `headers()` (a dynamic
+// API) to highlight the active nav link. That makes the whole (frontend) tree
+// dynamic, which conflicts with the `revalidate`/`generateStaticParams` ISR
+// config on the dynamic-segment routes (e.g. [slug]) and throws
+// DYNAMIC_SERVER_USAGE -> 500 in production. Forcing the segment dynamic here
+// resolves it for every route under this layout in one place.
+export const dynamic = 'force-dynamic'
+
 const sans = Plus_Jakarta_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
