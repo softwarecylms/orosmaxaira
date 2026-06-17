@@ -1,0 +1,340 @@
+@import url('https://fonts.googleapis.com/css2?family=Momo+Trust+Display&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Momo Trust Display', var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: #fcf2f0;
+  --color-foreground: #1d1d1f;
+  --color-muted: #51565a;
+  --color-card: #ffffff;
+  --color-card-foreground: #1d1d1f;
+  --color-surface-dark: #111518;
+  --color-surface-dark-foreground: #ffffff;
+  --color-border: rgba(252, 242, 240, 1);
+  --color-border-strong: rgba(17, 21, 24, 0.12);
+  --color-accent: #ab16b8;
+  --color-accent-foreground: #ffffff;
+  --color-accent-soft: #fdf2ff;
+  --color-pink: #fadbdf;
+  --color-peach: #ffe2c9;
+  --color-purple: #ab16b8;
+
+  /* Gitness-inspired warm palette for dark hero */
+  --color-night: #060607;
+  --color-night-soft: #0c0b0d;
+  --color-cream: #f0e6dd;
+  --color-cream-soft: #d8cfc6;
+  --color-warm-accent: #f5c5a1;
+  --color-warm-glow: #c97a4a;
+
+  /* Huly-inspired light palette for off-white sections that break up the dark */
+  --color-paper: #f6f6f6;          /* off-white section background */
+  --color-paper-soft: #ececec;     /* card divider / subtle borders on light */
+  --color-ink: #0a0910;            /* primary text on light */
+  --color-ink-soft: #4a4a52;       /* secondary text on light */
+  --color-ink-muted: #8a8a92;      /* tertiary text on light */
+
+  --radius-card: 1.25rem;
+  --radius-pill: 9999px;
+
+  --shadow-card: 0 18px 40px -22px rgba(20, 20, 20, 0.18);
+  --shadow-card-lg: 0 30px 60px -28px rgba(20, 20, 20, 0.25);
+
+  --container-7xl: 80rem;
+
+  /* Motion — single source of truth, mirrored in src/lib/motion.ts.
+     Exposed as Tailwind `ease-*` utilities (ease-soft, ease-emphasis, …).
+     Distinct names so they never clobber Tailwind's built-in ease-out/in. */
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-emphasis: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-snap: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-bounce: cubic-bezier(0.5, 1.5, 0.5, 1);
+
+  --duration-fast: 250ms;
+  --duration-ui: 300ms;
+  --duration-base: 550ms;
+  --duration-slow: 800ms;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv11';
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+
+  ::selection {
+    background: var(--color-foreground);
+    color: var(--color-background);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-foreground);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@utility container-page {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  max-width: 80rem;
+
+  @media (min-width: 768px) {
+    padding-inline: 2rem;
+  }
+}
+
+@utility section-y {
+  padding-block: 4rem;
+
+  @media (min-width: 768px) {
+    padding-block: 6rem;
+  }
+}
+
+@utility card-soft {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+}
+
+@utility eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  background: rgba(26, 26, 26, 0.05);
+  padding: 0.375rem 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-foreground);
+}
+
+.legacy-html h2,
+.legacy-html h3,
+.legacy-html h4 {
+  font-family: var(--font-display);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+
+.legacy-html h2 {
+  font-size: 1.875rem;
+  line-height: 1.25;
+}
+
+.legacy-html h3 {
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+
+.legacy-html h4 {
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.legacy-html p {
+  margin-bottom: 1.25rem;
+  line-height: 1.7;
+}
+
+.legacy-html a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.legacy-html a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.legacy-html ul,
+.legacy-html ol {
+  margin: 0 0 1.25rem 1.5rem;
+  padding-left: 0.5rem;
+}
+
+.legacy-html ul {
+  list-style: disc;
+}
+
+.legacy-html ol {
+  list-style: decimal;
+}
+
+.legacy-html li {
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
+
+.legacy-html blockquote {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 1.25rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--color-muted);
+}
+
+.legacy-html img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.legacy-html strong,
+.legacy-html b {
+  font-weight: 700;
+}
+
+.legacy-html em,
+.legacy-html i {
+  font-style: italic;
+}
+
+.legacy-html hr {
+  border: none;
+  border-top: 1px solid var(--color-border-strong);
+  margin: 2rem 0;
+}
+
+.legacy-html code {
+  background: var(--color-accent-soft);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.375rem;
+  font-size: 0.875em;
+}
+
+.legacy-html pre {
+  background: var(--color-surface-dark);
+  color: var(--color-surface-dark-foreground);
+  padding: 1rem;
+  border-radius: 1rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.legacy-html table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.legacy-html th,
+.legacy-html td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border-strong);
+  text-align: left;
+}
+
+.legacy-html th {
+  background: var(--color-accent-soft);
+  font-weight: 600;
+}
+
+.legacy-html figure {
+  margin: 1.5rem 0;
+}
+
+.legacy-html figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.legacy-html .aligncenter,
+.legacy-html .wp-block-image.aligncenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.legacy-html .alignleft {
+  float: left;
+  margin: 0 1.5rem 1rem 0;
+  max-width: 50%;
+}
+
+.legacy-html .alignright {
+  float: right;
+  margin: 0 0 1rem 1.5rem;
+  max-width: 50%;
+}
+
+.legacy-html .wp-block-image {
+  margin: 1.5rem 0;
+}
+
+.legacy-html iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.legacy-html h2 + h3,
+.legacy-html h3 + h4 {
+  margin-top: 1rem;
+}
+
+.legacy-html ul ul,
+.legacy-html ol ol,
+.legacy-html ul ol,
+.legacy-html ol ul {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-blog {
+  max-width: none;
+}
+
+.prose-blog .legacy-html > *:first-child {
+  margin-top: 0;
+}
