@@ -5,16 +5,20 @@ Informational/marketing site template. Next.js 15 + Payload CMS 3 + Puck visual 
 ## Stack
 - Next.js 15 (App Router) + React 19 + TypeScript
 - Tailwind v4 — tokens in `src/styles/globals.css` (`@theme` block)
-- Payload CMS 3 (Postgres) — admin at `/admin`
+- Payload CMS 3 (Postgres) — admin at `/admin`. Handles **content/marketing** pages.
+- Medusa v2 (Postgres) — headless **commerce** backend in `medusa/`. Handles products, cart, checkout, orders. See **Commerce** below.
 - Puck (`@measured/puck`) — drag-and-drop visual editor inside the admin (`src/payload/admin/PuckField.tsx`)
 - framer-motion for animation (centralised in `src/lib/motion.ts`)
 - Playwright for e2e (`pnpm test:e2e`); pnpm (lockfile committed)
 
 ## Dev server
 ```bash
-pnpm dev    # http://localhost:3001
+pnpm dev    # http://localhost:3009   (storefront; Payload admin at /admin)
 ```
-Often already running — check with `curl -s -o /dev/null -w "%{http_code}" http://localhost:3001/` first.
+Often already running — check with `curl -s -o /dev/null -w "%{http_code}" http://localhost:3009/` first.
+> Ports 3001/9000 are used by other local projects on this machine, so this
+> project runs the storefront on **3009** and the Medusa backend on **9009**.
+> The Medusa backend lives in `medusa/` and is started separately — see **Commerce** below.
 
 ## Project layout
 ```
@@ -39,6 +43,32 @@ scripts/            new-site.sh (provision GitHub+Vercel+Neon), post-build.mjs
 3. Register the name under a `categories` group.
 4. If it uses media/relationships, add it to `componentMediaMap` / `componentRelMap` in `src/puck/hydrate.ts`.
 5. `pnpm generate:types` + add an `e2e/<name>.spec.ts`. (No DB migration needed — content is JSON.)
+
+## Commerce (Medusa eshop)
+Two backends, clear split: **Payload = content**, **Medusa = commerce**. The Next.js app is the
+storefront for both — it renders CMS pages *and* talks to Medusa's Store API.
+
+- **Backend** lives in `medusa/` (a Turborepo; the app is `medusa/apps/backend`, Medusa v2).
+  ```bash
+  cd medusa && npm run dev        # Medusa on http://localhost:9009  (admin: /app)
+  ```
+  Its own `.env` (gitignored) holds `DATABASE_URL` (DB `medusa_orosmaxaira`), CORS, `PORT=9009`.
+  Admin login: `admin@orosmaxaira.com`. Uses npm (not pnpm — Medusa dislikes pnpm's layout) and
+  in-memory event bus/cache in dev (no Redis). Seed data (4 demo products, Europe/EUR region) is
+  auto-applied on `npx medusa db:migrate` via `src/migration-scripts/initial-data-seed.ts`.
+- **Storefront integration** (all Store API calls are server-side):
+  - `src/lib/medusa/` — `client.ts` (SDK), `region.ts` (single default region), `products.ts`,
+    `prices.ts` (v2 prices are **decimals, not cents**), `cookies.ts` (cart id cookie),
+    `actions.ts` (`'use server'`: cart + checkout mutations).
+  - Routes under `src/app/(frontend)/`: `shop/` (grid), `shop/[handle]/` (detail + add-to-cart),
+    `cart/`, `checkout/` (address → shipping → place order), `order/[id]/` (confirmation).
+  - Components in `src/components/commerce/`.
+- **Env** (storefront `.env`): `MEDUSA_BACKEND_URL=http://localhost:9009`,
+  `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_...` (Medusa admin → Settings → Publishable API keys).
+- **Add/manage products**: do it in the Medusa admin (`:9009/app`), not in code. No storefront
+  changes needed — `/shop` lists whatever is published to the sales channel.
+- Payment in dev uses Medusa's **system default provider** (`pp_system_default`) — no real charge.
+  Add Stripe (or another provider) before going live.
 
 ## Conventions
 - Tokens > arbitrary values. Add to the `@theme` block; never inline a hex/px that should be a token.

@@ -5,9 +5,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev -p 3001",
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev -p 3009",
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build && node scripts/post-build.mjs",
-    "start": "cross-env NODE_OPTIONS=--no-deprecation next start -p 3001",
+    "start": "cross-env NODE_OPTIONS=--no-deprecation next start -p 3009",
     "lint": "next lint",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
@@ -15,12 +15,14 @@
     "seed": "cross-env NODE_OPTIONS=--no-deprecation tsx src/payload/seed/index.ts",
     "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
-    "deploy:start": "cross-env PORT=3001 node .next/standalone/server.js",
+    "deploy:start": "cross-env PORT=3009 node .next/standalone/server.js",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@measured/puck": "^0.20.2",
+    "@medusajs/js-sdk": "2.15.5",
+    "@medusajs/types": "2.15.5",
     "@payloadcms/db-postgres": "3.84.1",
     "@payloadcms/next": "3.84.1",
     "@payloadcms/payload-cloud": "3.84.1",
