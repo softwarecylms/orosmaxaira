@@ -52,7 +52,7 @@ export function SiteFooter(_props: SiteFooterProps) {
                 height={67}
                 className="size-[67px] object-contain"
               />
-              <div className="flex h-[67px] items-center justify-center rounded-[4px] bg-foreground px-3.5">
+              <div className="flex h-[67px] items-center justify-center bg-black px-3.5">
                 <Image
                   src="/images/home/iso-20000-badge.webp"
                   alt="Πιστοποίηση ISO 20000-1"
