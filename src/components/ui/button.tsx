@@ -21,7 +21,7 @@ const buttonVariants = cva(
         light:
           'bg-card text-foreground border border-border hover:border-border-strong',
         accent:
-          'bg-accent text-accent-foreground hover:bg-accent/90 shadow-[0_10px_30px_-12px_rgba(241,172,16,0.45)]',
+          'bg-accent text-accent-foreground hover:bg-foreground hover:text-white shadow-[0_10px_30px_-12px_rgba(241,172,16,0.45)]',
       },
       size: {
         sm: 'h-9 px-4 text-[13px]',

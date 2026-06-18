@@ -6,7 +6,7 @@ type Variant = 'gold' | 'white' | 'outline' | 'link'
 
 const variants: Record<Variant, string> = {
   // Solid honey button, white label + arrow (Figma "Yellow").
-  gold: 'bg-accent text-white hover:bg-gold-strong p-[15px] rounded-[4px]',
+  gold: 'bg-accent text-white hover:bg-foreground p-[15px] rounded-[4px]',
   // White button, gold label + arrow (Figma "White"); darkens on hover.
   white: 'bg-white text-accent hover:bg-foreground hover:text-white p-[15px] rounded-[4px]',
   // Outline gold.

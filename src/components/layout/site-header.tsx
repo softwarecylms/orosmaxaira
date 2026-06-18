@@ -8,6 +8,7 @@ import { HeaderSearch } from './header-search'
 import { HeaderMobile } from './header-mobile'
 import { HeaderNav } from './header-nav'
 import { HeaderScrollShadow } from './header-scroll-shadow'
+import { HeaderReveal } from './header-reveal'
 
 type SiteHeaderProps = {
   header?: unknown
@@ -40,17 +41,20 @@ export async function SiteHeader(_props: SiteHeaderProps) {
       </a>
 
       {/* Announcement bar */}
-      <div className="flex h-[46px] items-center justify-center gap-2 bg-accent px-4 text-white">
+      <HeaderReveal className="flex h-[46px] items-center justify-center gap-2 bg-accent px-4 text-white">
         <Truck className="size-4 shrink-0" aria-hidden="true" />
         <p className="text-center text-[13px] leading-[21px] md:text-[14px]">
           <span className="font-display text-[15px] font-bold">ΔΩΡΕΑΝ </span>
           αποστολή σε όλες τις παραγγελίες άνω των €70
         </p>
-      </div>
+      </HeaderReveal>
 
       <div className="container-wide">
         {/* Utility row */}
-        <div className="flex items-center justify-between gap-6 border-b border-border py-[15px]">
+        <HeaderReveal
+          delay={0.08}
+          className="flex items-center justify-between gap-6 border-b border-border py-[15px]"
+        >
           <Link href="/" aria-label="Όρος Μαχαιρά — Αρχική" className="shrink-0">
             <Image
               src="/images/home/logo.svg"
@@ -132,10 +136,12 @@ export async function SiteHeader(_props: SiteHeaderProps) {
               phone={{ label: CONTACT.phone, href: CONTACT.phoneHref }}
             />
           </div>
-        </div>
+        </HeaderReveal>
 
         {/* Nav row with the Προϊόντα mega menu */}
-        <HeaderNav nav={NAV} adopt={ADOPT_LINK} mega={MEGA_MENU} />
+        <HeaderReveal delay={0.16}>
+          <HeaderNav nav={NAV} adopt={ADOPT_LINK} mega={MEGA_MENU} />
+        </HeaderReveal>
       </div>
     </header>
   )
