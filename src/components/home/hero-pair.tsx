@@ -15,7 +15,11 @@ export function HeroPair() {
       <div className="container-wide">
         <div className="grid gap-[30px] lg:grid-cols-2">
           {/* Left — off-white card */}
-          <article className="group relative flex flex-col items-center overflow-hidden rounded-[4px] bg-offwhite px-7 py-8 text-center lg:min-h-[490px] lg:flex-row lg:items-center lg:py-5 lg:pl-[50px] lg:pr-[25px] lg:text-left">
+          <article className="group relative flex flex-col items-center overflow-hidden rounded-[4px] bg-offwhite px-7 py-8 text-center transition-[transform,box-shadow] duration-500 ease-out will-change-transform hover:-translate-y-1.5 hover:shadow-[0_26px_60px_-28px_rgba(35,31,32,0.45)] lg:min-h-[490px] lg:flex-row lg:items-center lg:py-5 lg:pl-[50px] lg:pr-[25px] lg:text-left">
+            <span
+              aria-hidden="true"
+              className="home-glow pointer-events-none absolute left-[12%] top-[6%] size-[55%] rounded-full bg-[radial-gradient(circle,rgba(241,172,16,0.22),transparent_70%)] blur-2xl"
+            />
             <RevealUp className="relative z-10 flex w-full flex-col items-center gap-5 lg:w-auto lg:max-w-[345px] lg:items-start">
               <div className="flex flex-col gap-2.5">
                 <p className="text-[14px] uppercase leading-[21px] tracking-[0.01em] text-muted">
@@ -39,14 +43,18 @@ export function HeroPair() {
                 alt={HERO.left.imageAlt}
                 fill
                 sizes="(min-width: 1024px) 430px, 100vw"
-                className="object-cover object-bottom transition-transform duration-500 group-hover:scale-105 lg:object-contain lg:object-center"
+                className="object-cover object-bottom transition-transform duration-700 ease-out group-hover:scale-110 lg:object-contain lg:object-center"
                 priority
               />
             </RevealUp>
           </article>
 
           {/* Right — gold card */}
-          <article className="group relative flex flex-col items-center overflow-hidden rounded-[4px] bg-accent px-7 py-8 text-center lg:min-h-[490px] lg:flex-row lg:items-center lg:py-5 lg:pl-[50px] lg:pr-0 lg:text-left">
+          <article className="group relative flex flex-col items-center overflow-hidden rounded-[4px] bg-accent px-7 py-8 text-center transition-[transform,box-shadow] duration-500 ease-out will-change-transform hover:-translate-y-1.5 hover:shadow-[0_26px_60px_-28px_rgba(217,149,0,0.55)] lg:min-h-[490px] lg:flex-row lg:items-center lg:py-5 lg:pl-[50px] lg:pr-0 lg:text-left">
+            <span
+              aria-hidden="true"
+              className="home-glow pointer-events-none absolute left-[12%] top-[6%] size-[55%] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.3),transparent_70%)] blur-2xl"
+            />
             <RevealUp
               delay={0.1}
               className="relative z-10 flex w-full flex-col items-center gap-5 lg:w-auto lg:max-w-[345px] lg:items-start"
@@ -73,7 +81,7 @@ export function HeroPair() {
                 alt={HERO.right.imageAlt}
                 fill
                 sizes="(min-width: 1024px) 560px, 100vw"
-                className="-scale-x-100 object-cover object-[46%_100%] transition-transform duration-500 group-hover:scale-x-[-1.05] group-hover:scale-y-105 lg:object-[46%_44%]"
+                className="-scale-x-100 object-cover object-[46%_100%] transition-transform duration-700 ease-out group-hover:scale-x-[-1.1] group-hover:scale-y-110 lg:object-[46%_44%]"
                 priority
               />
             </RevealUp>

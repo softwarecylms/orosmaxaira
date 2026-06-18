@@ -158,6 +158,26 @@
   }
 }
 
+/* Ambient drifting glow behind the hero cards. */
+@keyframes home-glow-drift {
+  0%,
+  100% {
+    transform: translate3d(-8%, -6%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(14%, 11%, 0) scale(1.3);
+  }
+}
+.home-glow {
+  animation: home-glow-drift 15s ease-in-out infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-glow {
+    animation: none;
+  }
+}
+
 @utility section-y {
   padding-block: 4rem;
 
