@@ -4,12 +4,11 @@ import Image from 'next/image'
 import { useReducedMotion } from 'framer-motion'
 
 /**
- * The "wow" layer for the adopt-a-hive banner: the real honeycomb photo turned
- * into a looping video (rendered offline with ffmpeg — a slow Ken Burns drift,
- * a sunlight glint sweeping the comb, and gentle light breathing; see
- * scripts/render-adopt-video.sh). Transparent areas of the source were
- * flattened onto the banner gold so the edges fade seamlessly. The still photo
- * is the poster (instant paint) and the reduced-motion fallback.
+ * The "wow" layer for the adopt-a-hive banner: real macro footage of honeybees
+ * working a honeycomb, lightly graded to match the brand photo and looped
+ * seamlessly (see scripts/render-adopt-video.sh — sourced from Pexels, free
+ * for commercial use). A frame of the footage is the poster (instant paint);
+ * the original brand still is the reduced-motion fallback.
  */
 export function AdoptHiveScene({ image, alt }: { image: string; alt: string }) {
   const reduce = useReducedMotion()
@@ -27,7 +26,7 @@ export function AdoptHiveScene({ image, alt }: { image: string; alt: string }) {
             loop
             playsInline
             preload="metadata"
-            poster={image}
+            poster="/videos/adopt-hive-poster.jpg"
             aria-label={alt}
           >
             <source src="/videos/adopt-hive.webm" type="video/webm" />
