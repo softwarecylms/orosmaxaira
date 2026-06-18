@@ -9,8 +9,8 @@ export function BlogTeaser() {
   return (
     <section data-testid="blog-teaser" className="bg-offwhite py-12 md:py-[70px]">
       <div className="container-wide flex flex-col gap-7 md:gap-[30px]">
-        <RevealUp className="flex items-center justify-between gap-4">
-          <h2 className="font-display text-[22px] font-semibold leading-[1.12] text-foreground md:text-[41px] md:leading-[40px]">
+        <RevealUp className="flex items-center justify-center gap-4 sm:justify-between">
+          <h2 className="text-center font-display text-[22px] font-semibold leading-[1.12] text-foreground sm:text-left md:text-[41px] md:leading-[40px]">
             {BLOG.heading}
           </h2>
           <CtaLink href={BLOG.cta.href} variant="link" className="hidden shrink-0 sm:inline-flex">
