@@ -212,13 +212,13 @@ export const HERITAGE = {
 
 // --- Section 9: Flatlay band ---------------------------------------------
 export const FLATLAY = {
-  image: '/images/home/flatlay-marble.webp',
+  image: '/images/home/products-bg.jpg',
   imageAlt: 'Προϊόντα Όρος Μαχαιρά σε μαρμάρινη επιφάνεια',
   prices: [
-    { value: '7,50', left: '29.7%', top: '12.7%', href: '/' },
-    { value: '9,90', left: '29.3%', top: '63.8%', href: '/' },
-    { value: '16,00', left: '42.9%', top: '73.5%', href: '/' },
-    { value: '22,00', left: '68.4%', top: '46.9%', href: '/' },
+    { value: '7,50', left: '12.5%', top: '34%', href: '/' },
+    { value: '9,90', left: '82%', top: '33%', href: '/' },
+    { value: '16,00', left: '49%', top: '60%', href: '/' },
+    { value: '22,00', left: '78%', top: '58%', href: '/' },
   ],
 }
 
