@@ -194,8 +194,8 @@ export type Segment = { text: string; bold?: boolean }
 export const HERITAGE = {
   heading: 'Από γενιά σε γενιά',
   cta: { label: READ_MORE, href: '/' },
-  image: '/images/home/heritage-team.webp',
-  imageAlt: 'Η οικογένεια Όρος Μαχαιρά στο κατάστημά της',
+  image: '/images/home/family-photo.webp',
+  imageAlt: 'Η οικογένεια Όρος Μαχαιρά',
   paragraphs: [
     [
       { text: 'Η ιστορία του μελιού ' },
