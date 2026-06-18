@@ -361,6 +361,14 @@ export const FOOTER = {
       ],
     },
     {
+      title: 'Προϊόντα',
+      links: [
+        { label: 'Μέλι', href: '/' },
+        { label: 'Φυσικά Καλλυντικά', href: '/' },
+        { label: 'Πακέτα δώρων', href: '/' },
+      ],
+    },
+    {
       title: 'Επικοινωνία',
       lines: [
         'M.F. (OROS MAXAIRA) LTD.',
@@ -369,14 +377,6 @@ export const FOOTER = {
         'P.O.BOX: 7718',
         'Δε-Πα 08:00 – 16:00',
         'info@orosmaxaira.com',
-      ],
-    },
-    {
-      title: 'Προϊόντα',
-      links: [
-        { label: 'Μέλι', href: '/' },
-        { label: 'Φυσικά Καλλυντικά', href: '/' },
-        { label: 'Πακέτα δώρων', href: '/' },
       ],
     },
   ],
