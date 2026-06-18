@@ -44,13 +44,24 @@ export function SiteFooter(_props: SiteFooterProps) {
               />
             </Link>
             <p className="max-w-[300px] text-[17px] leading-[24px] text-muted">{FOOTER.tagline}</p>
-            <Image
-              src="/images/home/iso-badge.webp"
-              alt="Πιστοποίηση ISO 14001"
-              width={67}
-              height={67}
-              className="size-[67px] object-contain"
-            />
+            <div className="flex items-center gap-3">
+              <Image
+                src="/images/home/iso-badge.webp"
+                alt="Πιστοποίηση ISO 14001"
+                width={67}
+                height={67}
+                className="size-[67px] object-contain"
+              />
+              <div className="flex h-[67px] items-center justify-center rounded-[4px] bg-foreground px-3.5">
+                <Image
+                  src="/images/home/iso-20000-badge.webp"
+                  alt="Πιστοποίηση ISO 20000-1"
+                  width={400}
+                  height={518}
+                  className="h-[51px] w-auto object-contain"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Link columns + contact/social */}
@@ -76,11 +87,24 @@ export function SiteFooter(_props: SiteFooterProps) {
                           </Link>
                         </li>
                       ))
-                    : (col.lines ?? []).map((line) => (
-                        <li key={line} className="text-[17px] leading-[27px] text-muted">
-                          {line}
-                        </li>
-                      ))}
+                    : (col.lines ?? []).map((line) => {
+                        const href = line.startsWith('Τηλ')
+                          ? `tel:${line.replace(/[^+\d]/g, '')}`
+                          : line.includes('@')
+                            ? `mailto:${line.trim()}`
+                            : null
+                        return (
+                          <li key={line} className="text-[17px] leading-[27px] text-muted">
+                            {href ? (
+                              <a href={href} className="transition-colors hover:text-accent">
+                                {line}
+                              </a>
+                            ) : (
+                              line
+                            )}
+                          </li>
+                        )
+                      })}
                 </ul>
               </div>
             ))}
@@ -123,7 +147,12 @@ export function SiteFooter(_props: SiteFooterProps) {
         <div className="mt-12 flex flex-col gap-3 border-t border-border py-5 text-[15px] text-muted md:flex-row md:items-center md:justify-between md:text-[17px]">
           <p>
             {FOOTER.legal}{' '}
-            <Link href={FOOTER.legalBrandHref} className="text-accent hover:underline">
+            <Link
+              href={FOOTER.legalBrandHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:underline"
+            >
               {FOOTER.legalBrand}
             </Link>
           </p>
