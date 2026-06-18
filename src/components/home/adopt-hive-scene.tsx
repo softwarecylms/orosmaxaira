@@ -14,29 +14,31 @@ export function AdoptHiveScene({ image, alt }: { image: string; alt: string }) {
   const reduce = useReducedMotion()
 
   return (
-    <div className="pointer-events-none absolute inset-0 hidden lg:block">
-      <div className="absolute inset-y-0 left-0 w-[58%] overflow-hidden">
-        {reduce ? (
-          <Image src={image} alt={alt} fill sizes="58vw" className="object-cover" />
-        ) : (
-          <video
-            className="absolute inset-0 size-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            poster="/videos/adopt-hive-poster.jpg"
-            aria-label={alt}
-          >
-            <source src="/videos/adopt-hive.webm" type="video/webm" />
-            <source src="/videos/adopt-hive.mp4" type="video/mp4" />
-          </video>
-        )}
+    // Below lg: a banner across the top of the card (content sits beneath it).
+    // lg+: bleeds from the left behind the content.
+    <div className="pointer-events-none relative h-[240px] w-full overflow-hidden sm:h-[300px] lg:absolute lg:inset-y-0 lg:left-0 lg:h-auto lg:w-[58%]">
+      {reduce ? (
+        <Image src={image} alt={alt} fill sizes="(min-width:1024px) 58vw, 100vw" className="object-cover" />
+      ) : (
+        <video
+          className="absolute inset-0 size-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="/videos/adopt-hive-poster.jpg"
+          aria-label={alt}
+        >
+          <source src="/videos/adopt-hive.webm" type="video/webm" />
+          <source src="/videos/adopt-hive.mp4" type="video/mp4" />
+        </video>
+      )}
 
-        {/* Fade the footage into the gold band */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/20 to-accent" />
-      </div>
+      {/* Mobile/tablet: fade DOWN into the gold content (transparent → accent). */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-accent lg:hidden" />
+      {/* Desktop: fade RIGHT into the gold band. */}
+      <div className="absolute inset-0 hidden bg-gradient-to-r from-transparent via-accent/20 to-accent lg:block" />
     </div>
   )
 }
