@@ -15,7 +15,7 @@ export function Heritage() {
               alt={HERITAGE.imageAlt}
               fill
               sizes="(min-width:1024px) 843px, 100vw"
-              className="object-cover"
+              className="home-img-breathe object-cover"
             />
           </RevealUp>
           <RevealUp delay={0.1} className="flex flex-col items-center gap-5 text-center lg:w-[597px] lg:items-start lg:text-left">
