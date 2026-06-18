@@ -31,11 +31,12 @@ export async function SiteHeader(_props: SiteHeaderProps) {
     <>
       {/* Announcement bar — scrolls away with the page; it is intentionally
           NOT part of the sticky header below. */}
-      <HeaderReveal className="flex min-h-[46px] items-start justify-end gap-2 bg-accent px-4 py-2 text-white md:h-[46px] md:min-h-0 md:items-center md:justify-center md:py-0">
-        <Truck className="mt-0.5 size-4 shrink-0 md:mt-0" aria-hidden="true" />
-        <p className="text-right text-[13px] leading-[21px] md:text-center md:text-[14px]">
+      <HeaderReveal className="flex min-h-[46px] items-center justify-center gap-2 bg-accent px-4 py-2 text-white md:h-[46px] md:min-h-0 md:py-0">
+        <Truck className="size-4 shrink-0" aria-hidden="true" />
+        <p className="text-center text-[13px] leading-[21px] md:text-[14px]">
           <span className="font-display text-[15px] font-bold">ΔΩΡΕΑΝ </span>
-          αποστολή σε όλες τις παραγγελίες άνω των €70
+          <span className="md:hidden">αποστολή άνω των €70</span>
+          <span className="hidden md:inline">αποστολή σε όλες τις παραγγελίες άνω των €70</span>
         </p>
       </HeaderReveal>
 
