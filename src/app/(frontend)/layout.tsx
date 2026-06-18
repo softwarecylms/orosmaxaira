@@ -70,7 +70,7 @@ export default async function FrontendLayout({
 
   return (
     <html lang="el" className={`${sans.variable} ${display.variable}`}>
-      <body className="bg-background text-foreground antialiased">
+      <body className="bg-background text-foreground antialiased" suppressHydrationWarning>
         <MotionReady>
           <SiteHeader header={header} settings={settings} variant="default" />
           <main id="main">{children}</main>
