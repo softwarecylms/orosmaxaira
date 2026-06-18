@@ -66,7 +66,7 @@ export function HeroPair() {
             </RevealUp>
             <RevealUp
               delay={0.25}
-              className="pointer-events-none relative -mx-7 -mb-8 mt-1 aspect-[10/9] w-[calc(100%+3.5rem)] lg:absolute lg:inset-y-0 lg:right-[-6%] lg:mx-0 lg:mb-0 lg:mt-0 lg:aspect-auto lg:h-auto lg:w-[64%]"
+              className="pointer-events-none relative -mx-7 -mb-8 mt-1 aspect-[3/2] w-[calc(100%+3.5rem)] lg:absolute lg:inset-y-0 lg:right-[-6%] lg:mx-0 lg:mb-0 lg:mt-0 lg:aspect-auto lg:h-auto lg:w-[64%]"
             >
               <Image
                 src={HERO.right.image}
