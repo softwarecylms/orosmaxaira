@@ -12,9 +12,9 @@ const ICONS: Record<TrustIcon, (props: { className?: string }) => React.ReactEle
 /** Section 3 — four trust badges (Figma 156:592). */
 export function TrustBadges() {
   return (
-    <section data-testid="trust-badges" className="bg-white py-14 md:py-[72px]">
+    <section data-testid="trust-badges" className="bg-white py-9 md:py-[72px]">
       <div className="container-wide">
-        <RevealGroup className="grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-8 lg:grid-cols-4">
+        <RevealGroup className="grid grid-cols-2 gap-x-4 gap-y-7 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-4">
           {TRUST.map((item) => {
             const Icon = ICONS[item.icon]
             return (
