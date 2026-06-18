@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { HERO } from './home-content'
 import { CtaLink } from './cta-link'
+import { CardSpotlight } from './card-spotlight'
 import { RevealUp } from './reveal-up'
 
 /**
@@ -16,6 +17,7 @@ export function HeroPair() {
         <div className="grid gap-[30px] lg:grid-cols-2">
           {/* Left — off-white card */}
           <article className="group relative flex flex-col items-center overflow-hidden rounded-[4px] bg-offwhite px-7 py-8 text-center lg:min-h-[490px] lg:flex-row lg:items-center lg:py-5 lg:pl-[50px] lg:pr-[25px] lg:text-left">
+            <CardSpotlight color="rgba(241,172,16,0.3)" />
             <RevealUp className="relative z-10 flex w-full flex-col items-center gap-5 lg:w-auto lg:max-w-[345px] lg:items-start">
               <div className="flex flex-col gap-2.5">
                 <p className="text-[14px] uppercase leading-[21px] tracking-[0.01em] text-muted">
@@ -47,6 +49,7 @@ export function HeroPair() {
 
           {/* Right — gold card */}
           <article className="group relative flex flex-col items-center overflow-hidden rounded-[4px] bg-accent px-7 py-8 text-center lg:min-h-[490px] lg:flex-row lg:items-center lg:py-5 lg:pl-[50px] lg:pr-0 lg:text-left">
+            <CardSpotlight color="rgba(255,255,255,0.4)" />
             <RevealUp
               delay={0.1}
               className="relative z-10 flex w-full flex-col items-center gap-5 lg:w-auto lg:max-w-[345px] lg:items-start"
