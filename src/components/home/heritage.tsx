@@ -18,7 +18,7 @@ export function Heritage() {
               className="object-cover"
             />
           </RevealUp>
-          <RevealUp delay={0.1} className="flex flex-col items-start gap-5 lg:w-[597px]">
+          <RevealUp delay={0.1} className="flex flex-col items-center gap-5 text-center lg:w-[597px] lg:items-start lg:text-left">
             <h2 className="font-display text-[28px] font-semibold leading-[1.05] text-foreground md:text-[41px] md:leading-[40px]">
               {HERITAGE.heading}
             </h2>
