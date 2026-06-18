@@ -13,7 +13,7 @@ const variants: Record<Variant, string> = {
   outline:
     'border border-accent text-accent hover:bg-accent hover:text-white p-[15px] rounded-[4px]',
   // Inline gold "Δείτε περισσότερα →" text link used on section headers.
-  link: 'text-accent hover:text-gold-strong gap-2',
+  link: 'text-accent hover:text-foreground gap-2',
 }
 
 type CtaLinkProps = {
