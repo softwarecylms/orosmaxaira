@@ -158,7 +158,7 @@ export function SiteFooter(_props: SiteFooterProps) {
               {FOOTER.legalBrand}
             </Link>
           </p>
-          <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 md:justify-start">
             {FOOTER.policies.split(' | ').map((item, i) => (
               <span key={item} className="flex items-center gap-x-2">
                 {i > 0 ? <span aria-hidden="true">|</span> : null}
