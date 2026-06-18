@@ -158,22 +158,37 @@
   }
 }
 
-/* Ambient drifting glow behind the hero cards. */
-@keyframes home-glow-drift {
+/* Gentle continuous zoom in/out on the hero images (no hover needed).
+   Two variants: plain, and mirrored for the flipped bee photo. */
+@keyframes home-img-breathe {
   0%,
   100% {
-    transform: translate3d(-8%, -6%, 0) scale(1);
+    scale: 1;
   }
   50% {
-    transform: translate3d(14%, 11%, 0) scale(1.3);
+    scale: 1.06;
   }
 }
-.home-glow {
-  animation: home-glow-drift 15s ease-in-out infinite;
+@keyframes home-img-breathe-x {
+  0%,
+  100% {
+    scale: -1 1;
+  }
+  50% {
+    scale: -1.06 1.06;
+  }
+}
+.home-img-breathe {
+  animation: home-img-breathe 8s ease-in-out infinite;
+  will-change: transform;
+}
+.home-img-breathe-x {
+  animation: home-img-breathe-x 8s ease-in-out infinite;
   will-change: transform;
 }
 @media (prefers-reduced-motion: reduce) {
-  .home-glow {
+  .home-img-breathe,
+  .home-img-breathe-x {
     animation: none;
   }
 }
