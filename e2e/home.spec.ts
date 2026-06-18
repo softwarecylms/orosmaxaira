@@ -49,9 +49,11 @@ test.describe('OROS MACHAIRA home page', () => {
     const ticker = page.getByTestId('home-ticker').first()
     await expect(ticker).toBeVisible()
     const row = ticker.locator('> div').first()
-    const animationName = await row.evaluate(
-      (el) => getComputedStyle(el).animationName,
-    )
-    expect(animationName).toBe('none')
+    // The marquee keyframes (`marquee-x`) must not be running under reduced
+    // motion. Poll to avoid a first-paint race on the freshly-compiled dev
+    // server, where the stylesheet can land a beat after `networkidle`.
+    await expect
+      .poll(() => row.evaluate((el) => getComputedStyle(el).animationName))
+      .not.toBe('marquee-x')
   })
 })

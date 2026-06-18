@@ -1,25 +1,18 @@
-import Image from 'next/image'
 import { ADOPT } from './home-content'
 import { CtaLink } from './cta-link'
 import { RevealUp } from './reveal-up'
+import { AdoptHiveScene } from './adopt-hive-scene'
 
-/** Section 7 — "Υιοθετώ μια κυψέλη" gold banner (Figma 118:547). */
+/** Section 7 — "Υιοθετώ μια κυψέλη" gold banner (Figma 118:547).
+ *  The photo comes alive: a Ken Burns drift plus bees on the wing (see
+ *  AdoptHiveScene) — the page's signature flourish. */
 export function AdoptHiveBanner() {
   return (
     <section data-testid="adopt-hive" className="bg-white pb-12 pt-6 md:pb-[70px] md:pt-[35px]">
       <div className="container-wide">
         <div className="relative isolate overflow-hidden rounded-[4px] bg-accent">
-          {/* Bee photo bleeding from the left, fading into the gold */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-[58%] lg:block">
-            <Image
-              src={ADOPT.image}
-              alt={ADOPT.imageAlt}
-              fill
-              sizes="58vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/20 to-accent" />
-          </div>
+          {/* Living honeycomb + flying bees bleeding from the left */}
+          <AdoptHiveScene image={ADOPT.image} alt={ADOPT.imageAlt} />
 
           <RevealUp className="relative z-10 flex flex-col items-start gap-5 px-7 py-10 md:px-12 md:py-[40px] lg:ml-auto lg:w-[50%] lg:pl-0 lg:pr-[80px]">
             <p className="text-[14px] uppercase leading-[21px] text-cream">{ADOPT.eyebrow}</p>
