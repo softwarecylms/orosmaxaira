@@ -30,7 +30,7 @@ export function HeroPair() {
             </RevealUp>
             <RevealUp
               delay={0.15}
-              className="pointer-events-none relative mt-7 h-[240px] w-full sm:absolute sm:inset-y-5 sm:right-5 sm:mt-0 sm:h-auto sm:w-1/2 md:w-[430px]"
+              className="pointer-events-none relative mt-3 h-[300px] w-full sm:absolute sm:inset-y-5 sm:right-5 sm:mt-0 sm:h-auto sm:w-1/2 md:w-[430px]"
             >
               <Image
                 src={HERO.left.image}
@@ -61,7 +61,7 @@ export function HeroPair() {
             </RevealUp>
             <RevealUp
               delay={0.25}
-              className="pointer-events-none relative mt-7 h-[240px] w-full overflow-hidden rounded-[4px] sm:absolute sm:inset-y-0 sm:right-[-6%] sm:mt-0 sm:h-auto sm:w-[64%] sm:overflow-visible sm:rounded-none"
+              className="pointer-events-none relative mt-3 h-[300px] w-full overflow-hidden rounded-[4px] sm:absolute sm:inset-y-0 sm:right-[-6%] sm:mt-0 sm:h-auto sm:w-[64%] sm:overflow-visible sm:rounded-none"
             >
               <Image
                 src={HERO.right.image}
