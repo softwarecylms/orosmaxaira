@@ -14,7 +14,7 @@ export function AdoptHiveBanner() {
           {/* Living honeycomb + flying bees bleeding from the left */}
           <AdoptHiveScene image={ADOPT.image} alt={ADOPT.imageAlt} />
 
-          <RevealUp className="relative z-10 flex flex-col items-start gap-5 px-7 py-10 md:px-12 md:py-[40px] lg:ml-auto lg:w-[50%] lg:pl-0 lg:pr-[80px]">
+          <RevealUp className="relative z-10 flex flex-col items-start gap-5 px-7 py-[60px] md:px-12 md:py-[60px] lg:ml-auto lg:w-[50%] lg:pl-0 lg:pr-[80px]">
             <p className="text-[14px] uppercase leading-[21px] text-cream">{ADOPT.eyebrow}</p>
             <div className="flex flex-col gap-2.5">
               <h2 className="font-display text-[28px] font-semibold leading-[1.05] text-white md:text-[41px] md:leading-[40px]">
