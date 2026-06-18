@@ -148,7 +148,7 @@
 }
 
 .home-marquee {
-  animation: marquee-x 32s linear infinite;
+  animation: marquee-x 90s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
