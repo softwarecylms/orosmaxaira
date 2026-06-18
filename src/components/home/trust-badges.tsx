@@ -1,12 +1,12 @@
-import { BadgeCheck, Truck, Recycle, CreditCard } from 'lucide-react'
 import { RevealGroup, RevealItem } from './reveal-up'
 import { TRUST, type TrustIcon } from './home-content'
+import { PurityIcon, DeliveryIcon, EcoIcon, PaymentIcon } from './trust-icons'
 
-const ICONS: Record<TrustIcon, typeof BadgeCheck> = {
-  purity: BadgeCheck,
-  delivery: Truck,
-  eco: Recycle,
-  payment: CreditCard,
+const ICONS: Record<TrustIcon, (props: { className?: string }) => React.ReactElement> = {
+  purity: PurityIcon,
+  delivery: DeliveryIcon,
+  eco: EcoIcon,
+  payment: PaymentIcon,
 }
 
 /** Section 3 — four trust badges (Figma 156:592). */
@@ -23,7 +23,7 @@ export function TrustBadges() {
                 data-testid="trust-badge-cell"
                 className="flex flex-col items-center px-2 text-center"
               >
-                <Icon className="size-9 text-accent" strokeWidth={1.6} aria-hidden="true" />
+                <Icon className="h-[34px] w-auto text-accent" />
                 <h3 className="mt-4 text-[17px] font-bold leading-[24px] text-foreground">
                   {item.title}
                 </h3>
