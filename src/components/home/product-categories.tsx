@@ -23,7 +23,7 @@ export function ProductCategories() {
             <RevealItem key={cat.title}>
               <Link
                 href={cat.href}
-                className="group flex h-[210px] flex-col items-center justify-center gap-3 rounded-[4px] bg-offwhite px-4 sm:h-[320px] sm:gap-4 sm:px-6 md:h-[394px] md:gap-5"
+                className="group flex h-[248px] flex-col items-center justify-center gap-3 rounded-[4px] bg-offwhite px-4 sm:h-[360px] sm:gap-4 sm:px-6 md:h-[434px] md:gap-5"
               >
                 <div className="relative h-[120px] w-full sm:h-[210px] sm:w-[270px] sm:max-w-full md:h-[255px] md:w-[301px]">
                   <Image
