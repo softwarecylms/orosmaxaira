@@ -32,14 +32,14 @@ export function HeroPair() {
             </RevealUp>
             <RevealUp
               delay={0.15}
-              className="pointer-events-none relative mt-7 h-[320px] w-full lg:absolute lg:inset-y-5 lg:right-5 lg:mt-0 lg:h-auto lg:w-[430px]"
+              className="pointer-events-none relative -mx-7 -mb-8 mt-1 aspect-[10/9] w-[calc(100%+3.5rem)] lg:absolute lg:inset-y-5 lg:right-5 lg:mx-0 lg:mb-0 lg:mt-0 lg:aspect-auto lg:h-auto lg:w-[430px]"
             >
               <Image
                 src={HERO.left.image}
                 alt={HERO.left.imageAlt}
                 fill
                 sizes="(min-width: 1024px) 430px, 100vw"
-                className="object-contain object-center transition-transform duration-500 group-hover:scale-105"
+                className="object-cover object-bottom transition-transform duration-500 group-hover:scale-105 lg:object-contain lg:object-center"
                 priority
               />
             </RevealUp>
