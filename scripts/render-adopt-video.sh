@@ -21,9 +21,10 @@ URL="https://videos.pexels.com/video-files/7174859/7174859-uhd_2560_1440_30fps.m
 
 [ -f "$SRC" ] || curl -sL "$URL" -o "$SRC"
 
-# Forward segment: 7s, crop to 3:2, scale 1200x800, gentle high-key lift.
+# Forward segment: 7s, full 16:9 frame (zoomed out) scaled to 1280x720, with a
+# brighter high-key lift and stronger contrast.
 ffmpeg -hide_banner -loglevel error -y -ss 3 -t 7 -i "$SRC" \
-  -vf "fps=24,crop=2160:1440:(in_w-2160)/2:0,scale=1200:800,setsar=1,eq=brightness=0.035:contrast=1.04:saturation=1.05:gamma=1.03,format=yuv420p" \
+  -vf "fps=24,scale=1280:720,setsar=1,eq=brightness=0.03:contrast=1.16:saturation=1.06:gamma=1.02,format=yuv420p" \
   -an -c:v libx264 -crf 18 -preset medium "$FWD"
 
 # Boomerang (forward + reverse) for a seamless loop, encode WebM + MP4 + poster.
