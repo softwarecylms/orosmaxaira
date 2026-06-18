@@ -28,19 +28,9 @@ export async function SiteHeader(_props: SiteHeaderProps) {
   const count = cart?.items?.reduce((n, i) => n + (i.quantity ?? 0), 0) ?? 0
 
   return (
-    <header
-      data-testid="site-header"
-      className="sticky top-0 z-40 bg-white transition-shadow duration-300 data-[scrolled=true]:shadow-[0_6px_24px_-14px_rgba(35,31,32,0.22)]"
-    >
-      <HeaderScrollShadow />
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded-full focus:bg-foreground focus:px-4 focus:py-2 focus:text-white"
-      >
-        Μετάβαση στο περιεχόμενο
-      </a>
-
-      {/* Announcement bar */}
+    <>
+      {/* Announcement bar — scrolls away with the page; it is intentionally
+          NOT part of the sticky header below. */}
       <HeaderReveal className="flex h-[46px] items-center justify-center gap-2 bg-accent px-4 text-white">
         <Truck className="size-4 shrink-0" aria-hidden="true" />
         <p className="text-center text-[13px] leading-[21px] md:text-[14px]">
@@ -49,7 +39,19 @@ export async function SiteHeader(_props: SiteHeaderProps) {
         </p>
       </HeaderReveal>
 
-      <div className="container-wide">
+      <header
+        data-testid="site-header"
+        className="sticky top-0 z-40 bg-white transition-shadow duration-300 data-[scrolled=true]:shadow-[0_6px_24px_-14px_rgba(35,31,32,0.22)]"
+      >
+        <HeaderScrollShadow />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded-full focus:bg-foreground focus:px-4 focus:py-2 focus:text-white"
+        >
+          Μετάβαση στο περιεχόμενο
+        </a>
+
+        <div className="container-wide">
         {/* Utility row */}
         <HeaderReveal
           delay={0.08}
@@ -142,7 +144,8 @@ export async function SiteHeader(_props: SiteHeaderProps) {
         <HeaderReveal delay={0.16}>
           <HeaderNav nav={NAV} adopt={ADOPT_LINK} mega={MEGA_MENU} />
         </HeaderReveal>
-      </div>
-    </header>
+        </div>
+      </header>
+    </>
   )
 }
