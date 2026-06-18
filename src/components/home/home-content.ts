@@ -211,15 +211,89 @@ export const HERITAGE = {
 }
 
 // --- Section 9: Flatlay band ---------------------------------------------
-export const FLATLAY = {
+export type FlatlayPrice = {
+  value: string
+  left: string
+  top: string
+  href: string
+  /** Which way the hover quick-view card opens. */
+  placement: 'top' | 'bottom'
+  product: { category: string; title: string; price: string; image: string }
+}
+
+export const FLATLAY: {
+  image: string
+  imageAlt: string
+  prices: FlatlayPrice[]
+} = {
   image: '/images/home/products-bg.jpg',
   imageAlt: 'Προϊόντα Όρος Μαχαιρά σε μαρμάρινη επιφάνεια',
   prices: [
-    { value: '7,50', left: '27%', top: '31%', href: '/' },
-    { value: '12,50', left: '80%', top: '31%', href: '/' },
-    { value: '16,00', left: '49%', top: '59%', href: '/' },
-    { value: '22,00', left: '72%', top: '71%', href: '/' },
-    { value: '9,90', left: '30%', top: '83%', href: '/' },
+    {
+      value: '7,50',
+      left: '27%',
+      top: '31%',
+      href: '/',
+      placement: 'bottom',
+      product: {
+        category: 'Μέλι',
+        title: 'Μέλι Ανθέων «Όρος Μαχαιρά»',
+        price: '€3,50 – €31,00',
+        image: '/images/home/products/unheated-honey.webp',
+      },
+    },
+    {
+      value: '12,50',
+      left: '80%',
+      top: '31%',
+      href: '/',
+      placement: 'bottom',
+      product: {
+        category: 'Μέλι',
+        title: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»',
+        price: '€4,00 – €33,00',
+        image: '/images/home/products/thyme-honey.webp',
+      },
+    },
+    {
+      value: '16,00',
+      left: '49%',
+      top: '59%',
+      href: '/',
+      placement: 'top',
+      product: {
+        category: 'Προϊόντα Μέλισσας',
+        title: 'Υδρόμελο «Όρος Μαχαιρά»',
+        price: '€16,00',
+        image: '/images/home/products/mead.webp',
+      },
+    },
+    {
+      value: '22,00',
+      left: '72%',
+      top: '71%',
+      href: '/',
+      placement: 'top',
+      product: {
+        category: 'Προϊόντα Μέλισσας',
+        title: 'Βασιλικός Πολτός «Όρος Μαχαιρά»',
+        price: '€22,00',
+        image: '/images/home/products/royal-jelly.webp',
+      },
+    },
+    {
+      value: '9,90',
+      left: '30%',
+      top: '83%',
+      href: '/',
+      placement: 'top',
+      product: {
+        category: 'Φυσικά Καλλυντικά',
+        title: 'Κρέμα Χεριών Milk & Honey',
+        price: '€9,90',
+        image: '/images/home/products/hand-cream.webp',
+      },
+    },
   ],
 }
 
