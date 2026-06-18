@@ -32,7 +32,7 @@ export function SiteFooter(_props: SiteFooterProps) {
       <div className="container-wide">
         <RevealUp className="flex flex-col gap-12 lg:flex-row lg:justify-between lg:gap-10">
           {/* Logo block */}
-          <div className="flex w-full flex-col gap-7 lg:w-[320px] lg:shrink-0">
+          <div className="flex w-full flex-col items-center gap-7 text-center lg:w-[320px] lg:shrink-0 lg:items-start lg:text-left">
             <Link href="/" aria-label="Όρος Μαχαιρά — Αρχική">
               <Image
                 src="/images/home/logo.svg"
@@ -64,7 +64,7 @@ export function SiteFooter(_props: SiteFooterProps) {
           </div>
 
           {/* Link columns + contact/social */}
-          <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:flex lg:gap-[25px]">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-10 text-center sm:grid-cols-3 sm:text-left lg:flex lg:gap-[25px]">
             {(
               FOOTER.columns as Array<{
                 title: string
@@ -72,7 +72,10 @@ export function SiteFooter(_props: SiteFooterProps) {
                 lines?: string[]
               }>
             ).map((col) => (
-              <div key={col.title} className="flex flex-col gap-4 lg:w-[240px]">
+              <div
+                key={col.title}
+                className="flex flex-col items-center gap-4 sm:items-start lg:w-[240px]"
+              >
                 <h3 className="text-[22px] font-medium leading-[26.4px] text-foreground">{col.title}</h3>
                 <ul className="flex flex-col gap-0.5">
                   {col.links
@@ -109,8 +112,8 @@ export function SiteFooter(_props: SiteFooterProps) {
             ))}
 
             {/* Contact / social column */}
-            <div className="col-span-2 flex flex-col gap-10 sm:col-span-3 lg:w-[353px] lg:gap-[69px]">
-              <div className="flex flex-col gap-5">
+            <div className="flex flex-col items-center gap-10 text-center sm:col-span-3 sm:items-start sm:text-left lg:w-[353px] lg:gap-[69px]">
+              <div className="flex flex-col items-center gap-5 sm:items-start">
                 <p className="font-display text-[22px] leading-[26.4px] text-foreground">{FOOTER.tagline}</p>
                 <a
                   href={CONTACT.phoneHref}
@@ -120,7 +123,7 @@ export function SiteFooter(_props: SiteFooterProps) {
                   {CONTACT.phoneShort}
                 </a>
               </div>
-              <ul className="flex items-center gap-3">
+              <ul className="flex items-center justify-center gap-3 sm:justify-start">
                 {FOOTER.social.map((s) => {
                   const Icon = SOCIAL_ICONS[s.name]
                   return (
@@ -143,7 +146,7 @@ export function SiteFooter(_props: SiteFooterProps) {
         </RevealUp>
 
         {/* Bottom legal bar */}
-        <div className="mt-12 flex flex-col gap-3 border-t border-border py-5 text-[15px] text-muted md:flex-row md:items-center md:justify-between md:text-[17px]">
+        <div className="mt-12 flex flex-col items-center gap-3 border-t border-border py-5 text-center text-[15px] text-muted md:flex-row md:items-center md:justify-between md:text-left md:text-[17px]">
           <p>
             {FOOTER.legal}{' '}
             <Link
