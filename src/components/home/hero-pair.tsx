@@ -4,7 +4,9 @@ import { CtaLink } from './cta-link'
 import { RevealUp } from './reveal-up'
 
 /**
- * Section 2 — two side-by-side hero cards (Figma 181:1298).
+ * Section 2 — two hero cards (Figma 181:1298 desktop / 367:2194 tablet+mobile).
+ * Up to lg: centered text + button with the photo centered below (no overlap).
+ * lg+: text left + photo absolutely overlapping on the right.
  * Left: off-white card, honey-jars photo. Right: gold card, bee photo.
  */
 export function HeroPair() {
@@ -13,8 +15,8 @@ export function HeroPair() {
       <div className="container-wide">
         <div className="grid gap-[30px] lg:grid-cols-2">
           {/* Left — off-white card */}
-          <article className="group relative flex flex-col overflow-hidden rounded-[4px] bg-offwhite px-7 py-8 sm:min-h-[430px] sm:flex-row sm:items-center md:min-h-[490px] md:py-5 md:pl-[50px] md:pr-[25px]">
-            <RevealUp className="relative z-10 flex flex-col gap-5 sm:max-w-[345px]">
+          <article className="group relative flex flex-col items-center overflow-hidden rounded-[4px] bg-offwhite px-7 py-8 text-center lg:min-h-[490px] lg:flex-row lg:items-center lg:py-5 lg:pl-[50px] lg:pr-[25px] lg:text-left">
+            <RevealUp className="relative z-10 flex w-full flex-col items-center gap-5 lg:w-auto lg:max-w-[345px] lg:items-start">
               <div className="flex flex-col gap-2.5">
                 <p className="text-[14px] uppercase leading-[21px] tracking-[0.01em] text-muted">
                   {HERO.left.eyebrow}
@@ -23,20 +25,20 @@ export function HeroPair() {
                   {HERO.left.heading}
                 </h1>
               </div>
-              <p className="text-[17px] leading-[24px] text-muted">{HERO.left.body}</p>
-              <CtaLink href={HERO.left.cta.href} variant="gold" className="mt-1 self-start">
+              <p className="max-w-[465px] text-[17px] leading-[24px] text-muted">{HERO.left.body}</p>
+              <CtaLink href={HERO.left.cta.href} variant="gold" className="mt-1">
                 {HERO.left.cta.label}
               </CtaLink>
             </RevealUp>
             <RevealUp
               delay={0.15}
-              className="pointer-events-none relative mt-3 h-[300px] w-full sm:absolute sm:inset-y-5 sm:right-5 sm:mt-0 sm:h-auto sm:w-1/2 md:w-[430px]"
+              className="pointer-events-none relative mt-7 h-[320px] w-full lg:absolute lg:inset-y-5 lg:right-5 lg:mt-0 lg:h-auto lg:w-[430px]"
             >
               <Image
                 src={HERO.left.image}
                 alt={HERO.left.imageAlt}
                 fill
-                sizes="(min-width: 1024px) 430px, (min-width: 640px) 50vw, 100vw"
+                sizes="(min-width: 1024px) 430px, 100vw"
                 className="object-contain object-center transition-transform duration-500 group-hover:scale-105"
                 priority
               />
@@ -44,8 +46,11 @@ export function HeroPair() {
           </article>
 
           {/* Right — gold card */}
-          <article className="group relative flex flex-col overflow-hidden rounded-[4px] bg-accent px-7 py-8 sm:min-h-[430px] sm:flex-row sm:items-center md:min-h-[490px] md:py-5 md:pl-[50px] md:pr-0">
-            <RevealUp delay={0.1} className="relative z-10 flex flex-col gap-5 sm:max-w-[345px]">
+          <article className="group relative flex flex-col items-center overflow-hidden rounded-[4px] bg-accent px-7 py-8 text-center lg:min-h-[490px] lg:flex-row lg:items-center lg:py-5 lg:pl-[50px] lg:pr-0 lg:text-left">
+            <RevealUp
+              delay={0.1}
+              className="relative z-10 flex w-full flex-col items-center gap-5 lg:w-auto lg:max-w-[345px] lg:items-start"
+            >
               <div className="flex flex-col gap-2.5">
                 <p className="text-[14px] uppercase leading-[21px] tracking-[0.01em] text-cream">
                   {HERO.right.eyebrow}
@@ -54,20 +59,20 @@ export function HeroPair() {
                   {HERO.right.heading}
                 </h1>
               </div>
-              <p className="text-[17px] leading-[24px] text-cream">{HERO.right.body}</p>
-              <CtaLink href={HERO.right.cta.href} variant="white" className="mt-1 self-start">
+              <p className="max-w-[465px] text-[17px] leading-[24px] text-cream">{HERO.right.body}</p>
+              <CtaLink href={HERO.right.cta.href} variant="white" className="mt-1">
                 {HERO.right.cta.label}
               </CtaLink>
             </RevealUp>
             <RevealUp
               delay={0.25}
-              className="pointer-events-none relative mt-3 h-[300px] w-full overflow-hidden rounded-[4px] sm:absolute sm:inset-y-0 sm:right-[-6%] sm:mt-0 sm:h-auto sm:w-[64%] sm:overflow-visible sm:rounded-none"
+              className="pointer-events-none relative mt-7 h-[320px] w-full overflow-hidden rounded-[4px] lg:absolute lg:inset-y-0 lg:right-[-6%] lg:mt-0 lg:h-auto lg:w-[64%] lg:overflow-visible lg:rounded-none"
             >
               <Image
                 src={HERO.right.image}
                 alt={HERO.right.imageAlt}
                 fill
-                sizes="(min-width: 1024px) 560px, (min-width: 640px) 55vw, 100vw"
+                sizes="(min-width: 1024px) 560px, 100vw"
                 className="-scale-x-100 object-cover object-[46%_44%] transition-transform duration-500 group-hover:scale-x-[-1.05] group-hover:scale-y-105"
                 priority
               />
