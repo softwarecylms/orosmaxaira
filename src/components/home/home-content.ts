@@ -238,7 +238,7 @@ export const FLATLAY: {
       left: '27%',
       top: '31%',
       mLeft: '28%',
-      mTop: '35%',
+      mTop: '30%',
       href: '/',
       placement: 'bottom',
       product: {
@@ -253,7 +253,7 @@ export const FLATLAY: {
       left: '80%',
       top: '31%',
       mLeft: '75%',
-      mTop: '39%',
+      mTop: '35%',
       href: '/',
       placement: 'bottom',
       product: {
@@ -268,7 +268,7 @@ export const FLATLAY: {
       left: '49%',
       top: '59%',
       mLeft: '50%',
-      mTop: '52%',
+      mTop: '53%',
       href: '/',
       placement: 'top',
       product: {
@@ -283,7 +283,7 @@ export const FLATLAY: {
       left: '72%',
       top: '71%',
       mLeft: '71%',
-      mTop: '58%',
+      mTop: '61%',
       href: '/',
       placement: 'top',
       product: {
@@ -298,7 +298,7 @@ export const FLATLAY: {
       left: '30%',
       top: '83%',
       mLeft: '32%',
-      mTop: '66%',
+      mTop: '71%',
       href: '/',
       placement: 'top',
       product: {
