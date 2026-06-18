@@ -31,7 +31,6 @@ export function pageMetadata(
   const image = mediaUrl((seo as { image?: MediaLike }).image)
   const canonical =
     page.slug === 'home' ? '/' : `/${page.slug ?? ''}`
-  const noindex = Boolean((seo as { noindex?: boolean }).noindex)
 
   return {
     title,
@@ -49,7 +48,8 @@ export function pageMetadata(
       description,
       images: image ? [image] : undefined,
     },
-    robots: noindex ? { index: false, follow: false } : undefined,
+    // Pre-launch: force noindex on every page (revert to `noindex ? … : undefined` at launch).
+    robots: { index: false, follow: false },
   }
 }
 
@@ -70,7 +70,6 @@ export function postMetadata(
   const image =
     mediaUrl((seo as { image?: MediaLike }).image) || mediaUrl(post.cover as MediaLike)
   const canonical = `/${post.slug ?? ''}`
-  const noindex = Boolean((seo as { noindex?: boolean }).noindex)
   const authorName =
     post.author && typeof post.author === 'object' && 'name' in post.author
       ? (post.author as { name?: string }).name
@@ -96,6 +95,7 @@ export function postMetadata(
       description,
       images: image ? [image] : undefined,
     },
-    robots: noindex ? { index: false, follow: false } : undefined,
+    // Pre-launch: force noindex on every page (revert to `noindex ? … : undefined` at launch).
+    robots: { index: false, follow: false },
   }
 }

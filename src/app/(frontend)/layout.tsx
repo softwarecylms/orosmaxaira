@@ -53,7 +53,8 @@ export const metadata: Metadata = {
     locale: 'el_GR',
   },
   twitter: { card: 'summary_large_image' },
-  robots: { index: true, follow: true },
+  // Pre-launch: keep the site out of search results. Flip to true at launch.
+  robots: { index: false, follow: false },
 }
 
 export default async function FrontendLayout({
