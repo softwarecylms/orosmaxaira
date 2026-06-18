@@ -119,7 +119,7 @@ export function SiteFooter(_props: SiteFooterProps) {
                   href={CONTACT.phoneHref}
                   className="flex items-center gap-3.5 text-[22px] font-medium text-accent"
                 >
-                  <Phone className="size-[34px] shrink-0" aria-hidden="true" />
+                  <Phone className="phone-ring size-[34px] shrink-0" aria-hidden="true" />
                   {CONTACT.phoneShort}
                 </a>
               </div>

@@ -220,6 +220,33 @@
   }
 }
 
+/* Subtle periodic "ring" for the phone icon in the footer. */
+@keyframes phone-ring {
+  0%,
+  45%,
+  100% {
+    transform: rotate(0deg);
+  }
+  6%,
+  18% {
+    transform: rotate(-13deg);
+  }
+  12%,
+  24% {
+    transform: rotate(13deg);
+  }
+}
+.phone-ring {
+  display: inline-block;
+  transform-origin: 50% 85%;
+  animation: phone-ring 3s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .phone-ring {
+    animation: none;
+  }
+}
+
 @utility section-y {
   padding-block: 4rem;
 
