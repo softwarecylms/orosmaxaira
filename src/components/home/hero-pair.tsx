@@ -13,7 +13,7 @@ export function HeroPair() {
       <div className="container-wide">
         <div className="grid gap-[30px] lg:grid-cols-2">
           {/* Left — off-white card */}
-          <article className="relative flex min-h-[430px] items-center overflow-hidden rounded-[4px] bg-offwhite px-7 py-8 md:min-h-[490px] md:py-5 md:pl-[50px] md:pr-[25px]">
+          <article className="group relative flex min-h-[430px] items-center overflow-hidden rounded-[4px] bg-offwhite px-7 py-8 md:min-h-[490px] md:py-5 md:pl-[50px] md:pr-[25px]">
             <RevealUp className="relative z-10 flex max-w-[345px] flex-col gap-5">
               <div className="flex flex-col gap-2.5">
                 <p className="text-[14px] uppercase leading-[21px] tracking-[0.01em] text-muted">
@@ -37,14 +37,14 @@ export function HeroPair() {
                 alt={HERO.left.imageAlt}
                 fill
                 sizes="(min-width: 1024px) 430px, 50vw"
-                className="object-contain object-center"
+                className="object-contain object-center transition-transform duration-500 group-hover:scale-105"
                 priority
               />
             </RevealUp>
           </article>
 
           {/* Right — gold card */}
-          <article className="relative flex min-h-[430px] items-center overflow-hidden rounded-[4px] bg-accent px-7 py-8 md:min-h-[490px] md:py-5 md:pl-[50px] md:pr-0">
+          <article className="group relative flex min-h-[430px] items-center overflow-hidden rounded-[4px] bg-accent px-7 py-8 md:min-h-[490px] md:py-5 md:pl-[50px] md:pr-0">
             <RevealUp delay={0.1} className="relative z-10 flex max-w-[345px] flex-col gap-5">
               <div className="flex flex-col gap-2.5">
                 <p className="text-[14px] uppercase leading-[21px] tracking-[0.01em] text-cream">
@@ -68,7 +68,7 @@ export function HeroPair() {
                 alt={HERO.right.imageAlt}
                 fill
                 sizes="(min-width: 1024px) 560px, 55vw"
-                className="-scale-x-100 object-cover object-[46%_44%]"
+                className="-scale-x-100 object-cover object-[46%_44%] transition-transform duration-500 group-hover:scale-x-[-1.05] group-hover:scale-y-105"
                 priority
               />
             </RevealUp>
