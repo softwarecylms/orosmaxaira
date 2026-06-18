@@ -30,14 +30,14 @@ export function HeroPair() {
             </RevealUp>
             <RevealUp
               delay={0.15}
-              className="pointer-events-none absolute bottom-0 left-1/2 hidden h-[88%] w-[55%] -translate-x-1/2 sm:block md:w-[430px]"
+              className="pointer-events-none absolute inset-y-5 right-5 hidden w-1/2 sm:block"
             >
               <Image
                 src={HERO.left.image}
                 alt={HERO.left.imageAlt}
                 fill
                 sizes="(min-width: 1024px) 430px, 50vw"
-                className="object-contain object-bottom"
+                className="object-contain object-center"
                 priority
               />
             </RevealUp>
