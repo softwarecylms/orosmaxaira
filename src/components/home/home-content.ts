@@ -215,7 +215,7 @@ export const FLATLAY = {
   image: '/images/home/products-bg.jpg',
   imageAlt: 'Προϊόντα Όρος Μαχαιρά σε μαρμάρινη επιφάνεια',
   prices: [
-    { value: '7,50', left: '13%', top: '31%', href: '/' },
+    { value: '7,50', left: '27%', top: '31%', href: '/' },
     { value: '12,50', left: '80%', top: '31%', href: '/' },
     { value: '16,00', left: '49%', top: '59%', href: '/' },
     { value: '22,00', left: '72%', top: '71%', href: '/' },
