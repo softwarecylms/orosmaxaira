@@ -102,7 +102,7 @@ export async function SiteHeader(_props: SiteHeaderProps) {
             <span className="h-9 w-px bg-border" aria-hidden="true" />
 
             <Link
-              href="/cart"
+              href="/"
               data-testid="header-cart"
               className="flex items-center gap-3 text-foreground hover:text-accent"
             >
@@ -118,7 +118,7 @@ export async function SiteHeader(_props: SiteHeaderProps) {
 
           {/* Mobile utilities */}
           <div className="flex items-center gap-4 lg:hidden">
-            <Link href="/cart" data-testid="header-cart" className="relative text-foreground">
+            <Link href="/" data-testid="header-cart" className="relative text-foreground">
               <ShoppingBag className="size-6" aria-hidden="true" />
               {count > 0 && (
                 <span className="absolute -right-1.5 -top-1 flex size-[15px] items-center justify-center rounded-full bg-accent text-[10px] font-medium text-white">

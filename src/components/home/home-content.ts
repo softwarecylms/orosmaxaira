@@ -13,21 +13,21 @@ export const NAV: { label: string; href: string; children?: { label: string; hre
   { label: 'Αρχική', href: '/' },
   {
     label: 'Προϊόντα',
-    href: '/shop',
+    href: '/',
     children: [
-      { label: 'Μέλι Όρος Μαχαιρά', href: '/shop' },
-      { label: 'Προϊόντα Μέλισσας', href: '/shop' },
-      { label: 'Φυσικά Καλλυντικά', href: '/shop' },
-      { label: 'Πακέτα δώρων', href: '/shop' },
+      { label: 'Μέλι Όρος Μαχαιρά', href: '/' },
+      { label: 'Προϊόντα Μέλισσας', href: '/' },
+      { label: 'Φυσικά Καλλυντικά', href: '/' },
+      { label: 'Πακέτα δώρων', href: '/' },
     ],
   },
-  { label: 'Ποιοί είμαστε', href: '/about' },
-  { label: 'Δραστηριότητες', href: '/drastiriotites' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Επικοινωνία', href: '/contact' },
+  { label: 'Ποιοί είμαστε', href: '/' },
+  { label: 'Δραστηριότητες', href: '/' },
+  { label: 'Blog', href: '/' },
+  { label: 'Επικοινωνία', href: '/' },
 ]
 
-export const ADOPT_LINK: Cta = { label: 'Υιοθετώ μια κυψέλη', href: '/adopt' }
+export const ADOPT_LINK: Cta = { label: 'Υιοθετώ μια κυψέλη', href: '/' }
 export const READ_MORE = 'Δείτε περισσότερα'
 
 /** Mega menu shown on hover of "Προϊόντα" (Figma 305:2612). */
@@ -39,38 +39,38 @@ export type MegaColumn = {
 export const MEGA_MENU: MegaColumn[] = [
   {
     title: 'Μέλι',
-    href: '/shop',
+    href: '/',
     links: [
-      { label: 'Μέλι Ανθέων', href: '/shop' },
-      { label: 'Άβραστο (άθερμο) Μέλι Ανθέων', href: '/shop' },
-      { label: 'Θυμαρίσιο Μέλι', href: '/shop' },
+      { label: 'Μέλι Ανθέων', href: '/' },
+      { label: 'Άβραστο (άθερμο) Μέλι Ανθέων', href: '/' },
+      { label: 'Θυμαρίσιο Μέλι', href: '/' },
     ],
   },
   {
     title: 'Προϊόντα Μέλισσας',
-    href: '/shop',
+    href: '/',
     links: [
-      { label: 'Υδρόμελο', href: '/shop' },
-      { label: 'Βασιλικός πολτός', href: '/shop' },
-      { label: 'Μέλι με Φυστίκια', href: '/shop' },
+      { label: 'Υδρόμελο', href: '/' },
+      { label: 'Βασιλικός πολτός', href: '/' },
+      { label: 'Μέλι με Φυστίκια', href: '/' },
     ],
   },
   {
     title: 'Φυσικά Καλλυντικά',
-    href: '/shop',
+    href: '/',
     links: [
-      { label: 'Κρέμα Σώματος', href: '/shop' },
-      { label: 'Φυσική Κηραλοιφή Προσώπου', href: '/shop' },
-      { label: 'Βάλσαμο για τα Χείλη', href: '/shop' },
+      { label: 'Κρέμα Σώματος', href: '/' },
+      { label: 'Φυσική Κηραλοιφή Προσώπου', href: '/' },
+      { label: 'Βάλσαμο για τα Χείλη', href: '/' },
     ],
   },
   {
     title: 'Πακέτα δώρων',
-    href: '/shop',
+    href: '/',
     links: [
-      { label: 'Nourish Care Gift Set', href: '/shop' },
-      { label: 'Everyday Care Duo Gift Set', href: '/shop' },
-      { label: 'Balance Care Gift Set', href: '/shop' },
+      { label: 'Nourish Care Gift Set', href: '/' },
+      { label: 'Everyday Care Duo Gift Set', href: '/' },
+      { label: 'Balance Care Gift Set', href: '/' },
     ],
   },
 ]
@@ -91,7 +91,7 @@ export const HERO = {
     eyebrow: 'ΑΥΘΕΝΤΙΚΗ ΠΑΡΑΔΟΣΗ',
     heading: 'Οι Θησαυροί της Κυψέλης',
     body: 'Ανακαλύψτε μεταξύ άλλων το βραβευμένο μας μέλι, το εκλεκτό υδρόμελο και τον βασιλικό πολτό μας.',
-    cta: { label: READ_MORE, href: '/shop' },
+    cta: { label: READ_MORE, href: '/' },
     image: '/images/home/hero-jars.webp',
     imageAlt: 'Βραβευμένο μέλι Όρος Μαχαιρά σε ξύλινη βάση',
   },
@@ -99,7 +99,7 @@ export const HERO = {
     eyebrow: 'ΒΙΩΜΑΤΙΚΗ ΕΜΠΕΙΡΙΑ',
     heading: 'Εργαστήρια & Εκδηλώσεις',
     body: 'Ελάτε στο βουνό και ζήστε τη μαγεία του μελισσιού μέσα από μοναδικά, διαδραστικά εργαστήρια για όλη την οικογένεια.',
-    cta: { label: READ_MORE, href: '/drastiriotites' },
+    cta: { label: READ_MORE, href: '/' },
     image: '/images/home/hero-bee.webp',
     imageAlt: 'Μέλισσα πάνω σε κηρήθρα',
   },
@@ -151,31 +151,31 @@ export type HoneyProduct = {
 
 export const DEAL = {
   heading: 'Τα Διαμάντια του Μαχαιρά',
-  cta: { label: READ_MORE, href: '/shop' },
+  cta: { label: READ_MORE, href: '/' },
   featured: {
     title: 'Το Ελιξίριο των Θεών',
-    href: '/shop',
+    href: '/',
     image: '/images/home/deal-featured.webp',
     imageAlt: 'Υδρόμελο Melite — Όρος Μαχαιρά',
   },
   products: [
-    { category: 'Μέλι', title: 'Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-1.webp', href: '/shop' },
-    { category: 'Μέλι', title: 'Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-2.webp', href: '/shop' },
-    { category: 'Μέλι', title: 'Βασιλικός πολτός «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-3.webp', href: '/shop' },
-    { category: 'Μέλι', title: 'Υδρόμελο', price: '€3,50 – €31,00', image: '/images/home/deal-4.webp', href: '/shop' },
-    { category: 'Μέλι', title: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-5.webp', href: '/shop' },
+    { category: 'Μέλι', title: 'Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-1.webp', href: '/' },
+    { category: 'Μέλι', title: 'Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-2.webp', href: '/' },
+    { category: 'Μέλι', title: 'Βασιλικός πολτός «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-3.webp', href: '/' },
+    { category: 'Μέλι', title: 'Υδρόμελο', price: '€3,50 – €31,00', image: '/images/home/deal-4.webp', href: '/' },
+    { category: 'Μέλι', title: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-5.webp', href: '/' },
   ] satisfies HoneyProduct[],
 }
 
 // --- Section 6: Product categories ---------------------------------------
 export const CATEGORIES = {
   heading: 'Τα προϊόντα μας',
-  cta: { label: READ_MORE, href: '/shop' },
+  cta: { label: READ_MORE, href: '/' },
   items: [
-    { title: 'Μέλι Όρος Μαχαιρά', image: '/images/home/cat-honey.webp', href: '/shop' },
-    { title: 'Προϊόντα Μέλισσας', image: '/images/home/cat-bee-products.webp', href: '/shop' },
-    { title: 'Φυσικά Καλλυντικά', image: '/images/home/cat-cosmetics.webp', href: '/shop' },
-    { title: 'Πακέτα δώρων', image: '/images/home/cat-gifts.webp', href: '/shop' },
+    { title: 'Μέλι Όρος Μαχαιρά', image: '/images/home/cat-honey.webp', href: '/' },
+    { title: 'Προϊόντα Μέλισσας', image: '/images/home/cat-bee-products.webp', href: '/' },
+    { title: 'Φυσικά Καλλυντικά', image: '/images/home/cat-cosmetics.webp', href: '/' },
+    { title: 'Πακέτα δώρων', image: '/images/home/cat-gifts.webp', href: '/' },
   ],
 }
 
@@ -184,7 +184,7 @@ export const ADOPT = {
   eyebrow: 'ΒΙΩΜΑΤΙΚΗ ΕΜΠΕΙΡΙΑ',
   heading: 'Υιοθετώ μια κυψέλη',
   body: 'Γίνε και εσύ με την ομάδα σου μέρος του προγράμματος "Υιοθετώ μια κυψέλη" και… "Bee-come a Hero" για τις μέλισσες και το περιβάλλον.',
-  cta: { label: READ_MORE, href: '/adopt' },
+  cta: { label: READ_MORE, href: '/' },
   image: '/images/home/adopt-bee.webp',
   imageAlt: 'Μέλισσα πάνω σε κηρήθρα',
 }
@@ -193,7 +193,7 @@ export const ADOPT = {
 export type Segment = { text: string; bold?: boolean }
 export const HERITAGE = {
   heading: 'Από γενιά σε γενιά',
-  cta: { label: READ_MORE, href: '/about' },
+  cta: { label: READ_MORE, href: '/' },
   image: '/images/home/heritage-team.webp',
   imageAlt: 'Η οικογένεια Όρος Μαχαιρά στο κατάστημά της',
   paragraphs: [
@@ -215,17 +215,17 @@ export const FLATLAY = {
   image: '/images/home/flatlay-marble.webp',
   imageAlt: 'Προϊόντα Όρος Μαχαιρά σε μαρμάρινη επιφάνεια',
   prices: [
-    { value: '7,50', left: '29.7%', top: '12.7%', href: '/shop' },
-    { value: '9,90', left: '29.3%', top: '63.8%', href: '/shop' },
-    { value: '16,00', left: '42.9%', top: '73.5%', href: '/shop' },
-    { value: '22,00', left: '68.4%', top: '46.9%', href: '/shop' },
+    { value: '7,50', left: '29.7%', top: '12.7%', href: '/' },
+    { value: '9,90', left: '29.3%', top: '63.8%', href: '/' },
+    { value: '16,00', left: '42.9%', top: '73.5%', href: '/' },
+    { value: '22,00', left: '68.4%', top: '46.9%', href: '/' },
   ],
 }
 
 // --- Section 10: Blog -----------------------------------------------------
 export const BLOG = {
   heading: 'Ο Κόσμος της Μέλισσας & της Φύσης',
-  cta: { label: READ_MORE, href: '/blog' },
+  cta: { label: READ_MORE, href: '/' },
   badge: 'Άρθρα',
   featured: {
     image: '/images/home/blog-featured.webp',
@@ -235,20 +235,20 @@ export const BLOG = {
       'Το φυσικό αγνό μέλι τοπικής παραγωγής δεν είναι απλά θέμα trend η πολυτέλειας, είναι και θέμα υγείας και βιωσιμότητας...',
     author: 'orosmachaira',
     avatar: '/images/home/blog-avatar.webp',
-    href: '/blog',
+    href: '/',
   },
   items: [
     {
       image: '/images/home/blog-1.webp',
       title:
         'Η Μ.Φ. Όρος Μαχαιρά Λτδ Ενισχύει τη Βιωσιμότητά της με Εξειδικευμένη Υποστήριξη και Συγχρηματοδότηση της ΕΕ',
-      href: '/blog',
+      href: '/',
     },
     {
       image: '/images/home/blog-2.webp',
       title:
         'Αναβίωση της κυπριακής αυτόχθονης μέλισσας: Καινοτόμος συνεργασία για την διατήρηση και ταυτοποίηση της φυλής',
-      href: '/blog',
+      href: '/',
     },
   ],
 }
@@ -263,12 +263,12 @@ export const FOOTER = {
       title: 'Χρήσιμοι Σύνδεσμοι',
       links: [
         { label: 'Αρχική', href: '/' },
-        { label: 'Ποιοί είμαστε', href: '/about' },
-        { label: 'Προϊόντα', href: '/shop' },
-        { label: 'Δραστηριότητες', href: '/drastiriotites' },
-        { label: 'Υιοθετώ μια κυψέλη', href: '/adopt' },
-        { label: 'Blog', href: '/blog' },
-        { label: 'Επικοινωνία', href: '/contact' },
+        { label: 'Ποιοί είμαστε', href: '/' },
+        { label: 'Προϊόντα', href: '/' },
+        { label: 'Δραστηριότητες', href: '/' },
+        { label: 'Υιοθετώ μια κυψέλη', href: '/' },
+        { label: 'Blog', href: '/' },
+        { label: 'Επικοινωνία', href: '/' },
       ],
     },
     {
@@ -285,9 +285,9 @@ export const FOOTER = {
     {
       title: 'Προϊόντα',
       links: [
-        { label: 'Μέλι', href: '/shop' },
-        { label: 'Φυσικά Καλλυντικά', href: '/shop' },
-        { label: 'Πακέτα δώρων', href: '/shop' },
+        { label: 'Μέλι', href: '/' },
+        { label: 'Φυσικά Καλλυντικά', href: '/' },
+        { label: 'Πακέτα δώρων', href: '/' },
       ],
     },
   ],
