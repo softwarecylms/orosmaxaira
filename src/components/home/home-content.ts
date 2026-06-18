@@ -344,6 +344,8 @@ export const BLOG = {
 
 // --- Header + Footer ------------------------------------------------------
 export const SEARCH_PLACEHOLDER = '🍯 Μέλι'
+/** Rotating search placeholders (🥃 ≈ the brown Melite mead bottle). */
+export const SEARCH_PLACEHOLDERS = ['🍯 Μέλι', '🥜 Μέλι με Φυστίκια', '🥃 Υδρόμελο']
 
 export const FOOTER = {
   tagline: '100% ανεπεξέργαστο μέλι από τα άνθη και τα βότανα του Μαχαιρά.',
