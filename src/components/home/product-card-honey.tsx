@@ -16,7 +16,7 @@ export function ProductCardHoney({ product }: { product: HoneyProduct }) {
         />
       </div>
       <p className="text-[14px] leading-[21px] text-muted">{product.category}</p>
-      <h3 className="line-clamp-2 min-h-[48px] text-[17px] font-medium leading-[24px] text-foreground">
+      <h3 className="line-clamp-2 min-h-[48px] text-[17px] font-medium leading-[24px] text-foreground transition-colors group-hover:text-accent">
         {product.title}
       </h3>
       <p className="text-[14px] leading-[21px] text-accent">{product.price}</p>
