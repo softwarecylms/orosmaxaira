@@ -130,9 +130,9 @@ export function SiteFooter(_props: SiteFooterProps) {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={s.name}
-                        className="flex size-8 items-center justify-center text-foreground transition-colors hover:text-accent"
+                        className="flex size-9 items-center justify-center text-foreground transition-colors hover:text-accent"
                       >
-                        {Icon ? <Icon className="size-[22px]" /> : null}
+                        {Icon ? <Icon className="size-[28px]" /> : null}
                       </Link>
                     </li>
                   )
@@ -155,7 +155,16 @@ export function SiteFooter(_props: SiteFooterProps) {
               {FOOTER.legalBrand}
             </Link>
           </p>
-          <p>{FOOTER.policies}</p>
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            {FOOTER.policies.split(' | ').map((item, i) => (
+              <span key={item} className="flex items-center gap-x-2">
+                {i > 0 ? <span aria-hidden="true">|</span> : null}
+                <Link href="/" className="transition-colors hover:text-accent">
+                  {item}
+                </Link>
+              </span>
+            ))}
+          </p>
         </div>
       </div>
     </footer>
