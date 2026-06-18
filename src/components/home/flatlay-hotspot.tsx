@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from 'react'
 import Image from 'next/image'
 import { ShoppingCart } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -18,8 +19,15 @@ export function FlatlayHotspot({ item, index }: { item: FlatlayPrice; index: num
 
   return (
     <motion.div
-      className="group absolute z-20 hidden -translate-x-1/2 -translate-y-1/2 hover:z-40 md:block"
-      style={{ left: item.left, top: item.top }}
+      className="group absolute z-20 block -translate-x-1/2 -translate-y-1/2 left-[var(--fh-l)] top-[var(--fh-t)] hover:z-40 lg:left-[var(--fh-dl)] lg:top-[var(--fh-dt)]"
+      style={
+        {
+          '--fh-l': item.mLeft,
+          '--fh-t': item.mTop,
+          '--fh-dl': item.left,
+          '--fh-dt': item.top,
+        } as React.CSSProperties
+      }
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-8%' }}

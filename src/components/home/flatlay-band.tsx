@@ -6,8 +6,8 @@ import { FlatlayHotspot } from './flatlay-hotspot'
  *  a product quick-view card on hover (Figma 118:617 + 358:1793). */
 export function FlatlayBand() {
   return (
-    <section data-testid="flatlay-band" className="relative z-10 w-full">
-      <div className="relative h-[260px] w-full sm:h-[380px] lg:h-[520px]">
+    <section data-testid="flatlay-band" className="relative z-10 w-full overflow-x-clip">
+      <div className="relative aspect-square w-full lg:aspect-auto lg:h-[520px]">
         {/* Image clipped to the band; the hover cards are free to overflow it */}
         <div className="absolute inset-0 overflow-hidden">
           <Image

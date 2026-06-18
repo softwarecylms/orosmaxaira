@@ -213,8 +213,12 @@ export const HERITAGE = {
 // --- Section 9: Flatlay band ---------------------------------------------
 export type FlatlayPrice = {
   value: string
+  /** Position over the wide desktop crop (lg+). */
   left: string
   top: string
+  /** Position over the full square image shown on mobile/tablet (< lg). */
+  mLeft: string
+  mTop: string
   href: string
   /** Which way the hover quick-view card opens. */
   placement: 'top' | 'bottom'
@@ -233,6 +237,8 @@ export const FLATLAY: {
       value: '7,50',
       left: '27%',
       top: '31%',
+      mLeft: '28%',
+      mTop: '35%',
       href: '/',
       placement: 'bottom',
       product: {
@@ -246,6 +252,8 @@ export const FLATLAY: {
       value: '12,50',
       left: '80%',
       top: '31%',
+      mLeft: '75%',
+      mTop: '39%',
       href: '/',
       placement: 'bottom',
       product: {
@@ -259,6 +267,8 @@ export const FLATLAY: {
       value: '16,00',
       left: '49%',
       top: '59%',
+      mLeft: '50%',
+      mTop: '52%',
       href: '/',
       placement: 'top',
       product: {
@@ -272,6 +282,8 @@ export const FLATLAY: {
       value: '22,00',
       left: '72%',
       top: '71%',
+      mLeft: '71%',
+      mTop: '58%',
       href: '/',
       placement: 'top',
       product: {
@@ -285,6 +297,8 @@ export const FLATLAY: {
       value: '9,90',
       left: '30%',
       top: '83%',
+      mLeft: '32%',
+      mTop: '66%',
       href: '/',
       placement: 'top',
       product: {
