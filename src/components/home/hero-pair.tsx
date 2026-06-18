@@ -13,8 +13,8 @@ export function HeroPair() {
       <div className="container-wide">
         <div className="grid gap-[30px] lg:grid-cols-2">
           {/* Left — off-white card */}
-          <article className="group relative flex min-h-[430px] items-center overflow-hidden rounded-[4px] bg-offwhite px-7 py-8 md:min-h-[490px] md:py-5 md:pl-[50px] md:pr-[25px]">
-            <RevealUp className="relative z-10 flex max-w-[345px] flex-col gap-5">
+          <article className="group relative flex flex-col overflow-hidden rounded-[4px] bg-offwhite px-7 py-8 sm:min-h-[430px] sm:flex-row sm:items-center md:min-h-[490px] md:py-5 md:pl-[50px] md:pr-[25px]">
+            <RevealUp className="relative z-10 flex flex-col gap-5 sm:max-w-[345px]">
               <div className="flex flex-col gap-2.5">
                 <p className="text-[14px] uppercase leading-[21px] tracking-[0.01em] text-muted">
                   {HERO.left.eyebrow}
@@ -30,13 +30,13 @@ export function HeroPair() {
             </RevealUp>
             <RevealUp
               delay={0.15}
-              className="pointer-events-none absolute inset-y-5 right-5 hidden w-1/2 sm:block"
+              className="pointer-events-none relative mt-7 h-[240px] w-full sm:absolute sm:inset-y-5 sm:right-5 sm:mt-0 sm:h-auto sm:w-1/2 md:w-[430px]"
             >
               <Image
                 src={HERO.left.image}
                 alt={HERO.left.imageAlt}
                 fill
-                sizes="(min-width: 1024px) 430px, 50vw"
+                sizes="(min-width: 1024px) 430px, (min-width: 640px) 50vw, 100vw"
                 className="object-contain object-center transition-transform duration-500 group-hover:scale-105"
                 priority
               />
@@ -44,8 +44,8 @@ export function HeroPair() {
           </article>
 
           {/* Right — gold card */}
-          <article className="group relative flex min-h-[430px] items-center overflow-hidden rounded-[4px] bg-accent px-7 py-8 md:min-h-[490px] md:py-5 md:pl-[50px] md:pr-0">
-            <RevealUp delay={0.1} className="relative z-10 flex max-w-[345px] flex-col gap-5">
+          <article className="group relative flex flex-col overflow-hidden rounded-[4px] bg-accent px-7 py-8 sm:min-h-[430px] sm:flex-row sm:items-center md:min-h-[490px] md:py-5 md:pl-[50px] md:pr-0">
+            <RevealUp delay={0.1} className="relative z-10 flex flex-col gap-5 sm:max-w-[345px]">
               <div className="flex flex-col gap-2.5">
                 <p className="text-[14px] uppercase leading-[21px] tracking-[0.01em] text-cream">
                   {HERO.right.eyebrow}
@@ -61,13 +61,13 @@ export function HeroPair() {
             </RevealUp>
             <RevealUp
               delay={0.25}
-              className="pointer-events-none absolute inset-y-0 right-[-6%] hidden w-[64%] sm:block"
+              className="pointer-events-none relative mt-7 h-[240px] w-full overflow-hidden rounded-[4px] sm:absolute sm:inset-y-0 sm:right-[-6%] sm:mt-0 sm:h-auto sm:w-[64%] sm:overflow-visible sm:rounded-none"
             >
               <Image
                 src={HERO.right.image}
                 alt={HERO.right.imageAlt}
                 fill
-                sizes="(min-width: 1024px) 560px, 55vw"
+                sizes="(min-width: 1024px) 560px, (min-width: 640px) 55vw, 100vw"
                 className="-scale-x-100 object-cover object-[46%_44%] transition-transform duration-500 group-hover:scale-x-[-1.05] group-hover:scale-y-105"
                 priority
               />
