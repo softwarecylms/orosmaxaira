@@ -387,7 +387,7 @@ export const FOOTER = {
     { name: 'Pinterest', href: 'https://www.pinterest.com/orosmaxaira_/' },
     { name: 'LinkedIn', href: 'https://www.linkedin.com/company/oros-maxaira/' },
   ],
-  legal: '© 2026 Oros Machairas | All rights reserved | Powered and Designed by',
+  legal: '© 2026 Oros Machaira | All rights reserved | Powered and Designed by',
   legalBrand: 'SoftwareCy',
   legalBrandHref: 'https://softwarecy.com',
   policies: 'Παραγγελίες & Επιστροφές | Πολιτική Αποστολών | Πολιτική Απορρήτου & Cookies',

@@ -37,7 +37,7 @@ export function ProductCategories() {
                 <h3 className="text-center text-[15px] font-medium leading-[20px] text-foreground sm:text-[20px] sm:leading-[26.4px] md:text-[22px]">
                   {cat.title}
                 </h3>
-                <ArrowRight className="size-[15px] text-accent" />
+                <ArrowRight className="size-[15px] text-accent transition-transform duration-300 ease-out group-hover:translate-x-1.5 group-hover:scale-110" />
               </Link>
             </RevealItem>
           ))}
