@@ -35,6 +35,9 @@ const display = Gabarito({
 
 export const viewport: Viewport = {
   themeColor: '#F1AC10',
+  // Light-only design — stops mobile browsers (Samsung Internet / Chrome
+  // "force dark") from auto-inverting the brand gold into a burgundy tint.
+  colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
 }
