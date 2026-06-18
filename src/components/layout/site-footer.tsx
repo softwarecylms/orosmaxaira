@@ -1,8 +1,15 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Facebook, Instagram, Linkedin, Youtube, Phone } from 'lucide-react'
+import { Phone } from 'lucide-react'
 import { FOOTER, CONTACT } from '@/components/home/home-content'
 import { RevealUp } from '@/components/home/reveal-up'
+import {
+  FacebookSolid,
+  InstagramSolid,
+  YoutubeSolid,
+  PinterestSolid,
+  LinkedinSolid,
+} from './social-icons'
 
 type SiteFooterProps = {
   footer?: unknown
@@ -11,19 +18,11 @@ type SiteFooterProps = {
 }
 
 const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  Facebook,
-  Instagram,
-  YouTube: Youtube,
-  Pinterest: PinterestIcon,
-  LinkedIn: Linkedin,
-}
-
-function PinterestIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-      <path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.64 7.86 6.36 9.32-.09-.79-.17-2.01.03-2.88.18-.78 1.17-4.97 1.17-4.97s-.3-.6-.3-1.49c0-1.39.81-2.43 1.81-2.43.85 0 1.27.64 1.27 1.41 0 .86-.55 2.14-.83 3.33-.24.99.5 1.8 1.48 1.8 1.77 0 3.13-1.87 3.13-4.57 0-2.39-1.72-4.06-4.17-4.06-2.84 0-4.51 2.13-4.51 4.33 0 .86.33 1.78.74 2.28.08.1.09.19.07.29-.08.32-.25.99-.28 1.13-.04.18-.15.22-.34.13-1.25-.58-2.03-2.4-2.03-3.87 0-3.15 2.29-6.04 6.6-6.04 3.47 0 6.16 2.47 6.16 5.77 0 3.45-2.17 6.22-5.19 6.22-1.01 0-1.97-.53-2.29-1.15l-.62 2.38c-.23.86-.83 1.94-1.24 2.6.93.29 1.92.44 2.95.44 5.52 0 10-4.48 10-10S17.52 2 12 2z" />
-    </svg>
-  )
+  Facebook: FacebookSolid,
+  Instagram: InstagramSolid,
+  YouTube: YoutubeSolid,
+  Pinterest: PinterestSolid,
+  LinkedIn: LinkedinSolid,
 }
 
 /** OROS MACHAIRA footer (Figma 156:1342). */
