@@ -46,11 +46,14 @@ export function DealOfMonth({ products }: { products?: HoneyProduct[] }) {
               </CtaLink>
             </RevealUp>
             <RevealGroup
-              className="grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 lg:flex lg:justify-between lg:gap-0"
+              className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-pl-5 px-5 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-x-5 sm:gap-y-8 sm:overflow-visible sm:px-0 sm:pb-0 lg:flex lg:justify-between lg:gap-0 [&::-webkit-scrollbar]:hidden"
               stagger={0.07}
             >
               {items.map((p, i) => (
-                <RevealItem key={i} className="lg:w-[216.8px] lg:shrink-0">
+                <RevealItem
+                  key={i}
+                  className="w-[calc(50%-0.5rem)] shrink-0 snap-start sm:w-auto sm:shrink lg:w-[216.8px] lg:shrink-0"
+                >
                   <ProductCardHoney product={p} />
                 </RevealItem>
               ))}
