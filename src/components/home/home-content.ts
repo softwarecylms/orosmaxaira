@@ -215,10 +215,11 @@ export const FLATLAY = {
   image: '/images/home/products-bg.jpg',
   imageAlt: 'Προϊόντα Όρος Μαχαιρά σε μαρμάρινη επιφάνεια',
   prices: [
-    { value: '7,50', left: '12.5%', top: '34%', href: '/' },
-    { value: '9,90', left: '82%', top: '33%', href: '/' },
-    { value: '16,00', left: '49%', top: '60%', href: '/' },
-    { value: '22,00', left: '78%', top: '58%', href: '/' },
+    { value: '7,50', left: '13%', top: '31%', href: '/' },
+    { value: '12,50', left: '80%', top: '31%', href: '/' },
+    { value: '16,00', left: '49%', top: '59%', href: '/' },
+    { value: '22,00', left: '72%', top: '71%', href: '/' },
+    { value: '9,90', left: '30%', top: '83%', href: '/' },
   ],
 }
 
