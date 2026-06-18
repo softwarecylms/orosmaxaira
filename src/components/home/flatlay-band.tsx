@@ -32,7 +32,7 @@ export function FlatlayBand() {
 
   return (
     <section ref={ref} data-testid="flatlay-band" className="relative z-10 w-full overflow-x-clip">
-      <div className="relative aspect-[4/3] w-full lg:aspect-auto lg:h-[520px]">
+      <div className="relative aspect-[3/2] w-full lg:aspect-auto lg:h-[520px]">
         {/* Image clipped to the band; the hover cards are free to overflow it */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div style={{ y }} className="absolute inset-0 will-change-transform lg:-inset-y-[14%]">

@@ -19,7 +19,7 @@ export function FlatlayHotspot({ item, index }: { item: FlatlayPrice; index: num
 
   return (
     <motion.div
-      className="group absolute z-20 block -translate-x-1/2 -translate-y-1/2 left-[var(--fh-l)] top-[var(--fh-t)] hover:z-40 lg:left-[var(--fh-dl)] lg:top-[var(--fh-dt)]"
+      className="group absolute z-20 block -translate-x-1/2 -translate-y-1/2 left-[var(--fh-l)] top-[var(--fh-t)] hover:z-40 focus-within:z-40 lg:left-[var(--fh-dl)] lg:top-[var(--fh-dt)]"
       style={
         {
           '--fh-l': item.mLeft,
@@ -38,7 +38,7 @@ export function FlatlayHotspot({ item, index }: { item: FlatlayPrice; index: num
         tabIndex={0}
         role="button"
         aria-label={`${item.product.title} — ${item.product.price}`}
-        className="flex cursor-pointer items-center justify-center rounded-[21px] bg-white px-5 py-2.5 text-[17px] leading-[24px] text-foreground shadow-[0_6px_20px_-8px_rgba(0,0,0,0.35)] outline-none transition-transform focus-visible:ring-2 focus-visible:ring-accent group-hover:scale-105"
+        className="flex cursor-pointer items-center justify-center rounded-full bg-white px-3.5 py-1.5 text-[14px] leading-[20px] text-foreground shadow-[0_6px_20px_-8px_rgba(0,0,0,0.35)] outline-none transition-transform focus-visible:ring-2 focus-visible:ring-accent group-hover:scale-105 lg:px-5 lg:py-2.5 lg:text-[17px] lg:leading-[24px]"
       >
         {item.value}
       </span>
