@@ -2,9 +2,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { DEAL, type HoneyProduct } from './home-content'
 import { CtaLink } from './cta-link'
-import { ProductCardHoney } from './product-card-honey'
+import { DealCarousel } from './deal-carousel'
 import { ArrowRight } from './icons'
-import { RevealUp, RevealGroup, RevealItem } from './reveal-up'
+import { RevealUp } from './reveal-up'
 
 /** Section 4 — "Τα Διαμάντια του Μαχαιρά" (Figma 118:456). */
 export function DealOfMonth({ products }: { products?: HoneyProduct[] }) {
@@ -45,19 +45,7 @@ export function DealOfMonth({ products }: { products?: HoneyProduct[] }) {
                 {DEAL.cta.label}
               </CtaLink>
             </RevealUp>
-            <RevealGroup
-              className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-pl-5 px-5 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-x-5 sm:gap-y-8 sm:overflow-visible sm:px-0 sm:pb-0 lg:flex lg:justify-between lg:gap-0 [&::-webkit-scrollbar]:hidden"
-              stagger={0.07}
-            >
-              {items.map((p, i) => (
-                <RevealItem
-                  key={i}
-                  className="w-[calc(50%-0.5rem)] shrink-0 snap-start sm:w-auto sm:shrink lg:w-[216.8px] lg:shrink-0"
-                >
-                  <ProductCardHoney product={p} />
-                </RevealItem>
-              ))}
-            </RevealGroup>
+            <DealCarousel products={items} />
           </div>
         </div>
       </div>
