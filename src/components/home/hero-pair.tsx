@@ -30,7 +30,7 @@ export function HeroPair() {
             </RevealUp>
             <RevealUp
               delay={0.15}
-              className="pointer-events-none absolute bottom-0 right-0 hidden h-[88%] w-[55%] sm:block md:w-[430px]"
+              className="pointer-events-none absolute bottom-0 left-1/2 hidden h-[88%] w-[55%] -translate-x-1/2 sm:block md:w-[430px]"
             >
               <Image
                 src={HERO.left.image}
