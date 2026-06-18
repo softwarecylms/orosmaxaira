@@ -193,6 +193,33 @@
   }
 }
 
+/* Gentle idle flutter for the 🐝 in the "Υιοθετώ μια κυψέλη" header link. */
+@keyframes bee-flutter {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  20% {
+    transform: translateY(-2px) rotate(-9deg);
+  }
+  55% {
+    transform: translateY(0.5px) rotate(2deg);
+  }
+  80% {
+    transform: translateY(-1px) rotate(9deg);
+  }
+}
+.bee-flutter {
+  display: inline-block;
+  transform-origin: 55% 75%;
+  animation: bee-flutter 2.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bee-flutter {
+    animation: none;
+  }
+}
+
 @utility section-y {
   padding-block: 4rem;
 

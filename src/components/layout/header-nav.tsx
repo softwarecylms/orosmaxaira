@@ -79,7 +79,7 @@ export function HeaderNav({
           href={adopt.href}
           className="text-[17px] text-foreground transition-colors hover:text-accent"
         >
-          🐝 {adopt.label}
+          <span className="bee-flutter">🐝</span> {adopt.label}
         </Link>
       </nav>
 
