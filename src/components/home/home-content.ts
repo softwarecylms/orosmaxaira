@@ -24,7 +24,7 @@ export const NAV: { label: string; href: string; children?: { label: string; hre
   { label: 'Ποιοί είμαστε', href: '/' },
   { label: 'Δραστηριότητες', href: '/' },
   { label: 'Blog', href: '/' },
-  { label: 'Επικοινωνία', href: '/contact' },
+  { label: 'Επικοινωνία', href: '/' },
 ]
 
 export const ADOPT_LINK: Cta = { label: 'Υιοθετώ μια κυψέλη', href: '/' }
@@ -359,7 +359,7 @@ export const FOOTER = {
         { label: 'Δραστηριότητες', href: '/' },
         { label: 'Υιοθετώ μια κυψέλη', href: '/' },
         { label: 'Blog', href: '/' },
-        { label: 'Επικοινωνία', href: '/contact' },
+        { label: 'Επικοινωνία', href: '/' },
       ],
     },
     {
