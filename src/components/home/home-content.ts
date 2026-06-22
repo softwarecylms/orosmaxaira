@@ -115,7 +115,7 @@ export const TRUST: { icon: TrustIcon; title: string; body: string }[] = [
   },
   {
     icon: 'delivery',
-    title: 'Άμεση Παράδοση',
+    title: 'Γρήγορη Παράδοση',
     body: 'Γρήγορη και ασφαλής αποστολή της παραγγελίας σας.',
   },
   {
@@ -133,10 +133,10 @@ export const TRUST: { icon: TrustIcon; title: string; body: string }[] = [
 // --- Section 5: Ticker strip ----------------------------------------------
 export const TICKER: string[] = [
   '100% ΕΓΓΥΗΣΗ ΑΓΝΟΤΗΤΑΣ',
-  'ΑΜΕΣΗ ΠΑΡΑΔΟΣΗ',
+  'ΓΡΗΓΟΡΗ ΠΑΡΑΔΟΣΗ',
   'ΑΣΦΑΛΕΙΣ ONLINE ΠΛΗΡΩΜΕΣ',
   'ΟΙΚΟΛΟΓΙΚΗ ΣΥΝΕΙΔΗΣΗ',
-  'ΑΜΕΣΗ ΕΞΥΠΗΡΕΤΗΣΗ',
+  'ΓΡΗΓΟΡΗ ΕΞΥΠΗΡΕΤΗΣΗ',
 ]
 
 // --- Section 4: Deal of the month ----------------------------------------

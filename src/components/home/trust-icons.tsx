@@ -29,7 +29,7 @@ export function PurityIcon({ className }: IconProps) {
   )
 }
 
-/** Άμεση Παράδοση — delivery van + clock (34×34). */
+/** Γρήγορη Παράδοση — delivery van + clock (34×34). */
 export function DeliveryIcon({ className }: IconProps) {
   return (
     <svg
