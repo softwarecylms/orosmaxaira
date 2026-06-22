@@ -1,33 +1,49 @@
 import type { Metadata } from 'next'
-import { Section, Container, SectionHeading } from '@/components/ui/section'
-import { ProductCard } from '@/components/commerce/product-card'
-import { listProducts } from '@/lib/medusa/products'
+import Link from 'next/link'
+import { ChevronRight } from 'lucide-react'
+import { SHOP_PAGE } from '@/components/shop/shop-content'
+import { ShopBrowser } from '@/components/shop/shop-browser'
+import { RevealUp } from '@/components/home/reveal-up'
 
 export const metadata: Metadata = {
-  title: 'Shop',
-  description: 'Browse the full collection.',
+  title: 'Προϊόντα',
+  description: 'Όλα τα προϊόντα Όρος Μαχαιρά — αγνό μέλι, προϊόντα μέλισσας, φυσικά καλλυντικά και πακέτα δώρων.',
 }
 
-export default async function ShopPage() {
-  const { products } = await listProducts({ limit: 24 })
-
+/** Shop / products listing (Figma 209:4095). Header + footer come from the
+ *  shared layout; the filterable, infinite-scrolling grid is <ShopBrowser>. */
+export default function ShopPage() {
   return (
-    <Section spacing="lg">
-      <Container className="flex flex-col gap-10">
-        <SectionHeading eyebrow="Shop" heading="All products" align="left" />
+    <>
+      {/* Breadcrumb + heading */}
+      <div className="container-wide pb-6 pt-4">
+        <nav
+          aria-label="breadcrumb"
+          className="flex items-center gap-1.5 text-[15px] text-muted md:text-[17px]"
+        >
+          {SHOP_PAGE.breadcrumb.map((b, i) => (
+            <span key={b.label} className="flex items-center gap-1.5">
+              {i > 0 ? <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" /> : null}
+              {b.href ? (
+                <Link href={b.href} className="transition-colors hover:text-accent">
+                  {b.label}
+                </Link>
+              ) : (
+                <span className="text-foreground">{b.label}</span>
+              )}
+            </span>
+          ))}
+        </nav>
 
-        {products.length === 0 ? (
-          <p className="text-muted">
-            No products are available yet. Add some in the Medusa admin.
-          </p>
-        ) : (
-          <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-4">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        )}
-      </Container>
-    </Section>
+        <RevealUp className="mt-4 flex flex-col gap-2.5">
+          <h1 className="font-display text-[32px] font-bold leading-[1.1] text-foreground md:text-[41px] md:leading-[44px]">
+            {SHOP_PAGE.title}
+          </h1>
+          <p className="max-w-[640px] text-[17px] leading-[24px] text-muted">{SHOP_PAGE.subtitle}</p>
+        </RevealUp>
+      </div>
+
+      <ShopBrowser />
+    </>
   )
 }
