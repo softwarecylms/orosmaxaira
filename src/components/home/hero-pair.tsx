@@ -18,7 +18,7 @@ export function HeroPair() {
           {/* Left — off-white card */}
           <article className="group relative flex flex-col items-center overflow-hidden rounded-[4px] bg-offwhite px-7 py-8 text-center lg:min-h-[490px] lg:flex-row lg:items-center lg:py-5 lg:pl-[50px] lg:pr-[25px] lg:text-left">
             <CardSpotlight color="rgba(241,172,16,0.3)" />
-            <RevealUp className="relative z-10 flex w-full flex-col items-center gap-5 lg:w-auto lg:max-w-[345px] lg:items-start">
+            <RevealUp className="relative z-10 flex w-full flex-col items-center gap-5 lg:w-auto lg:max-w-[290px] lg:items-start xl:max-w-[320px] 2xl:max-w-[345px]">
               <div className="flex flex-col gap-2.5">
                 <p className="text-[14px] uppercase leading-[21px] tracking-[0.01em] text-muted">
                   {HERO.left.eyebrow}
@@ -34,13 +34,13 @@ export function HeroPair() {
             </RevealUp>
             <RevealUp
               delay={0.15}
-              className="pointer-events-none relative -mx-7 -mb-8 mt-1 aspect-[10/9] w-[calc(100%+3.5rem)] lg:absolute lg:inset-y-5 lg:right-5 lg:mx-0 lg:mb-0 lg:mt-0 lg:aspect-auto lg:h-auto lg:w-[430px]"
+              className="pointer-events-none relative -mx-7 -mb-8 mt-1 aspect-[10/9] w-[calc(100%+3.5rem)] lg:absolute lg:inset-y-5 lg:right-5 lg:mx-0 lg:mb-0 lg:mt-0 lg:aspect-auto lg:h-auto lg:w-[250px] xl:w-[320px] 2xl:w-[400px]"
             >
               <Image
                 src={HERO.left.image}
                 alt={HERO.left.imageAlt}
                 fill
-                sizes="(min-width: 1024px) 430px, 100vw"
+                sizes="(min-width: 1024px) 320px, 100vw"
                 className="home-img-breathe object-cover object-bottom drop-shadow-[0_0_16px_rgba(241,172,16,0.4)] lg:object-contain lg:object-center"
                 priority
               />
@@ -52,7 +52,7 @@ export function HeroPair() {
             <CardSpotlight color="rgba(255,255,255,0.4)" />
             <RevealUp
               delay={0.1}
-              className="relative z-10 flex w-full flex-col items-center gap-5 lg:w-auto lg:max-w-[345px] lg:items-start"
+              className="relative z-10 flex w-full flex-col items-center gap-5 lg:w-auto lg:max-w-[265px] lg:items-start xl:max-w-[285px] 2xl:max-w-[310px]"
             >
               <div className="flex flex-col gap-2.5">
                 <p className="text-[14px] uppercase leading-[21px] tracking-[0.01em] text-cream">
@@ -69,14 +69,14 @@ export function HeroPair() {
             </RevealUp>
             <RevealUp
               delay={0.25}
-              className="pointer-events-none relative -mx-7 -mb-8 mt-1 aspect-[9/4] w-[calc(100%+3.5rem)] lg:absolute lg:inset-y-0 lg:right-[-6%] lg:mx-0 lg:mb-0 lg:mt-0 lg:aspect-auto lg:h-auto lg:w-[64%]"
+              className="pointer-events-none relative mt-2 aspect-[5/4] w-full lg:absolute lg:inset-y-0 lg:bottom-[-6%] lg:right-[-2%] lg:mx-0 lg:mt-0 lg:aspect-auto lg:h-auto lg:w-[58%] min-[1400px]:w-[60%] 2xl:w-[60%]"
             >
               <Image
                 src={HERO.right.image}
                 alt={HERO.right.imageAlt}
                 fill
-                sizes="(min-width: 1024px) 560px, 100vw"
-                className="home-img-breathe-x object-cover object-[46%_100%] drop-shadow-[0_0_16px_rgba(255,255,255,0.5)] lg:object-[46%_44%]"
+                sizes="(min-width: 1024px) 60vw, 100vw"
+                className="object-contain object-center lg:object-bottom lg:-scale-x-100"
                 priority
               />
             </RevealUp>

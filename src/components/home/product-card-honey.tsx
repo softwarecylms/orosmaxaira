@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { HoneyProduct } from './home-content'
+import { displayPrice } from '@/lib/utils'
 
 /** Bespoke product card used in the Deal-of-the-Month row (Figma "Product w price"). */
 export function ProductCardHoney({ product }: { product: HoneyProduct }) {
@@ -19,7 +20,7 @@ export function ProductCardHoney({ product }: { product: HoneyProduct }) {
       <h3 className="line-clamp-2 min-h-[48px] text-[17px] font-medium leading-[24px] text-foreground transition-colors group-hover:text-accent">
         {product.title}
       </h3>
-      <p className="text-[14px] leading-[21px] text-accent">{product.price}</p>
+      <p className="text-[14px] leading-[21px] text-accent">{displayPrice(product.price)}</p>
     </Link>
   )
 }

@@ -18,6 +18,17 @@ export const CONTACT_PAGE = {
     imageAlt: 'Μελισσοκόμοι Όρος Μαχαιρά στο μελισσοκομείο',
   },
 
+  // Pinned apiary location. `embedSrc` is Google Maps' keyless embed (the pin
+  // coords resolved from the shared maps.app.goo.gl link); `link` opens the
+  // full interactive map in a new tab.
+  map: {
+    title: 'Πού θα μας βρείτε',
+    embedSrc:
+      'https://www.google.com/maps?q=34.8649955,33.1669842&z=16&hl=el&output=embed',
+    link: 'https://maps.app.goo.gl/EUCGrKmDcbkCV8CL7',
+    label: 'Όρος Μαχαιρά — τοποθεσία στον χάρτη',
+  },
+
   connect: {
     heading: 'Συνδεθείτε μαζί μας',
     body: [
@@ -42,6 +53,7 @@ export const CONTACT_PAGE = {
         icon: 'location' as ContactIcon,
         title: 'Επισκεφθείτε μας',
         lines: ['Μελίνη, Λάρνακα 7716', 'P.O.BOX: 7718'],
+        href: 'https://maps.app.goo.gl/EUCGrKmDcbkCV8CL7',
       },
       {
         icon: 'email' as ContactIcon,

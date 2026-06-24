@@ -21,7 +21,7 @@ export const NAV: { label: string; href: string; children?: { label: string; hre
       { label: 'Πακέτα δώρων', href: '/' },
     ],
   },
-  { label: 'Ποιοί είμαστε', href: '/' },
+  { label: 'Ποιοί είμαστε', href: '/about' },
   { label: 'Δραστηριότητες', href: '/' },
   { label: 'Blog', href: '/' },
   { label: 'Επικοινωνία', href: '/' },
@@ -100,7 +100,7 @@ export const HERO = {
     heading: 'Εργαστήρια & Εκδηλώσεις',
     body: 'Ελάτε στο βουνό και ζήστε τη μαγεία του μελισσιού μέσα από μοναδικά, διαδραστικά εργαστήρια για όλη την οικογένεια.',
     cta: { label: READ_MORE, href: '/' },
-    image: '/images/home/hero-bee.webp',
+    image: '/images/home/hero-bee-comb.webp',
     imageAlt: 'Μέλισσα πάνω σε κηρήθρα',
   },
 }
@@ -354,7 +354,7 @@ export const FOOTER = {
       title: 'Χρήσιμοι Σύνδεσμοι',
       links: [
         { label: 'Αρχική', href: '/' },
-        { label: 'Ποιοί είμαστε', href: '/' },
+        { label: 'Ποιοί είμαστε', href: '/about' },
         { label: 'Προϊόντα', href: '/' },
         { label: 'Δραστηριότητες', href: '/' },
         { label: 'Υιοθετώ μια κυψέλη', href: '/' },

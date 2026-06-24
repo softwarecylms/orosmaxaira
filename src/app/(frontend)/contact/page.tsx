@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { BadgeCheck, ChevronRight, Clock, Leaf, Mail, MapPin, Phone, Users } from 'lucide-react'
 import {
@@ -7,6 +6,8 @@ import {
   type ContactIcon,
   type ValueIcon,
 } from '@/components/contact/contact-content'
+import { ContactHero } from '@/components/contact/contact-hero'
+import { ContactMap } from '@/components/contact/contact-map'
 import { ContactMessageForm } from '@/components/contact/contact-message-form'
 import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
 import { FOOTER } from '@/components/home/home-content'
@@ -66,22 +67,7 @@ export default function ContactPage() {
       </div>
 
       {/* Hero */}
-      <section className="relative isolate flex min-h-[260px] items-center justify-center overflow-hidden md:min-h-[340px] lg:min-h-[401px]">
-        <Image
-          src={c.hero.image}
-          alt={c.hero.imageAlt}
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-black/30" />
-        <RevealUp className="relative z-10 px-6 text-center">
-          <h1 className="font-display text-[32px] font-bold leading-[1.12] text-white md:text-[45px] md:leading-[55px]">
-            {c.hero.title}
-          </h1>
-        </RevealUp>
-      </section>
+      <ContactHero image={c.hero.image} imageAlt={c.hero.imageAlt} title={c.hero.title} />
 
       {/* Contact body — info + form */}
       <section className="bg-white py-14 md:py-[80px]">
@@ -108,27 +94,39 @@ export default function ContactPage() {
             <RevealGroup className="grid grid-cols-1 gap-x-8 gap-y-9 sm:grid-cols-2" stagger={0.08}>
               {c.connect.items.map((item) => {
                 const Icon = CONTACT_ICONS[item.icon]
-                return (
-                  <RevealItem key={item.title} className="flex items-start gap-4">
+                const external = item.href?.startsWith('http')
+                const inner = (
+                  <>
                     <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-cream text-accent">
                       <Icon className="size-6" strokeWidth={1.6} aria-hidden="true" />
                     </span>
                     <div className="flex flex-col gap-2">
-                      <h3 className="text-[20px] font-medium leading-[26.4px] text-foreground md:text-[22px]">
+                      <h3 className="text-[20px] font-medium leading-[26.4px] text-foreground transition-colors group-hover:text-accent md:text-[22px]">
                         {item.title}
                       </h3>
-                      <div className="flex flex-col text-[17px] leading-[24px] text-foreground/80">
-                        {item.lines.map((line) =>
-                          item.href ? (
-                            <a key={line} href={item.href} className="transition-colors hover:text-accent">
-                              {line}
-                            </a>
-                          ) : (
-                            <span key={line}>{line}</span>
-                          ),
-                        )}
+                      <div className="flex flex-col text-[17px] leading-[24px] text-foreground/80 transition-colors group-hover:text-accent">
+                        {item.lines.map((line) => (
+                          <span key={line}>{line}</span>
+                        ))}
                       </div>
                     </div>
+                  </>
+                )
+                return (
+                  <RevealItem key={item.title} className="group">
+                    {item.href ? (
+                      <a
+                        href={item.href}
+                        {...(external
+                          ? { target: '_blank', rel: 'noopener noreferrer' }
+                          : {})}
+                        className="flex items-start gap-4"
+                      >
+                        {inner}
+                      </a>
+                    ) : (
+                      <div className="flex items-start gap-4">{inner}</div>
+                    )}
                   </RevealItem>
                 )
               })}
@@ -157,6 +155,9 @@ export default function ContactPage() {
           <ContactMessageForm />
         </div>
       </section>
+
+      {/* Full-width map */}
+      <ContactMap />
 
       {/* Values band */}
       <section className="bg-offwhite py-14 md:py-[80px]">

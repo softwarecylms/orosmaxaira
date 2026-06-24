@@ -23,12 +23,12 @@ export function BlogTeaser() {
           stagger={0.12}
         >
           {/* Featured article */}
-          <RevealItem className="h-full">
+          <RevealItem className="h-full min-w-0">
             <Link
               href={BLOG.featured.href}
-              className="group flex h-full w-full flex-col overflow-hidden rounded-[4px] bg-white sm:flex-row sm:items-center sm:gap-[50px]"
+              className="group flex h-full w-full flex-col overflow-hidden rounded-[4px] bg-white sm:flex-row sm:items-center sm:gap-6 lg:gap-8 2xl:gap-[50px]"
             >
-              <div className="relative aspect-[471/427] w-full shrink-0 overflow-hidden sm:aspect-auto sm:h-[427px] sm:w-[471px]">
+              <div className="relative aspect-[471/427] w-full shrink-0 overflow-hidden sm:aspect-auto sm:h-[360px] sm:w-[320px] lg:w-[280px] xl:w-[380px] 2xl:h-[427px] 2xl:w-[471px]">
                 <Image
                   src={BLOG.featured.image}
                   alt={BLOG.featured.imageAlt}
@@ -37,7 +37,7 @@ export function BlogTeaser() {
                   className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                 />
               </div>
-              <div className="flex flex-col items-start gap-5 p-6 sm:max-w-[418px] sm:p-0 sm:pr-6">
+              <div className="flex min-w-0 flex-col items-start gap-5 p-6 sm:max-w-[418px] sm:p-0 sm:pr-6">
                 <span className="rounded-[20px] bg-accent px-[11px] py-[5px] text-[14px] leading-[21px] text-white">
                   {BLOG.badge}
                 </span>
@@ -63,15 +63,15 @@ export function BlogTeaser() {
           </RevealItem>
 
           {/* Two stacked articles */}
-          <RevealItem className="h-full">
+          <RevealItem className="h-full min-w-0">
             <div className="flex h-full flex-col justify-between gap-5">
               {BLOG.items.map((item, i) => (
                 <Link
                   key={i}
                   href={item.href}
-                  className="group flex items-stretch gap-4 overflow-hidden rounded-[4px] bg-white sm:gap-[25px]"
+                  className="group flex items-stretch gap-4 overflow-hidden rounded-[4px] bg-white 2xl:gap-[25px]"
                 >
-                  <div className="relative aspect-[262/203] w-[130px] shrink-0 overflow-hidden sm:aspect-auto sm:h-[203px] sm:w-[262px]">
+                  <div className="relative aspect-[262/203] w-[130px] shrink-0 overflow-hidden sm:aspect-auto sm:h-[170px] sm:w-[200px] lg:w-[150px] xl:w-[200px] 2xl:h-[203px] 2xl:w-[262px]">
                     <Image
                       src={item.image}
                       alt={item.title}
@@ -80,7 +80,7 @@ export function BlogTeaser() {
                       className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                     />
                   </div>
-                  <div className="flex flex-col items-start justify-center gap-3 py-4 pr-4 sm:w-[288px] sm:gap-[17px] sm:py-0">
+                  <div className="flex min-w-0 flex-1 flex-col items-start justify-center gap-3 py-4 pr-4 sm:gap-[17px] sm:py-0">
                     <span className="rounded-[20px] bg-accent px-[11px] py-[5px] text-[13px] leading-[13px] text-white">
                       {BLOG.badge}
                     </span>

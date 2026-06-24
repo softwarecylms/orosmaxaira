@@ -4,6 +4,8 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { OrganizationSchema } from '@/components/seo/organization-schema'
 import { MotionReady } from '@/components/motion/motion-ready'
+import { CartProvider } from '@/components/commerce/cart-store'
+import { CartDrawer } from '@/components/commerce/cart-drawer'
 import { getSiteSettings, getHeader, getFooter } from '@/lib/cms'
 import { siteUrl } from '@/lib/seo'
 
@@ -75,10 +77,13 @@ export default async function FrontendLayout({
     <html lang="el" className={`${sans.variable} ${display.variable}`}>
       <body className="bg-background text-foreground antialiased" suppressHydrationWarning>
         <MotionReady>
-          <SiteHeader header={header} settings={settings} variant="default" />
-          <main id="main">{children}</main>
-          <SiteFooter footer={footer} settings={settings} variant="default" />
-          <OrganizationSchema settings={settings} />
+          <CartProvider>
+            <SiteHeader header={header} settings={settings} variant="default" />
+            <main id="main">{children}</main>
+            <SiteFooter footer={footer} settings={settings} variant="default" />
+            <CartDrawer />
+            <OrganizationSchema settings={settings} />
+          </CartProvider>
         </MotionReady>
       </body>
     </html>

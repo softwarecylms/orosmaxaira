@@ -1,0 +1,137 @@
+/**
+ * About ("Ποιοί είμαστε") page content (Figma 393:1992). All Greek copy + asset
+ * paths in one place, mirroring the home/contact content modules.
+ */
+
+export type AboutValueIcon = 'purity' | 'eco' | 'family'
+
+export const ABOUT_PAGE = {
+  breadcrumb: [
+    { label: 'Αρχική', href: '/' },
+    { label: 'Ποιοί είμαστε' },
+  ] as { label: string; href?: string }[],
+
+  hero: {
+    eyebrow: 'Η ΙΣΤΟΡΙΑ ΜΑΣ',
+    title: 'Ποιοι Είμαστε',
+    body: [
+      'Είμαστε μία μελισσοκομική οικογένεια. Ασχολούμαστε επαγγελματικά με τη μελισσοκομία από το 1983. Όλα αυτά τα χρόνια, με σκληρή δουλειά και αγάπη για τις μέλισσες καταφέραμε να δημιουργήσουμε μια σχέση εμπιστοσύνης με τους πελάτες μας.',
+      'Έχοντας την ευθύνη όλης της διαδικασίας παραγωγής του μελιού από την κυψέλη στον καταναλωτή, μπορούμε να διασφαλίσουμε την υψηλή ποιότητα και γνησιότητά του μελιού μας.',
+    ],
+    image: '/images/about/about-hero.png',
+    imageAlt: 'Η οικογένεια Όρος Μαχαιρά στο μελισσοκομείο',
+    author: {
+      name: 'Μέλιος Φιλίππου',
+      role: 'Διευθυντής',
+      avatar: '/images/about/family-melios.png',
+    },
+  },
+
+  stats: [
+    { icon: 'experience', value: '40+', label: 'Χρόνια εμπειρίας' },
+    { icon: 'clients', value: '10K', label: 'Έμπιστους πελάτες' },
+    { icon: 'honey', value: '120', label: 'Τόνοι μέλι τον χρόνο' },
+    { icon: 'award', value: '7', label: 'Βραβεία Ποιότητας' },
+    { icon: 'points', value: '600+', label: 'Σημεία Πώλησης' },
+  ] as { icon: string; value: string; label: string }[],
+
+  values: [
+    {
+      icon: 'purity' as AboutValueIcon,
+      title: 'Αγνότητα',
+      text: 'Το μέλι μας φτάνει στο τραπέζι σας ακριβώς όπως το φτιάχνει η μέλισσα.',
+    },
+    {
+      icon: 'eco' as AboutValueIcon,
+      title: 'Περιβάλλον',
+      text: 'Πιστοποιημένοι με ISO 14001 & ISO 22001 - σεβασμός για τη γη και τις μέλισσες.',
+    },
+    {
+      icon: 'family' as AboutValueIcon,
+      title: 'Οικογένεια',
+      text: 'Από το 1983, τρεις γενιές με το ίδιο πάθος για τη φύση και τις μέλισσες.',
+    },
+  ],
+
+  indoor: {
+    heading: 'Τι θα βρείτε στους εσωτερικούς μας χώρους',
+    // NOTE: swap these with the real interior photos — the Figma reuses
+    // placeholder images for these cards, so these are best-fit brand photos
+    // (just replace /public/images/about/indoor-1|2|3.png).
+    cards: [
+      {
+        title: 'Προεργασία & Εμφιάλωση',
+        text: 'Αίθουσα για την προεργασία και εμφιάλωση των μελιών μας.',
+        image: '/images/about/indoor-1.png',
+      },
+      {
+        title: 'Η ιστορία μας',
+        text: 'Αίθουσα προβολών με την ιστορία μας και τον μαγικό κόσμο της μέλισσας.',
+        image: '/images/about/indoor-2.png',
+      },
+      {
+        title: 'Υποδοχή & Γευσιγνωσία',
+        text: 'Φιλόξενο χώρο υποδοχής και γευσιγνωσίας των προϊόντων μας.',
+        image: '/images/about/indoor-3.png',
+      },
+    ] as { title: string; text: string; image?: string }[],
+  },
+
+  outdoor: {
+    heading: 'Και τι θα βρείτε στους εξωτερικούς μας χώρους',
+    cta: { label: 'Δείτε περισσότερα', href: '/' },
+    slides: [
+      {
+        title: 'Εργαστήρια & Δραστηριότητες',
+        text: 'Ειδικά διαμορφωμένο χώρο για τη διεξαγωγή εργαστηρίων και εκπαιδευτικών δραστηριοτήτων.',
+        image: '/images/about/outdoor-workshops.png',
+      },
+      {
+        title: 'Πλούσιους Κήπους',
+        text: 'Πλούσιους κήπους, που αποτελούν τροφή για τις μέλισσές μας και ένα όμορφο περιβάλλον για τους επισκέπτες.',
+        image: '/images/about/outdoor-gardens.png',
+      },
+      {
+        title: 'Εκπαιδευτικά Παιχνίδια',
+        text: 'Διαδραστικά εκπαιδευτικά παιχνίδια για μικρούς και μεγάλους, με θέμα τη μέλισσα και τα προϊόντα της.',
+        image: '/images/about/outdoor-games.png',
+      },
+      {
+        title: 'Επίσκεψη στις Κυψέλες',
+        text: 'Δυνατότητα για επίσκεψη στις κυψέλες (με την κατάλληλη προστασία), βιώνοντας από κοντά τον κόσμο του μελισσιού.',
+        image: '/images/about/outdoor-hives.png',
+      },
+      {
+        title: 'Μελισσοθεραπεία',
+        text: 'Έναν ειδικό χώρο για μελισσοθεραπεία, για όσους αναζητούν τις ευεργετικές ιδιότητες του περιβάλλοντος της κυψέλης.',
+        image: '/images/about/outdoor-therapy.png',
+      },
+      {
+        title: 'Δεξιώσεις & Διοργανώσεις',
+        text: 'Φιλοξενία δεξιώσεις βαπτίσεων και διοργάνωση γενεθλίων, σε ένα μοναδικό φυσικό και βιωματικό περιβάλλον.',
+        image: '/images/about/outdoor-gardens.png',
+      },
+    ],
+  },
+
+  band: 'Η λειτουργία όλων αυτών των χώρων και δραστηριοτήτων διέπεται από τη δέσμευσή μας για βιώσιμη ανάπτυξη και περιβαλλοντική ευθύνη, η οποία αποδεικνύεται έμπρακτα με την εφαρμογή του διεθνούς προτύπου ISO 14001: Σύστημα Περιβαλλοντικής Διαχείρισης. Παράλληλα, αναγνωρίζοντας την υψίστη σημασία της ασφάλειας των τροφίμων, πήραμε την πιστοποίηση ISO 22000: Σύστημα Διαχείρισης Ασφάλειας Τροφίμων, ενισχύοντας περαιτέρω την εμπιστοσύνη των καταναλωτών στα προϊόντα μας.',
+
+  family: {
+    heading: 'Η Οικογένειά μας',
+    members: [
+      { name: 'Μέλιος Φιλίππου', role: 'Διευθυντής', photo: '/images/about/family-melios.png' },
+      { name: 'Βαλεντίνος Φιλίππου', role: 'Υποδιευθυντής', photo: '/images/about/family-valentinos.png' },
+      { name: 'Μαρία Σολωμονίδου', role: 'Υπεύθυνη εργοστασίου', photo: '/images/about/family-maria.png' },
+      { name: 'Νίκος Φιλίππου', role: 'Υπεύθυνος παραγωγής (Μελισσοκόμος)', photo: '/images/about/family-nikos.png' },
+      { name: 'Μιχάλης Φιλίππου', role: 'Υπεύθυνος παραγωγής (Μελισσοκόμος)' },
+    ] as { name: string; role: string; photo?: string }[],
+  },
+
+  goal: {
+    eyebrow: 'ΒΙΩΜΑΤΙΚΗ ΕΜΠΕΙΡΙΑ',
+    title: 'Στόχος μας',
+    body: 'Στόχος μας είναι να παράγουμε και να διαθέτουμε στην αγορά όλα τα προϊόντα της μέλισσας διατηρώντας τα αγνά και θρεπτικά όπως η μέλισσα τα φτιάχνει.',
+    image: '/images/about/goal.png',
+    imageAlt: 'Προϊόντα Όρος Μαχαιρά',
+  },
+}

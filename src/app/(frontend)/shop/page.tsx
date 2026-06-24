@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
 import { SHOP_PAGE } from '@/components/shop/shop-content'
 import { ShopBrowser } from '@/components/shop/shop-browser'
-import { RevealUp } from '@/components/home/reveal-up'
 
 export const metadata: Metadata = {
   title: 'Προϊόντα',
@@ -15,7 +14,7 @@ export const metadata: Metadata = {
 export default function ShopPage() {
   return (
     <>
-      {/* Breadcrumb + heading */}
+      {/* Breadcrumb */}
       <div className="container-wide pb-6 pt-4">
         <nav
           aria-label="breadcrumb"
@@ -34,13 +33,6 @@ export default function ShopPage() {
             </span>
           ))}
         </nav>
-
-        <RevealUp className="mt-4 flex flex-col gap-2.5">
-          <h1 className="font-display text-[32px] font-bold leading-[1.1] text-foreground md:text-[41px] md:leading-[44px]">
-            {SHOP_PAGE.title}
-          </h1>
-          <p className="max-w-[640px] text-[17px] leading-[24px] text-muted">{SHOP_PAGE.subtitle}</p>
-        </RevealUp>
       </div>
 
       <ShopBrowser />

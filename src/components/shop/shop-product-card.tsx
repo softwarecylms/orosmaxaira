@@ -2,7 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart } from 'lucide-react'
 import type { ShopProduct } from './shop-content'
-import { SHOP_PAGE } from './shop-content'
+import { SHOP_PAGE, handleOf } from './shop-content'
+import { displayPrice } from '@/lib/utils'
 
 /**
  * Shop product card (Figma 209:4451 "Item"). Image, category, title, gold price
@@ -10,8 +11,7 @@ import { SHOP_PAGE } from './shop-content'
  * live store, so the card + button link out to the real product page.
  */
 export function ShopProductCard({ product }: { product: ShopProduct }) {
-  const external = product.href.startsWith('http')
-  const linkProps = external ? { target: '_blank', rel: 'noopener noreferrer' } : {}
+  const href = `/shop/${handleOf(product)}`
 
   return (
     <article
@@ -19,8 +19,7 @@ export function ShopProductCard({ product }: { product: ShopProduct }) {
       className="group flex h-full flex-col gap-3 rounded-[4px] bg-white p-[15px]"
     >
       <Link
-        href={product.href}
-        {...linkProps}
+        href={href}
         className="relative block aspect-square overflow-hidden rounded-[4px] bg-offwhite"
       >
         <Image
@@ -39,17 +38,16 @@ export function ShopProductCard({ product }: { product: ShopProduct }) {
 
       <p className="text-[14px] leading-[21px] text-[#555]">{product.category}</p>
 
-      <Link href={product.href} {...linkProps} className="block">
+      <Link href={href} className="block">
         <h3 className="line-clamp-2 min-h-[48px] text-[17px] font-medium leading-[24px] text-foreground transition-colors group-hover:text-accent">
           {product.title}
         </h3>
       </Link>
 
-      <p className="text-[16px] leading-[24px] text-accent">{product.price}</p>
+      <p className="text-[16px] leading-[24px] text-accent">{displayPrice(product.price)}</p>
 
       <Link
-        href={product.href}
-        {...linkProps}
+        href={href}
         className="mt-auto flex items-center justify-center gap-2 rounded-[4px] bg-accent px-3 py-2.5 text-center text-[13px] leading-[20px] text-white transition-colors hover:bg-foreground sm:gap-3 sm:p-[15px] sm:text-[17px] sm:leading-[24px]"
       >
         <ShoppingCart className="size-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />

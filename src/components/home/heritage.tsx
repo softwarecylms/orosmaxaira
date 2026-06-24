@@ -8,17 +8,17 @@ export function Heritage() {
   return (
     <section data-testid="heritage" className="bg-offwhite py-12 md:py-[70px]">
       <div className="container-wide">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-[120px] lg:pr-[120px]">
-          <RevealUp className="relative h-[320px] shrink-0 overflow-hidden rounded-[4px] md:h-[480px] lg:h-[625px] lg:w-[843px]">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-10 xl:gap-[80px] xl:pr-[60px]">
+          <RevealUp className="relative aspect-[843/625] w-full shrink-0 overflow-hidden rounded-[4px] lg:w-1/2">
             <Image
               src={HERITAGE.image}
               alt={HERITAGE.imageAlt}
               fill
-              sizes="(min-width:1024px) 843px, 100vw"
+              sizes="(min-width:1024px) 50vw, 100vw"
               className="home-img-breathe object-cover"
             />
           </RevealUp>
-          <RevealUp delay={0.1} className="flex flex-col items-center gap-5 text-center lg:w-[597px] lg:items-start lg:text-left">
+          <RevealUp delay={0.1} className="flex flex-col items-center gap-5 text-center lg:flex-1 lg:items-start lg:text-left">
             <h2 className="font-display text-[28px] font-semibold leading-[1.05] text-foreground md:text-[41px] md:leading-[40px]">
               {HERITAGE.heading}
             </h2>

@@ -46,6 +46,7 @@ export function ShopBrowser() {
 
   const filtered = useMemo(() => {
     let list = SHOP_PRODUCTS.filter((p) => {
+      if (!p.inStock) return false // hide out-of-stock products
       if (cats.size > 0 && !cats.has(p.category)) return false
       const euros = p.sortPrice / 100
       return euros >= priceMin && euros <= priceMax
@@ -200,13 +201,13 @@ export function ShopBrowser() {
                 <ArrowRight className="size-4" strokeWidth={2} aria-hidden="true" />
               </Link>
             </div>
-            <div className="relative mt-3 h-[200px] w-full">
+            <div className="relative mt-3 h-[265px] w-full">
               <Image
                 src={SHOP_PAGE.banner.image}
                 alt={SHOP_PAGE.banner.imageAlt}
                 fill
                 sizes="343px"
-                className="object-cover object-top"
+                className="-scale-x-100 object-cover object-bottom"
               />
             </div>
           </div>
@@ -262,7 +263,7 @@ export function ShopBrowser() {
           {shown.length === 0 ? (
             <p className="py-20 text-center text-[17px] text-muted">{SHOP_PAGE.filters.empty}</p>
           ) : (
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 2xl:grid-cols-4">
               {shown.map((p) => (
                 <RevealUp key={p.href} className="h-full">
                   <ShopProductCard product={p} />

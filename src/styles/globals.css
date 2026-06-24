@@ -28,6 +28,10 @@
   --color-gold: #f1ac10;           /* accent alias for clarity */
   --color-gold-strong: #d99500;    /* hover / darker gold */
 
+  /* Positive / success states (e.g. free-shipping unlocked) */
+  --color-success: #2f8f4e;        /* success text + icon */
+  --color-success-soft: #e7f4ec;   /* success background tint */
+
   /* Dark accents retained for any dark UI (warmed to brand) */
   --color-night: #231f20;
   --color-night-soft: #2c2728;

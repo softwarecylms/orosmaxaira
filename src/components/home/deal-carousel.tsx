@@ -58,14 +58,14 @@ export function DealCarousel({ products }: { products: HoneyProduct[] }) {
         onPointerLeave={release}
         onTouchStart={hold}
         onTouchEnd={release}
-        className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-pl-5 px-5 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-x-5 sm:gap-y-8 sm:overflow-visible sm:px-0 sm:pb-0 lg:flex lg:justify-between lg:gap-0 [&::-webkit-scrollbar]:hidden"
+        className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-pl-5 px-5 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-x-5 sm:gap-y-8 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-5 lg:gap-y-0 [&::-webkit-scrollbar]:hidden"
       >
         {products.map((p, i) => (
           <motion.div
             key={i}
             variants={fadeUp}
             transition={{ duration: DURATION.base, ease: EASE.soft }}
-            className="w-[calc(50%-0.5rem)] shrink-0 snap-start sm:w-auto sm:shrink lg:w-[216.8px] lg:shrink-0"
+            className="w-[calc(50%-0.5rem)] shrink-0 snap-start sm:w-auto sm:shrink"
           >
             <ProductCardHoney product={p} />
           </motion.div>

@@ -1,8 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Phone, ChevronDown, User, Heart, ShoppingBag, Truck } from 'lucide-react'
-import { retrieveCart } from '@/lib/medusa/actions'
-import { formatPrice } from '@/lib/medusa/prices'
+import { Phone, ChevronDown, User, Heart, Truck } from 'lucide-react'
+import { CartBadge } from '@/components/commerce/cart-badge'
 import { NAV, ADOPT_LINK, CONTACT, MEGA_MENU } from '@/components/home/home-content'
 import { HeaderSearch } from './header-search'
 import { HeaderMobile } from './header-mobile'
@@ -19,14 +18,10 @@ type SiteHeaderProps = {
 /**
  * OROS MACHAIRA header (Figma 156:1218): announcement bar + utility row
  * (search, phone, language, account, wishlist, cart) + nav row. Search /
- * language / wishlist are visual stubs; the cart pill reads the live Medusa cart.
+ * language / wishlist are visual stubs; the cart pill (<CartBadge>) reads the
+ * client-side honey cart.
  */
 export async function SiteHeader(_props: SiteHeaderProps) {
-  const cart = await retrieveCart().catch(() => null)
-  const currency = cart?.currency_code ?? cart?.region?.currency_code ?? 'eur'
-  const total = formatPrice(cart?.total ?? 0, currency, 'en-US')
-  const count = cart?.items?.reduce((n, i) => n + (i.quantity ?? 0), 0) ?? 0
-
   return (
     <>
       {/* Announcement bar — scrolls away with the page; it is intentionally
@@ -108,31 +103,12 @@ export async function SiteHeader(_props: SiteHeaderProps) {
 
             <span className="h-9 w-px bg-border" aria-hidden="true" />
 
-            <Link
-              href="/"
-              data-testid="header-cart"
-              className="flex items-center gap-3 text-foreground hover:text-accent"
-            >
-              <span className="relative">
-                <ShoppingBag className="size-6" aria-hidden="true" />
-                <span className="absolute -right-1.5 -top-1 flex size-[15px] items-center justify-center rounded-full bg-accent text-[10px] font-medium text-white">
-                  {count}
-                </span>
-              </span>
-              <span className="text-[17px]">{total}</span>
-            </Link>
+            <CartBadge variant="desktop" />
           </div>
 
           {/* Mobile utilities */}
           <div className="flex items-center gap-4 lg:hidden">
-            <Link href="/" data-testid="header-cart" className="relative text-foreground">
-              <ShoppingBag className="size-6" aria-hidden="true" />
-              {count > 0 && (
-                <span className="absolute -right-1.5 -top-1 flex size-[15px] items-center justify-center rounded-full bg-accent text-[10px] font-medium text-white">
-                  {count}
-                </span>
-              )}
-            </Link>
+            <CartBadge variant="mobile" />
             <Link href="/" aria-label="Λογαριασμός" className="text-foreground">
               <User className="size-6" aria-hidden="true" />
             </Link>

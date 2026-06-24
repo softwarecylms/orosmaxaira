@@ -5,6 +5,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+/**
+ * Display label for a product price. A price may be a single value ('€7,00')
+ * or a range ('€3,00 – €27,50' — products sold in several sizes). For ranges
+ * we show only the starting price, prefixed with «Από».
+ */
+export function displayPrice(price: string): string {
+  const parts = price.split(/\s*[–—-]\s*/)
+  return parts.length > 1 ? `Από ${parts[0].trim()}` : price
+}
+
 export function mediaSrc(media: unknown): string | undefined {
   if (!media || typeof media === 'string' || typeof media === 'number') return undefined
   const m = media as { url?: string | null }

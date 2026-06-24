@@ -30,19 +30,31 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
   async headers() {
+    const securityHeaders = {
+      source: '/(.*)',
+      headers: [
+        { key: 'X-Content-Type-Options', value: 'nosniff' },
+        { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+        { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        {
+          key: 'Permissions-Policy',
+          value: 'camera=(), microphone=(), geolocation=()',
+        },
+      ],
+    }
+
+    // Long-lived immutable caching of static chunks is only safe in production,
+    // where Next.js content-hashes chunk filenames (new build ⇒ new URL). In
+    // dev the filenames are stable (e.g. page.js), so an immutable header makes
+    // the browser keep serving the first — possibly broken — chunk it cached
+    // after every edit, surfacing as "Cannot read properties of undefined
+    // (reading 'call')" / hydration errors until a manual hard refresh.
+    if (process.env.NODE_ENV !== 'production') {
+      return [securityHeaders]
+    }
+
     return [
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
-          },
-        ],
-      },
+      securityHeaders,
       {
         source: '/_next/static/(.*)',
         headers: [
