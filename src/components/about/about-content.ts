@@ -23,7 +23,7 @@ export const ABOUT_PAGE = {
     author: {
       name: 'Μέλιος Φιλίππου',
       role: 'Διευθυντής',
-      avatar: '/images/about/family-melios.png',
+      avatar: '/images/about/family-melios.webp',
     },
   },
 
@@ -55,24 +55,21 @@ export const ABOUT_PAGE = {
 
   indoor: {
     heading: 'Τι θα βρείτε στους εσωτερικούς μας χώρους',
-    // NOTE: swap these with the real interior photos — the Figma reuses
-    // placeholder images for these cards, so these are best-fit brand photos
-    // (just replace /public/images/about/indoor-1|2|3.png).
     cards: [
       {
         title: 'Προεργασία & Εμφιάλωση',
         text: 'Αίθουσα για την προεργασία και εμφιάλωση των μελιών μας.',
-        image: '/images/about/indoor-1.png',
+        image: '/images/about/indoor-1.webp',
       },
       {
         title: 'Η ιστορία μας',
         text: 'Αίθουσα προβολών με την ιστορία μας και τον μαγικό κόσμο της μέλισσας.',
-        image: '/images/about/indoor-2.png',
+        image: '/images/about/indoor-2.webp',
       },
       {
         title: 'Υποδοχή & Γευσιγνωσία',
         text: 'Φιλόξενο χώρο υποδοχής και γευσιγνωσίας των προϊόντων μας.',
-        image: '/images/about/indoor-3.png',
+        image: '/images/about/indoor-3.webp',
       },
     ] as { title: string; text: string; image?: string }[],
   },
@@ -119,11 +116,11 @@ export const ABOUT_PAGE = {
   family: {
     heading: 'Η Οικογένειά μας',
     members: [
-      { name: 'Μέλιος Φιλίππου', role: 'Διευθυντής', photo: '/images/about/family-melios.png' },
-      { name: 'Βαλεντίνος Φιλίππου', role: 'Υποδιευθυντής', photo: '/images/about/family-valentinos.png' },
-      { name: 'Μαρία Σολωμονίδου', role: 'Υπεύθυνη εργοστασίου', photo: '/images/about/family-maria.png' },
-      { name: 'Νίκος Φιλίππου', role: 'Υπεύθυνος παραγωγής (Μελισσοκόμος)', photo: '/images/about/family-nikos.png' },
-      { name: 'Μιχάλης Φιλίππου', role: 'Υπεύθυνος παραγωγής (Μελισσοκόμος)' },
+      { name: 'Μέλιος Φιλίππου', role: 'Διευθυντής', photo: '/images/about/family-melios.webp' },
+      { name: 'Βαλεντίνος Φιλίππου', role: 'Υποδιευθυντής', photo: '/images/about/family-valentinos.webp' },
+      { name: 'Μαρία Σολωμονίδου', role: 'Υπεύθυνη εργοστασίου', photo: '/images/about/family-maria.webp' },
+      { name: 'Νίκος Φιλίππου', role: 'Υπεύθυνος παραγωγής (Μελισσοκόμος)', photo: '/images/about/family-nikos.webp' },
+      { name: 'Μιχάλης Φιλίππου', role: 'Υπεύθυνος παραγωγής (Μελισσοκόμος)', photo: '/images/about/family-michalis.webp' },
     ] as { name: string; role: string; photo?: string }[],
   },
 
@@ -131,7 +128,7 @@ export const ABOUT_PAGE = {
     eyebrow: 'ΒΙΩΜΑΤΙΚΗ ΕΜΠΕΙΡΙΑ',
     title: 'Στόχος μας',
     body: 'Στόχος μας είναι να παράγουμε και να διαθέτουμε στην αγορά όλα τα προϊόντα της μέλισσας διατηρώντας τα αγνά και θρεπτικά όπως η μέλισσα τα φτιάχνει.',
-    image: '/images/about/goal.png',
-    imageAlt: 'Προϊόντα Όρος Μαχαιρά',
+    image: '/images/about/goal-bg-v3.webp',
+    imageAlt: 'Κερί μέλισσας σε ξύλινη επιφάνεια — Όρος Μαχαιρά',
   },
 }

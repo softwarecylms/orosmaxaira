@@ -205,47 +205,73 @@ export default function AboutPage() {
           </h2>
         </RevealUp>
         <RevealGroup
-          className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-3 md:mt-12 lg:grid-cols-5"
+          className="mt-8 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 md:mt-12 lg:grid-cols-5"
           stagger={0.07}
         >
           {a.family.members.map((m) => (
-            <RevealItem key={m.name} className="flex flex-col gap-3">
-              <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[4px] bg-offwhite">
+            <RevealItem key={m.name} className="flex flex-col overflow-hidden rounded-[4px]">
+              <div className="relative aspect-[302/256] w-full overflow-hidden bg-offwhite">
                 {m.photo ? (
-                  <Image src={m.photo} alt={m.name} fill sizes="(min-width:1024px) 20vw, 45vw" className="object-cover" />
+                  <Image
+                    src={m.photo}
+                    alt={m.name}
+                    fill
+                    sizes="(min-width:1024px) 20vw, 45vw"
+                    className="object-cover object-top"
+                  />
                 ) : (
                   <span className="flex size-full items-center justify-center text-muted/40">
                     <User className="size-12" strokeWidth={1.2} aria-hidden="true" />
                   </span>
                 )}
               </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-[17px] font-medium leading-[22px] text-foreground">{m.name}</span>
-                <span className="text-[14px] leading-[20px] text-muted">{m.role}</span>
+              <div className="flex flex-1 flex-col items-center gap-[7px] bg-offwhite px-3 py-[26px] text-center md:py-[30px]">
+                <span className="text-[18px] font-medium leading-[24px] text-foreground md:text-[22px] md:leading-[26.4px]">
+                  {m.name}
+                </span>
+                <span className="text-[15px] leading-[22px] text-muted md:text-[17px] md:leading-[24px]">
+                  {m.role}
+                </span>
               </div>
             </RevealItem>
           ))}
         </RevealGroup>
       </section>
 
-      {/* Goal */}
-      <section className="container-wide pb-16 md:pb-24">
-        <div className="grid grid-cols-1 overflow-hidden rounded-[8px] lg:grid-cols-2">
-          <RevealUp className="lg:order-1">
-            <div className="relative aspect-[4/3] h-full w-full overflow-hidden bg-offwhite lg:aspect-auto lg:min-h-[360px]">
-              <Image src={a.goal.image} alt={a.goal.imageAlt} fill sizes="(min-width:1024px) 50vw, 100vw" className="object-cover" />
-            </div>
-          </RevealUp>
-          <RevealUp className="lg:order-2">
-            <div className="flex h-full flex-col justify-center gap-4 bg-accent px-8 py-12 text-white md:px-12 md:py-16">
-              <p className="text-[14px] font-semibold uppercase tracking-[0.12em] text-white/80">
-                {a.goal.eyebrow}
-              </p>
-              <h2 className="font-display text-[28px] font-bold leading-[1.1] md:text-[36px]">
-                {a.goal.title}
-              </h2>
-              <p className="text-[17px] leading-[26px] text-white/90">{a.goal.body}</p>
-            </div>
+      {/* Goal — full-width gold banner, beeswax image bleeding on the left (Figma 156:1211) */}
+      <section className="container-wide py-14 md:py-24">
+        <div className="relative overflow-hidden rounded-[4px] bg-accent">
+          {/* Desktop: exact Figma banner background, rendered proportionally so the
+              blocks stay in the left ~40% and never collide with the copy */}
+          <Image
+            src={a.goal.image}
+            alt={a.goal.imageAlt}
+            width={1680}
+            height={300}
+            sizes="100vw"
+            className="hidden w-full xl:block"
+          />
+
+          {/* Mobile + small desktop: top band, text below */}
+          <div className="relative h-[150px] w-full sm:h-[190px] xl:hidden">
+            <Image
+              src={a.goal.image}
+              alt={a.goal.imageAlt}
+              fill
+              sizes="100vw"
+              className="object-cover object-left"
+            />
+          </div>
+
+          {/* Text */}
+          <RevealUp className="relative flex flex-col gap-2.5 px-7 pb-9 text-white md:px-12 xl:absolute xl:inset-0 xl:ml-[49%] xl:max-w-[560px] xl:justify-center xl:py-5 xl:pb-5 xl:pl-2 xl:pr-[56px]">
+            <p className="text-[14px] uppercase leading-[21px] tracking-[0.02em] text-cream">
+              {a.goal.eyebrow}
+            </p>
+            <h2 className="font-display text-[28px] font-semibold leading-[1.1] md:text-[41px] md:leading-[44px]">
+              {a.goal.title}
+            </h2>
+            <p className="text-[17px] leading-[24px] text-cream">{a.goal.body}</p>
           </RevealUp>
         </div>
       </section>
