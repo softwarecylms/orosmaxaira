@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
 import { SHOP_PAGE } from '@/components/shop/shop-content'
@@ -35,7 +36,9 @@ export default function ShopPage() {
         </nav>
       </div>
 
-      <ShopBrowser />
+      <Suspense fallback={<div className="container-wide min-h-[60vh]" aria-hidden="true" />}>
+        <ShopBrowser />
+      </Suspense>
     </>
   )
 }

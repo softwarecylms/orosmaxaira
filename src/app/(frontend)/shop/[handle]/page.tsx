@@ -12,8 +12,8 @@ import { ProductView } from '@/components/shop/product/product-view'
 import type { AddonProduct } from '@/components/shop/product/product-purchase'
 import { ProductTabs } from '@/components/shop/product/product-tabs'
 import { BenefitsBar } from '@/components/shop/product/benefits-bar'
-import { ShopProductCard } from '@/components/shop/shop-product-card'
-import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
+import { RelatedCarousel } from '@/components/shop/product/related-carousel'
+import { RevealUp } from '@/components/home/reveal-up'
 
 type Params = { params: Promise<{ handle: string }> }
 
@@ -83,16 +83,10 @@ export default async function ProductPage({ params }: Params) {
                 Προϊόντα που ίσως σας ενδιαφέρουν
               </h2>
             </RevealUp>
-            <RevealGroup
-              className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:mt-12 md:grid-cols-4"
-              stagger={0.08}
-            >
-              {related.map((p) => (
-                <RevealItem key={p.title} className="h-full">
-                  <ShopProductCard product={p} />
-                </RevealItem>
-              ))}
-            </RevealGroup>
+            {/* Mobile: swipe carousel w/ arrows + auto-advance (like the home deal row); md+: 4-col grid */}
+            <div className="mt-8 md:mt-12">
+              <RelatedCarousel products={related} />
+            </div>
           </div>
         </section>
       ) : null}

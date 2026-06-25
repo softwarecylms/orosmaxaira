@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { ArrowRight, SlidersHorizontal, X } from 'lucide-react'
 import {
   SHOP_CATEGORIES,
@@ -36,8 +37,40 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
 const PAGE_SIZE = 12
 const PAGE_STEP = 8
 
+// Default catalogue order: honey (Μέλι) first, then bee products (Προϊόντα Μέλισσας)
+// with Υδρόμελο + bee pollen (Γύρη Μελισσών) leading, then cosmetics, then gift sets.
+// Stable sort keeps each group's existing relative order.
+const DEFAULT_CATEGORY_RANK: Record<string, number> = {
+  Μέλι: 0,
+  'Προϊόντα Μέλισσας': 1,
+  Καλλυντικά: 2,
+  'Πακέτα Δώρων': 3,
+}
+function defaultOrderRank(p: (typeof SHOP_PRODUCTS)[number]): number {
+  const cat = DEFAULT_CATEGORY_RANK[p.category] ?? 4
+  const lead =
+    p.category === 'Προϊόντα Μέλισσας' &&
+    (p.title === 'Υδρόμελο' || p.title.startsWith('Γύρη Μελισσών'))
+      ? 0
+      : 1
+  return cat * 10 + lead
+}
+
 export function ShopBrowser() {
-  const [cats, setCats] = useState<Set<ShopCategory>>(new Set())
+  // A `?category=…` query (set by clicking a category on a product card)
+  // pre-selects that filter, and keeps it in sync on navigation.
+  const categoryParam = useSearchParams().get('category')
+  const validCat =
+    categoryParam && (SHOP_CATEGORIES as readonly string[]).includes(categoryParam)
+      ? (categoryParam as ShopCategory)
+      : null
+  const [cats, setCats] = useState<Set<ShopCategory>>(() =>
+    validCat ? new Set([validCat]) : new Set(),
+  )
+  useEffect(() => {
+    setCats(validCat ? new Set([validCat]) : new Set())
+  }, [validCat])
+
   const [priceMin, setPriceMin] = useState(SHOP_PRICE_MIN)
   const [priceMax, setPriceMax] = useState(SHOP_PRICE_MAX)
   const [sort, setSort] = useState<ShopSort>('default')
@@ -54,6 +87,7 @@ export function ShopBrowser() {
     if (sort === 'price-asc') list = [...list].sort((a, b) => a.sortPrice - b.sortPrice)
     else if (sort === 'price-desc') list = [...list].sort((a, b) => b.sortPrice - a.sortPrice)
     else if (sort === 'name-asc') list = [...list].sort((a, b) => a.title.localeCompare(b.title, 'el'))
+    else list = [...list].sort((a, b) => defaultOrderRank(a) - defaultOrderRank(b)) // 'default'
     return list
   }, [cats, priceMin, priceMax, sort])
 

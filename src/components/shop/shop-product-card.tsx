@@ -10,7 +10,14 @@ import { displayPrice } from '@/lib/utils'
  * and a full-width add-to-cart button. Products are a static snapshot of the
  * live store, so the card + button link out to the real product page.
  */
-export function ShopProductCard({ product }: { product: ShopProduct }) {
+export function ShopProductCard({
+  product,
+  shortCta = false,
+}: {
+  product: ShopProduct
+  /** Use the short "Προσθήκη" label instead of "Προσθήκη στο καλάθι" (tight grids). */
+  shortCta?: boolean
+}) {
   const href = `/shop/${handleOf(product)}`
 
   return (
@@ -36,7 +43,12 @@ export function ShopProductCard({ product }: { product: ShopProduct }) {
         )}
       </Link>
 
-      <p className="text-[14px] leading-[21px] text-[#555]">{product.category}</p>
+      <Link
+        href={`/shop?category=${encodeURIComponent(product.category)}`}
+        className="w-fit text-[14px] leading-[21px] text-[#555] transition-colors hover:text-accent"
+      >
+        {product.category}
+      </Link>
 
       <Link href={href} className="block">
         <h3 className="line-clamp-2 min-h-[48px] text-[17px] font-medium leading-[24px] text-foreground transition-colors group-hover:text-accent">
@@ -51,7 +63,14 @@ export function ShopProductCard({ product }: { product: ShopProduct }) {
         className="mt-auto flex items-center justify-center gap-2 rounded-[4px] bg-accent px-3 py-2.5 text-center text-[13px] leading-[20px] text-white transition-colors hover:bg-foreground sm:gap-3 sm:p-[15px] sm:text-[17px] sm:leading-[24px]"
       >
         <ShoppingCart className="size-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />
-        {SHOP_PAGE.addToCart}
+        {shortCta ? (
+          <>
+            <span className="md:hidden">Προσθήκη</span>
+            <span className="hidden md:inline">{SHOP_PAGE.addToCart}</span>
+          </>
+        ) : (
+          SHOP_PAGE.addToCart
+        )}
       </Link>
     </article>
   )

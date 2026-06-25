@@ -392,5 +392,9 @@ export const FOOTER = {
   legal: '© 2026 Oros Machaira | All rights reserved | Powered and Designed by',
   legalBrand: 'SoftwareCy',
   legalBrandHref: 'https://softwarecy.com',
-  policies: 'Παραγγελίες & Επιστροφές | Πολιτική Αποστολών | Πολιτική Απορρήτου & Cookies',
+  policies: [
+    { label: 'Παραγγελίες & Επιστροφές', href: '/terms#epistrofes' },
+    { label: 'Πολιτική Αποστολών', href: '/terms#apostoles' },
+    { label: 'Πολιτική Απορρήτου & Cookies', href: '/privacy' },
+  ],
 }

@@ -102,6 +102,23 @@ export function HeaderMobile({
               </Link>
             </nav>
 
+            <div className="flex flex-col">
+              <Link
+                href="/terms"
+                onClick={() => setOpen(false)}
+                className="py-2 text-[15px] text-muted transition-colors hover:text-accent"
+              >
+                Όροι &amp; Προϋποθέσεις
+              </Link>
+              <Link
+                href="/privacy"
+                onClick={() => setOpen(false)}
+                className="py-2 text-[15px] text-muted transition-colors hover:text-accent"
+              >
+                Πολιτική Απορρήτου
+              </Link>
+            </div>
+
             <a
               href={phone.href}
               className="mt-auto flex items-center gap-2.5 text-[19px] font-medium text-accent"

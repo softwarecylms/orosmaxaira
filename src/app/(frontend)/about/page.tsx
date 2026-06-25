@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ChevronRight, Users, BadgeCheck, Leaf, User, Building2 } from 'lucide-react'
+import { ChevronRight, User, Building2 } from 'lucide-react'
 import { ABOUT_PAGE, type AboutValueIcon } from '@/components/about/about-content'
 import { OutdoorCarousel } from '@/components/about/outdoor-carousel'
 import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
@@ -13,10 +13,11 @@ export const metadata: Metadata = {
     'Είμαστε μία μελισσοκομική οικογένεια. Ασχολούμαστε επαγγελματικά με τη μελισσοκομία από το 1983 — αγνό κυπριακό μέλι από τα άνθη και τα βότανα του Μαχαιρά.',
 }
 
-const VALUE_ICONS: Record<AboutValueIcon, typeof BadgeCheck> = {
-  purity: BadgeCheck,
-  eco: Leaf,
-  family: Users,
+/** Brand value icons (white cut-outs from Figma) shown on the gold discs. */
+const VALUE_ICONS: Record<AboutValueIcon, string> = {
+  purity: '/images/about/value-purity.png',
+  eco: '/images/about/value-eco.png',
+  family: '/images/about/value-family.png',
 }
 
 export default function AboutPage() {
@@ -118,23 +119,27 @@ export default function AboutPage() {
           className="container-wide grid grid-cols-1 gap-12 sm:grid-cols-3 sm:gap-10"
           stagger={0.1}
         >
-          {a.values.map((v) => {
-            const Icon = VALUE_ICONS[v.icon]
-            return (
+          {a.values.map((v) => (
               <RevealItem
                 key={v.title}
                 className="mx-auto flex max-w-[360px] flex-col items-center gap-[15px] text-center"
               >
-                <span className="flex size-[50px] items-center justify-center rounded-full bg-accent text-white">
-                  <Icon className="size-6" strokeWidth={1.8} aria-hidden="true" />
+                <span className="flex size-[50px] items-center justify-center rounded-full bg-accent">
+                  <Image
+                    src={VALUE_ICONS[v.icon]}
+                    alt=""
+                    width={28}
+                    height={28}
+                    className="size-[27px] object-contain"
+                  />
                 </span>
                 <h3 className="text-[20px] font-medium leading-[26.4px] text-foreground md:text-[22px]">
                   {v.title}
                 </h3>
                 <p className="text-[17px] leading-[24px] text-muted">{v.text}</p>
               </RevealItem>
-            )
-          })}
+            ),
+          )}
         </RevealGroup>
       </section>
 

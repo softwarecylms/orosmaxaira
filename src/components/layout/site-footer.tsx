@@ -161,11 +161,11 @@ export function SiteFooter(_props: SiteFooterProps) {
             </Link>
           </p>
           <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 md:justify-start">
-            {FOOTER.policies.split(' | ').map((item, i) => (
-              <span key={item} className="flex items-center gap-x-2">
+            {FOOTER.policies.map((item, i) => (
+              <span key={item.label} className="flex items-center gap-x-2">
                 {i > 0 ? <span aria-hidden="true">|</span> : null}
-                <Link href="/" className="transition-colors hover:text-accent">
-                  {item}
+                <Link href={item.href} className="transition-colors hover:text-accent">
+                  {item.label}
                 </Link>
               </span>
             ))}

@@ -18,9 +18,6 @@ export function CartView() {
   if (items.length === 0) {
     return (
       <div className="container-wide flex flex-col items-start gap-5 py-16 md:py-24">
-        <h1 className="font-display text-[32px] font-bold text-foreground md:text-[41px]">
-          Το καλάθι σας
-        </h1>
         <p className="text-[17px] text-muted">Το καλάθι σας είναι άδειο.</p>
         <Link
           href="/shop"
@@ -38,10 +35,6 @@ export function CartView() {
 
   return (
     <div className="container-wide flex flex-col gap-8 py-12 md:py-16">
-      <h1 className="font-display text-[32px] font-bold text-foreground md:text-[41px]">
-        Το καλάθι σας
-      </h1>
-
       <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
         {/* Line items */}
         <div className="flex flex-col divide-y divide-border border-y border-border">
