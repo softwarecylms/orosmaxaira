@@ -254,7 +254,7 @@ export function CheckoutForm() {
   return (
     <form onSubmit={placeOrder} className="container-wide grid gap-10 py-12 md:py-16 lg:grid-cols-[1fr_400px]">
       {/* Billing details */}
-      <fieldset className="flex flex-col gap-4">
+      <fieldset className="flex min-w-0 flex-col gap-4">
         <legend className="mb-2 text-[20px] font-semibold text-foreground">Στοιχεία χρέωσης</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Όνομα" value={c.firstName} onChange={set('firstName')} required autoComplete="given-name" />
@@ -273,7 +273,7 @@ export function CheckoutForm() {
             value={c.country}
             onChange={onCountry}
             required
-            className="rounded-[4px] border border-border bg-white px-4 py-3 text-[16px] text-foreground outline-none focus:border-accent"
+            className="w-full min-w-0 rounded-[4px] border border-border bg-white px-4 py-3 text-[16px] text-foreground outline-none focus:border-accent"
           >
             <option value="Κύπρος">Κύπρος</option>
             <option value="Ελλάδα">Ελλάδα</option>
@@ -337,13 +337,13 @@ export function CheckoutForm() {
             onChange={set('notes')}
             rows={3}
             placeholder="Σημειώσεις για την παραγγελία σας, π.χ. ειδικές οδηγίες για την παράδοση."
-            className="resize-y rounded-[4px] border border-border bg-white px-4 py-3 text-[16px] text-foreground outline-none transition-colors focus:border-accent"
+            className="w-full min-w-0 resize-y rounded-[4px] border border-border bg-white px-4 py-3 text-[16px] text-foreground outline-none transition-colors focus:border-accent"
           />
         </label>
       </fieldset>
 
       {/* Order summary — items, delivery, payment, totals, submit */}
-      <aside className="flex h-fit flex-col gap-5 rounded-[4px] border border-border bg-white p-6">
+      <aside className="flex h-fit min-w-0 flex-col gap-5 rounded-[4px] border border-border bg-white p-6">
         <h2 className="text-[20px] font-semibold text-foreground">Η παραγγελία σας</h2>
 
         <div className="flex flex-col divide-y divide-border">
@@ -397,7 +397,7 @@ export function CheckoutForm() {
                 value={c.acsPoint}
                 onChange={set('acsPoint')}
                 required
-                className="rounded-[4px] border border-border bg-white px-3 py-2.5 text-[14px] text-foreground outline-none focus:border-accent"
+                className="w-full min-w-0 rounded-[4px] border border-border bg-white px-3 py-2.5 text-[14px] text-foreground outline-none focus:border-accent"
               >
                 <option value="">Επιλέξτε σημείο παραλαβής…</option>
                 {ACS_STORES[c.country].map((group) => (
@@ -581,7 +581,7 @@ function Field({
       <input
         {...props}
         required={required}
-        className="rounded-[4px] border border-border bg-white px-4 py-3 text-[16px] text-foreground outline-none transition-colors focus:border-accent"
+        className="w-full min-w-0 rounded-[4px] border border-border bg-white px-4 py-3 text-[16px] text-foreground outline-none transition-colors focus:border-accent"
       />
     </label>
   )

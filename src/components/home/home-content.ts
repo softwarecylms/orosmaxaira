@@ -43,7 +43,7 @@ export const MEGA_MENU: MegaColumn[] = [
     links: [
       { label: 'Μέλι Ανθέων', href: '/' },
       { label: 'Άβραστο (άθερμο) Μέλι Ανθέων', href: '/' },
-      { label: 'Θυμαρίσιο Μέλι', href: '/' },
+      { label: 'Θυμαρίσιο Μέλι', href: '/shop/thymarisio-meli-oros-machaira' },
     ],
   },
   {
@@ -163,7 +163,7 @@ export const DEAL = {
     { category: 'Μέλι', title: 'Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-2.webp', href: '/' },
     { category: 'Μέλι', title: 'Βασιλικός πολτός «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-3.webp', href: '/' },
     { category: 'Μέλι', title: 'Υδρόμελο', price: '€3,50 – €31,00', image: '/images/home/deal-4.webp', href: '/' },
-    { category: 'Μέλι', title: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-5.webp', href: '/' },
+    { category: 'Μέλι', title: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-5.webp', href: '/shop/thymarisio-meli-oros-machaira' },
   ] satisfies HoneyProduct[],
 }
 
@@ -254,7 +254,7 @@ export const FLATLAY: {
       top: '31%',
       mLeft: '75%',
       mTop: '33%',
-      href: '/',
+      href: '/shop/thymarisio-meli-oros-machaira',
       placement: 'bottom',
       product: {
         category: 'Μέλι',
