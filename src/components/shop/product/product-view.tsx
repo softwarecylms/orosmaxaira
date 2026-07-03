@@ -40,13 +40,21 @@ export function ProductView({
     if (s?.image) setActive(s.image)
   }
 
+  // Reverse of onSelectSize: picking a gallery image that belongs to a variation
+  // selects that variation too (so the size chips + price stay in sync).
+  function onSelectImage(src: string) {
+    setActive(src)
+    const s = sizes.find((x) => x.image === src)
+    if (s) setSize(s.label)
+  }
+
   return (
     <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-[60px]">
       <RevealUp>
         <ProductGallery
           images={gallery}
           active={active}
-          onSelect={setActive}
+          onSelect={onSelectImage}
           alt={product.imageAlt}
         />
       </RevealUp>

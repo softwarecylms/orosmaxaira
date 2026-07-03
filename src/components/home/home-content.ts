@@ -13,7 +13,7 @@ export const NAV: { label: string; href: string; children?: { label: string; hre
   { label: 'Αρχική', href: '/' },
   {
     label: 'Προϊόντα',
-    href: '/',
+    href: '/shop',
     children: [
       { label: 'Μέλι Όρος Μαχαιρά', href: '/' },
       { label: 'Προϊόντα Μέλισσας', href: '/' },
@@ -22,12 +22,22 @@ export const NAV: { label: string; href: string; children?: { label: string; hre
     ],
   },
   { label: 'Ποιοί είμαστε', href: '/about' },
-  { label: 'Δραστηριότητες', href: '/' },
-  { label: 'Blog', href: '/' },
-  { label: 'Επικοινωνία', href: '/' },
+  { label: 'Βραβεία', href: '/awards' },
+  {
+    label: 'Δραστηριότητες',
+    href: '/drastiriotites',
+    children: [
+      { label: 'Γνωρίζω τη Μέλισσα', href: '/drastiriotites/xenagiseis' },
+      { label: 'Εργαστήρια', href: '/drastiriotites/ergastiria' },
+      { label: 'Μελισσοθεραπεία', href: '/drastiriotites/melissotherapeia' },
+      { label: 'Περιπέτειες στις Κυψέλες', href: '/drastiriotites/peripeteies-stis-kypseles' },
+    ],
+  },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Επικοινωνία', href: '/contact' },
 ]
 
-export const ADOPT_LINK: Cta = { label: 'Υιοθετώ μια κυψέλη', href: '/' }
+export const ADOPT_LINK: Cta = { label: 'Υιοθετώ μια κυψέλη', href: '/adopt-a-hive' }
 export const READ_MORE = 'Δείτε περισσότερα'
 
 /** Mega menu shown on hover of "Προϊόντα" (Figma 305:2612). */
@@ -39,38 +49,38 @@ export type MegaColumn = {
 export const MEGA_MENU: MegaColumn[] = [
   {
     title: 'Μέλι',
-    href: '/',
+    href: '/shop?category=Μέλι',
     links: [
-      { label: 'Μέλι Ανθέων', href: '/' },
-      { label: 'Άβραστο (άθερμο) Μέλι Ανθέων', href: '/' },
+      { label: 'Μέλι Ανθέων', href: '/shop/meli-antheon-oros-machaira' },
+      { label: 'Άβραστο (άθερμο) Μέλι Ανθέων', href: '/shop/avrasto-meli-antheon-oros-machaira' },
       { label: 'Θυμαρίσιο Μέλι', href: '/shop/thymarisio-meli-oros-machaira' },
     ],
   },
   {
     title: 'Προϊόντα Μέλισσας',
-    href: '/',
+    href: '/shop?category=Προϊόντα%20Μέλισσας',
     links: [
-      { label: 'Υδρόμελο', href: '/' },
-      { label: 'Βασιλικός πολτός', href: '/' },
-      { label: 'Μέλι με Φυστίκια', href: '/' },
+      { label: 'Υδρόμελο', href: '/shop/ydromelo' },
+      { label: 'Βασιλικός πολτός', href: '/shop/vasilikos-poltos-oros-machaira' },
+      { label: 'Μέλι με Φυστίκια', href: '/shop/meli-me-fistikia' },
     ],
   },
   {
     title: 'Φυσικά Καλλυντικά',
-    href: '/',
+    href: '/shop?category=Καλλυντικά',
     links: [
-      { label: 'Κρέμα Σώματος', href: '/' },
-      { label: 'Φυσική Κηραλοιφή Προσώπου', href: '/' },
-      { label: 'Βάλσαμο για τα Χείλη', href: '/' },
+      { label: 'Κρέμα Σώματος', href: '/shop/krema-somatos' },
+      { label: 'Φυσική Κηραλοιφή Προσώπου', href: '/shop/fysiki-kiraloifi-gia-prosopo' },
+      { label: 'Βάλσαμο για τα Χείλη', href: '/shop/valsamo-gia-ta-cheili' },
     ],
   },
   {
     title: 'Πακέτα δώρων',
-    href: '/',
+    href: '/shop?category=Πακέτα%20Δώρων',
     links: [
-      { label: 'Nourish Care Gift Set', href: '/' },
-      { label: 'Everyday Care Duo Gift Set', href: '/' },
-      { label: 'Balance Care Gift Set', href: '/' },
+      { label: 'Nourish Care Gift Set', href: '/shop/nourish-care-gift-set' },
+      { label: 'Everyday Care Duo Gift Set', href: '/shop/everyday-care-duo-gift-set' },
+      { label: 'Balance Care Gift Set', href: '/shop/balance-care-gift-set' },
     ],
   },
 ]
@@ -355,11 +365,14 @@ export const FOOTER = {
       links: [
         { label: 'Αρχική', href: '/' },
         { label: 'Ποιοί είμαστε', href: '/about' },
+        { label: 'Βραβεία', href: '/awards' },
         { label: 'Προϊόντα', href: '/' },
-        { label: 'Δραστηριότητες', href: '/' },
-        { label: 'Υιοθετώ μια κυψέλη', href: '/' },
-        { label: 'Blog', href: '/' },
-        { label: 'Επικοινωνία', href: '/' },
+        { label: 'Δραστηριότητες', href: '/drastiriotites' },
+        { label: 'Υιοθετώ μια κυψέλη', href: '/adopt-a-hive' },
+        { label: 'Αφανείς Ήρωες της Φύσης', href: '/nature-heroes' },
+        { label: 'Γνωρίζω τη Μέλισσα', href: '/drastiriotites/xenagiseis' },
+        { label: 'Blog', href: '/blog' },
+        { label: 'Επικοινωνία', href: '/contact' },
       ],
     },
     {

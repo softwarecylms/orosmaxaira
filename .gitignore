@@ -51,4 +51,11 @@ playwright-report
 .shots
 
 # raw source images (originals kept locally; only optimized .webp are committed)
-public/images/home/_raw
+**/_raw/
+
+# turborepo cache
+.turbo
+
+# local-only dev config + internal source docs (not shipped or publicly served)
+.mcp.json
+public/awards.docx

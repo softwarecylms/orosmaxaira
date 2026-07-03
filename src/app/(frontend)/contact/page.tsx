@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { BadgeCheck, ChevronRight, Clock, Leaf, Mail, MapPin, Phone, Users } from 'lucide-react'
+import { BadgeCheck, Clock, Leaf, Mail, MapPin, Phone, Users } from 'lucide-react'
 import {
   CONTACT_PAGE,
   type ContactIcon,
@@ -48,24 +48,6 @@ export default function ContactPage() {
 
   return (
     <>
-      {/* Breadcrumb */}
-      <div className="container-wide pb-2.5 pt-4">
-        <nav aria-label="breadcrumb" className="flex items-center gap-1.5 text-[15px] text-muted md:text-[17px]">
-          {c.breadcrumb.map((b, i) => (
-            <span key={b.label} className="flex items-center gap-1.5">
-              {i > 0 ? <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" /> : null}
-              {b.href ? (
-                <Link href={b.href} className="transition-colors hover:text-accent">
-                  {b.label}
-                </Link>
-              ) : (
-                <span className="text-foreground">{b.label}</span>
-              )}
-            </span>
-          ))}
-        </nav>
-      </div>
-
       {/* Hero */}
       <ContactHero image={c.hero.image} imageAlt={c.hero.imageAlt} title={c.hero.title} />
 

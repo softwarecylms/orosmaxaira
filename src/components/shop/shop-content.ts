@@ -5,6 +5,8 @@
  * purchase actually happens; swap `href`/data for Medusa once products are seeded.
  */
 
+import { GENERATED_PRODUCT_DETAILS } from './product-details.generated'
+
 export type ShopCategory = 'Μέλι' | 'Προϊόντα Μέλισσας' | 'Καλλυντικά' | 'Πακέτα Δώρων'
 
 export type ShopProduct = {
@@ -61,37 +63,37 @@ export const SHOP_PAGE = {
 }
 
 export const SHOP_PRODUCTS: ShopProduct[] = [
-  { category: 'Πακέτα Δώρων', title: 'Balance Care Gift Set', price: '€49,90', sortPrice: 4990, inStock: false, image: '/images/shop/balance-care-gift-set.webp', imageAlt: 'Skincare gift set labeled Balance Care on a pastel gradient sleeve resting on a beige textured bag in a wooden surface booth.', href: 'https://orosmaxaira.com/product/balance-care-gift-set/' },
-  { category: 'Πακέτα Δώρων', title: 'Nourish Care Gift Set', price: '€28,50', sortPrice: 2850, inStock: true, image: '/images/shop/nourish-care-gift-set.webp', imageAlt: 'Beige zippered cosmetic bag with a pink label showcasing a Nourish Care skincare set and small bottles on a wooden surface.', href: 'https://orosmaxaira.com/product/nourish-care-gift-set/' },
-  { category: 'Πακέτα Δώρων', title: 'Everyday Care Duo Gift Set', price: '€14,25', sortPrice: 1425, inStock: true, image: '/images/shop/everyday-care-duo-gift-set.webp', imageAlt: "Beige cosmetic bag with a peach label reading 'EVERYDAY CARE DUO' and small skincare bottles pictured on the front label (gift set).", href: 'https://orosmaxaira.com/product/everyday-care-duo-gift-set/' },
-  { category: 'Πακέτα Δώρων', title: 'Κιτ Χειροποίητης Πασχαλινής Μελισσολαμπάδας «Όρος Μαχαιρά» – Special Easter Release', price: '€12,50', sortPrice: 1250, inStock: false, image: '/images/shop/kit-cheiropoiitis-paschalinis-melissolampadas-quot-oros-machaira-quot-special-easter-release-2.webp', imageAlt: 'Κιτ Χειροποίητης Πασχαλινής Μελισσολαμπάδας «Όρος Μαχαιρά» – Special Easter Release', href: 'https://orosmaxaira.com/product/kit-cheiropoiitis-paschalinis-melissolampadas-quot-oros-machaira-quot-special-easter-release-2/' },
-  { category: 'Καλλυντικά', title: 'Κρέμα Σώματος', price: '€15,90', sortPrice: 1590, inStock: true, image: '/images/shop/krema-somatos.webp', imageAlt: 'Κρέμα Σώματος', href: 'https://orosmaxaira.com/product/krema-somatos/' },
-  { category: 'Πακέτα Δώρων', title: 'Υδρόμελο – Valentine’s Gift Box', price: '€22,00', sortPrice: 2200, inStock: true, image: '/images/shop/ydromelo-valentine-gift-box.webp', imageAlt: 'Υδρόμελο – Valentine’s Gift Box', href: 'https://orosmaxaira.com/product/ydromelo-valentine-gift-box/' },
-  { category: 'Προϊόντα Μέλισσας', title: 'Μέλι με Φουντούκια', price: '€5,40', sortPrice: 540, inStock: true, image: '/images/shop/meli-me-foyntoykia.webp', imageAlt: 'Μέλι με Φουντούκια', href: 'https://orosmaxaira.com/product/meli-me-foyntoykia/' },
-  { category: 'Προϊόντα Μέλισσας', title: 'Μέλι με Φυστίκια', price: '€4,80', sortPrice: 480, inStock: true, image: '/images/shop/meli-me-fistikia.webp', imageAlt: 'Μέλι με Φυστίκια', href: 'https://orosmaxaira.com/product/meli-me-fistikia/' },
-  { category: 'Προϊόντα Μέλισσας', title: 'Μέλι με Γύρη', price: '€6,20', sortPrice: 620, inStock: true, image: '/images/shop/meli-me-gyri.webp', imageAlt: 'Μέλι με Γύρη', href: 'https://orosmaxaira.com/product/meli-me-gyri/' },
-  { category: 'Προϊόντα Μέλισσας', title: 'Μέλι με Χαρούπι και Φουντούκια', price: '€5,40', sortPrice: 540, inStock: true, image: '/images/shop/meli-me-charoypi-kai-foyntoykia.webp', imageAlt: 'Μέλι με Χαρούπι και Φουντούκια', href: 'https://orosmaxaira.com/product/meli-me-charoypi-kai-foyntoykia/' },
-  { category: 'Καλλυντικά', title: 'Φυσική Κηραλοιφή για Εντριβές στο Στήθος και Μυϊκό Μασάζ', price: '€17,90', sortPrice: 1790, inStock: true, image: '/images/shop/kiraloifi-gia-entrives-sto-stithos-kai-myiko-masaz.webp', imageAlt: 'Φυσική Κηραλοιφή για Εντριβές στο Στήθος και Μυϊκό Μασάζ', href: 'https://orosmaxaira.com/product/kiraloifi-gia-entrives-sto-stithos-kai-myiko-masaz/' },
-  { category: 'Καλλυντικά', title: 'Φυσική Κηραλοιφή για Κυτταρίτιδα', price: '€17,90', sortPrice: 1790, inStock: true, image: '/images/shop/kiraloifi-gia-kyttaritida.webp', imageAlt: 'Φυσική Κηραλοιφή για Κυτταρίτιδα', href: 'https://orosmaxaira.com/product/kiraloifi-gia-kyttaritida/' },
-  { category: 'Προϊόντα Μέλισσας', title: 'Μείγμα μελιού γύρης και βασιλικού πολτού', price: '€3,50', sortPrice: 350, inStock: true, image: '/images/shop/meigma-melioy-gyris-kai-vasilikoy-poltoy.webp', imageAlt: 'Μείγμα μελιού γύρης και βασιλικού πολτού', href: 'https://orosmaxaira.com/product/meigma-melioy-gyris-kai-vasilikoy-poltoy/' },
-  { category: 'Προϊόντα Μέλισσας', title: 'Υδρόμελο', price: '€16,00', sortPrice: 1600, inStock: true, image: '/images/shop/ydromelo.webp', imageAlt: 'Υδρόμελο', href: 'https://orosmaxaira.com/product/ydromelo/' },
-  { category: 'Καλλυντικά', title: 'Φυσική Κηραλοιφή για Ευαίσθητες Επιδερμίδες', price: '€17,90', sortPrice: 1790, inStock: true, image: '/images/shop/kiraloifi-gia-eyaisthites-epidermides.webp', imageAlt: 'Φυσική Κηραλοιφή για Ευαίσθητες Επιδερμίδες', href: 'https://orosmaxaira.com/product/kiraloifi-gia-eyaisthites-epidermides/' },
-  { category: 'Καλλυντικά', title: 'Φυσική Κηραλοιφή για Σκασμένα Χέρια', price: '€17,90', sortPrice: 1790, inStock: true, image: '/images/shop/kiraloifi-gia-skasmena-cheria.webp', imageAlt: 'Φυσική Κηραλοιφή για Σκασμένα Χέρια', href: 'https://orosmaxaira.com/product/kiraloifi-gia-skasmena-cheria/' },
-  { category: 'Καλλυντικά', title: 'Φυσική Κηραλοιφή Προσώπου', price: '€24,90', sortPrice: 2490, inStock: true, image: '/images/shop/fysiki-kiraloifi-gia-prosopo.webp', imageAlt: 'Φυσική Κηραλοιφή Προσώπου', href: 'https://orosmaxaira.com/product/fysiki-kiraloifi-gia-prosopo/' },
-  { category: 'Καλλυντικά', title: 'Φυσική Κηραλοιφή για Σπυράκια και Τσιμπήματα Εντόμων', price: '€17,90', sortPrice: 1790, inStock: true, image: '/images/shop/fysiki-kiraloifi-gia-spyrakia-kai-tsimpimata-entomon.webp', imageAlt: 'Φυσική Κηραλοιφή για Σπυράκια και Τσιμπήματα Εντόμων', href: 'https://orosmaxaira.com/product/fysiki-kiraloifi-gia-spyrakia-kai-tsimpimata-entomon/' },
-  { category: 'Καλλυντικά', title: 'Φυσική Ενυδατική Κρέμα Προσώπου', price: '€24,90', sortPrice: 2490, inStock: true, image: '/images/shop/enydatiki-krema-prosopoy.webp', imageAlt: 'Φυσική Ενυδατική Κρέμα Προσώπου', href: 'https://orosmaxaira.com/product/enydatiki-krema-prosopoy/' },
-  { category: 'Καλλυντικά', title: 'Φυσική Αντιγηραντική Κρέμα Ματιών', price: '€24,90', sortPrice: 2490, inStock: false, image: '/images/shop/fysiki-antigirantiki-krema-mation.webp', imageAlt: 'Φυσική Αντιγηραντική Κρέμα Ματιών', href: 'https://orosmaxaira.com/product/fysiki-antigirantiki-krema-mation/' },
-  { category: 'Καλλυντικά', title: 'Κρέμα Χεριών (Milk & Honey)', price: '€9,90', sortPrice: 990, inStock: true, image: '/images/shop/krema-cherion-milk-amp-honey.webp', imageAlt: 'Κρέμα Χεριών (Milk & Honey)', href: 'https://orosmaxaira.com/product/krema-cherion-milk-amp-honey/' },
-  { category: 'Καλλυντικά', title: 'Κρέμα Χεριών (Red Grape)', price: '€9,90', sortPrice: 990, inStock: true, image: '/images/shop/krema-cherion-red-grape.webp', imageAlt: 'Κρέμα Χεριών (Red Grape)', href: 'https://orosmaxaira.com/product/krema-cherion-red-grape/' },
-  { category: 'Καλλυντικά', title: 'Βάλσαμο για τα Χείλη', price: '€5,90', sortPrice: 590, inStock: true, image: '/images/shop/valsamo-gia-ta-cheili.webp', imageAlt: 'Βάλσαμο για τα Χείλη', href: 'https://orosmaxaira.com/product/valsamo-gia-ta-cheili/' },
-  { category: 'Προϊόντα Μέλισσας', title: 'Γύρη Μελισσών «Όρος Μαχαιρά»', price: '€15,00 – €24,00', sortPrice: 1500, inStock: true, image: '/images/shop/gyri-oros-machaira.webp', imageAlt: 'Γύρη Μελισσών «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/gyri-oros-machaira/' },
-  { category: 'Προϊόντα Μέλισσας', title: 'Βασιλικός πολτός «Όρος Μαχαιρά»', price: '€22,00', sortPrice: 2200, inStock: true, image: '/images/shop/vasilikos-poltos-oros-machaira.webp', imageAlt: 'Βασιλικός πολτός «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/vasilikos-poltos-oros-machaira/' },
-  { category: 'Προϊόντα Μέλισσας', title: 'Κηρήθρα με μέλι «Όρος Μαχαιρά»', price: '€7,00', sortPrice: 700, inStock: false, image: '/images/shop/kirithra-oros-machaira.webp', imageAlt: 'Κηρήθρα με μέλι «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/kirithra-oros-machaira/' },
-  { category: 'Προϊόντα Μέλισσας', title: 'Βάμμα πρόπολης «Όρος Μαχαιρά»', price: '€11,00', sortPrice: 1100, inStock: true, image: '/images/shop/vamma-propolis-oros-machaira.webp', imageAlt: 'Βάμμα πρόπολης «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/vamma-propolis-oros-machaira/' },
-  { category: 'Μέλι', title: 'Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,00 – €27,50', sortPrice: 300, inStock: true, image: '/images/shop/meli-antheon-oros-machaira.webp', imageAlt: 'Μέλι Ανθέων «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/meli-antheon-oros-machaira/' },
-  { category: 'Μέλι', title: 'Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', sortPrice: 350, inStock: true, image: '/images/shop/avrasto-meli-antheon-oros-machaira.webp', imageAlt: 'Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/avrasto-meli-antheon-oros-machaira/' },
-  { category: 'Μέλι', title: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»', price: '€4,00 – €33,00', sortPrice: 400, inStock: true, image: '/images/shop/thymarisio-meli-oros-machaira.webp', imageAlt: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/thymarisio-meli-oros-machaira/' },
-  { category: 'Προϊόντα Μέλισσας', title: 'Κερί Μέλισσας (200-250γρ)', price: '€4,50', sortPrice: 450, inStock: true, image: '/images/shop/melissokeri.webp', imageAlt: 'Κερί Μέλισσας (200-250γρ)', href: 'https://orosmaxaira.com/product/melissokeri/' },
+  { category: 'Πακέτα Δώρων', title: 'Balance Care Gift Set', price: '€49,90', sortPrice: 4990, inStock: false, image: 'https://orosmaxaira.com/wp-content/uploads/2026/04/BALANCE-CARE-SET-WEBSITE.jpg', imageAlt: 'Skincare gift set labeled Balance Care on a pastel gradient sleeve resting on a beige textured bag in a wooden surface booth.', href: 'https://orosmaxaira.com/product/balance-care-gift-set/' },
+  { category: 'Πακέτα Δώρων', title: 'Nourish Care Gift Set', price: '€28,50', sortPrice: 2850, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2026/04/NOURISH-SET-WEBSITE.jpg', imageAlt: 'Beige zippered cosmetic bag with a pink label showcasing a Nourish Care skincare set and small bottles on a wooden surface.', href: 'https://orosmaxaira.com/product/nourish-care-gift-set/' },
+  { category: 'Πακέτα Δώρων', title: 'Everyday Care Duo Gift Set', price: '€14,25', sortPrice: 1425, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2026/04/EVERYDAY-CARE-DUO-SET-WEBSITE.jpg', imageAlt: "Beige cosmetic bag with a peach label reading 'EVERYDAY CARE DUO' and small skincare bottles pictured on the front label (gift set).", href: 'https://orosmaxaira.com/product/everyday-care-duo-gift-set/' },
+  { category: 'Πακέτα Δώρων', title: 'Κιτ Χειροποίητης Πασχαλινής Μελισσολαμπάδας «Όρος Μαχαιρά» – Special Easter Release', price: '€12,50', sortPrice: 1250, inStock: false, image: 'https://orosmaxaira.com/wp-content/uploads/2026/03/kit-pasxalinis-lampadas-2.jpg', imageAlt: 'Κιτ Χειροποίητης Πασχαλινής Μελισσολαμπάδας «Όρος Μαχαιρά» – Special Easter Release', href: 'https://orosmaxaira.com/product/kit-cheiropoiitis-paschalinis-melissolampadas-quot-oros-machaira-quot-special-easter-release-2/' },
+  { category: 'Καλλυντικά', title: 'Κρέμα Σώματος', price: '€15,90', sortPrice: 1590, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2026/02/body-lotion-oros-maxaira.png', imageAlt: 'Κρέμα Σώματος', href: 'https://orosmaxaira.com/product/krema-somatos/' },
+  { category: 'Πακέτα Δώρων', title: 'Υδρόμελο – Valentine’s Gift Box', price: '€22,00', sortPrice: 2200, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2026/02/melite.jpg', imageAlt: 'Υδρόμελο – Valentine’s Gift Box', href: 'https://orosmaxaira.com/product/ydromelo-valentine-gift-box/' },
+  { category: 'Προϊόντα Μέλισσας', title: 'Μέλι με Φουντούκια', price: '€5,40', sortPrice: 540, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-fountoukia-2.jpg', imageAlt: 'Μέλι με Φουντούκια', href: 'https://orosmaxaira.com/product/meli-me-foyntoykia/' },
+  { category: 'Προϊόντα Μέλισσας', title: 'Μέλι με Φυστίκια', price: '€4,80', sortPrice: 480, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-fistikia-2.jpg', imageAlt: 'Μέλι με Φυστίκια', href: 'https://orosmaxaira.com/product/meli-me-fistikia/' },
+  { category: 'Προϊόντα Μέλισσας', title: 'Μέλι με Γύρη', price: '€6,20', sortPrice: 620, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-gyri.jpg', imageAlt: 'Μέλι με Γύρη', href: 'https://orosmaxaira.com/product/meli-me-gyri/' },
+  { category: 'Προϊόντα Μέλισσας', title: 'Μέλι με Χαρούπι και Φουντούκια', price: '€5,40', sortPrice: 540, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-charoupi-fountouki-2.jpg', imageAlt: 'Μέλι με Χαρούπι και Φουντούκια', href: 'https://orosmaxaira.com/product/meli-me-charoypi-kai-foyntoykia/' },
+  { category: 'Καλλυντικά', title: 'Φυσική Κηραλοιφή για Εντριβές στο Στήθος και Μυϊκό Μασάζ', price: '€17,90', sortPrice: 1790, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2024/04/Oros-Maxaira-kiraloifi-gia-entrives-sto-stithos-miiko-masaz-1.jpg', imageAlt: 'Φυσική Κηραλοιφή για Εντριβές στο Στήθος και Μυϊκό Μασάζ', href: 'https://orosmaxaira.com/product/kiraloifi-gia-entrives-sto-stithos-kai-myiko-masaz/' },
+  { category: 'Καλλυντικά', title: 'Φυσική Κηραλοιφή για Κυτταρίτιδα', price: '€17,90', sortPrice: 1790, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2024/04/Oros-Maxaira-kiraloifi-gia-kittaritida-1.jpg', imageAlt: 'Φυσική Κηραλοιφή για Κυτταρίτιδα', href: 'https://orosmaxaira.com/product/kiraloifi-gia-kyttaritida/' },
+  { category: 'Προϊόντα Μέλισσας', title: 'Μείγμα μελιού γύρης και βασιλικού πολτού', price: '€3,50', sortPrice: 350, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-meigma-melioy-gyris-kai-vasilikoy-poltoy.jpg', imageAlt: 'Μείγμα μελιού γύρης και βασιλικού πολτού', href: 'https://orosmaxaira.com/product/meigma-melioy-gyris-kai-vasilikoy-poltoy/' },
+  { category: 'Προϊόντα Μέλισσας', title: 'Υδρόμελο', price: '€16,00', sortPrice: 1600, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-ydromelo.jpg', imageAlt: 'Υδρόμελο', href: 'https://orosmaxaira.com/product/ydromelo/' },
+  { category: 'Καλλυντικά', title: 'Φυσική Κηραλοιφή για Ευαίσθητες Επιδερμίδες', price: '€17,90', sortPrice: 1790, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-kiraloifi-gia-eyaisthites-epidermides-1.jpg', imageAlt: 'Φυσική Κηραλοιφή για Ευαίσθητες Επιδερμίδες', href: 'https://orosmaxaira.com/product/kiraloifi-gia-eyaisthites-epidermides/' },
+  { category: 'Καλλυντικά', title: 'Φυσική Κηραλοιφή για Σκασμένα Χέρια', price: '€17,90', sortPrice: 1790, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-kiraloifi-gia-skasmena-cheria-1.jpg', imageAlt: 'Φυσική Κηραλοιφή για Σκασμένα Χέρια', href: 'https://orosmaxaira.com/product/kiraloifi-gia-skasmena-cheria/' },
+  { category: 'Καλλυντικά', title: 'Φυσική Κηραλοιφή Προσώπου', price: '€24,90', sortPrice: 2490, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2024/04/Oros-Maxaira-fysiki-kiraloifi-gia-prosopo-1.jpg', imageAlt: 'Φυσική Κηραλοιφή Προσώπου', href: 'https://orosmaxaira.com/product/fysiki-kiraloifi-gia-prosopo/' },
+  { category: 'Καλλυντικά', title: 'Φυσική Κηραλοιφή για Σπυράκια και Τσιμπήματα Εντόμων', price: '€17,90', sortPrice: 1790, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-fysiki-kiraloifi-gia-spyrakia-kai-tsimpimata-entomon-1.jpg', imageAlt: 'Φυσική Κηραλοιφή για Σπυράκια και Τσιμπήματα Εντόμων', href: 'https://orosmaxaira.com/product/fysiki-kiraloifi-gia-spyrakia-kai-tsimpimata-entomon/' },
+  { category: 'Καλλυντικά', title: 'Φυσική Ενυδατική Κρέμα Προσώπου', price: '€24,90', sortPrice: 2490, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-enydatiki-krema-prosopoy.jpg', imageAlt: 'Φυσική Ενυδατική Κρέμα Προσώπου', href: 'https://orosmaxaira.com/product/enydatiki-krema-prosopoy/' },
+  { category: 'Καλλυντικά', title: 'Φυσική Αντιγηραντική Κρέμα Ματιών', price: '€24,90', sortPrice: 2490, inStock: false, image: 'https://orosmaxaira.com/wp-content/uploads/2024/04/Oros-Maxaira-krema-matiwn.jpg', imageAlt: 'Φυσική Αντιγηραντική Κρέμα Ματιών', href: 'https://orosmaxaira.com/product/fysiki-antigirantiki-krema-mation/' },
+  { category: 'Καλλυντικά', title: 'Κρέμα Χεριών (Milk & Honey)', price: '€9,90', sortPrice: 990, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-krema-cherion-milk-amp-honey.pg_.jpg', imageAlt: 'Κρέμα Χεριών (Milk & Honey)', href: 'https://orosmaxaira.com/product/krema-cherion-milk-amp-honey/' },
+  { category: 'Καλλυντικά', title: 'Κρέμα Χεριών (Red Grape)', price: '€9,90', sortPrice: 990, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-krema-cherion-red-grape.jpg', imageAlt: 'Κρέμα Χεριών (Red Grape)', href: 'https://orosmaxaira.com/product/krema-cherion-red-grape/' },
+  { category: 'Καλλυντικά', title: 'Βάλσαμο για τα Χείλη', price: '€5,90', sortPrice: 590, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-lip-balm.jpg', imageAlt: 'Βάλσαμο για τα Χείλη', href: 'https://orosmaxaira.com/product/valsamo-gia-ta-cheili/' },
+  { category: 'Προϊόντα Μέλισσας', title: 'Γύρη Μελισσών «Όρος Μαχαιρά»', price: '€15,00 – €24,00', sortPrice: 1500, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-gyri.jpg', imageAlt: 'Γύρη Μελισσών «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/gyri-oros-machaira/' },
+  { category: 'Προϊόντα Μέλισσας', title: 'Βασιλικός πολτός «Όρος Μαχαιρά»', price: '€22,00', sortPrice: 2200, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-vasilikos-poltos.jpg', imageAlt: 'Βασιλικός πολτός «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/vasilikos-poltos-oros-machaira/' },
+  { category: 'Προϊόντα Μέλισσας', title: 'Κηρήθρα με μέλι «Όρος Μαχαιρά»', price: '€7,00', sortPrice: 700, inStock: false, image: 'https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-kirithra.jpg', imageAlt: 'Κηρήθρα με μέλι «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/kirithra-oros-machaira/' },
+  { category: 'Προϊόντα Μέλισσας', title: 'Βάμμα πρόπολης «Όρος Μαχαιρά»', price: '€11,00', sortPrice: 1100, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-vamma-propolis.jpg', imageAlt: 'Βάμμα πρόπολης «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/vamma-propolis-oros-machaira/' },
+  { category: 'Μέλι', title: 'Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,00 – €27,50', sortPrice: 300, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn.jpg', imageAlt: 'Μέλι Ανθέων «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/meli-antheon-oros-machaira/' },
+  { category: 'Μέλι', title: 'Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', sortPrice: 350, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-meli.jpg', imageAlt: 'Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/avrasto-meli-antheon-oros-machaira/' },
+  { category: 'Μέλι', title: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»', price: '€4,00 – €33,00', sortPrice: 400, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-thimarisio-meli.jpg', imageAlt: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/thymarisio-meli-oros-machaira/' },
+  { category: 'Προϊόντα Μέλισσας', title: 'Κερί Μέλισσας (200-250γρ)', price: '€4,50', sortPrice: 450, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-melissokeri.jpg', imageAlt: 'Κερί Μέλισσας (200-250γρ)', href: 'https://orosmaxaira.com/product/melissokeri/' },
 ]
 
 /** Price-filter bounds derived from the catalogue (in whole euros). */
@@ -192,37 +194,10 @@ export const PRODUCT_DETAILS: Record<string, ShopProductDetail> = {
         body: 'Προτείνουμε να κάνετε την παραγγελία online μέσα από το website μας καθώς η διαθεσιμότητα στις υπεραγορές είναι περιορισμένη.',
       },
     ],
-    nutrition: {
-      unit: 'Ανά 100g',
-      rows: [
-        { label: 'Ενέργεια', value: '1.280 kJ / 304 kcal' },
-        { label: 'Λιπαρά', value: '0 g' },
-        { label: 'εκ των οποίων κορεσμένα', value: '0 g' },
-        { label: 'Υδατάνθρακες', value: '82 g' },
-        { label: 'εκ των οποίων σάκχαρα', value: '82 g' },
-        { label: 'Πρωτεΐνες', value: '0,3 g' },
-        { label: 'Αλάτι', value: '0 g' },
-      ],
-    },
   },
 
-  'meli-me-foyntoykia': {
-    description:
-      'Η αλοιφή από Μέλι και Φουντούκια αποτελεί μέρος της νέας σειράς προϊόντων «Όρος Μαχαιρά», «Premium Blends». Συνδυάζει την υπέροχη γεύση και τις ευεργετικές ιδιότητες του γνήσιου Κυπριακού μελιού «Όρος Μαχαιρά» με τα θρεπτικά οφέλη των φουντουκιών. Αυτός ο απολαυστικός συνδυασμός είναι πλούσιος σε θρεπτικά συστατικά.',
-    gallery: [
-      'https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-fountoukia-2.jpg',
-      'https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-fountoukia.jpg',
-    ],
-    addons: ['thymarisio-meli-oros-machaira', 'meli-me-gyri', 'vasilikos-poltos-oros-machaira'],
-    sections: [
-      {
-        body: 'Η κατανάλωση φουντουκιών έχει αποδειχθεί ότι προστατεύει την καρδιά, καθώς συμβάλλει στη μείωση των επιπέδων τριγλυκεριδίων, της ολικής και της LDL χοληστερόλης, καθώς και στην ομαλοποίηση της αρτηριακής πίεσης. Τα φουντούκια αποτελούν διατροφικό θησαυρό, πλούσιο σε βιταμίνες και μέταλλα όπως η βιταμίνη Β6, το φυλλικό οξύ, ο σίδηρος, ο φώσφορος, το κάλιο και ο ψευδάργυρος. Επιπλέον, είναι μια εξαιρετική πηγή Ω6 και Ω9 λιπαρών οξέων. Τα φουντούκια περιέχουν επίσης σημαντικές ποσότητες αντιοξειδωτικών που προστατεύουν το σώμα μας από τις ελεύθερες ρίζες, ενισχύοντας έτσι τη γενική υγεία και ευεξία.',
-      },
-      {
-        body: 'Η αλοιφή από Μέλι και Φουντούκια είναι χωρίς γλουτένη, χωρίς πρόσθετη ζάχαρη και χωρίς φοινικέλαιο. Ένα μοναδικό προϊόν στην αγορά! Απολαύστε αυτό το υπέροχο γευστικό μείγμα, εντάξτε το στην καθημερινότητά σας και επωφεληθείτε από τα οφέλη του για την υγεία σας!',
-      },
-    ],
-  },
+  // All other products are generated from the live WooCommerce Store API.
+  ...GENERATED_PRODUCT_DETAILS,
 }
 
 /** Slug used for the internal product URL (/shop/<handle>), derived from the

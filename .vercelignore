@@ -1,3 +1,9 @@
 # The Medusa backend (top-level medusa/) deploys to Railway, not Vercel.
 # Leading slash anchors to repo root so it does NOT match src/lib/medusa/.
 /medusa
+
+# Never upload local secrets or raw source images (env vars come from Vercel project settings).
+.env
+.env.local
+.env*.local
+**/_raw

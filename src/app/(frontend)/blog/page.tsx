@@ -1,23 +1,33 @@
 import type { Metadata } from 'next'
-import { getAllCategories, getAllPosts } from '@/lib/cms'
-import { BlogIndexRender } from '@/blocks/blog-index'
-
-export const revalidate = 60
+import { BLOG_POSTS } from '@/components/blog/blog-data'
+import { BLOG_CATEGORIES, POST_CATEGORIES } from '@/components/blog/blog-categories'
+import { PageHero } from '@/components/shared/page-hero'
+import { BlogFilterGrid } from '@/components/blog/blog-filter-grid'
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description: 'Articles and updates.',
+  description:
+    'Νέα, άρθρα και συνταγές από το Όρος Μαχαιρά — για το μέλι, τις μέλισσες, την υγεία και τη μελισσοκομία.',
   alternates: { canonical: '/blog' },
 }
 
-export default async function BlogIndex() {
-  const [posts, categories] = await Promise.all([getAllPosts(), getAllCategories()])
+export default function BlogPage() {
   return (
-    <BlogIndexRender
-      heading="Latest News From Our Blog"
-      subheading="Latest articles and updates."
-      posts={posts}
-      categories={categories}
-    />
+    <>
+      <PageHero
+        image="/images/blog/hero.webp"
+        imageAlt="Μελισσοκόμος κρατά πλαίσιο με μέλισσες σε χωράφι"
+        title="Blog"
+        overlayClassName="bg-black/30"
+      />
+
+      <section className="container-wide py-12 md:py-[70px]">
+        <BlogFilterGrid
+          posts={BLOG_POSTS}
+          categories={BLOG_CATEGORIES}
+          postCategories={POST_CATEGORIES}
+        />
+      </section>
+    </>
   )
 }

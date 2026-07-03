@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
-import { ChevronRight, User, Building2 } from 'lucide-react'
+import { User, Building2 } from 'lucide-react'
 import { ABOUT_PAGE, type AboutValueIcon } from '@/components/about/about-content'
 import { OutdoorCarousel } from '@/components/about/outdoor-carousel'
 import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
@@ -25,29 +24,6 @@ export default function AboutPage() {
 
   return (
     <>
-      {/* Breadcrumb */}
-      <div className="container-wide pb-2.5 pt-4">
-        <RevealUp>
-          <nav
-            aria-label="breadcrumb"
-            className="flex flex-wrap items-center gap-1.5 text-[15px] text-muted md:text-[17px]"
-          >
-            {a.breadcrumb.map((b, i) => (
-              <span key={b.label} className="flex items-center gap-1.5">
-                {i > 0 ? <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" /> : null}
-                {b.href ? (
-                  <Link href={b.href} className="transition-colors hover:text-accent">
-                    {b.label}
-                  </Link>
-                ) : (
-                  <span className="text-foreground">{b.label}</span>
-                )}
-              </span>
-            ))}
-          </nav>
-        </RevealUp>
-      </div>
-
       {/* Hero — photo + intro */}
       <section className="container-wide py-8 md:py-12">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center lg:gap-[60px]">

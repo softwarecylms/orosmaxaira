@@ -7,13 +7,14 @@ import { cn } from '@/lib/utils'
 import { ArrowRight } from '@/components/home/icons'
 import type { MegaColumn } from '@/components/home/home-content'
 
-type NavItem = { label: string; href: string; children?: unknown }
+type NavItem = { label: string; href: string; children?: { label: string; href: string }[] }
+
+const MEGA_LABEL = 'Προϊόντα'
 
 /**
- * Desktop nav row with the "Προϊόντα" mega menu (Figma 305:2612).
- * The panel opens on hover/focus of any nav item that has `children` and stays
- * open while the pointer is over the trigger or the panel (short close delay so
- * the cursor can travel between them).
+ * Desktop nav row. "Προϊόντα" opens the product mega menu; any other item with
+ * `children` opens a simple dropdown beneath it. Menus open on hover/focus and
+ * stay open while the pointer is over the trigger or the panel (short close delay).
  */
 export function HeaderNav({
   nav,
@@ -24,53 +25,91 @@ export function HeaderNav({
   adopt: { label: string; href: string }
   mega: MegaColumn[]
 }) {
-  const [open, setOpen] = useState(false)
+  const [openItem, setOpenItem] = useState<string | null>(null)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const openMenu = () => {
+  const openMenu = (label: string) => {
     if (timer.current) clearTimeout(timer.current)
-    setOpen(true)
+    setOpenItem(label)
   }
   const scheduleClose = () => {
     if (timer.current) clearTimeout(timer.current)
-    timer.current = setTimeout(() => setOpen(false), 120)
+    timer.current = setTimeout(() => setOpenItem(null), 120)
+  }
+  const close = () => {
+    if (timer.current) clearTimeout(timer.current)
+    setOpenItem(null)
   }
 
   return (
     <div
       className="relative hidden lg:block"
       onKeyDown={(e) => {
-        if (e.key === 'Escape') setOpen(false)
+        if (e.key === 'Escape') close()
       }}
     >
       <nav className="flex items-center justify-between py-3.5" aria-label="Κύρια πλοήγηση">
         <ul className="flex items-center gap-[39px]">
           {nav.map((item) => {
-            const hasMega = Boolean(item.children)
+            const hasDropdown = Boolean(item.children)
+            const isOpen = openItem === item.label
             return (
               <li
                 key={item.label}
-                onMouseEnter={hasMega ? openMenu : undefined}
-                onMouseLeave={hasMega ? scheduleClose : undefined}
+                className="relative"
+                onMouseEnter={hasDropdown ? () => openMenu(item.label) : undefined}
+                onMouseLeave={hasDropdown ? scheduleClose : undefined}
               >
                 <Link
                   href={item.href}
                   className="flex items-center gap-1.5 text-[17px] text-foreground transition-colors hover:text-accent"
-                  aria-haspopup={hasMega ? 'true' : undefined}
-                  aria-expanded={hasMega ? open : undefined}
-                  onFocus={hasMega ? openMenu : undefined}
+                  aria-haspopup={hasDropdown ? 'true' : undefined}
+                  aria-expanded={hasDropdown ? isOpen : undefined}
+                  onFocus={hasDropdown ? () => openMenu(item.label) : undefined}
                 >
                   {item.label}
-                  {hasMega ? (
+                  {hasDropdown ? (
                     <ChevronDown
                       className={cn(
                         'size-3 text-muted transition-transform duration-200',
-                        open && 'rotate-180',
+                        isOpen && 'rotate-180',
                       )}
                       aria-hidden="true"
                     />
                   ) : null}
                 </Link>
+
+                {/* Simple dropdown for non-mega items with children */}
+                {item.children && item.label !== MEGA_LABEL ? (
+                  <div
+                    onMouseEnter={() => openMenu(item.label)}
+                    onMouseLeave={scheduleClose}
+                    className={cn(
+                      'absolute left-0 top-full z-50 pt-3 transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none',
+                      isOpen
+                        ? 'visible translate-y-0 opacity-100'
+                        : 'pointer-events-none invisible -translate-y-1 opacity-0',
+                    )}
+                  >
+                    <ul
+                      role="menu"
+                      aria-label={item.label}
+                      className="flex min-w-[260px] flex-col rounded-[4px] bg-white p-2 shadow-[0_0_12px_rgba(35,31,32,0.1)]"
+                    >
+                      {item.children.map((c) => (
+                        <li key={c.label}>
+                          <Link
+                            href={c.href}
+                            onClick={close}
+                            className="block rounded-[4px] px-4 py-2.5 text-[16px] leading-[24px] text-muted transition-colors hover:bg-offwhite hover:text-accent"
+                          >
+                            {c.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
               </li>
             )
           })}
@@ -83,13 +122,13 @@ export function HeaderNav({
         </Link>
       </nav>
 
-      {/* Mega menu panel */}
+      {/* Mega menu panel — Προϊόντα only */}
       <div
-        onMouseEnter={openMenu}
+        onMouseEnter={() => openMenu(MEGA_LABEL)}
         onMouseLeave={scheduleClose}
         className={cn(
           'absolute left-0 top-full z-50 pt-3 transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none',
-          open
+          openItem === MEGA_LABEL
             ? 'visible translate-y-0 opacity-100'
             : 'pointer-events-none invisible -translate-y-1 opacity-0',
         )}
@@ -103,7 +142,7 @@ export function HeaderNav({
             <div key={col.title} className="flex min-w-0 flex-1 flex-col gap-[15px]">
               <Link
                 href={col.href}
-                onClick={() => setOpen(false)}
+                onClick={close}
                 className="text-[17px] font-bold leading-[24px] text-foreground transition-colors hover:text-accent"
               >
                 {col.title}
@@ -113,7 +152,7 @@ export function HeaderNav({
                   <li key={l.label}>
                     <Link
                       href={l.href}
-                      onClick={() => setOpen(false)}
+                      onClick={close}
                       className="block text-[17px] leading-[39px] text-muted transition-colors hover:text-accent"
                     >
                       {l.label}
@@ -123,7 +162,7 @@ export function HeaderNav({
               </ul>
               <Link
                 href={col.href}
-                onClick={() => setOpen(false)}
+                onClick={close}
                 aria-label={`Δείτε όλα — ${col.title}`}
                 className="text-accent transition-colors hover:text-gold-strong"
               >

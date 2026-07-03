@@ -6,6 +6,64 @@ import { cn } from '@/lib/utils'
 
 type Nutrition = { unit: string; rows: ShopNutritionRow[] }
 
+// ── Auto-bold key benefit terms in the Περιγραφή (up to MAX_BOLD per product) ──
+// Accent-insensitive Greek matching, applied at render time — no data edits, so
+// it survives regeneration of the descriptions.
+const MAX_BOLD = 4
+const GW = 'Α-Ωα-ωΆΈΉΊΌΎΏϊϋΐΰάέήίόύώ' // greek word characters
+const VOWELS: Record<string, string> = {
+  α: 'αά', ε: 'εέ', η: 'ηή', ι: 'ιίϊΐ', ο: 'οό', υ: 'υύϋΰ', ω: 'ωώ',
+}
+/** term → accent-insensitive regex source (each vowel becomes a char class). */
+const ai = (s: string) =>
+  [...s]
+    .map((c) => {
+      const l = c.toLowerCase()
+      return VOWELS[l] ? `[${VOWELS[l]}]` : c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    })
+    .join('')
+
+/** Exact benefit phrases (written unaccented; matched accent-insensitively). */
+const BOLD_PHRASES = ['διατροφικη αξια', 'χωρις γλουτενη', 'χωρις προσθετη ζαχαρη', 'χωρις φοινικελαιο', '100% φυσικη']
+/** Word stems (unaccented) — the whole word is bolded. */
+const BOLD_STEMS = [
+  'υπερτροφ', 'αντιοξειδωτικ', 'ανοσοποιητικ', 'αντιβακτηριακ', 'αντιμικροβιακ', 'αντιμυκητιακ',
+  'βιταμιν', 'μεταλλ', 'αμινοξ', 'πρωτειν', 'μονοακορεστ', 'πολυακορεστ', 'ενζυμ', 'θρεπτικ', 'θρεψ',
+  'ενυδατωσ', 'ενυδατικ', 'ενυδατωμεν', 'επιδερμιδ', 'αγνο', 'αντισηπτικ', 'φυσικ', 'φροντιδ', 'απαλοτητ',
+]
+const boldRe = () =>
+  new RegExp(
+    `(?<![${GW}])(${[...BOLD_PHRASES.map(ai), ...BOLD_STEMS.map((s) => ai(s) + `[${GW}]*`)].join('|')})`,
+    'gi',
+  )
+const deaccent = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+
+/** Bold up to `budget.left` distinct key terms in `text`; mutates the budget. */
+function highlightImportant(text: string, budget: { left: number; seen: Set<string> }): React.ReactNode {
+  if (budget.left <= 0) return text
+  const re = boldRe()
+  const out: React.ReactNode[] = []
+  let last = 0
+  let m: RegExpExecArray | null
+  while ((m = re.exec(text)) !== null) {
+    if (budget.left <= 0) break
+    const term = m[0]
+    const key = deaccent(term)
+    if (budget.seen.has(key)) continue // don't bold the same word twice
+    out.push(text.slice(last, m.index))
+    out.push(
+      <strong key={m.index} className="font-semibold text-foreground">
+        {term}
+      </strong>,
+    )
+    last = m.index + term.length
+    budget.seen.add(key)
+    budget.left--
+  }
+  out.push(text.slice(last))
+  return out
+}
+
 /** Description / nutrition tabs below the product (Figma 237:1214). */
 export function ProductTabs({
   sections,
@@ -21,6 +79,9 @@ export function ProductTabs({
 
   const [active, setActive] = useState<'desc' | 'nutrition'>(tabs[0] ?? 'desc')
   if (!tabs.length) return null
+
+  // render-scoped budget: bold at most MAX_BOLD terms across the whole description
+  const bold = { left: MAX_BOLD, seen: new Set<string>() }
 
   return (
     <div className="flex flex-col gap-8">
@@ -44,7 +105,7 @@ export function ProductTabs({
               {s.heading ? (
                 <h3 className="text-[17px] font-semibold text-foreground">{s.heading}</h3>
               ) : null}
-              <p>{s.body}</p>
+              <p>{highlightImportant(s.body, bold)}</p>
             </div>
           ))}
         </div>
