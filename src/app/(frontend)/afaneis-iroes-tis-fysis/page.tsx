@@ -105,52 +105,39 @@ export default function NatureHeroesPage() {
       {/* 5 · Adopt-a-hive banner (homepage section, tailored copy) */}
       <AdoptHiveBanner body="Το πρόγραμμα «Υιοθετώ μια κυψέλη» είναι ένα σημαντικό βήμα προς αυτήν την κατεύθυνση, προσφέροντας έναν τρόπο στους ανθρώπους να συνεισφέρουν άμεσα στη διατήρηση αυτών των ζωτικής σημασίας πλασμάτων." />
 
-      {/* 6 · Why every bee matters — editorial manifesto (only the real copy, white) */}
-      <section className="container-wide py-16 md:py-24">
-        <div className="mx-auto max-w-[860px]">
-          <RevealStagger className="flex flex-col items-center gap-6 text-center" stagger={0.1}>
+      {/* 6 · Why every bee matters — image left, content right */}
+      <section className="container-wide py-12 md:py-[70px]">
+        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <Reveal>
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[16px] bg-offwhite shadow-card">
+              <Image
+                src={n.matters.image}
+                alt={n.matters.imageAlt}
+                fill
+                sizes="(min-width:1024px) 50vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+          </Reveal>
+          <RevealStagger className="flex flex-col gap-4" stagger={0.08}>
             <RevealStaggerItem>
-              <span className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">
+              <span className="text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">
                 {n.matters.eyebrow}
               </span>
             </RevealStaggerItem>
             <RevealStaggerItem>
-              <h2 className="font-display text-[30px] font-bold leading-[1.12] text-foreground md:text-[42px]">
+              <h2 className="font-display text-[26px] font-bold leading-[1.14] text-foreground md:text-[33px]">
                 {n.matters.heading}
               </h2>
             </RevealStaggerItem>
-
-            {/* Paragraph 1 — the pressures (threat terms emphasised) */}
-            <RevealStaggerItem>
-              <p className="max-w-[720px] text-[16px] leading-[1.85] text-muted md:text-[17px]">
-                <BoldText text={n.matters.body[0]} bold={n.matters.emphasis} />
-              </p>
-            </RevealStaggerItem>
-
-            {/* Paragraph 2 — the risk, emphasised between accent rules */}
-            <RevealStaggerItem className="flex w-full items-center justify-center gap-4 pt-1">
-              <span className="hidden h-px w-8 shrink-0 bg-accent/40 sm:block md:w-12" aria-hidden="true" />
-              <p className="max-w-[520px] text-[17px] font-semibold leading-[1.4] text-gold-strong md:text-[19px]">
-                {n.matters.body[1]}
-              </p>
-              <span className="hidden h-px w-8 shrink-0 bg-accent/40 sm:block md:w-12" aria-hidden="true" />
-            </RevealStaggerItem>
+            {n.matters.body.map((p, i) => (
+              <RevealStaggerItem key={i}>
+                <p className="text-[16px] leading-[1.7] text-muted">
+                  <BoldText text={p} bold={n.matters.emphasis} />
+                </p>
+              </RevealStaggerItem>
+            ))}
           </RevealStagger>
-
-          {/* Paragraph 3 — the heart of it, as a display pull-quote */}
-          <Reveal className="mt-12 flex flex-col items-center gap-2 md:mt-16">
-            <span className="font-display text-[72px] leading-[0.4] text-accent/70" aria-hidden="true">
-              &ldquo;
-            </span>
-            <blockquote className="max-w-[780px] text-center font-display text-[24px] font-bold leading-[1.32] text-foreground md:text-[32px]">
-              {n.matters.body[2]}
-            </blockquote>
-          </Reveal>
-
-          {/* Paragraph 4 — the call to protect */}
-          <Reveal className="mx-auto mt-9 max-w-[660px] text-center md:mt-11">
-            <p className="text-[16px] leading-[1.85] text-muted md:text-[17px]">{n.matters.body[3]}</p>
-          </Reveal>
         </div>
       </section>
 

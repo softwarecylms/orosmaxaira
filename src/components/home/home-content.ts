@@ -369,7 +369,7 @@ export const FOOTER = {
         { label: 'Προϊόντα', href: '/' },
         { label: 'Δραστηριότητες', href: '/drastiriotites' },
         { label: 'Υιοθετώ μια κυψέλη', href: '/adopt-a-hive' },
-        { label: 'Αφανείς Ήρωες της Φύσης', href: '/nature-heroes' },
+        { label: 'Αφανείς Ήρωες της Φύσης', href: '/afaneis-iroes-tis-fysis' },
         { label: 'Γνωρίζω τη Μέλισσα', href: '/drastiriotites/xenagiseis' },
         { label: 'Blog', href: '/blog' },
         { label: 'Επικοινωνία', href: '/contact' },

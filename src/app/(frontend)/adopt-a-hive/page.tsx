@@ -77,6 +77,9 @@ export default function AdoptAHivePage() {
               {a.intro.hook}
             </p>
             <p className="text-[16px] leading-[1.7] text-muted">{a.intro.body}</p>
+            <CtaLink href="#cta" variant="gold" className="mt-1 self-start">
+              Υιοθετήστε μια κυψέλη
+            </CtaLink>
           </Reveal>
 
           <div className="flex flex-col gap-4">

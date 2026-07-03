@@ -100,7 +100,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         </article>
 
         {/* ── Sidebar (≈30%) ── */}
-        <aside className="flex flex-col gap-8 lg:sticky lg:top-[calc(100vh-700px)] lg:self-start">
+        <aside className="flex flex-col gap-8 lg:sticky lg:top-[calc(100vh-880px)] lg:self-start">
           <div className="rounded-[16px] bg-offwhite p-6 ring-1 ring-border/60">
             <h2 className="mb-4 font-display text-[18px] font-bold text-foreground">Σχετικά Άρθρα</h2>
             <ul className="flex flex-col divide-y divide-border">
@@ -124,27 +124,38 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             </ul>
           </div>
 
-          <div className="rounded-[16px] bg-accent p-6 text-white">
-            <h2 className="font-display text-[18px] font-bold">Επικοινωνήστε μαζί μας</h2>
-            <p className="mt-2 text-[14px] leading-[1.6] text-white/75">
-              Έχετε απορίες για τα προϊόντα ή τις δραστηριότητές μας; Η ομάδα μας είναι εδώ για εσάς.
-            </p>
-            <div className="mt-4 flex flex-col gap-3 text-[14px] text-white/90">
-              <a href="tel:+35725622305" className="flex items-center gap-3 transition-colors hover:text-white">
-                <Phone className="size-4 shrink-0 text-cream" aria-hidden="true" />
-                25622305
-              </a>
-              <a href="mailto:info@orosmaxaira.com" className="flex items-center gap-3 transition-colors hover:text-white">
-                <Mail className="size-4 shrink-0 text-cream" aria-hidden="true" />
-                info@orosmaxaira.com
-              </a>
+          <div className="overflow-hidden rounded-[16px] bg-accent text-white">
+            <div className="p-6">
+              <h2 className="font-display text-[18px] font-bold">Επικοινωνήστε μαζί μας</h2>
+              <p className="mt-2 text-[14px] font-normal leading-[1.6] text-white/75">
+                Έχετε απορίες για τα προϊόντα ή τις δραστηριότητές μας; Η ομάδα μας είναι εδώ για εσάς.
+              </p>
+              <div className="mt-4 flex flex-col gap-3 text-[14px] font-semibold text-white">
+                <a href="tel:+35725622305" className="flex items-center gap-3 transition-colors hover:text-white">
+                  <Phone className="size-4 shrink-0 text-cream" aria-hidden="true" />
+                  25622305
+                </a>
+                <a href="mailto:info@orosmaxaira.com" className="flex items-center gap-3 transition-colors hover:text-white">
+                  <Mail className="size-4 shrink-0 text-cream" aria-hidden="true" />
+                  info@orosmaxaira.com
+                </a>
+              </div>
+              <Link
+                href="/contact"
+                className="mt-5 inline-flex items-center justify-center rounded-[4px] bg-white px-5 py-2.5 text-[14px] font-medium text-foreground transition-colors hover:bg-foreground hover:text-white"
+              >
+                Επικοινωνία
+              </Link>
             </div>
-            <Link
-              href="/contact"
-              className="mt-5 inline-flex items-center justify-center rounded-[4px] bg-white px-5 py-2.5 text-[14px] font-medium text-foreground transition-colors hover:bg-foreground hover:text-white"
-            >
-              Επικοινωνία
-            </Link>
+            <div className="relative h-[200px] w-full">
+              {/* Raw <img> (bee/flower cutout) — object-contain so nothing is cropped. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/blog/contact.png"
+                alt="Μέλισσα πάνω σε κίτρινο λουλούδι"
+                className="absolute inset-0 size-full object-contain object-left-bottom"
+              />
+            </div>
           </div>
         </aside>
       </div>

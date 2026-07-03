@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { Counter } from '@/components/motion/counter'
+import { CtaLink } from '@/components/home/cta-link'
 import { ADOPT_PAGE } from './adopt-content'
 
 /** §8 "Ο Στόχος μας" — a gold band with the honeybee footage bleeding in on the
@@ -60,6 +61,13 @@ export function GoalBand() {
               ))}
             </h2>
             <p className="text-[16px] leading-[1.7] text-white/85">{g.body}</p>
+            <CtaLink
+              href="/afaneis-iroes-tis-fysis"
+              variant="link"
+              className="mt-1 self-start text-white hover:text-white/75"
+            >
+              Αφανείς Ήρωες της Φύσης
+            </CtaLink>
           </div>
 
           <div className="flex flex-col gap-6 [text-shadow:0_2px_14px_rgba(35,31,32,0.45)]">

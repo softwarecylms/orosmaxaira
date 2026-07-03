@@ -37,11 +37,26 @@ export const DURATION = {
   ui: 0.3,
   base: 0.55,
   slow: 0.8,
+  /** Ambient, continuous motion (floats/drifts) — far slower than UI transitions. */
+  ambient: 4,
 } as const
 
 export const defaultTransition: Transition = {
   duration: DURATION.base,
   ease: EASE.soft,
+}
+
+/** Subtle, continuous vertical float — a single ambient flourish (e.g. a hero
+ *  wordmark). `repeatType: 'mirror'` eases the return symmetrically so the bob
+ *  feels natural. Gate on `useReducedMotion()` at the call site. */
+export const floatY = {
+  animate: { y: [0, -8] },
+  transition: {
+    duration: DURATION.ambient,
+    ease: EASE.soft,
+    repeat: Infinity,
+    repeatType: 'mirror',
+  } as Transition,
 }
 
 /** Subtle fade+rise — the default reveal. */

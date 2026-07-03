@@ -5,6 +5,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { RevealMountStagger, RevealMountItem } from '@/components/motion/reveal'
 import { useMotionReady } from '@/components/motion/motion-ready'
 import { CtaLink } from '@/components/home/cta-link'
+import { floatY } from '@/lib/motion'
 import { ADOPT_PAGE } from './adopt-content'
 
 /** Full-bleed programme hero — parallax photo, dark overlay, wordmark + tagline
@@ -40,17 +41,24 @@ export function AdoptHero() {
       <div className="relative z-10 w-full pb-12 pt-12 md:pb-[70px] md:pt-14">
         <RevealMountStagger className="container-wide mx-auto flex max-w-[1200px] flex-col items-center text-center">
           <RevealMountItem>
-            <Image
-              src={h.wordmark}
-              alt="Adopt a Hive — Όρος Μαχαιρά"
-              width={280}
-              height={173}
-              priority
-              // Render the wordmark solid white (brightness(0) invert(1)), then a
-              // soft dark shadow for legibility on the photo — order fixed via one
-              // arbitrary filter so invert doesn't flip the shadow colour.
-              className="mb-6 h-11 w-auto object-contain opacity-95 md:h-16 [filter:brightness(0)_invert(1)_drop-shadow(0_2px_10px_rgba(0,0,0,0.45))]"
-            />
+            {/* Subtle continuous float on the wordmark (disabled under reduced motion). */}
+            <motion.div
+              animate={reduce ? undefined : floatY.animate}
+              transition={reduce ? undefined : floatY.transition}
+              className="will-change-transform"
+            >
+              <Image
+                src={h.wordmark}
+                alt="Adopt a Hive — Όρος Μαχαιρά"
+                width={280}
+                height={173}
+                priority
+                // Render the wordmark solid white (brightness(0) invert(1)), then a
+                // soft dark shadow for legibility on the photo — order fixed via one
+                // arbitrary filter so invert doesn't flip the shadow colour.
+                className="mb-6 h-11 w-auto object-contain opacity-95 md:h-16 [filter:brightness(0)_invert(1)_drop-shadow(0_2px_10px_rgba(0,0,0,0.45))]"
+              />
+            </motion.div>
           </RevealMountItem>
           <RevealMountItem>
             <h1 className="font-display text-[28px] font-bold leading-[1.16] text-white sm:text-[32px] md:text-[45px] md:leading-[1.14]">
