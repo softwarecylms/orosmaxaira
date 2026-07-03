@@ -76,15 +76,17 @@ export const ABOUT_PAGE = {
 
   outdoor: {
     heading: 'Και τι θα βρείτε στους εξωτερικούς μας χώρους',
-    cta: { label: 'Δείτε περισσότερα', href: '/' },
+    cta: { label: 'Δείτε περισσότερα', href: '/drastiriotites' },
     slides: [
       {
         title: 'Εργαστήρια & Δραστηριότητες',
+        href: '/drastiriotites',
         text: 'Ειδικά διαμορφωμένο χώρο για τη διεξαγωγή εργαστηρίων και εκπαιδευτικών δραστηριοτήτων.',
         image: '/images/about/outdoor-workshops.png',
       },
       {
         title: 'Πλούσιους Κήπους',
+        href: '/drastiriotites/xenagiseis',
         text: 'Πλούσιους κήπους, που αποτελούν τροφή για τις μέλισσές μας και ένα όμορφο περιβάλλον για τους επισκέπτες.',
         image: '/images/about/outdoor-gardens.png',
       },
@@ -95,11 +97,13 @@ export const ABOUT_PAGE = {
       },
       {
         title: 'Επίσκεψη στις Κυψέλες',
+        href: '/drastiriotites/peripeteies-stis-kypseles',
         text: 'Δυνατότητα για επίσκεψη στις κυψέλες (με την κατάλληλη προστασία), βιώνοντας από κοντά τον κόσμο του μελισσιού.',
         image: '/images/about/outdoor-hives.png',
       },
       {
         title: 'Μελισσοθεραπεία',
+        href: '/drastiriotites/melissotherapeia',
         text: 'Έναν ειδικό χώρο για μελισσοθεραπεία, για όσους αναζητούν τις ευεργετικές ιδιότητες του περιβάλλοντος της κυψέλης.',
         image: '/images/about/outdoor-therapy.png',
       },

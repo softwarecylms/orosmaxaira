@@ -11,6 +11,7 @@ export type OutdoorSlide = {
   title: string
   text: string
   image: string
+  href?: string
 }
 
 const AUTOPLAY_MS = 8000
@@ -104,7 +105,7 @@ export function OutdoorCarousel({
               </h3>
               <p className="text-[17px] leading-[24px] text-muted">{slide.text}</p>
               <Link
-                href={cta.href}
+                href={slide.href ?? cta.href}
                 className="inline-flex items-center gap-3 rounded-[4px] bg-accent px-[18px] py-[13px] text-[17px] leading-[24px] text-white transition-colors hover:bg-foreground"
               >
                 {cta.label}

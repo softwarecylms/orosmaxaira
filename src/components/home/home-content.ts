@@ -22,7 +22,6 @@ export const NAV: { label: string; href: string; children?: { label: string; hre
     ],
   },
   { label: 'Ποιοί είμαστε', href: '/about' },
-  { label: 'Βραβεία', href: '/awards' },
   {
     label: 'Δραστηριότητες',
     href: '/drastiriotites',

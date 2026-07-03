@@ -4,6 +4,7 @@ import { User, Building2 } from 'lucide-react'
 import { ABOUT_PAGE, type AboutValueIcon } from '@/components/about/about-content'
 import { OutdoorCarousel } from '@/components/about/outdoor-carousel'
 import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
+import { CtaLink } from '@/components/home/cta-link'
 import { Counter } from '@/components/motion/counter'
 
 export const metadata: Metadata = {
@@ -66,6 +67,11 @@ export default function AboutPage() {
                   <span className="text-[14px] text-muted">{a.hero.author.role}</span>
                 </span>
               </div>
+            </RevealItem>
+            <RevealItem>
+              <CtaLink href="/awards" variant="gold" className="mt-2 self-start">
+                Βραβεία & Διακρίσεις
+              </CtaLink>
             </RevealItem>
           </RevealGroup>
         </div>
