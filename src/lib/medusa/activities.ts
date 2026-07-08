@@ -1,0 +1,80 @@
+import { sdk } from './client'
+
+/**
+ * Storefront data layer for the Medusa `bookings` module (activities +
+ * availability). All calls are server-side; the SDK auto-attaches the
+ * publishable key. Reads are `no-store` so admin edits + live seat counts
+ * always reflect immediately.
+ */
+
+export type PriceTier = { key: string; label: string; price: number; note?: string }
+export type GalleryImage = { url: string; alt?: string }
+export type Feature = { title: string; text: string }
+export type Policy = { title: string; body: string }
+export type Review = { name: string; date?: string; rating?: number; body: string }
+
+export type Activity = {
+  id: string
+  slug: string
+  title: string
+  subtitle?: string | null
+  hero_image?: string | null
+  hero_image_alt?: string | null
+  video_url?: string | null
+  description?: string | null
+  details?: string | null
+  note?: string | null
+  rating?: number | null
+  review_count?: number | null
+  duration_label?: string | null
+  age_label?: string | null
+  season_start_month?: number | null
+  season_end_month?: number | null
+  currency?: string
+  status?: string
+  meta_title?: string | null
+  meta_description?: string | null
+  price_tiers?: PriceTier[] | null
+  gallery?: GalleryImage[] | null
+  features?: Feature[] | null
+  policies?: Policy[] | null
+  reviews?: Review[] | null
+  related_slugs?: string[] | null
+}
+
+export type AvailabilitySlot = {
+  id: string
+  date: string // YYYY-MM-DD
+  start_time: string // HH:mm
+  end_time?: string | null
+  capacity: number
+  remaining: number
+}
+
+/** Fetch a published activity by slug, or null if it isn't in Medusa. */
+export async function getActivity(slug: string): Promise<Activity | null> {
+  return sdk.client
+    .fetch<{ activity: Activity }>(`/store/activities/${slug}`, {
+      method: 'GET',
+      cache: 'no-store',
+    })
+    .then((r) => r.activity)
+    .catch(() => null)
+}
+
+/** Open slots (with remaining capacity) for a date range. */
+export async function getAvailability(
+  slug: string,
+  from?: string,
+  to?: string,
+): Promise<{ slots: AvailabilitySlot[]; currency: string }> {
+  const query: Record<string, string> = {}
+  if (from) query.from = from
+  if (to) query.to = to
+  return sdk.client
+    .fetch<{ slots: AvailabilitySlot[]; currency: string }>(
+      `/store/activities/${slug}/availability`,
+      { method: 'GET', query, cache: 'no-store' },
+    )
+    .catch(() => ({ slots: [] as AvailabilitySlot[], currency: 'eur' }))
+}

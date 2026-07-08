@@ -1,52 +1,123 @@
 /**
- * "Δραστηριότητες" page content. Copy from orosmaxaira.com/drastiriotites,
- * lightly tightened. Photos optimised into /public/images/activities/.
+ * "Δραστηριότητες" (Όρος Μαχαιρά Academy) landing-page content.
+ * Copy adapted from the Bee Academy sample, tightened to our design system.
  */
+
+export type ExperienceCard = {
+  image: string
+  title: string
+  text: string
+  href: string
+  badge?: string
+  rating?: number
+  reviews?: number
+}
+
+export type ProgramCard = {
+  image: string
+  title: string
+  text: string
+  href: string
+  cta: string
+  /** When true, the card renders as non-clickable (link temporarily disabled). */
+  disabled?: boolean
+}
 
 export const ACTIVITIES_PAGE = {
   hero: {
-    title: 'Δραστηριότητες',
+    eyebrow: 'Όρος Μαχαιρά Academy',
+    title: 'Μάθε, εξερεύνησε, δημιούργησε',
     description:
-      'Ζήστε τη μέλισσα από κοντά — βιωματικές εμπειρίες για όλη την οικογένεια στο μελισσοκομείο μας.',
+      'Ο κόσμος της μέλισσας σε περιμένει — βιωματικές ξεναγήσεις, εργαστήρια και εκπαιδευτικά προγράμματα για μικρούς και μεγάλους.',
     image: '/images/activities/hero.webp',
-    imageAlt: 'Γευσιγνωσία θυμαρίσιου μελιού Όρος Μαχαιρά',
+    imageAlt: 'Βιωματική εμπειρία στο μελισσοκομείο του Όρους Μαχαιρά',
   },
 
-  list: {
-    eyebrow: 'Οι Δραστηριότητες',
-    heading: 'Τι Μπορείτε να Κάνετε',
-    sub: 'Επιλέξτε τις εμπειρίες που σας ταιριάζουν — ξεχωριστά ή όλες μαζί.',
+  experiences: {
+    eyebrow: 'Οι Εμπειρίες μας',
+    heading: 'Ανακαλύψτε τις Εμπειρίες μας',
+    sub: 'Βιωματικές ξεναγήσεις, εργαστήρια και εκπαιδευτικά προγράμματα.',
     items: [
       {
         image: '/images/activities/gnorizw.webp',
-        title: 'Γνωρίζω τη μέλισσα',
-        text: 'Μια βιωματική ξενάγηση στον κόσμο της μέλισσας — γνωρίστε τους ρόλους της μέσα στην κυψέλη, τα προϊόντα της και γευτείτε τα μέλια μας.',
+        title: 'Γνωρίζω τη Μέλισσα',
+        text: 'Εκπαιδευτική ξενάγηση στον κόσμο της μέλισσας και του μελιού, με γευσιγνωσία των προϊόντων μας.',
         href: '/drastiriotites/xenagiseis',
+        badge: 'Best Seller',
+        rating: 4.9,
+        reviews: 300,
+      },
+      {
+        image: '/images/activities/episkepsi.webp',
+        title: 'Περιπέτειες στις Κυψέλες',
+        text: 'Οι επισκέπτες φορούν στολή μελισσοκόμου και γνωρίζουν από κοντά τη ζωή των μελισσών.',
+        href: '/drastiriotites/peripeteies-stis-kypseles',
+        badge: 'Σχεδόν Sold Out',
+        rating: 4.9,
+        reviews: 300,
       },
       {
         image: '/images/activities/ergastiria.webp',
-        title: 'Εργαστήρια',
-        text: 'Συμμετέχετε σε διαδραστικά εργαστήρια και δημιουργήστε τα δικά σας προϊόντα από αγνό μελισσοκέρι.',
+        title: 'Ξενάγηση & Εργαστήρι Ζωγραφικής',
+        text: 'Εκπαιδευτική ξενάγηση και εργαστήρι ζωγραφικής γύψινων φιγούρων, εμπνευσμένο από τη μέλισσα.',
         href: '/drastiriotites/ergastiria',
+        rating: 4.9,
+        reviews: 300,
       },
       {
         image: '/images/activities/melisotherapia.webp',
         title: 'Μελισσοθεραπεία',
-        text: 'Χαλαρώστε και αναπνεύστε τον αέρα της κυψέλης σε έναν ελεγχόμενο χώρο — μια μοναδική εμπειρία ευεξίας και αναζωογόνησης.',
+        text: 'Αναπνεύστε τον αέρα της κυψέλης σε έναν ελεγχόμενο χώρο — μια μοναδική εμπειρία ευεξίας.',
         href: '/drastiriotites/melissotherapeia',
+        rating: 4.9,
+        reviews: 300,
+      },
+    ] as ExperienceCard[],
+  },
+
+  programs: {
+    eyebrow: 'Για Σχολεία & Οργανισμούς',
+    heading: 'Εκπαιδευτικά Προγράμματα με Περιβαλλοντικό Αντίκτυπο',
+    sub: 'Προγράμματα με εκπαιδευτικό, περιβαλλοντικό και κοινωνικό αντίκτυπο,\nειδικά σχεδιασμένα για σχολεία, εταιρείες και οργανισμούς.',
+    items: [
+      {
+        image: '/images/adopt/visit-2.webp',
+        title: 'Εκπαιδευτικές Επισκέψεις Σχολείων',
+        text: 'Ένα οργανωμένο εκπαιδευτικό πρόγραμμα για σχολεία, αφιερωμένο στη μέλισσα, το περιβάλλον και τη βιωματική μάθηση.',
+        href: '/contact',
+        cta: 'Επικοινωνήστε μαζί μας',
+        disabled: true,
       },
       {
-        image: '/images/activities/episkepsi.webp',
-        title: 'Περιπέτειες στις κυψέλες',
-        text: 'Ντυθείτε μελισσοκόμοι, πλησιάστε τις κυψέλες και δείτε από κοντά την κοινωνία της μέλισσας, με την καθοδήγηση των έμπειρων μελισσοκόμων μας.',
-        href: '/drastiriotites/peripeteies-stis-kypseles',
+        image: '/images/adopt/hero.webp',
+        title: 'Πρόγραμμα Adopt a Hive',
+        text: 'Το καινοτόμο και βραβευμένο πρόγραμμα ΕΚΕ που μετατρέπει την περιβαλλοντική προσφορά σε μια ουσιαστική συλλογική εμπειρία team building.',
+        href: '/adopt-a-hive',
+        cta: 'Μάθετε περισσότερα',
       },
-    ] as { image: string; title: string; text: string; href: string }[],
+    ] as ProgramCard[],
+  },
+
+  fact: {
+    eyebrow: 'Ήξερες ότι…',
+    heading: 'Οι μέλισσες τρέφουν τον κόσμο.',
+    body: 'Το ένα τρίτο περίπου των τροφίμων που καταναλώνουμε καθημερινά εξαρτάται από την επικονίαση — κυρίως των μελισσών.',
+    stat: {
+      value: '1/3',
+      label: 'των τροφίμων μας εξαρτάται από την επικονίαση των μελισσών.',
+    },
+    closing:
+      'Προστατεύοντας τις μέλισσες, προστατεύουμε την τροφή και τη βιοποικιλότητα ολόκληρου του πλανήτη.',
+    cta: { label: 'Αφανείς Ήρωες της Φύσης', href: '/afaneis-iroes-tis-fysis' },
+    image: '/images/nature/pollinators-3.webp',
+    imageAlt: 'Μέλισσα επικονιάζει λουλούδι',
   },
 
   cta: {
     eyebrow: 'Κράτηση',
     heading: 'Κλείστε τη δική σας εμπειρία',
-    body: 'Συμπληρώστε τη φόρμα και επιλέξτε τις δραστηριότητες που σας ενδιαφέρουν. Η κράτηση θεωρείται έγκυρη μόνο μετά από δική μας επιβεβαίωση.',
+    body: 'Επιλέξτε τη δραστηριότητα που σας ενδιαφέρει και κλείστε online, ή επικοινωνήστε μαζί μας για ομαδικές και σχολικές κρατήσεις.',
+    primary: { label: 'Δείτε τις εμπειρίες', href: '#experiences' },
+    secondary: { label: 'Επικοινωνία', href: '/contact' },
   },
 } as const

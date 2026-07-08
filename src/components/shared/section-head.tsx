@@ -17,10 +17,12 @@ export function SectionHead({
   return (
     <Reveal className={cn('mx-auto flex max-w-[720px] flex-col items-center gap-3 text-center', className)}>
       <span className="text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">{eyebrow}</span>
-      <h2 className="font-display text-[28px] font-bold leading-[1.14] text-foreground md:text-[35px]">
+      <h2 className="text-balance font-display text-[28px] font-bold leading-[1.14] text-foreground md:text-[35px]">
         {heading}
       </h2>
-      {sub ? <p className="text-[16px] leading-[1.6] text-muted">{sub}</p> : null}
+      {sub ? (
+        <p className="whitespace-pre-line text-[16px] leading-[1.6] text-muted">{sub}</p>
+      ) : null}
     </Reveal>
   )
 }
