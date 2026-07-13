@@ -20,7 +20,7 @@ import { Repeater } from "./repeater"
 const api = {
   get: <T,>(u: string) => sdk.client.fetch<T>(u, { method: "GET" }),
   post: <T,>(u: string, body: unknown) =>
-    sdk.client.fetch<T>(u, { method: "POST", body }),
+    sdk.client.fetch<T>(u, { method: "POST", body: body as Record<string, unknown> }),
   del: <T,>(u: string) => sdk.client.fetch<T>(u, { method: "DELETE" }),
 }
 
@@ -151,6 +151,12 @@ export function ActivityEditor({
         payload.price_tiers = payload.price_tiers.map((t: any) => ({
           ...t,
           price: Number(t.price) || 0,
+          // Empty ⇒ null (this tier has no separate weekend price → falls back
+          // to `price`); otherwise a number.
+          weekend_price:
+            t.weekend_price === "" || t.weekend_price == null
+              ? null
+              : Number(t.weekend_price) || 0,
         }))
       }
       if (Array.isArray(payload.reviews)) {
@@ -303,11 +309,12 @@ export function ActivityEditor({
                     onChange={(v) => set("price_tiers", v)}
                     fields={[
                       { key: "key", label: "Κλειδί (adult/child/infant)" },
-                      { key: "price", label: "Τιμή (€)", type: "number" },
+                      { key: "price", label: "Τιμή καθημ. (€)", type: "number" },
+                      { key: "weekend_price", label: "Τιμή Σ/Κ (€, προαιρετικό)", type: "number" },
                       { key: "label", label: "Ετικέτα", width: "col-span-2" },
                       { key: "note", label: "Σημείωση (π.χ. Δωρεάν)", width: "col-span-2" },
                     ]}
-                    blank={{ key: "", label: "", price: 0, note: "" }}
+                    blank={{ key: "", label: "", price: 0, weekend_price: "", note: "" }}
                   />
                   <Repeater
                     label="Χαρακτηριστικά (features)"

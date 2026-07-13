@@ -4,7 +4,23 @@ import { randomBytes } from "crypto"
 import { BOOKINGS_MODULE } from "../../../modules/bookings"
 import type BookingsModuleService from "../../../modules/bookings/service"
 
-type PriceTier = { key: string; label?: string; price: number; note?: string }
+type PriceTier = {
+  key: string
+  label?: string
+  // Values come from an admin-editable JSON blob, so tolerate stringy numbers.
+  price: number | string
+  // Optional weekend (Sat/Sun) price; falls back to `price` when absent/blank.
+  weekend_price?: number | string | null
+  note?: string
+}
+
+/** True when a `YYYY-MM-DD` date falls on a Saturday or Sunday. Built from
+ *  y/m/d components so it's timezone-independent (no UTC off-by-one). */
+function isWeekend(date: string): boolean {
+  const [y, m, d] = date.split("-").map(Number)
+  const wd = new Date(y, (m ?? 1) - 1, d ?? 1).getDay()
+  return wd === 0 || wd === 6
+}
 
 type BookingBody = {
   slug: string
@@ -90,8 +106,17 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
   }
 
   const tiers: PriceTier[] = ((activity as any).price_tiers ?? []) as PriceTier[]
-  const priceOf = (key: string) =>
-    Number(tiers.find((t) => t.key === key)?.price ?? 0)
+  // Weekend (Sat/Sun) slots use `weekend_price` when a tier defines it; every
+  // other case falls back to the base `price` (so single-price activities are
+  // unaffected). The slot's own date is authoritative, never the client.
+  const weekend = isWeekend((slot as any).date)
+  const priceOf = (key: string) => {
+    const t = tiers.find((tt) => tt.key === key)
+    if (!t) return 0
+    const wp = t.weekend_price
+    const raw = weekend && wp != null && wp !== "" ? wp : t.price
+    return Number(raw) || 0
+  }
   const total =
     Math.round(
       (adults * priceOf("adult") +

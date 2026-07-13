@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Minus, Plus, X, Check, Loader2, CalendarDays, Mail } from 'lucide-react'
-import type { Activity, AvailabilitySlot } from '@/lib/medusa/activities'
+import type { Activity, AvailabilitySlot, PriceTier } from '@/lib/medusa/activities'
+import { tierPrice } from '@/lib/pricing'
 import {
   createBooking,
   getMonthAvailability,
@@ -19,6 +20,14 @@ const MONTHS_GEN = [
 
 const isoOf = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+
+/** True when a `YYYY-MM-DD` date is a Saturday/Sunday (timezone-safe). */
+function isWeekendDate(ds?: string | null): boolean {
+  if (!ds) return false
+  const [y, m, d] = ds.split('-').map(Number)
+  const wd = new Date(y, (m ?? 1) - 1, d ?? 1).getDay()
+  return wd === 0 || wd === 6
+}
 
 function greekDate(ds?: string): string {
   if (!ds) return ''
@@ -133,7 +142,12 @@ export function BookingModal({
   const remaining = selectedSlot?.remaining ?? 0
 
   const seats = Object.values(counts).reduce((a, b) => a + b, 0)
-  const total = tiers.reduce((sum, t) => sum + (counts[t.key] ?? 0) * t.price, 0)
+  // Weekend (Sat/Sun) dates use each tier's `weekend_price` when set — mirrors
+  // the server's authoritative calculation in the bookings route (via the shared
+  // `tierPrice` helper, so the preview can never diverge from what's charged).
+  const weekendSelected = isWeekendDate(selectedDate)
+  const priceOf = (t: PriceTier) => tierPrice(t, weekendSelected)
+  const total = tiers.reduce((sum, t) => sum + (counts[t.key] ?? 0) * priceOf(t), 0)
 
   // Nudge each newly-revealed step into view so it's obvious more is below.
   const scrollTo = (el: HTMLElement | null) =>
@@ -321,7 +335,7 @@ export function BookingModal({
                             <div className="flex flex-col">
                               <span className="text-[15px] text-foreground">{t.label}</span>
                               <span className="text-[13px] text-muted">
-                                {t.price === 0 ? (t.note ?? 'Δωρεάν') : money(t.price, currency)}
+                                {priceOf(t) === 0 ? (t.note ?? 'Δωρεάν') : money(priceOf(t), currency)}
                               </span>
                             </div>
                             <Stepper

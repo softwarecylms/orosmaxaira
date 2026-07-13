@@ -7,7 +7,15 @@ import { sdk } from './client'
  * always reflect immediately.
  */
 
-export type PriceTier = { key: string; label: string; price: number; note?: string }
+export type PriceTier = {
+  key: string
+  label: string
+  // Values originate from an admin-editable JSON blob → tolerate stringy numbers.
+  price: number | string
+  /** Optional Sat/Sun price; when absent/blank, weekend uses `price`. */
+  weekend_price?: number | string | null
+  note?: string
+}
 export type GalleryImage = { url: string; alt?: string }
 export type Feature = { title: string; text: string }
 export type Policy = { title: string; body: string }
