@@ -1,64 +1,33 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import { Lock } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight, CalendarRange } from 'lucide-react'
 import { PageHero } from '@/components/shared/page-hero'
 import { SectionHead } from '@/components/shared/section-head'
 import { BoldText } from '@/components/shared/bold-text'
-import { BookingForm } from '@/components/booking/booking-form'
 import { FormVideoBg } from '@/components/adopt/form-video-bg'
-import { CtaLink } from '@/components/home/cta-link'
 import { Reveal, RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
+import { publishedWorkshops, seasonBadge } from '@/lib/data/workshops'
+import { SeasonCalendar } from '@/components/ergastiria/season-calendar'
+import { WorkshopComboNotice } from '@/components/ergastiria/workshop-combo-notice'
+import { WorkshopEnquiryForm } from '@/components/ergastiria/workshop-enquiry-form'
 import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'Βιωματικά Εργαστήρια — Λαμπάδες, Κερί & Μελισσοκατασκευές',
   description:
-    'Δωρεάν βιωματικά εργαστήρια στο μελισσοκομείο του Όρους Μαχαιρά: μελισσολαμπάδες, περιτύλιγμα φαγητού με κερί μέλισσας και κέρινες δημιουργίες — με την υποστήριξη του Υφυπουργείου Τουρισμού.',
+    'Δωρεάν βιωματικά εργαστήρια στο μελισσοκομείο του Όρους Μαχαιρά. Κάθε εποχή το δικό της εργαστήρι — πάντα σε συνδυασμό με την εμπειρία «Γνωρίζω τη μέλισσα». Με την υποστήριξη του Υφυπουργείου Τουρισμού.',
 }
 
 const INTRO =
   'Η εξόρμηση στη φύση σε συνδυασμό με δημιουργικές δραστηριότητες είναι η καλύτερη λύση στην πιεστική καθημερινότητα. Με την υποστήριξη του Υφυπουργείου Τουρισμού, διοργανώνουμε δωρεάν βιωματικά εργαστήρια στο μελισσοκομείο μας, τόσο τα Σαββατοκύριακα όσο και τις αργίες. Θα ήταν χαρά μας να σας γνωρίσουμε από κοντά και να περάσουμε μαζί μια δημιουργική μέρα! Τα εργαστήρια απευθύνονται σε παιδιά και μεγάλους, δίνοντας σε κάθε οικογένεια την ευκαιρία να περάσει δημιουργικές στιγμές μαζί. Συμπληρώστε την φόρμα επικοινωνίας ή καλέστε στο 25622305 για περισσότερες πληροφορίες.'
 
-const WORKSHOPS = [
-  {
-    title: 'Μελισσολαμπάδες',
-    image: '/images/activities/ergastiria/workshop-1.webp',
-    imageAlt: 'Εργαστήρι κατασκευής μελισσολαμπάδων',
-    bold: ['Πάσχα', 'δωρεάν', 'ξεναγηθείτε', 'παίξετε'],
-    bookingClosed: false,
-    body: [
-      'Λίγο πριν το Πάσχα, ποια θα ήταν η καλύτερη δραστηριότητα για εσάς και τα παιδιά σας; Μα βεβαίως η κατασκευή των δικών σας μελισσολαμπάδων! Θα διασκεδάσετε, θα μάθετε για τη μέλισσα και θα φτιάξετε τις δικές σας λαμπάδες: θα τυλίξετε το φυτίλι με τη βάση της κηρήθρας και θα τις διακοσμήσετε με πασχαλινά διακοσμητικά όπως εσείς θέλετε — και θα τις πάρετε δωρεάν μαζί σας.',
-      'Επιπλέον, θα ξεναγηθείτε στους χώρους του μελισσοκομείου μας, θα δείτε πώς γίνεται η εμφιάλωση του μελιού, θα γνωρίσετε τη «φωλιά της μέλισσας» — πού και πώς ζει η μέλισσα και ποια η διαφορά μεταξύ μέλισσας, βασίλισσας και κηφήνα — και θα παίξετε ένα παιχνίδι γνώσεων για τη μέλισσα και το μέλι.',
-    ],
-  },
-  {
-    title: 'Περιτύλιγμα φαγητού με κερί μέλισσας',
-    image: '/images/activities/ergastiria/workshop-2.webp',
-    imageAlt: 'Εργαστήρι κατασκευής περιτυλίγματος φαγητού με κερί μέλισσας',
-    bold: ['μειώσετε τις πλαστικές μεμβράνες', 'ξεναγηθείτε', 'δωρεάν'],
-    bookingClosed: true,
-    body: [
-      'Εντάξτε την κυκλική οικονομία στην καθημερινότητά σας με έξυπνο, οικονομικό και φιλικό προς το περιβάλλον τρόπο! Θα μάθετε πώς να μειώσετε τις πλαστικές μεμβράνες που τυλίγουμε τα τρόφιμα (sandwich των παιδιών, απομεινάρια φαγητών, φρούτα κ.ά.) και να τις αντικαταστήσετε με περιτυλίγματα από κερί μέλισσας. Χρειάζεστε μόνο κερί μέλισσας και ένα παλιό βαμβακερό ύφασμα — τα υπόλοιπα θα τα μάθετε στο εργαστήριο!',
-      'Πέρα από την κατασκευή, θα γνωρίσετε από κοντά την κοινωνία των μελισσών, θα ξεναγηθείτε στους χώρους μας, θα δείτε ζωντανά την εμφιάλωση του μελιού, θα παίξετε ένα παιχνίδι γνώσεων και θα δοκιμάσετε τα είδη μελιών μας. Και όλα αυτά δωρεάν!',
-    ],
-  },
-  {
-    title: 'Κέρινες δημιουργίες',
-    image: '/images/activities/ergastiria/workshop-3.webp',
-    imageAlt: 'Εργαστήρι κέρινες δημιουργίες',
-    bold: ['δημιουργική δραστηριότητα', 'ξεναγηθείτε'],
-    bookingClosed: false,
-    body: [
-      'Μια δημιουργική δραστηριότητα για εποικοδομητικό χρόνο με την οικογένεια ή τους φίλους σας: η κατασκευή των δικών σας πολύχρωμων μελισσο-κεριών! Θα τυλίξετε το φυτίλι με τη βάση της κηρήθρας, θα διακοσμήσετε το κερί σας με κορδέλες και θα το πάρετε μαζί σας στο σπίτι για να το στολίσετε. Κατάλληλο για κάθε ηλικία.',
-      'Επιπλέον, θα ξεναγηθείτε στους χώρους μας, θα μάθετε πώς γίνεται η εμφιάλωση του μελιού, θα δείτε τη «φωλιά της μέλισσας» και θα παίξετε ένα παιχνίδι γνώσεων για τη μέλισσα και το μέλι.',
-    ],
-  },
-]
-
 const BOOKING_BODY =
-  'Για να κλείσετε το εργαστήρι σας, συμπληρώστε τη φόρμα ή καλέστε στο 25622305. Θα λάβετε σχετική ενημέρωση εντός 24 ωρών.'
+  'Για να κλείσετε την εμπειρία σας, συμπληρώστε τη φόρμα ή καλέστε στο 25622305. Θα λάβετε σχετική ενημέρωση εντός 24 ωρών.'
 
 export default function ErgastiriaPage() {
+  const workshops = publishedWorkshops()
+
   return (
     <>
       {/* 1 · Hero */}
@@ -106,40 +75,61 @@ export default function ErgastiriaPage() {
               />
             </div>
           </RevealStaggerItem>
+          <RevealStaggerItem className="w-full max-w-[760px]">
+            <WorkshopComboNotice className="mt-2 text-left" />
+          </RevealStaggerItem>
         </RevealStagger>
       </section>
 
-      {/* 3 · Workshops — alternating rows */}
+      {/* 3 · Seasonal calendar — the centrepiece */}
       <section className="bg-offwhite py-12 md:py-[70px]">
+        <div className="container-wide flex flex-col gap-10">
+          <SectionHead
+            eyebrow="Το Ημερολόγιο"
+            heading="Κάθε εποχή, το δικό της εργαστήρι"
+            sub="Το εργαστήρι της κάθε περιόδου καθορίζεται από εμάς, ανάλογα με τη σεζόν. Δείτε τι τρέχει κάθε μήνα."
+          />
+          <Reveal>
+            <SeasonCalendar />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 4 · Workshops — alternating rows, driven by the data module */}
+      <section className="py-12 md:py-[70px]">
         <div className="container-wide flex flex-col gap-14 md:gap-20">
           <SectionHead
             eyebrow="Τα Εργαστήρια"
-            heading="Επιλέξτε το Εργαστήρι σας"
-            sub="Τρία δημιουργικά εργαστήρια — διαλέξτε αυτό που σας ταιριάζει."
+            heading="Τα Εργαστήρια μας"
+            sub="Κάθε εποχή έχει το δικό της εργαστήρι. Το εργαστήρι της κάθε περιόδου καθορίζεται από εμάς, ανάλογα με τη σεζόν."
           />
-          {WORKSHOPS.map((w, i) => (
-            <article key={w.title} className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
+          {workshops.map((w, i) => (
+            <article key={w.slug} className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
               <Reveal className={cn(i % 2 === 1 && 'lg:order-2')}>
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[18px] bg-white shadow-card">
-                  <Image
-                    src={w.image}
-                    alt={w.imageAlt}
-                    fill
-                    sizes="(min-width:1024px) 50vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
+                <Link
+                  href={`/drastiriotites/ergastiria/${w.slug}`}
+                  className="group block"
+                  aria-label={w.title}
+                >
+                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[18px] bg-white shadow-card">
+                    <Image
+                      src={w.image}
+                      alt={w.title}
+                      fill
+                      sizes="(min-width:1024px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-500 ease-soft group-hover:scale-[1.04]"
+                    />
+                  </div>
+                </Link>
               </Reveal>
               <RevealStagger
                 className={cn('flex flex-col gap-4', i % 2 === 1 && 'lg:order-1')}
                 stagger={0.07}
               >
                 <RevealStaggerItem>
-                  <span className="inline-flex items-center gap-2.5 text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">
-                    <span className="flex size-7 items-center justify-center rounded-full bg-gradient-to-br from-accent to-gold-strong text-[13px] font-bold text-white shadow-[0_6px_16px_-6px_rgba(241,172,16,0.75)]">
-                      {i + 1}
-                    </span>
-                    Εργαστήρι {i + 1}
+                  <span className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-3 py-1.5 text-[12.5px] font-semibold uppercase tracking-[0.08em] text-gold-strong">
+                    <CalendarRange className="size-3.5" aria-hidden="true" />
+                    {seasonBadge(w)}
                   </span>
                 </RevealStaggerItem>
                 <RevealStaggerItem>
@@ -147,27 +137,20 @@ export default function ErgastiriaPage() {
                     {w.title}
                   </h3>
                 </RevealStaggerItem>
-                {w.body.map((p, j) => (
-                  <RevealStaggerItem key={j}>
-                    <p className="text-[15.5px] leading-[1.7] text-muted">
-                      <BoldText text={p} bold={w.bold} />
-                    </p>
-                  </RevealStaggerItem>
-                ))}
                 <RevealStaggerItem>
-                  {w.bookingClosed ? (
-                    <span
-                      aria-disabled="true"
-                      className="mt-1 inline-flex cursor-not-allowed select-none items-center gap-2 self-start whitespace-nowrap rounded-[4px] border border-border bg-offwhite px-[16px] py-[13px] text-[14px] font-medium text-muted"
-                    >
-                      <Lock className="size-4" aria-hidden="true" />
-                      Οι κρατήσεις έχουν κλείσει
-                    </span>
-                  ) : (
-                    <CtaLink href="#cta" variant="gold" className="mt-1 self-start">
-                      Κάντε κράτηση
-                    </CtaLink>
-                  )}
+                  <p className="text-[15.5px] leading-[1.7] text-muted">{w.excerpt}</p>
+                </RevealStaggerItem>
+                <RevealStaggerItem>
+                  <Link
+                    href={`/drastiriotites/ergastiria/${w.slug}`}
+                    className="group mt-1 inline-flex items-center gap-1.5 self-start text-[15px] font-semibold text-accent"
+                  >
+                    Δείτε το εργαστήρι
+                    <ArrowRight
+                      className="size-4 transition-transform duration-300 ease-soft group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
+                  </Link>
                 </RevealStaggerItem>
               </RevealStagger>
             </article>
@@ -175,18 +158,18 @@ export default function ErgastiriaPage() {
         </div>
       </section>
 
-      {/* 4 · Booking CTA + form */}
-      <section id="cta" className="scroll-mt-24 py-12 md:py-[70px]">
+      {/* 5 · Booking CTA + enquiry form */}
+      <section id="cta" className="scroll-mt-24 bg-offwhite py-12 md:py-[70px]">
         <div className="container-wide">
           <Reveal className="relative isolate overflow-hidden rounded-[30px] bg-accent p-8 text-white md:p-14">
             <FormVideoBg />
-            <div className="relative z-10 grid items-center gap-10 lg:grid-cols-2">
+            <div className="relative z-10 grid items-start gap-10 lg:grid-cols-2">
               <div className="flex flex-col items-center gap-5 text-center lg:items-start lg:text-left">
                 <span className="text-[13px] font-semibold uppercase tracking-[0.12em] text-cream">
                   Κράτηση
                 </span>
                 <h2 className="font-display text-[28px] font-bold leading-[1.15] text-white md:text-[38px]">
-                  Κλείστε το εργαστήρι σας
+                  Κλείστε την εμπειρία σας
                 </h2>
                 <p className="max-w-[520px] text-[16px] leading-[1.6] text-white/85">
                   <BoldText
@@ -197,7 +180,7 @@ export default function ErgastiriaPage() {
                   />
                 </p>
               </div>
-              <BookingForm activityName="Εργαστήρια" startHour={8} endHour={16} />
+              <WorkshopEnquiryForm startHour={8} endHour={16} />
             </div>
           </Reveal>
         </div>
