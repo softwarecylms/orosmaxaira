@@ -166,6 +166,8 @@ export function ActivityEditor({
         }))
       }
       payload.status = form.status ?? "draft" // rendered as a separate select
+      payload.booking_type = form.booking_type ?? "seats"
+      if (form.benefits !== undefined) payload.benefits = form.benefits
       await api.post(`/admin/activities/${activityId}`, payload)
       toast.success("Αποθηκεύτηκε")
       onSaved()
@@ -301,6 +303,19 @@ export function ActivityEditor({
                         <option value="published">Δημοσιευμένη</option>
                       </select>
                     </div>
+                    <div className="flex flex-col gap-1">
+                      <Label size="small" weight="plus">
+                        Τύπος κράτησης
+                      </Label>
+                      <select
+                        className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm"
+                        value={form.booking_type ?? "seats"}
+                        onChange={(e) => set("booking_type", e.target.value)}
+                      >
+                        <option value="seats">Θέσεις (slots + πληρωμή)</option>
+                        <option value="enquiry">Αίτημα / ραντεβού</option>
+                      </select>
+                    </div>
                   </div>
 
                   <Repeater
@@ -358,6 +373,34 @@ export function ActivityEditor({
                     ]}
                     blank={{ name: "", rating: 5, date: "", body: "" }}
                   />
+
+                  {/* Οφέλη — for enquiry activities like Μελισσοθεραπεία. */}
+                  <div className="flex flex-col gap-3 rounded-lg border border-ui-border-base p-4">
+                    <Label size="small" weight="plus">
+                      Οφέλη (π.χ. Μελισσοθεραπεία)
+                    </Label>
+                    <div className="flex flex-col gap-1">
+                      <Text size="xsmall">Εισαγωγή</Text>
+                      <Textarea
+                        value={form.benefits?.intro ?? ""}
+                        onChange={(e) =>
+                          set("benefits", { ...(form.benefits ?? {}), intro: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <Text size="xsmall">Λίστα — μία κατάσταση ανά γραμμή</Text>
+                      <Textarea
+                        value={(form.benefits?.items ?? []).join("\n")}
+                        onChange={(e) =>
+                          set("benefits", {
+                            ...(form.benefits ?? {}),
+                            items: e.target.value.split("\n").map((x) => x.trim()).filter(Boolean),
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
                 </div>
               </Tabs.Content>
 
