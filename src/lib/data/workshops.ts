@@ -127,6 +127,13 @@ export function monthName(m: number, short = false): string {
   return arr[((m - 1) % 12 + 12) % 12] ?? ''
 }
 
+/** Accusative Greek month name, e.g. after "στον …" ("στον Ιούλιο"). Every
+ *  Greek month is masculine ending in -ος, so the accusative just drops the
+ *  final ς (Ιούλιος → Ιούλιο, Αύγουστος → Αύγουστο). */
+export function monthNameAccusative(m: number): string {
+  return monthName(m).replace(/ς$/, '')
+}
+
 /** "Μάρτιος – Απρίλιος" for a season's months (array is in season order, so a
  *  winter [12,1,2] reads "Δεκέμβριος – Φεβρουάριος"). Empty ⇒ ''. */
 export function monthRangeLabel(months: number[]): string {
