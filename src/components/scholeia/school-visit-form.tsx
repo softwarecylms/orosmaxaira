@@ -199,7 +199,7 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className={labelCls}>
-          Αριθμός μαθητών
+          Αριθμός παιδιών
           <input
             type="number"
             inputMode="numeric"
@@ -209,7 +209,7 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
             onChange={(e) => setStudents(e.target.value)}
             required
             placeholder={`1–${MAX_STUDENTS}`}
-            aria-label="Αριθμός μαθητών"
+            aria-label="Αριθμός παιδιών"
             className={inputCls}
           />
         </label>
@@ -287,16 +287,17 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
         className={`${inputCls} resize-y`}
       />
 
-      {/* Live cost estimate */}
+      {/* Live total — €8/παιδί έως 25 παιδιά, €7/παιδί για 26+ (οι συνοδοί δωρεάν) */}
       {count > 0 && count <= MAX_STUDENTS ? (
-        <div className="flex items-center justify-between gap-3 rounded-[8px] bg-accent/10 px-4 py-3">
-          <span className="text-[13px] leading-[1.4] text-muted">
-            Εκτιμώμενο κόστος&nbsp;
-            <span className="text-foreground/60">
-              ({count} × €{pricePerChild(count)} — συνοδοί δωρεάν)
-            </span>
+        <div className="flex flex-col gap-1 rounded-[8px] bg-accent/10 px-4 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-[14px] font-semibold text-foreground">Εκτιμώμενο σύνολο</span>
+            <span className="text-[22px] font-bold leading-none text-accent">€{estimate}</span>
+          </div>
+          <span className="text-[12px] leading-[1.4] text-muted">
+            {count} {count === 1 ? 'παιδί' : 'παιδιά'} × €{pricePerChild(count)} ανά παιδί · οι
+            συνοδοί δωρεάν
           </span>
-          <span className="text-[20px] font-bold leading-none text-accent">€{estimate}</span>
         </div>
       ) : null}
 

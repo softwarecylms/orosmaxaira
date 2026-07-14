@@ -19,19 +19,25 @@ export function SchoolBookingCard() {
       <div className="flex flex-col gap-5 rounded-[20px] border border-border-strong/15 bg-white p-6 shadow-card md:p-7">
         <div className="flex flex-col gap-3">
           <span className="text-[13px] font-semibold uppercase tracking-[0.08em] text-gold-strong">
-            Κόστος συμμετοχής
+            Κόστος ανά παιδί
           </span>
           <ul className="flex flex-col gap-3">
             {SCHOOL_PRICING.map((t) => (
               <li key={t.range} className="flex items-baseline justify-between gap-3">
                 <span className="text-[15px] leading-snug text-muted">{t.range}</span>
                 <span className="shrink-0 text-[18px] font-bold text-accent">
-                  {t.price === null ? 'Δωρεάν' : `€${t.price}`}
+                  {t.price === null ? (
+                    'Δωρεάν'
+                  ) : (
+                    <>
+                      €{t.price}
+                      <span className="text-[12px] font-medium text-muted"> / παιδί</span>
+                    </>
+                  )}
                 </span>
               </li>
             ))}
           </ul>
-          <p className="text-[12.5px] text-muted">Όλες οι τιμές συμπεριλαμβάνουν ΦΠΑ.</p>
         </div>
 
         <button
