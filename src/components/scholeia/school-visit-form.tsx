@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { Check, Info, Loader2 } from 'lucide-react'
+import { BookingCalendar } from '@/components/booking/booking-calendar'
 import {
   MAX_STUDENTS,
   SCHOOL_WORKSHOP_OPTIONS,
@@ -25,6 +26,15 @@ const isWeekday = (ds: string): boolean => {
   return wd >= 1 && wd <= 5
 }
 
+const MONTHS_GEN = [
+  'Ιανουαρίου', 'Φεβρουαρίου', 'Μαρτίου', 'Απριλίου', 'Μαΐου', 'Ιουνίου',
+  'Ιουλίου', 'Αυγούστου', 'Σεπτεμβρίου', 'Οκτωβρίου', 'Νοεμβρίου', 'Δεκεμβρίου',
+]
+const formatGreekDate = (ds: string): string => {
+  const [y, m, d] = ds.split('-').map(Number)
+  return `${d} ${MONTHS_GEN[(m ?? 1) - 1]} ${y}`
+}
+
 /**
  * School-visit booking request form (rendered inside SchoolBookingModal).
  * Captures the school, contact, headcount, preferred date and the chosen
@@ -45,16 +55,29 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
   const [notes, setNotes] = useState('')
   const [website, setWebsite] = useState('') // honeypot
 
-  const [minDate, setMinDate] = useState('')
+  const [availableDates, setAvailableDates] = useState<Set<string>>(new Set())
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [sent, setSent] = useState(false)
 
+  // Bookable dates = weekdays (Mon–Fri) from today through ~8 months out, so the
+  // calendar greys out weekends + past dates. Computed on the client (depends on
+  // today) to avoid a hydration mismatch.
   useEffect(() => {
     const now = new Date()
-    setMinDate(
-      `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`,
-    )
+    const pad = (n: number) => String(n).padStart(2, '0')
+    const isoOf = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+    const set = new Set<string>()
+    const end = new Date(now.getFullYear(), now.getMonth() + 8, now.getDate())
+    for (
+      const cur = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      cur <= end;
+      cur.setDate(cur.getDate() + 1)
+    ) {
+      const wd = cur.getDay()
+      if (wd >= 1 && wd <= 5) set.add(isoOf(cur))
+    }
+    setAvailableDates(set)
   }, [])
 
   const count = useMemo(() => {
@@ -203,23 +226,24 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
         </label>
       </div>
 
-      <label className={labelCls}>
-        Προτιμώμενη ημερομηνία <span className="text-muted">(Δευτέρα–Παρασκευή)</span>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          required
-          min={minDate}
-          aria-label="Προτιμώμενη ημερομηνία (εργάσιμες ημέρες)"
-          className={inputCls}
-        />
-        {date && !isWeekday(date) ? (
-          <span className="text-[12.5px] font-medium text-red-600">
-            Οι επισκέψεις γίνονται μόνο εργάσιμες ημέρες (Δευτέρα–Παρασκευή).
+      <div className="flex flex-col gap-2">
+        <span className="text-[13px] font-medium text-foreground">
+          Προτιμώμενη ημερομηνία <span className="text-muted">(μόνο Δευτέρα–Παρασκευή)</span>
+        </span>
+        <div className="rounded-[8px] border border-border bg-white p-3">
+          <BookingCalendar
+            availableDates={availableDates}
+            selected={date || null}
+            onSelect={setDate}
+          />
+        </div>
+        {date ? (
+          <span className="text-[12.5px] text-muted">
+            Επιλεγμένη ημερομηνία:{' '}
+            <span className="font-semibold text-foreground">{formatGreekDate(date)}</span>
           </span>
         ) : null}
-      </label>
+      </div>
 
       {/* Δραστηριότητα 2 workshop choice (required) */}
       <fieldset className="flex flex-col gap-2" aria-required="true">
