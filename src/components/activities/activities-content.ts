@@ -84,9 +84,8 @@ export const ACTIVITIES_PAGE = {
         image: '/images/adopt/visit-2.webp',
         title: 'Εκπαιδευτικές Επισκέψεις Σχολείων',
         text: 'Ένα οργανωμένο εκπαιδευτικό πρόγραμμα για σχολεία, αφιερωμένο στη μέλισσα, το περιβάλλον και τη βιωματική μάθηση.',
-        href: '/contact',
-        cta: 'Επικοινωνήστε μαζί μας',
-        disabled: true,
+        href: '/drastiriotites/scholeia',
+        cta: 'Δείτε το πρόγραμμα',
       },
       {
         image: '/images/adopt/hero.webp',
