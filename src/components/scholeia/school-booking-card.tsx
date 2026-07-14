@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { CalendarCheck, Gift, Phone, ShieldCheck } from 'lucide-react'
+import { CalendarCheck, Gift, Phone } from 'lucide-react'
 import { SCHOOL_PRICING } from '@/lib/data/school-visit'
 import { SchoolBookingModal } from './school-booking-modal'
 
@@ -48,11 +48,6 @@ export function SchoolBookingCard() {
           <CalendarCheck className="size-5" aria-hidden="true" />
           Κλείστε επίσκεψη
         </button>
-
-        <p className="flex items-start gap-2 text-[13px] leading-[1.5] text-muted">
-          <ShieldCheck className="mt-0.5 size-4 shrink-0 text-success" aria-hidden="true" />
-          Το αίτημα δεν δεσμεύει — θα επικοινωνήσουμε για την επιβεβαίωση της ημερομηνίας.
-        </p>
 
         <p className="flex items-start gap-2 rounded-[14px] bg-accent-soft p-4 text-[13px] leading-[1.55] text-foreground/80 ring-1 ring-accent/15">
           <Gift className="mt-0.5 size-4 shrink-0 text-gold-strong" aria-hidden="true" />
