@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { CalendarCheck, CalendarRange, Clock, Phone, ShieldCheck, X } from 'lucide-react'
@@ -20,6 +21,10 @@ const FACTS = [
 export function MelissotherapeiaBooking() {
   const [open, setOpen] = useState(false)
   const reduce = useReducedMotion()
+
+  // Portal to <body> so the overlay escapes ancestor stacking contexts.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
 
   useEffect(() => {
     if (!open) return
@@ -103,8 +108,10 @@ export function MelissotherapeiaBooking() {
         </div>
       </div>
 
-      {/* Enquiry modal — same shell as the activity BookingModal */}
-      <AnimatePresence>
+      {/* Enquiry modal — portaled to <body> so it sits above the sticky header */}
+      {mounted
+        ? createPortal(
+            <AnimatePresence>
         {open ? (
           <motion.div
             className="fixed inset-0 z-[110] flex items-end justify-center p-0 sm:items-center sm:p-4"
@@ -157,7 +164,10 @@ export function MelissotherapeiaBooking() {
             </motion.div>
           </motion.div>
         ) : null}
-      </AnimatePresence>
+            </AnimatePresence>,
+            document.body,
+          )
+        : null}
     </>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { GraduationCap, X } from 'lucide-react'
 import { EASE, DURATION } from '@/lib/motion'
@@ -14,6 +15,10 @@ import { SchoolVisitForm } from './school-visit-form'
  */
 export function SchoolBookingModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const reduce = useReducedMotion()
+
+  // Portal to <body> so the overlay escapes ancestor stacking contexts.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
 
   // Esc + body-scroll lock while open.
   useEffect(() => {
@@ -30,7 +35,7 @@ export function SchoolBookingModal({ open, onClose }: { open: boolean; onClose: 
     }
   }, [open, onClose])
 
-  return (
+  const overlay = (
     <AnimatePresence>
       {open ? (
         <motion.div
@@ -84,4 +89,6 @@ export function SchoolBookingModal({ open, onClose }: { open: boolean; onClose: 
       ) : null}
     </AnimatePresence>
   )
+
+  return mounted ? createPortal(overlay, document.body) : null
 }

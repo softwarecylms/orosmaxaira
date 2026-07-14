@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Minus, Plus, X, Check, Loader2, CalendarDays, Mail } from 'lucide-react'
 import type { Activity, AvailabilitySlot, PriceTier } from '@/lib/medusa/activities'
@@ -63,6 +64,11 @@ export function BookingModal({
   const reduce = useReducedMotion()
   const currency = activity.currency ?? 'eur'
   const tiers = activity.price_tiers ?? []
+
+  // Portal to <body> so the fixed overlay escapes any ancestor stacking context
+  // (e.g. the sticky header) and truly sits on top. Mounted guard keeps SSR safe.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
 
   const [loading, setLoading] = useState(true)
   const [slots, setSlots] = useState<AvailabilitySlot[]>([])
@@ -220,7 +226,7 @@ export function BookingModal({
     setSubmitting(false)
   }
 
-  return (
+  const overlay = (
     <AnimatePresence>
       {open ? (
         <motion.div
@@ -434,6 +440,8 @@ export function BookingModal({
       ) : null}
     </AnimatePresence>
   )
+
+  return mounted ? createPortal(overlay, document.body) : null
 }
 
 const fieldCls =
