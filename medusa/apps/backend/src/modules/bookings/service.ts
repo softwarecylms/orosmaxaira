@@ -4,7 +4,13 @@ import {
   MedusaService,
 } from "@medusajs/framework/utils"
 import type { Context } from "@medusajs/framework/types"
-import { Activity, AvailabilitySlot, Booking } from "./models/definitions"
+import {
+  Activity,
+  AvailabilitySlot,
+  Booking,
+  SchoolProgram,
+  Workshop,
+} from "./models/definitions"
 
 type GenerateSlotsInput = {
   activityId: string
@@ -29,6 +35,8 @@ class BookingsModuleService extends MedusaService({
   Activity,
   AvailabilitySlot,
   Booking,
+  Workshop,
+  SchoolProgram,
 }) {
   /**
    * Atomically reserve `seats` on a slot. Returns true if the reservation

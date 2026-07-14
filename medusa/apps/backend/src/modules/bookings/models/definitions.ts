@@ -34,6 +34,9 @@ export const Activity = model.define("activity", {
   season_end_month: model.number().nullable(),
   currency: model.text().default("eur"),
   status: model.enum(["draft", "published"]).default("draft"),
+  // How the storefront books this activity: the real seat/slot checkout, or an
+  // enquiry (appointment) request — e.g. Μελισσοθεραπεία, which has no slots.
+  booking_type: model.enum(["seats", "enquiry"]).default("seats"),
   meta_title: model.text().nullable(),
   meta_description: model.text().nullable(),
   // Structured content — small arrays edited via repeater sub-forms in admin.
@@ -42,6 +45,8 @@ export const Activity = model.define("activity", {
   features: model.json().nullable(), //    [{ title, text }]
   policies: model.json().nullable(), //    [{ title, body }]
   reviews: model.json().nullable(), //     [{ name, date, rating, body }]
+  // Optional "Οφέλη" list (e.g. Μελισσοθεραπεία conditions): { intro?, items[] }.
+  benefits: model.json().nullable(),
   related_slugs: model.json().nullable(), // string[]
   slots: model.hasMany(() => AvailabilitySlot, { mappedBy: "activity" }),
   bookings: model.hasMany(() => Booking, { mappedBy: "activity" }),
@@ -85,4 +90,67 @@ export const Booking = model.define("booking", {
   notes: model.text().nullable(),
   activity: model.belongsTo(() => Activity, { mappedBy: "bookings" }),
   slot: model.belongsTo(() => AvailabilitySlot, { mappedBy: "bookings" }),
+})
+
+/**
+ * A seasonal βιωματικό εργαστήρι — the /drastiriotites/ergastiria hub + each
+ * per-workshop page. The farm runs one workshop per season; `months` (1–12, in
+ * season order) drives the seasonal calendar. Empty `months` = "κατόπιν ραντεβού".
+ * Content-only (booking is an enquiry), so no slots/pricing here.
+ */
+export const Workshop = model.define("workshop", {
+  id: model.id({ prefix: "wsh" }).primaryKey(),
+  slug: model.text().unique(),
+  title: model.text(),
+  excerpt: model.text().nullable(),
+  description: model.text().nullable(),
+  season_label: model.text().nullable(),
+  months: model.json().nullable(), // number[] 1–12, in season order
+  image: model.text().nullable(), // hero image
+  gallery: model.json().nullable(), // [{ url, alt }]
+  duration_label: model.text().nullable(),
+  age_label: model.text().nullable(),
+  currency: model.text().default("eur"),
+  // Demo pricing = the bookable experience combinations, each a priced tier:
+  //   [{ key, label: "Γνωρίζω τη Μέλισσα (+ Περιπέτειες)", price, note? }]
+  price_tiers: model.json().nullable(),
+  features: model.json().nullable(), // [{ title, text }]
+  rank: model.number().default(0), // display order in the hub
+  status: model.enum(["draft", "published"]).default("draft"),
+  meta_title: model.text().nullable(),
+  meta_description: model.text().nullable(),
+})
+
+/**
+ * The "Εκπαιδευτικές Επισκέψεις Σχολείων" program driving /drastiriotites/scholeia.
+ * A singleton content record (one published row, `slug` = "default"). Booking is
+ * an enquiry (headcount + weekday), so there are no slots; pricing is per-child
+ * headcount tiers rather than seat tiers.
+ */
+export const SchoolProgram = model.define("school_program", {
+  id: model.id({ prefix: "sprog" }).primaryKey(),
+  slug: model.text().unique(), // "default" — the one published program
+  title: model.text(),
+  hero_image: model.text().nullable(),
+  hero_image_alt: model.text().nullable(),
+  intro: model.text().nullable(), // Περιγραφή
+  closing: model.text().nullable(),
+  program_note: model.text().nullable(), // "Τα παιδιά χωρίζονται σε ομάδες…"
+  tour_title: model.text().nullable(),
+  tour_intro: model.text().nullable(),
+  tour_stops: model.json().nullable(), // [{ text }]
+  workshop_intro: model.text().nullable(),
+  workshop_options: model.json().nullable(), // [{ key, short, description }]
+  workshop_note: model.text().nullable(),
+  play_title: model.text().nullable(),
+  play_text: model.text().nullable(),
+  duration_text: model.text().nullable(),
+  max_students: model.number().default(50),
+  pricing: model.json().nullable(), // [{ range, price, note }]
+  notes: model.json().nullable(), // [{ title, body }]
+  allergy_title: model.text().nullable(),
+  allergy_body: model.json().nullable(), // string[] paragraphs
+  status: model.enum(["draft", "published"]).default("published"),
+  meta_title: model.text().nullable(),
+  meta_description: model.text().nullable(),
 })
