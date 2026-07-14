@@ -110,15 +110,24 @@ const WORKSHOPS: Record<string, any>[] = [
   },
 ]
 
+// Display order on the hub (by slug).
+const RANK: Record<string, number> = {
+  melissolampades: 0,
+  "peritiligma-fagitou": 1,
+  "kerines-dimiourgies": 2,
+  "fytefsi-sporon": 3,
+  "ergastiria-mageirikis": 4,
+  keraloifes: 5,
+}
+
 export default async function seedWorkshops({ container }: ExecArgs) {
   const logger = container.resolve("logger")
   const bookings = container.resolve(BOOKINGS_MODULE) as BookingsModuleService
 
-  let rank = 0
   for (const w of WORKSHOPS) {
     const data = {
       ...w,
-      rank: rank++,
+      rank: RANK[w.slug] ?? 99,
       duration_label: "45 λεπτά",
       age_label: "Για όλες τις ηλικίες",
       currency: "eur",
