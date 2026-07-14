@@ -260,6 +260,12 @@ function WorkshopBookingForm({
 
   return (
     <form onSubmit={submit} className="flex w-full flex-col gap-4 text-left">
+      <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Ονοματεπώνυμο" aria-label="Ονοματεπώνυμο" className={inputCls} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="Email" aria-label="Email" className={inputCls} />
+        <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="Τηλέφωνο" aria-label="Τηλέφωνο" className={inputCls} />
+      </div>
+
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-1 text-[13px] font-semibold text-foreground">
           Συνδυασμός εμπειρίας <span aria-hidden="true">*</span>
@@ -294,11 +300,6 @@ function WorkshopBookingForm({
         </div>
       </fieldset>
 
-      <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Ονοματεπώνυμο" aria-label="Ονοματεπώνυμο" className={inputCls} />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="Email" aria-label="Email" className={inputCls} />
-        <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="Τηλέφωνο" aria-label="Τηλέφωνο" className={inputCls} />
-      </div>
       <label className="flex flex-col gap-1.5 text-[13px] font-medium text-foreground">
         Προτιμώμενη ημερομηνία (προαιρετικό)
         <input type="date" value={date} onChange={(e) => setDate(e.target.value)} min={minDate} aria-label="Προτιμώμενη ημερομηνία" className={inputCls} />
