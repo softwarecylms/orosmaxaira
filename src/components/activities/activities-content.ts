@@ -58,7 +58,7 @@ export const ACTIVITIES_PAGE = {
       },
       {
         image: '/images/activities/ergastiria.webp',
-        title: 'Ξενάγηση & Εργαστήρι Ζωγραφικής',
+        title: 'Εργαστήρια',
         text: 'Εκπαιδευτική ξενάγηση και εργαστήρι ζωγραφικής γύψινων φιγούρων, εμπνευσμένο από τη μέλισσα.',
         href: '/drastiriotites/ergastiria',
         rating: 4.9,
