@@ -13,7 +13,6 @@ export type SchoolWorkshopOption = {
   /** Short label for compact UI. */
   short: string
   description: string
-  image: string
 }
 
 export const SCHOOL_WORKSHOP_OPTIONS = [
@@ -23,7 +22,6 @@ export const SCHOOL_WORKSHOP_OPTIONS = [
     short: 'Κατασκευή κεριών & poster',
     description:
       'Τα παιδιά κατασκευάζουν το δικό τους κερί από φύλλο κηρήθρας και το διακοσμούν με κορδέλες και μπιχλιμπίδια, αφήνοντας την προσωπική τους πινελιά.',
-    image: '/images/activities/ergastiria/workshop-1.webp',
   },
   {
     key: 'fytefsi',
@@ -31,7 +29,6 @@ export const SCHOOL_WORKSHOP_OPTIONS = [
     short: 'Φύτευση σπόρων & ζωγραφική',
     description:
       'Τα παιδιά φυτεύουν μελισσοκομικούς σπόρους σε κεραμικά γλαστράκια — ένας τρόπος προστασίας των μελισσών — και ύστερα τα ζωγραφίζουν με πινέλα.',
-    image: '/images/nature/pollinator.webp',
   },
 ] as const satisfies readonly SchoolWorkshopOption[]
 

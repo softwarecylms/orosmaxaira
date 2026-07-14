@@ -216,24 +216,13 @@ export default function SchoolVisitsPage() {
                   <div className="grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr]">
                     {SCHOOL_WORKSHOP_OPTIONS.map((opt, i) => (
                       <div key={opt.key} className="contents">
-                        <div className="flex flex-col overflow-hidden rounded-[14px] bg-white ring-1 ring-border/50">
-                          <div className="relative aspect-[16/9] w-full overflow-hidden">
-                            <Image
-                              src={opt.image}
-                              alt={opt.short}
-                              fill
-                              sizes="(min-width:768px) 30vw, 100vw"
-                              className="object-cover"
-                            />
-                          </div>
-                          <div className="flex flex-col gap-1.5 p-4">
-                            <h4 className="font-display text-[16px] font-bold leading-[1.25] text-foreground">
-                              {opt.short}
-                            </h4>
-                            <p className="text-[13.5px] leading-[1.55] text-muted">
-                              {opt.description}
-                            </p>
-                          </div>
+                        <div className="flex flex-col gap-2 rounded-[14px] bg-white p-5 ring-1 ring-border/50">
+                          <h4 className="font-display text-[16px] font-bold leading-[1.25] text-foreground">
+                            {opt.short}
+                          </h4>
+                          <p className="text-[13.5px] leading-[1.55] text-muted">
+                            {opt.description}
+                          </p>
                         </div>
                         {i === 0 ? (
                           <div className="flex items-center justify-center">
