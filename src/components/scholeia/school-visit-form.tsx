@@ -10,22 +10,22 @@ import {
   type SchoolWorkshopKey,
 } from '@/lib/data/school-visit'
 
-// Glass fields on the gold band — same treatment as the other on-brand forms.
+// Light fields — the form lives inside the white booking modal.
 const inputCls =
-  'w-full rounded-[4px] border border-white/30 bg-white/15 px-[15px] py-2.5 text-[16px] leading-[24px] text-white outline-none backdrop-blur transition placeholder:text-white/80 focus:border-white focus:bg-white/25'
+  'w-full rounded-[8px] border border-border bg-white px-4 py-2.5 text-[15px] leading-[22px] text-foreground outline-none transition placeholder:text-muted focus:border-accent'
 
-const labelCls = 'flex flex-col gap-1.5 text-[13px] font-medium text-white/90'
+const labelCls = 'flex flex-col gap-1.5 text-[13px] font-medium text-foreground'
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
 
 /**
- * School-visit booking request form. Captures the school, contact, headcount,
- * preferred date and the chosen Δραστηριότητα-2 workshop, shows a live cost
- * estimate, and submits to /api/school-visit-enquiry (real email pipeline).
- * Validation runs on submit (not via a disabled button) so keyboard / screen
+ * School-visit booking request form (rendered inside SchoolBookingModal).
+ * Captures the school, contact, headcount, preferred date and the chosen
+ * Δραστηριότητα-2 workshop, shows a live cost estimate, and submits to
+ * /api/school-visit-enquiry. Validation runs on submit so keyboard / screen
  * reader users get a concrete reason; the workshop + headcount are re-checked
  * server-side.
  */
-export function SchoolVisitForm() {
+export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
   const [school, setSchool] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -101,6 +101,7 @@ export function SchoolVisitForm() {
         throw new Error(data?.error ?? 'Κάτι πήγε στραβά. Δοκιμάστε ξανά.')
       }
       setSent(true)
+      onSuccess?.()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Κάτι πήγε στραβά. Δοκιμάστε ξανά.')
     } finally {
@@ -110,13 +111,16 @@ export function SchoolVisitForm() {
 
   if (sent) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-[8px] border border-white/30 bg-white/15 px-5 py-10 text-center text-white backdrop-blur">
-        <span className="flex size-12 items-center justify-center rounded-full bg-white/25">
-          <Check className="size-6" strokeWidth={2.5} aria-hidden="true" />
+      <div className="flex flex-col items-center gap-4 py-6 text-center">
+        <span className="flex size-14 items-center justify-center rounded-full bg-success-soft text-success">
+          <Check className="size-7" strokeWidth={2.5} aria-hidden="true" />
         </span>
-        <p className="text-[16px] leading-[24px]">
-          Λάβαμε το αίτημά σας για επίσκεψη! Θα επικοινωνήσουμε σύντομα μαζί σας για την επιβεβαίωση
-          της ημερομηνίας και των λεπτομερειών. 🐝
+        <h3 className="font-display text-[22px] font-bold text-foreground">
+          Λάβαμε το αίτημά σας! 🐝
+        </h3>
+        <p className="max-w-[360px] text-[14.5px] leading-[1.6] text-muted">
+          Θα επικοινωνήσουμε σύντομα μαζί σας για την επιβεβαίωση της ημερομηνίας και των
+          λεπτομερειών της επίσκεψης.
         </p>
       </div>
     )
@@ -202,25 +206,25 @@ export function SchoolVisitForm() {
             required
             min={minDate}
             aria-label="Προτιμώμενη ημερομηνία"
-            className={`${inputCls} [color-scheme:dark]`}
+            className={inputCls}
           />
         </label>
         <label className={labelCls}>
-          Εναλλακτική ημερομηνία (προαιρετικό)
+          Εναλλακτική (προαιρετικό)
           <input
             type="date"
             value={altDate}
             onChange={(e) => setAltDate(e.target.value)}
             min={minDate}
             aria-label="Εναλλακτική ημερομηνία"
-            className={`${inputCls} [color-scheme:dark]`}
+            className={inputCls}
           />
         </label>
       </div>
 
       {/* Δραστηριότητα 2 workshop choice (required) */}
       <fieldset className="flex flex-col gap-2" aria-required="true">
-        <legend className="mb-1.5 text-[13px] font-semibold text-white">
+        <legend className="mb-1 text-[13px] font-semibold text-foreground">
           Εργαστήριο (Δραστηριότητα 2) <span aria-hidden="true">*</span>
           <span className="sr-only">(υποχρεωτικό)</span>
         </legend>
@@ -230,10 +234,10 @@ export function SchoolVisitForm() {
             return (
               <label
                 key={opt.key}
-                className={`flex cursor-pointer items-start gap-3 rounded-[4px] border px-4 py-3 text-[14.5px] leading-[1.4] backdrop-blur transition ${
+                className={`flex cursor-pointer items-start gap-3 rounded-[8px] border px-4 py-3 text-[14.5px] leading-[1.4] transition ${
                   active
-                    ? 'border-white bg-white/25 text-white'
-                    : 'border-white/30 bg-white/10 text-white/90 hover:border-white/60'
+                    ? 'border-accent bg-accent/10 text-foreground'
+                    : 'border-border bg-white text-muted hover:border-accent'
                 }`}
               >
                 <input
@@ -242,7 +246,7 @@ export function SchoolVisitForm() {
                   value={opt.key}
                   checked={active}
                   onChange={() => setWorkshop(opt.key)}
-                  className="mt-0.5 size-4 shrink-0 accent-white"
+                  className="mt-0.5 size-4 shrink-0 accent-accent"
                 />
                 <span>{opt.short}</span>
               </label>
@@ -262,14 +266,14 @@ export function SchoolVisitForm() {
 
       {/* Live cost estimate */}
       {count > 0 && count <= MAX_STUDENTS ? (
-        <div className="flex items-center justify-between gap-3 rounded-[4px] bg-white/15 px-4 py-3 text-white backdrop-blur">
-          <span className="text-[13px] leading-[1.4] text-white/90">
+        <div className="flex items-center justify-between gap-3 rounded-[8px] bg-accent/10 px-4 py-3">
+          <span className="text-[13px] leading-[1.4] text-muted">
             Εκτιμώμενο κόστος&nbsp;
-            <span className="text-white/70">
-              ({count} × €{pricePerChild(count)} — οι συνοδοί δωρεάν)
+            <span className="text-foreground/60">
+              ({count} × €{pricePerChild(count)} — συνοδοί δωρεάν)
             </span>
           </span>
-          <span className="text-[20px] font-bold leading-none">€{estimate}</span>
+          <span className="text-[20px] font-bold leading-none text-accent">€{estimate}</span>
         </div>
       ) : null}
 
@@ -284,14 +288,14 @@ export function SchoolVisitForm() {
         aria-hidden="true"
       />
 
-      <p className="flex items-start gap-2 text-[13px] font-semibold leading-[1.5] text-white">
-        <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-        Το παρόν αποτελεί αίτημα κράτησης. Θα επικοινωνήσουμε μαζί σας για την επιβεβαίωση της
+      <p className="flex items-start gap-2 text-[13px] leading-[1.5] text-muted">
+        <Info className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden="true" />
+        Το παρόν αποτελεί αίτημα κράτησης — θα επικοινωνήσουμε για την επιβεβαίωση της
         διαθεσιμότητας.
       </p>
 
       {error ? (
-        <p className="rounded-[4px] bg-white px-4 py-2.5 text-[14px] font-medium text-red-700">
+        <p className="rounded-[8px] bg-red-50 px-4 py-2.5 text-[14px] font-medium text-red-700">
           {error}
         </p>
       ) : null}
@@ -299,7 +303,7 @@ export function SchoolVisitForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="flex items-center justify-center gap-2 rounded-[4px] bg-white p-[14px] text-[16px] font-medium text-foreground transition-colors hover:bg-foreground hover:text-white disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-white disabled:hover:text-foreground"
+        className="flex items-center justify-center gap-2 rounded-[4px] bg-accent p-[14px] text-[16px] font-semibold text-white transition-colors hover:bg-foreground disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-accent"
       >
         {submitting ? (
           <>
