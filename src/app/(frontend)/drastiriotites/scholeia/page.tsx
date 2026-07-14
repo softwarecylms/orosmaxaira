@@ -18,52 +18,133 @@ import {
 } from 'lucide-react'
 import { RevealUp } from '@/components/home/reveal-up'
 import { SchoolBookingCard } from '@/components/scholeia/school-booking-card'
-import { SCHOOL_WORKSHOP_OPTIONS } from '@/lib/data/school-visit'
+import {
+  MAX_STUDENTS,
+  SCHOOL_PRICING,
+  SCHOOL_WORKSHOP_OPTIONS,
+} from '@/lib/data/school-visit'
+import { getSchoolProgram } from '@/lib/medusa/school-program'
 
-export const metadata: Metadata = {
-  title: 'Εκπαιδευτικές Επισκέψεις Σχολείων',
-  description:
-    'Οργανωμένο εκπαιδευτικό πρόγραμμα για δημοτικά σχολεία στο μελισσοκομείο του Όρους Μαχαιρά: ξενάγηση, δημιουργικό εργαστήριο και ελεύθερο παιχνίδι. Διάρκεια ~2ω30′, έως 50 μαθητές. Κλείστε την επίσκεψή σας online.',
+// Live so admin edits reflect; falls back to the static copy if Medusa is down.
+export const dynamic = 'force-dynamic'
+
+const TOUR_ICONS = [BookOpenText, Video, Gift, Cookie]
+const NOTE_ICONS = [Cookie, Users]
+
+type PView = {
+  title: string
+  heroImage: string
+  heroAlt: string
+  intro: string
+  closing: string
+  programNote: string
+  tourTitle: string
+  tourIntro: string
+  tourStops: { text: string }[]
+  workshopIntro: string
+  workshopOptions: { key: string; short: string; description: string }[]
+  workshopNote: string
+  playTitle: string
+  playText: string
+  durationText: string
+  maxStudents: number
+  pricing: { range: string; price: number | null; note?: string }[]
+  notes: { title: string; body: string }[]
+  allergyTitle: string
+  allergyBody: string[]
+  metaTitle: string
+  metaDescription?: string
 }
 
-const PILLS = [
-  { icon: Clock, label: '≈ 2ω 30′ · 09:30–12:00' },
-  { icon: Users, label: 'Έως 50 μαθητές' },
-  { icon: GraduationCap, label: 'Δημοτικά σχολεία' },
-]
+const FALLBACK: PView = {
+  title: 'Εκπαιδευτικές Επισκέψεις Σχολείων',
+  heroImage: '/images/adopt/visit-2.webp',
+  heroAlt: 'Μαθητές σε εκπαιδευτική επίσκεψη στο μελισσοκομείο του Όρους Μαχαιρά',
+  intro:
+    'Το μελισσοκομείο μας είναι ανοικτό για επισκέψεις για τα δημοτικά σχολεία. Έχουμε διαμορφώσει ένα πρόγραμμα το οποίο ανταποκρίνεται στις εκπαιδευτικές ανάγκες των μαθητών, συνδυάζοντας πληροφόρηση, δημιουργικότητα και επαφή με τη φύση.',
+  closing:
+    'Ανυπομονούμε να σας υποδεχτούμε μαζί με τα παιδιά για μια όμορφη, εκπαιδευτική ημέρα γεμάτη γνώση και ψυχαγωγία.',
+  programNote:
+    'Τα παιδιά χωρίζονται σε δύο ή τρεις ομάδες, ανάλογα με τον αριθμό των μαθητών, και εναλλάσσονται στις ακόλουθες τρεις δραστηριότητες — κάθε 45 λεπτά.',
+  tourTitle: 'Εκπαιδευτική Ξενάγηση',
+  tourIntro:
+    'Μια οργανωμένη περιήγηση στους εσωτερικούς και εξωτερικούς εκπαιδευτικούς μας χώρους, η οποία περιλαμβάνει:',
+  tourStops: [
+    {
+      text: 'Επίσκεψη στο σπιτάκι μελισσοθεραπείας για γνωριμία με τα προϊόντα της μέλισσας και τις χρήσεις τους, καθώς και εκμάθηση των ρόλων των μελισσών μέσα στην κυψέλη.',
+    },
+    {
+      text: 'Προβολή εκπαιδευτικού βίντεο που παρουσιάζει μια βασίλισσα μέλισσα να γεννά, μαζί με ενδιαφέρουσες πληροφορίες για την ανατομία και την επικοινωνία των μελισσών.',
+    },
+    { text: 'Quiz γνώσεων με μικρά δώρα από το κατάστημά μας για τους συμμετέχοντες.' },
+    { text: 'Γευσιγνωσία μελιού και σημαντικές πληροφορίες σχετικά με το μέλι.' },
+  ],
+  workshopIntro: 'Επιλέγετε ένα από τα δύο βιωματικά εργαστήρια:',
+  workshopOptions: SCHOOL_WORKSHOP_OPTIONS as unknown as PView['workshopOptions'],
+  workshopNote: 'Και στα δύο εργαστήρια, τα παιδιά παίρνουν μαζί τους την κατασκευή τους.',
+  playTitle: 'Ελεύθερο Παιχνίδι στον Παιδότοπο',
+  playText:
+    'Τα παιδιά θα απολαύσουν ελεύθερο παιχνίδι στον χώρο της παιδικής χαράς, με χρόνο για ξεκούραση και σνακ.',
+  durationText:
+    'Το πρόγραμμα διαρκεί περίπου 2 ώρες και 30 λεπτά, μεταξύ 09:30–12:00 (συμπεριλαμβάνεται και ο χρόνος που θα χρειαστούν τα παιδιά για να φάνε το πρωινό που θα φέρουν μαζί τους). Είναι ευέλικτο ανάλογα με την ώρα άφιξής σας, με όλες τις ομάδες να εναλλάσσονται κάθε 45 λεπτά.',
+  maxStudents: MAX_STUDENTS,
+  pricing: SCHOOL_PRICING,
+  notes: [
+    {
+      title: 'Σνακ & Ποτά',
+      body: 'Τα παιδιά θα πρέπει να φέρουν τα δικά τους σνακ. Στον χώρο μας διατίθενται μόνο μέλι και προϊόντα της μέλισσας.',
+    },
+    {
+      title: 'Επίβλεψη',
+      body: 'Κατά τη διάρκεια του ελεύθερου παιχνιδιού, η επίβλεψη παραμένει αποκλειστικά ευθύνη των συνοδών.',
+    },
+  ],
+  allergyTitle: 'Αλλεργίες & Ιατρικές Καταστάσεις',
+  allergyBody: [
+    'Παρακαλούμε να μας ενημερώσετε εκ των προτέρων για τυχόν ιατρικές καταστάσεις ή αλλεργίες (κυρίως σε ξηρούς καρπούς, μέλι, μέλισσες).',
+    'Καθώς οι μέλισσες υπάρχουν φυσικά στο περιβάλλον μας, παιδιά ή προσωπικό με αλλεργία στις μέλισσες συνιστάται έντονα να μην συμμετέχουν στην επίσκεψη.',
+  ],
+  metaTitle: 'Εκπαιδευτικές Επισκέψεις Σχολείων',
+  metaDescription:
+    'Οργανωμένο εκπαιδευτικό πρόγραμμα για δημοτικά σχολεία στο μελισσοκομείο του Όρους Μαχαιρά: ξενάγηση, δημιουργικό εργαστήριο και ελεύθερο παιχνίδι.',
+}
 
-// Δραστηριότητα 1 — the guided tour's four stops.
-const TOUR_STOPS = [
-  {
-    icon: BookOpenText,
-    text: 'Επίσκεψη στο σπιτάκι μελισσοθεραπείας για γνωριμία με τα προϊόντα της μέλισσας και τις χρήσεις τους, καθώς και εκμάθηση των ρόλων των μελισσών μέσα στην κυψέλη.',
-  },
-  {
-    icon: Video,
-    text: 'Προβολή εκπαιδευτικού βίντεο που παρουσιάζει μια βασίλισσα μέλισσα να γεννά, μαζί με ενδιαφέρουσες πληροφορίες για την ανατομία και την επικοινωνία των μελισσών.',
-  },
-  {
-    icon: Gift,
-    text: 'Quiz γνώσεων με μικρά δώρα από το κατάστημά μας για τους συμμετέχοντες.',
-  },
-  {
-    icon: Cookie,
-    text: 'Γευσιγνωσία μελιού και σημαντικές πληροφορίες σχετικά με το μέλι.',
-  },
-]
+async function loadProgram(): Promise<PView> {
+  const p = await getSchoolProgram()
+  if (!p) return FALLBACK
+  const s = <T,>(v: T | null | undefined, d: T): T => (v == null || v === '' ? d : v)
+  return {
+    title: s(p.title, FALLBACK.title),
+    heroImage: s(p.hero_image, FALLBACK.heroImage),
+    heroAlt: s(p.hero_image_alt, FALLBACK.heroAlt),
+    intro: s(p.intro, FALLBACK.intro),
+    closing: s(p.closing, FALLBACK.closing),
+    programNote: s(p.program_note, FALLBACK.programNote),
+    tourTitle: s(p.tour_title, FALLBACK.tourTitle),
+    tourIntro: s(p.tour_intro, FALLBACK.tourIntro),
+    tourStops: p.tour_stops?.length ? p.tour_stops : FALLBACK.tourStops,
+    workshopIntro: s(p.workshop_intro, FALLBACK.workshopIntro),
+    workshopOptions: (p.workshop_options?.length
+      ? p.workshop_options
+      : FALLBACK.workshopOptions) as PView['workshopOptions'],
+    workshopNote: s(p.workshop_note, FALLBACK.workshopNote),
+    playTitle: s(p.play_title, FALLBACK.playTitle),
+    playText: s(p.play_text, FALLBACK.playText),
+    durationText: s(p.duration_text, FALLBACK.durationText),
+    maxStudents: s(p.max_students, FALLBACK.maxStudents),
+    pricing: p.pricing?.length ? p.pricing : FALLBACK.pricing,
+    notes: p.notes?.length ? p.notes : FALLBACK.notes,
+    allergyTitle: s(p.allergy_title, FALLBACK.allergyTitle),
+    allergyBody: p.allergy_body?.length ? p.allergy_body : FALLBACK.allergyBody,
+    metaTitle: s(p.meta_title, FALLBACK.metaTitle),
+    metaDescription: p.meta_description ?? FALLBACK.metaDescription,
+  }
+}
 
-const NOTES = [
-  {
-    icon: Cookie,
-    title: 'Σνακ & Ποτά',
-    body: 'Τα παιδιά θα πρέπει να φέρουν τα δικά τους σνακ. Στον χώρο μας διατίθενται μόνο μέλι και προϊόντα της μέλισσας.',
-  },
-  {
-    icon: Users,
-    title: 'Επίβλεψη',
-    body: 'Κατά τη διάρκεια του ελεύθερου παιχνιδιού, η επίβλεψη παραμένει αποκλειστικά ευθύνη των συνοδών.',
-  },
-]
+export async function generateMetadata(): Promise<Metadata> {
+  const v = await loadProgram()
+  return { title: v.metaTitle, description: v.metaDescription }
+}
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -100,7 +181,14 @@ function ActivityHead({
   )
 }
 
-export default function SchoolVisitsPage() {
+export default async function SchoolVisitsPage() {
+  const v = await loadProgram()
+  const pills = [
+    { icon: Clock, label: '≈ 2ω 30′ · 09:30–12:00' },
+    { icon: Users, label: `Έως ${v.maxStudents} μαθητές` },
+    { icon: GraduationCap, label: 'Δημοτικά σχολεία' },
+  ]
+
   return (
     <>
       {/* Breadcrumb */}
@@ -118,7 +206,7 @@ export default function SchoolVisitsPage() {
               Δραστηριότητες
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
-            <span className="text-foreground">Εκπαιδευτικές Επισκέψεις Σχολείων</span>
+            <span className="text-foreground">{v.title}</span>
           </nav>
         </RevealUp>
       </div>
@@ -128,10 +216,10 @@ export default function SchoolVisitsPage() {
         <RevealUp>
           <div className="flex flex-col gap-4">
             <h1 className="font-display text-[32px] font-bold leading-[1.06] text-foreground md:text-[46px]">
-              Εκπαιδευτικές Επισκέψεις Σχολείων
+              {v.title}
             </h1>
             <ul className="flex flex-wrap items-center gap-2">
-              {PILLS.map((p) => (
+              {pills.map((p) => (
                 <li
                   key={p.label}
                   className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1.5 text-[13px] font-semibold text-gold-strong"
@@ -148,8 +236,8 @@ export default function SchoolVisitsPage() {
         <RevealUp className="mt-6">
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[20px] bg-offwhite shadow-card md:aspect-[16/7]">
             <Image
-              src="/images/adopt/visit-2.webp"
-              alt="Μαθητές σε εκπαιδευτική επίσκεψη στο μελισσοκομείο του Όρους Μαχαιρά"
+              src={v.heroImage}
+              alt={v.heroAlt}
               fill
               priority
               sizes="(min-width:1280px) 1216px, 100vw"
@@ -164,67 +252,52 @@ export default function SchoolVisitsPage() {
             {/* Περιγραφή */}
             <section className="flex flex-col gap-4">
               <SectionHeading>Περιγραφή</SectionHeading>
-              <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">
-                Το μελισσοκομείο μας είναι ανοικτό για επισκέψεις για τα δημοτικά σχολεία. Έχουμε
-                διαμορφώσει ένα πρόγραμμα το οποίο ανταποκρίνεται στις εκπαιδευτικές ανάγκες των
-                μαθητών, συνδυάζοντας πληροφόρηση, δημιουργικότητα και επαφή με τη φύση.
-              </p>
-              <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">
-                Ανυπομονούμε να σας υποδεχτούμε μαζί με τα παιδιά για μια όμορφη, εκπαιδευτική ημέρα
-                γεμάτη γνώση και ψυχαγωγία.
-              </p>
+              <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">{v.intro}</p>
+              <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">{v.closing}</p>
             </section>
 
             {/* Το πρόγραμμα — three rotating activities */}
             <section className="flex flex-col gap-6">
               <SectionHeading>Το πρόγραμμα</SectionHeading>
-              <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">
-                Τα παιδιά χωρίζονται σε δύο ή τρεις ομάδες, ανάλογα με τον αριθμό των μαθητών, και
-                εναλλάσσονται στις ακόλουθες τρεις δραστηριότητες — κάθε 45 λεπτά.
-              </p>
+              <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">{v.programNote}</p>
 
               <div className="flex flex-col gap-4">
                 {/* Δ1 */}
                 <div className="flex flex-col gap-5 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50 md:p-6">
-                  <ActivityHead n="1" icon={BookOpenText} title="Εκπαιδευτική Ξενάγηση" />
-                  <p className="text-[15px] leading-[1.7] text-muted">
-                    Μια οργανωμένη περιήγηση στους εσωτερικούς και εξωτερικούς εκπαιδευτικούς μας
-                    χώρους, η οποία περιλαμβάνει:
-                  </p>
+                  <ActivityHead n="1" icon={BookOpenText} title={v.tourTitle} />
+                  <p className="text-[15px] leading-[1.7] text-muted">{v.tourIntro}</p>
                   <ul className="grid gap-3 sm:grid-cols-2">
-                    {TOUR_STOPS.map((s) => (
-                      <li
-                        key={s.text}
-                        className="flex items-start gap-3 rounded-[12px] bg-white p-4 ring-1 ring-border/50"
-                      >
-                        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
-                          <s.icon className="size-4" aria-hidden="true" />
-                        </span>
-                        <span className="text-[14px] leading-[1.55] text-foreground">{s.text}</span>
-                      </li>
-                    ))}
+                    {v.tourStops.map((s, i) => {
+                      const Icon = TOUR_ICONS[i] ?? BookOpenText
+                      return (
+                        <li
+                          key={i}
+                          className="flex items-start gap-3 rounded-[12px] bg-white p-4 ring-1 ring-border/50"
+                        >
+                          <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
+                            <Icon className="size-4" aria-hidden="true" />
+                          </span>
+                          <span className="text-[14px] leading-[1.55] text-foreground">{s.text}</span>
+                        </li>
+                      )
+                    })}
                   </ul>
                 </div>
 
                 {/* Δ2 */}
                 <div className="flex flex-col gap-5 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50 md:p-6">
                   <ActivityHead n="2" icon={Palette} title="Δημιουργικό Εργαστήριο" />
-                  <p className="text-[15px] leading-[1.7] text-muted">
-                    Επιλέγετε <strong className="font-semibold text-foreground">ένα</strong> από τα
-                    δύο βιωματικά εργαστήρια:
-                  </p>
+                  <p className="text-[15px] leading-[1.7] text-muted">{v.workshopIntro}</p>
                   <div className="grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr]">
-                    {SCHOOL_WORKSHOP_OPTIONS.map((opt, i) => (
+                    {v.workshopOptions.map((opt, i) => (
                       <div key={opt.key} className="contents">
                         <div className="flex flex-col gap-2 rounded-[14px] bg-white p-5 ring-1 ring-border/50">
                           <h4 className="font-display text-[16px] font-bold leading-[1.25] text-foreground">
                             {opt.short}
                           </h4>
-                          <p className="text-[13.5px] leading-[1.55] text-muted">
-                            {opt.description}
-                          </p>
+                          <p className="text-[13.5px] leading-[1.55] text-muted">{opt.description}</p>
                         </div>
-                        {i === 0 ? (
+                        {i === 0 && v.workshopOptions.length > 1 ? (
                           <div className="flex items-center justify-center">
                             <span className="flex size-9 items-center justify-center rounded-full bg-white text-[13px] font-bold uppercase text-muted ring-1 ring-border">
                               ή
@@ -236,17 +309,14 @@ export default function SchoolVisitsPage() {
                   </div>
                   <p className="flex items-start gap-2 rounded-[12px] bg-accent/10 px-4 py-3 text-[13.5px] font-medium leading-[1.55] text-gold-strong">
                     <Check className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                    Και στα δύο εργαστήρια, τα παιδιά παίρνουν μαζί τους την κατασκευή τους.
+                    {v.workshopNote}
                   </p>
                 </div>
 
                 {/* Δ3 */}
                 <div className="flex flex-col gap-4 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50 md:p-6">
-                  <ActivityHead n="3" icon={PartyPopper} title="Ελεύθερο Παιχνίδι στον Παιδότοπο" />
-                  <p className="text-[15px] leading-[1.7] text-muted">
-                    Τα παιδιά θα απολαύσουν ελεύθερο παιχνίδι στον χώρο της παιδικής χαράς, με χρόνο
-                    για ξεκούραση και σνακ.
-                  </p>
+                  <ActivityHead n="3" icon={PartyPopper} title={v.playTitle} />
+                  <p className="text-[15px] leading-[1.7] text-muted">{v.playText}</p>
                 </div>
               </div>
             </section>
@@ -254,19 +324,14 @@ export default function SchoolVisitsPage() {
             {/* Διάρκεια & ροή */}
             <section className="flex flex-col gap-5">
               <SectionHeading>Διάρκεια & ροή</SectionHeading>
-              <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">
-                Το πρόγραμμα διαρκεί περίπου 2 ώρες και 30 λεπτά, μεταξύ 09:30–12:00
-                (συμπεριλαμβάνεται και ο χρόνος που θα χρειαστούν τα παιδιά για να φάνε το πρωινό που
-                θα φέρουν μαζί τους). Είναι ευέλικτο ανάλογα με την ώρα άφιξής σας, με όλες τις ομάδες
-                να εναλλάσσονται κάθε 45 λεπτά.
-              </p>
+              <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">{v.durationText}</p>
               <p className="flex items-start gap-2.5 rounded-[14px] bg-accent-soft p-4 text-[14px] leading-[1.6] text-foreground/80 ring-1 ring-accent/15">
                 <Info className="mt-0.5 size-4 shrink-0 text-gold-strong" aria-hidden="true" />
                 <span>
                   <span className="font-semibold text-foreground/90">
                     Μέγιστος αριθμός συμμετεχόντων:{' '}
                   </span>
-                  50 μαθητές.
+                  {v.maxStudents} μαθητές.
                 </span>
               </p>
             </section>
@@ -275,22 +340,23 @@ export default function SchoolVisitsPage() {
             <section className="flex flex-col gap-5">
               <SectionHeading>Σημαντικές σημειώσεις</SectionHeading>
               <div className="grid gap-4 sm:grid-cols-2">
-                {NOTES.map((n) => (
-                  <div
-                    key={n.title}
-                    className="flex items-start gap-4 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50"
-                  >
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
-                      <n.icon className="size-5" aria-hidden="true" />
-                    </span>
-                    <div className="flex flex-col gap-1.5">
-                      <h3 className="font-display text-[17px] font-bold text-foreground">
-                        {n.title}
-                      </h3>
-                      <p className="text-[14px] leading-[1.6] text-muted">{n.body}</p>
+                {v.notes.map((n, i) => {
+                  const Icon = NOTE_ICONS[i] ?? Info
+                  return (
+                    <div
+                      key={n.title}
+                      className="flex items-start gap-4 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50"
+                    >
+                      <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
+                        <Icon className="size-5" aria-hidden="true" />
+                      </span>
+                      <div className="flex flex-col gap-1.5">
+                        <h3 className="font-display text-[17px] font-bold text-foreground">{n.title}</h3>
+                        <p className="text-[14px] leading-[1.6] text-muted">{n.body}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
 
                 {/* Allergies — safety warning, emphasised */}
                 <div className="flex items-start gap-4 rounded-[16px] border border-accent/40 bg-accent/[0.07] p-5 sm:col-span-2">
@@ -299,31 +365,26 @@ export default function SchoolVisitsPage() {
                   </span>
                   <div className="flex flex-col gap-2">
                     <h3 className="font-display text-[17px] font-bold text-foreground">
-                      Αλλεργίες & Ιατρικές Καταστάσεις
+                      {v.allergyTitle}
                     </h3>
-                    <p className="text-[14px] leading-[1.6] text-muted">
-                      Παρακαλούμε να μας ενημερώσετε{' '}
-                      <strong className="font-semibold text-foreground">εκ των προτέρων</strong> για
-                      τυχόν ιατρικές καταστάσεις ή αλλεργίες (κυρίως σε ξηρούς καρπούς, μέλι,
-                      μέλισσες).
-                    </p>
-                    <p className="text-[14px] leading-[1.6] text-muted">
-                      Καθώς οι μέλισσες υπάρχουν φυσικά στο περιβάλλον μας, παιδιά ή προσωπικό με{' '}
-                      <strong className="font-semibold text-foreground">
-                        αλλεργία στις μέλισσες συνιστάται έντονα να μην συμμετέχουν
-                      </strong>{' '}
-                      στην επίσκεψη.
-                    </p>
+                    {v.allergyBody.map((para, i) => (
+                      <p key={i} className="text-[14px] leading-[1.6] text-muted">
+                        {para}
+                      </p>
+                    ))}
                   </div>
                 </div>
               </div>
             </section>
           </div>
 
-          {/* Offset clears the sticky header (~150px) so the card's top isn't
-              tucked underneath it. */}
+          {/* Offset clears the sticky header (~150px). */}
           <div className="lg:sticky lg:top-[150px] lg:self-start">
-            <SchoolBookingCard />
+            <SchoolBookingCard
+              pricing={v.pricing}
+              workshopOptions={v.workshopOptions}
+              maxStudents={v.maxStudents}
+            />
           </div>
         </div>
       </section>

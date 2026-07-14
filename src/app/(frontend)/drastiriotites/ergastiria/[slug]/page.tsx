@@ -2,23 +2,95 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ChevronRight, CalendarRange } from 'lucide-react'
-import {
-  getWorkshop,
-  publishedWorkshops,
-  seasonBadge,
-} from '@/lib/data/workshops'
+import { ChevronRight, CalendarRange, Clock, Users } from 'lucide-react'
+import { getWorkshop as getMedusaWorkshop } from '@/lib/medusa/workshops'
+import type { PriceTier } from '@/lib/medusa/activities'
+import { getWorkshop as getStaticWorkshop } from '@/lib/data/workshops'
 import { RevealUp } from '@/components/home/reveal-up'
 import { SectionHead } from '@/components/shared/section-head'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
-import { CtaLink } from '@/components/home/cta-link'
 import { RichText } from '@/components/activities/detail/rich-text'
 import { WorkshopComboNotice } from '@/components/ergastiria/workshop-combo-notice'
+import { WorkshopBooking } from '@/components/ergastiria/workshop-booking'
+
+// Live so admin edits reflect immediately; falls back to static data if Medusa
+// is unavailable.
+export const dynamic = 'force-dynamic'
 
 const SITE = 'https://orosmaxaira.vercel.app'
+const MONTHS_NOM = [
+  'Ιανουάριος', 'Φεβρουάριος', 'Μάρτιος', 'Απρίλιος', 'Μάιος', 'Ιούνιος',
+  'Ιούλιος', 'Αύγουστος', 'Σεπτέμβριος', 'Οκτώβριος', 'Νοέμβριος', 'Δεκέμβριος',
+]
+// Fallback combos (match the seed's DEMO prices) when Medusa has no tiers.
+const DEFAULT_COMBOS: PriceTier[] = [
+  { key: 'gnorizw', label: 'Γνωρίζω τη Μέλισσα', price: 12, note: 'ανά άτομο · ενδεικτική τιμή' },
+  {
+    key: 'gnorizw-peripeteies',
+    label: 'Γνωρίζω τη Μέλισσα + Περιπέτειες στις Κυψέλες',
+    price: 20,
+    note: 'ανά άτομο · ενδεικτική τιμή',
+  },
+]
 
-export function generateStaticParams() {
-  return publishedWorkshops().map((w) => ({ slug: w.slug }))
+type WView = {
+  slug: string
+  title: string
+  excerpt?: string
+  description: string
+  seasonBadge: string
+  durationLabel?: string
+  ageLabel?: string
+  image: string
+  gallery: { src: string; alt: string }[]
+  tiers: PriceTier[]
+  metaTitle: string
+  metaDescription?: string
+}
+
+function badge(seasonLabel: string | null | undefined, months: number[] | null | undefined): string {
+  if (months && months.length) {
+    const a = MONTHS_NOM[months[0] - 1]
+    const b = MONTHS_NOM[months[months.length - 1] - 1]
+    return `${seasonLabel ?? ''} · ${a}${a !== b ? ` – ${b}` : ''}`.trim().replace(/^· /, '')
+  }
+  return seasonLabel ?? ''
+}
+
+async function loadWorkshop(slug: string): Promise<WView | null> {
+  const m = await getMedusaWorkshop(slug)
+  if (m) {
+    return {
+      slug: m.slug,
+      title: m.title,
+      excerpt: m.excerpt ?? undefined,
+      description: m.description ?? '',
+      seasonBadge: badge(m.season_label, m.months),
+      durationLabel: m.duration_label ?? undefined,
+      ageLabel: m.age_label ?? undefined,
+      image: m.image ?? '',
+      gallery: (m.gallery ?? []).filter((g) => g?.url).map((g) => ({ src: g.url, alt: g.alt ?? m.title })),
+      tiers: m.price_tiers?.length ? m.price_tiers : DEFAULT_COMBOS,
+      metaTitle: m.meta_title ?? `${m.title} — Βιωματικά Εργαστήρια | Όρος Μαχαιρά`,
+      metaDescription: m.meta_description ?? m.excerpt ?? undefined,
+    }
+  }
+  const s = getStaticWorkshop(slug)
+  if (!s) return null
+  return {
+    slug: s.slug,
+    title: s.title,
+    excerpt: s.excerpt,
+    description: s.description,
+    seasonBadge: badge(s.seasonLabel, s.months),
+    durationLabel: '45 λεπτά',
+    ageLabel: 'Για όλες τις ηλικίες',
+    image: s.image,
+    gallery: (s.gallery ?? []).filter((g) => g?.src),
+    tiers: DEFAULT_COMBOS,
+    metaTitle: `${s.title} — Βιωματικά Εργαστήρια | Όρος Μαχαιρά`,
+    metaDescription: s.excerpt,
+  }
 }
 
 export async function generateMetadata({
@@ -27,28 +99,21 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const w = getWorkshop(slug)
+  const w = await loadWorkshop(slug)
   if (!w) return { title: 'Εργαστήρι' }
   const url = `${SITE}/drastiriotites/ergastiria/${w.slug}`
   return {
-    title: `${w.title} — Βιωματικά Εργαστήρια | Όρος Μαχαιρά`,
-    description: w.excerpt,
+    title: w.metaTitle,
+    description: w.metaDescription,
     alternates: { canonical: url },
     openGraph: {
       title: `${w.title} — Όρος Μαχαιρά`,
-      description: w.excerpt,
+      description: w.metaDescription,
       url,
-      images: [{ url: `${SITE}${w.image}` }],
+      images: w.image ? [{ url: `${SITE}${w.image}` }] : undefined,
       type: 'article',
     },
   }
-}
-
-function paragraphs(text: string): string[] {
-  return text
-    .split(/\n{2,}/)
-    .map((s) => s.trim())
-    .filter(Boolean)
 }
 
 export default async function WorkshopDetailPage({
@@ -57,13 +122,15 @@ export default async function WorkshopDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const w = getWorkshop(slug)
+  const w = await loadWorkshop(slug)
   if (!w) notFound()
 
-  const gallery = (w.gallery ?? []).filter((g) => g?.src)
+  const pills = [
+    w.seasonBadge ? { icon: CalendarRange, label: w.seasonBadge } : null,
+    w.durationLabel ? { icon: Clock, label: w.durationLabel } : null,
+    w.ageLabel ? { icon: Users, label: w.ageLabel } : null,
+  ].filter(Boolean) as { icon: typeof Clock; label: string }[]
 
-  // BreadcrumbList only — these workshops are seasonal with no fixed dates, so an
-  // Event/Course node would just trigger "missing startDate" warnings.
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -75,11 +142,12 @@ export default async function WorkshopDetailPage({
     ],
   }
 
+  const paragraphs = w.description.split(/\n{2,}/).map((s) => s.trim()).filter(Boolean)
+
   return (
     <>
       <script
         type="application/ld+json"
-        // Escape `<` so a title containing `</script>` can't break out of the tag.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
 
@@ -111,67 +179,76 @@ export default async function WorkshopDetailPage({
         {/* Header */}
         <RevealUp>
           <div className="flex flex-col gap-4">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-accent/10 px-3 py-1.5 text-[12.5px] font-semibold uppercase tracking-[0.08em] text-gold-strong">
-              <CalendarRange className="size-3.5" aria-hidden="true" />
-              {seasonBadge(w)}
+            <span className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">
+              Βιωματικό Εργαστήρι
             </span>
             <h1 className="font-display text-[32px] font-bold leading-[1.06] text-foreground md:text-[46px]">
               {w.title}
             </h1>
+            {pills.length ? (
+              <ul className="flex flex-wrap items-center gap-2">
+                {pills.map((p) => (
+                  <li
+                    key={p.label}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1.5 text-[13px] font-semibold text-gold-strong"
+                  >
+                    <p.icon className="size-3.5" aria-hidden="true" />
+                    {p.label}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
         </RevealUp>
 
         {/* Hero image */}
-        <RevealUp className="mt-6">
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[20px] bg-offwhite shadow-card md:aspect-[16/7]">
-            <Image
-              src={w.image}
-              alt={w.title}
-              fill
-              priority
-              sizes="(min-width:1280px) 1216px, 100vw"
-              className="object-cover"
-            />
-          </div>
-        </RevealUp>
-
-        {/* Body */}
-        <div className="mx-auto mt-8 flex max-w-[760px] flex-col gap-8">
-          <div className="flex flex-col gap-4">
-            {paragraphs(w.description).map((p, i) => (
-              <p
-                key={i}
-                className="whitespace-pre-line text-[16px] leading-[1.8] text-muted md:text-[17px]"
-              >
-                <RichText text={p} />
-              </p>
-            ))}
-          </div>
-
-          <WorkshopComboNotice />
-
-          <div className="flex flex-col items-start gap-3 rounded-[18px] bg-offwhite p-6 ring-1 ring-border/50 md:flex-row md:items-center md:justify-between md:p-7">
-            <div className="flex flex-col gap-1">
-              <h2 className="font-display text-[19px] font-bold text-foreground md:text-[21px]">
-                Κλείστε την εμπειρία σας
-              </h2>
-              <p className="text-[14.5px] leading-[1.55] text-muted">
-                Στείλτε το αίτημά σας και θα επικοινωνήσουμε για την επιβεβαίωση της διαθεσιμότητας.
-              </p>
+        {w.image ? (
+          <RevealUp className="mt-6">
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[20px] bg-offwhite shadow-card md:aspect-[16/7]">
+              <Image
+                src={w.image}
+                alt={w.title}
+                fill
+                priority
+                sizes="(min-width:1280px) 1216px, 100vw"
+                className="object-cover"
+              />
             </div>
-            <CtaLink href="/drastiriotites/ergastiria#cta" variant="gold" className="shrink-0">
-              Κλείστε την εμπειρία σας
-            </CtaLink>
+          </RevealUp>
+        ) : null}
+
+        {/* Content + sticky booking card */}
+        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px] lg:items-start lg:gap-12">
+          <div className="flex min-w-0 flex-col gap-8">
+            <section className="flex flex-col gap-5">
+              <h2 className="font-display text-[22px] font-bold leading-[1.2] text-foreground md:text-[26px]">
+                Περιγραφή
+              </h2>
+              {paragraphs.map((p, i) => (
+                <p
+                  key={i}
+                  className="whitespace-pre-line text-[16px] leading-[1.8] text-muted md:text-[17px]"
+                >
+                  <RichText text={p} />
+                </p>
+              ))}
+            </section>
+            <WorkshopComboNotice />
+          </div>
+
+          {/* Sticky booking card */}
+          <div className="lg:sticky lg:top-[150px] lg:self-start">
+            <WorkshopBooking workshopTitle={w.title} tiers={w.tiers} />
           </div>
         </div>
       </section>
 
-      {/* Gallery (only when the workshop has one) */}
-      {gallery.length ? (
+      {/* Gallery */}
+      {w.gallery.length ? (
         <section className="bg-offwhite py-12 md:py-[70px]">
           <div className="container-wide flex flex-col gap-8">
             <SectionHead eyebrow="Στιγμές" heading={`Στιγμές από «${w.title}»`} />
-            <GalleryCarousel images={gallery} />
+            <GalleryCarousel images={w.gallery} />
           </div>
         </section>
       ) : null}

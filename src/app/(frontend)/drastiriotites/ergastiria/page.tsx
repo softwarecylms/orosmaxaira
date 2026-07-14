@@ -7,16 +7,41 @@ import { SectionHead } from '@/components/shared/section-head'
 import { BoldText } from '@/components/shared/bold-text'
 import { FormVideoBg } from '@/components/adopt/form-video-bg'
 import { Reveal, RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
-import { publishedWorkshops, seasonBadge } from '@/lib/data/workshops'
-import { SeasonCalendar } from '@/components/ergastiria/season-calendar'
+import { publishedWorkshops } from '@/lib/data/workshops'
+import { getWorkshops } from '@/lib/medusa/workshops'
+import { SeasonCalendar, type CalWorkshop } from '@/components/ergastiria/season-calendar'
 import { WorkshopComboNotice } from '@/components/ergastiria/workshop-combo-notice'
 import { WorkshopEnquiryForm } from '@/components/ergastiria/workshop-enquiry-form'
 import { cn } from '@/lib/utils'
+
+// Live so admin edits reflect; falls back to the static workshops if Medusa is down.
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Βιωματικά Εργαστήρια — Λαμπάδες, Κερί & Μελισσοκατασκευές',
   description:
     'Δωρεάν βιωματικά εργαστήρια στο μελισσοκομείο του Όρους Μαχαιρά. Κάθε εποχή το δικό της εργαστήρι — πάντα σε συνδυασμό με την εμπειρία «Γνωρίζω τη μέλισσα». Με την υποστήριξη του Υφυπουργείου Τουρισμού.',
+}
+
+const MONTHS_NOM = [
+  'Ιανουάριος', 'Φεβρουάριος', 'Μάρτιος', 'Απρίλιος', 'Μάιος', 'Ιούνιος',
+  'Ιούλιος', 'Αύγουστος', 'Σεπτέμβριος', 'Οκτώβριος', 'Νοέμβριος', 'Δεκέμβριος',
+]
+type Row = {
+  slug: string
+  title: string
+  excerpt: string
+  image: string
+  seasonLabel: string
+  months: number[]
+}
+function seasonBadge(seasonLabel: string, months: number[]): string {
+  if (months.length) {
+    const a = MONTHS_NOM[months[0] - 1]
+    const b = MONTHS_NOM[months[months.length - 1] - 1]
+    return `${seasonLabel} · ${a}${a !== b ? ` – ${b}` : ''}`
+  }
+  return seasonLabel
 }
 
 const INTRO =
@@ -25,8 +50,31 @@ const INTRO =
 const BOOKING_BODY =
   'Για να κλείσετε την εμπειρία σας, συμπληρώστε τη φόρμα ή καλέστε στο 25622305. Θα λάβετε σχετική ενημέρωση εντός 24 ωρών.'
 
-export default function ErgastiriaPage() {
-  const workshops = publishedWorkshops()
+export default async function ErgastiriaPage() {
+  const medusa = await getWorkshops()
+  const workshops: Row[] = medusa
+    ? medusa.map((w) => ({
+        slug: w.slug,
+        title: w.title,
+        excerpt: w.excerpt ?? '',
+        image: w.image ?? '',
+        seasonLabel: w.season_label ?? '',
+        months: w.months ?? [],
+      }))
+    : publishedWorkshops().map((w) => ({
+        slug: w.slug,
+        title: w.title,
+        excerpt: w.excerpt,
+        image: w.image,
+        seasonLabel: w.seasonLabel,
+        months: w.months,
+      }))
+  const calWorkshops: CalWorkshop[] = workshops.map((w) => ({
+    slug: w.slug,
+    title: w.title,
+    seasonLabel: w.seasonLabel,
+    months: w.months,
+  }))
 
   return (
     <>
@@ -90,7 +138,7 @@ export default function ErgastiriaPage() {
             sub="Το εργαστήρι της κάθε περιόδου καθορίζεται από εμάς, ανάλογα με τη σεζόν. Δείτε τι τρέχει κάθε μήνα."
           />
           <Reveal>
-            <SeasonCalendar />
+            <SeasonCalendar workshops={calWorkshops} />
           </Reveal>
         </div>
       </section>
@@ -129,7 +177,7 @@ export default function ErgastiriaPage() {
                 <RevealStaggerItem>
                   <span className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-3 py-1.5 text-[12.5px] font-semibold uppercase tracking-[0.08em] text-gold-strong">
                     <CalendarRange className="size-3.5" aria-hidden="true" />
-                    {seasonBadge(w)}
+                    {seasonBadge(w.seasonLabel, w.months)}
                   </span>
                 </RevealStaggerItem>
                 <RevealStaggerItem>

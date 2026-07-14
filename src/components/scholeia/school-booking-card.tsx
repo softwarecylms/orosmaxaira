@@ -3,15 +3,27 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { CalendarCheck, Gift, Phone } from 'lucide-react'
-import { SCHOOL_PRICING } from '@/lib/data/school-visit'
+import { MAX_STUDENTS, SCHOOL_PRICING, SCHOOL_WORKSHOP_OPTIONS } from '@/lib/data/school-visit'
 import { SchoolBookingModal } from './school-booking-modal'
+
+type Pricing = { range: string; price: number | null; note?: string }[]
+type WorkshopOptions = { key: string; short: string }[]
 
 /**
  * Sticky sidebar booking card for the school visit — same anatomy as the
  * activity ActivityBookingCard (price tiers → CTA → trust note → phone → brand),
  * but its CTA opens the school-visit request modal instead of the seat checkout.
+ * Pricing / options / max come from the backend (props), with static defaults.
  */
-export function SchoolBookingCard() {
+export function SchoolBookingCard({
+  pricing = SCHOOL_PRICING,
+  workshopOptions = SCHOOL_WORKSHOP_OPTIONS as unknown as WorkshopOptions,
+  maxStudents = MAX_STUDENTS,
+}: {
+  pricing?: Pricing
+  workshopOptions?: WorkshopOptions
+  maxStudents?: number
+} = {}) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -22,7 +34,7 @@ export function SchoolBookingCard() {
             Κόστος ανά παιδί
           </span>
           <ul className="flex flex-col gap-3">
-            {SCHOOL_PRICING.map((t) => (
+            {pricing.map((t) => (
               <li key={t.range} className="flex items-baseline justify-between gap-3">
                 <span className="text-[15px] leading-snug text-muted">{t.range}</span>
                 <span className="shrink-0 text-[18px] font-bold text-accent">
@@ -84,7 +96,13 @@ export function SchoolBookingCard() {
         </div>
       </div>
 
-      <SchoolBookingModal open={open} onClose={() => setOpen(false)} />
+      <SchoolBookingModal
+        open={open}
+        onClose={() => setOpen(false)}
+        workshopOptions={workshopOptions}
+        maxStudents={maxStudents}
+        pricing={pricing}
+      />
     </>
   )
 }

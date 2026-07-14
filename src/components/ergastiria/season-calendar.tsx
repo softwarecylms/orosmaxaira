@@ -3,37 +3,29 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, CalendarClock, CalendarRange } from 'lucide-react'
-import {
-  monthNameAccusative,
-  monthRangeLabel,
-  publishedWorkshops,
-  workshopForMonth,
-} from '@/lib/data/workshops'
+import { monthNameAccusative, monthRangeLabel } from '@/lib/data/workshops'
 import { cn } from '@/lib/utils'
 
+/** Minimal shape the calendar needs — supplied by the hub (Medusa or static). */
+export type CalWorkshop = { slug: string; title: string; seasonLabel: string; months: number[] }
+
 /**
- * Seasonal timeline for the Εργαστήρια hub. Rather than a 12-cell month grid
- * (which repeats each workshop across every month it runs), it shows one card
- * per scheduled workshop in season order, marks the one running *now*, and
- * surfaces the by-appointment workshops separately. Everything derives from the
- * data module, so it stays in sync automatically.
- *
- * "Now" is resolved after mount (client date) to avoid a build-time / hydration
- * mismatch: the server and first client render show no highlight, then the
- * current season lights up once mounted.
+ * Seasonal timeline for the Εργαστήρια hub: one card per scheduled workshop in
+ * season order, the one running *now* marked «Τώρα», and the by-appointment
+ * workshops surfaced separately. Data is passed in (so it reflects admin edits).
+ * "Now" is resolved after mount to avoid a hydration mismatch.
  */
-export function SeasonCalendar() {
+export function SeasonCalendar({ workshops }: { workshops: CalWorkshop[] }) {
   const [currentMonth, setCurrentMonth] = useState<number | null>(null)
   useEffect(() => setCurrentMonth(new Date().getMonth() + 1), [])
 
-  const published = publishedWorkshops()
-  const scheduled = published.filter((w) => w.months.length > 0)
-  const onRequest = published.filter((w) => w.months.length === 0)
-  const current = currentMonth ? workshopForMonth(currentMonth) : null
+  const scheduled = workshops.filter((w) => w.months.length > 0)
+  const onRequest = workshops.filter((w) => w.months.length === 0)
+  const current =
+    currentMonth != null ? scheduled.find((w) => w.months.includes(currentMonth)) ?? null : null
 
   return (
     <div className="flex flex-col gap-7">
-      {/* "You are here" — the one line that answers "what's on this month?" */}
       {currentMonth ? (
         <p className="text-[15px] leading-[1.7] text-muted">
           Βρισκόμαστε στον{' '}
@@ -55,7 +47,6 @@ export function SeasonCalendar() {
         </p>
       ) : null}
 
-      {/* One card per scheduled workshop, in season order; "now" is highlighted. */}
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {scheduled.map((w) => {
           const isCurrent = current?.slug === w.slug
@@ -127,7 +118,6 @@ export function SeasonCalendar() {
         })}
       </ul>
 
-      {/* By-appointment workshops — run all year, so they sit outside the seasons. */}
       {onRequest.length > 0 ? (
         <div className="flex flex-col gap-3.5 rounded-[18px] border border-dashed border-border bg-white/60 p-5">
           <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-muted">

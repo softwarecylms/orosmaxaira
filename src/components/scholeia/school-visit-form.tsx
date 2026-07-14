@@ -3,13 +3,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Check, Info, Loader2 } from 'lucide-react'
 import { BookingCalendar } from '@/components/booking/booking-calendar'
-import {
-  MAX_STUDENTS,
-  SCHOOL_WORKSHOP_OPTIONS,
-  estimateCost,
-  pricePerChild,
-  type SchoolWorkshopKey,
-} from '@/lib/data/school-visit'
+import { MAX_STUDENTS, SCHOOL_WORKSHOP_OPTIONS, pricePerChild } from '@/lib/data/school-visit'
+
+type FormWorkshopOption = { key: string; short: string }
+type FormPricing = { range: string; price: number | null }[]
 
 // Light fields — the form lives inside the white booking modal.
 const inputCls =
@@ -43,7 +40,17 @@ const formatGreekDate = (ds: string): string => {
  * reader users get a concrete reason; the workshop + headcount are re-checked
  * server-side.
  */
-export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
+export function SchoolVisitForm({
+  onSuccess,
+  workshopOptions = SCHOOL_WORKSHOP_OPTIONS as unknown as FormWorkshopOption[],
+  maxStudents = MAX_STUDENTS,
+  pricing,
+}: {
+  onSuccess?: () => void
+  workshopOptions?: FormWorkshopOption[]
+  maxStudents?: number
+  pricing?: FormPricing
+}) {
   const [school, setSchool] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -51,7 +58,7 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
   const [date, setDate] = useState('')
   const [students, setStudents] = useState('')
   const [grade, setGrade] = useState('')
-  const [workshop, setWorkshop] = useState<SchoolWorkshopKey | ''>('')
+  const [workshop, setWorkshop] = useState<string>('')
   const [notes, setNotes] = useState('')
   const [website, setWebsite] = useState('') // honeypot
 
@@ -84,7 +91,16 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
     const n = parseInt(students, 10)
     return Number.isFinite(n) ? n : 0
   }, [students])
-  const estimate = estimateCost(count)
+  // Per-child price: from the Medusa pricing tiers ([≤25, 26+]) when provided,
+  // else the static rule (≤25 → €8, else €7).
+  const perChild = (n: number): number => {
+    if (pricing && pricing.length) {
+      const num = (v: unknown, d: number) => (typeof v === 'number' && Number.isFinite(v) ? v : d)
+      return n <= 25 ? num(pricing[0]?.price, 8) : num(pricing[1]?.price, 7)
+    }
+    return pricePerChild(n)
+  }
+  const estimate = count > 0 ? count * perChild(count) : 0
 
   const validate = (): string | null => {
     if (school.trim().length < 2) return 'Συμπληρώστε το όνομα του σχολείου.'
@@ -92,7 +108,7 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
     if (!emailOk(email)) return 'Συμπληρώστε ένα έγκυρο email.'
     if (phone.trim().length < 5) return 'Συμπληρώστε έγκυρο τηλέφωνο επικοινωνίας.'
     if (!count || count < 1) return 'Συμπληρώστε τον αριθμό των μαθητών.'
-    if (count > MAX_STUDENTS) return `Ο μέγιστος αριθμός συμμετεχόντων είναι ${MAX_STUDENTS} μαθητές.`
+    if (count > maxStudents) return `Ο μέγιστος αριθμός συμμετεχόντων είναι ${maxStudents} μαθητές.`
     if (!workshop) return 'Επιλέξτε ένα από τα δύο εργαστήρια (Δραστηριότητα 2).'
     if (!date) return 'Επιλέξτε προτιμώμενη ημερομηνία.'
     if (!isWeekday(date)) return 'Οι επισκέψεις γίνονται μόνο εργάσιμες ημέρες (Δευτέρα–Παρασκευή).'
@@ -204,11 +220,11 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
             type="number"
             inputMode="numeric"
             min={1}
-            max={MAX_STUDENTS}
+            max={maxStudents}
             value={students}
             onChange={(e) => setStudents(e.target.value)}
             required
-            placeholder={`1–${MAX_STUDENTS}`}
+            placeholder={`1–${maxStudents}`}
             aria-label="Αριθμός παιδιών"
             className={inputCls}
           />
@@ -252,7 +268,7 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
           <span className="sr-only">(υποχρεωτικό)</span>
         </legend>
         <div className="flex flex-col gap-2">
-          {SCHOOL_WORKSHOP_OPTIONS.map((opt) => {
+          {workshopOptions.map((opt) => {
             const active = workshop === opt.key
             return (
               <label
@@ -288,15 +304,15 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
       />
 
       {/* Live total — €8/παιδί έως 25 παιδιά, €7/παιδί για 26+ (οι συνοδοί δωρεάν) */}
-      {count > 0 && count <= MAX_STUDENTS ? (
+      {count > 0 && count <= maxStudents ? (
         <div className="flex flex-col gap-1 rounded-[8px] bg-accent/10 px-4 py-3">
           <div className="flex items-center justify-between gap-3">
             <span className="text-[14px] font-semibold text-foreground">Εκτιμώμενο σύνολο</span>
             <span className="text-[22px] font-bold leading-none text-accent">€{estimate}</span>
           </div>
           <span className="text-[12px] leading-[1.4] text-muted">
-            {count} {count === 1 ? 'παιδί' : 'παιδιά'} × €{pricePerChild(count)} ανά παιδί · οι
-            συνοδοί δωρεάν
+            {count} {count === 1 ? 'παιδί' : 'παιδιά'} × €{perChild(count)} ανά παιδί · οι συνοδοί
+            δωρεάν
           </span>
         </div>
       ) : null}

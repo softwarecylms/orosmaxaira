@@ -42,11 +42,15 @@ export type Activity = {
   status?: string
   meta_title?: string | null
   meta_description?: string | null
+  /** 'seats' = real slot/seat checkout; 'enquiry' = appointment request (e.g. Μελισσοθεραπεία). */
+  booking_type?: 'seats' | 'enquiry'
   price_tiers?: PriceTier[] | null
   gallery?: GalleryImage[] | null
   features?: Feature[] | null
   policies?: Policy[] | null
   reviews?: Review[] | null
+  /** Optional "Οφέλη" list (e.g. Μελισσοθεραπεία conditions). */
+  benefits?: { intro?: string; items: string[] } | null
   related_slugs?: string[] | null
 }
 

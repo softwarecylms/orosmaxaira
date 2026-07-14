@@ -8,19 +8,32 @@ import { CalendarCheck, CalendarRange, Clock, Phone, ShieldCheck, X } from 'luci
 import { EASE, DURATION } from '@/lib/motion'
 import { BookingForm } from '@/components/booking/booking-form'
 
-const FACTS = [
-  { icon: Clock, label: 'Διάρκεια', value: '20 λεπτά / συνεδρία' },
-  { icon: CalendarRange, label: 'Περίοδος', value: 'Απρίλιος – Οκτώβριος' },
-]
-
 /**
  * Sticky sidebar booking card for Μελισσοθεραπεία — same anatomy as the activity
  * ActivityBookingCard (info → CTA → trust note → phone → brand), but appointment-
- * based (no seat pricing), so its CTA opens an enquiry modal.
+ * based (no seat pricing), so its CTA opens an enquiry modal. Facts + season come
+ * from the backend (Medusa), with sensible defaults.
  */
-export function MelissotherapeiaBooking() {
+export function MelissotherapeiaBooking({
+  durationLabel = '20 λεπτά / συνεδρία',
+  periodLabel = 'Απρίλιος – Οκτώβριος',
+  seasonStartMonth = 4,
+  seasonEndMonth = 10,
+  seasonLabel = 'Διαθέσιμη μόνο Απρίλιο–Οκτώβριο',
+}: {
+  durationLabel?: string
+  periodLabel?: string
+  seasonStartMonth?: number
+  seasonEndMonth?: number
+  seasonLabel?: string
+} = {}) {
   const [open, setOpen] = useState(false)
   const reduce = useReducedMotion()
+
+  const FACTS = [
+    { icon: Clock, label: 'Διάρκεια', value: durationLabel },
+    { icon: CalendarRange, label: 'Περίοδος', value: periodLabel },
+  ]
 
   // Portal to <body> so the overlay escapes ancestor stacking contexts.
   const [mounted, setMounted] = useState(false)
@@ -156,9 +169,9 @@ export function MelissotherapeiaBooking() {
                 <BookingForm
                   activityName="Μελισσοθεραπεία"
                   variant="light"
-                  seasonStartMonth={4}
-                  seasonEndMonth={10}
-                  seasonLabel="Διαθέσιμη μόνο Απρίλιο–Οκτώβριο"
+                  seasonStartMonth={seasonStartMonth}
+                  seasonEndMonth={seasonEndMonth}
+                  seasonLabel={seasonLabel}
                 />
               </div>
             </motion.div>

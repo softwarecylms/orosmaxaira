@@ -13,7 +13,19 @@ import { SchoolVisitForm } from './school-visit-form'
  * instead of the seat-based checkout (school visits are date/headcount
  * requests, confirmed by the farm).
  */
-export function SchoolBookingModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function SchoolBookingModal({
+  open,
+  onClose,
+  workshopOptions,
+  maxStudents,
+  pricing,
+}: {
+  open: boolean
+  onClose: () => void
+  workshopOptions?: { key: string; short: string }[]
+  maxStudents?: number
+  pricing?: { range: string; price: number | null }[]
+}) {
   const reduce = useReducedMotion()
 
   // Portal to <body> so the overlay escapes ancestor stacking contexts.
@@ -82,7 +94,11 @@ export function SchoolBookingModal({ open, onClose }: { open: boolean; onClose: 
 
             {/* Body */}
             <div className="flex-1 overflow-y-auto px-5 py-5">
-              <SchoolVisitForm />
+              <SchoolVisitForm
+                workshopOptions={workshopOptions}
+                maxStudents={maxStudents}
+                pricing={pricing}
+              />
             </div>
           </motion.div>
         </motion.div>
