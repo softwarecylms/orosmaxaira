@@ -9,7 +9,6 @@ import { FormVideoBg } from '@/components/adopt/form-video-bg'
 import { Reveal, RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
 import { publishedWorkshops } from '@/lib/data/workshops'
 import { getWorkshops } from '@/lib/medusa/workshops'
-import { WorkshopComboNotice } from '@/components/ergastiria/workshop-combo-notice'
 import { WorkshopEnquiryForm } from '@/components/ergastiria/workshop-enquiry-form'
 
 // Live so admin edits reflect; falls back to the static workshops if Medusa is down.
@@ -18,7 +17,7 @@ export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'Βιωματικά Εργαστήρια — Λαμπάδες, Κερί & Μελισσοκατασκευές',
   description:
-    'Δωρεάν βιωματικά εργαστήρια στο μελισσοκομείο του Όρους Μαχαιρά. Κάθε εποχή το δικό της εργαστήρι — πάντα σε συνδυασμό με την εμπειρία «Γνωρίζω τη μέλισσα». Με την υποστήριξη του Υφυπουργείου Τουρισμού.',
+    'Δωρεάν βιωματικά εργαστήρια στο μελισσοκομείο του Όρους Μαχαιρά. Κάθε εποχή το δικό της εργαστήρι — πάντα σε συνδυασμό με την εμπειρία «Γνωρίζω τη μέλισσα».',
 }
 
 const MONTHS_NOM = [
@@ -33,17 +32,15 @@ type Row = {
   seasonLabel: string
   months: number[]
 }
-function seasonBadge(seasonLabel: string, months: number[]): string {
-  if (months.length) {
-    const a = MONTHS_NOM[months[0] - 1]
-    const b = MONTHS_NOM[months[months.length - 1] - 1]
-    return `${seasonLabel} · ${a}${a !== b ? ` – ${b}` : ''}`
-  }
-  return seasonLabel
+function monthsLabel(months: number[]): string {
+  if (!months.length) return 'Κατόπιν ραντεβού'
+  const a = MONTHS_NOM[months[0] - 1]
+  const b = MONTHS_NOM[months[months.length - 1] - 1]
+  return a === b ? a : `${a} – ${b}`
 }
 
 const INTRO =
-  'Η εξόρμηση στη φύση σε συνδυασμό με δημιουργικές δραστηριότητες είναι η καλύτερη λύση στην πιεστική καθημερινότητα. Με την υποστήριξη του Υφυπουργείου Τουρισμού, διοργανώνουμε δωρεάν βιωματικά εργαστήρια στο μελισσοκομείο μας, τόσο τα Σαββατοκύριακα όσο και τις αργίες. Θα ήταν χαρά μας να σας γνωρίσουμε από κοντά και να περάσουμε μαζί μια δημιουργική μέρα! Τα εργαστήρια απευθύνονται σε παιδιά και μεγάλους, δίνοντας σε κάθε οικογένεια την ευκαιρία να περάσει δημιουργικές στιγμές μαζί. Συμπληρώστε την φόρμα επικοινωνίας ή καλέστε στο 25622305 για περισσότερες πληροφορίες.'
+  'Η εξόρμηση στη φύση σε συνδυασμό με δημιουργικές δραστηριότητες είναι η καλύτερη λύση στην πιεστική καθημερινότητα. Διοργανώνουμε δωρεάν βιωματικά εργαστήρια στο μελισσοκομείο μας, τόσο τα Σαββατοκύριακα όσο και τις αργίες. Θα ήταν χαρά μας να σας γνωρίσουμε από κοντά και να περάσουμε μαζί μια δημιουργική μέρα! Τα εργαστήρια απευθύνονται σε παιδιά και μεγάλους, δίνοντας σε κάθε οικογένεια την ευκαιρία να περάσει δημιουργικές στιγμές μαζί. Συμπληρώστε την φόρμα επικοινωνίας ή καλέστε στο 25622305 για περισσότερες πληροφορίες.'
 
 const BOOKING_BODY =
   'Για να κλείσετε την εμπειρία σας, συμπληρώστε τη φόρμα ή καλέστε στο 25622305. Θα λάβετε σχετική ενημέρωση εντός 24 ωρών.'
@@ -100,24 +97,10 @@ export default async function ErgastiriaPage() {
             <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">
               <BoldText
                 text={INTRO}
-                bold={['φύση', 'δημιουργικές δραστηριότητες', 'Υφυπουργείου Τουρισμού', 'δωρεάν']}
+                bold={['φύση', 'δημιουργικές δραστηριότητες', 'δωρεάν']}
                 links={{ '25622305': 'tel:+35725622305' }}
               />
             </p>
-          </RevealStaggerItem>
-          <RevealStaggerItem>
-            <div className="mt-3 flex items-center justify-center">
-              <Image
-                src="/images/activities/ergastiria/support-logos.webp"
-                alt="Υφυπουργείο Τουρισμού Κύπρου · Love Cyprus · Heartland of Legends"
-                width={592}
-                height={170}
-                className="h-[52px] w-auto md:h-[60px]"
-              />
-            </div>
-          </RevealStaggerItem>
-          <RevealStaggerItem className="w-full max-w-[760px]">
-            <WorkshopComboNotice className="mt-2 text-left" />
           </RevealStaggerItem>
         </RevealStagger>
       </section>
@@ -133,9 +116,7 @@ export default async function ErgastiriaPage() {
           <RevealStagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {workshops.map((w) => {
               const isNow = w.months.includes(currentMonth)
-              const availability = w.months.length
-                ? seasonBadge(w.seasonLabel, w.months)
-                : 'Κατόπιν ραντεβού'
+              const availability = monthsLabel(w.months)
               return (
                 <RevealStaggerItem key={w.slug} hoverLift className="flex">
                   <Link
