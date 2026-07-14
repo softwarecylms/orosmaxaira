@@ -3,13 +3,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, CalendarRange } from 'lucide-react'
 import { PageHero } from '@/components/shared/page-hero'
-import { SectionHead } from '@/components/shared/section-head'
 import { BoldText } from '@/components/shared/bold-text'
-import { FormVideoBg } from '@/components/adopt/form-video-bg'
-import { Reveal, RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
+import { RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
 import { publishedWorkshops } from '@/lib/data/workshops'
 import { getWorkshops } from '@/lib/medusa/workshops'
-import { WorkshopEnquiryForm } from '@/components/ergastiria/workshop-enquiry-form'
 
 // Live so admin edits reflect; falls back to the static workshops if Medusa is down.
 export const dynamic = 'force-dynamic'
@@ -41,9 +38,6 @@ function monthsLabel(months: number[]): string {
 
 const INTRO =
   'Η εξόρμηση στη φύση σε συνδυασμό με δημιουργικές δραστηριότητες είναι η καλύτερη λύση στην πιεστική καθημερινότητα. Διοργανώνουμε δωρεάν βιωματικά εργαστήρια στο μελισσοκομείο μας, τόσο τα Σαββατοκύριακα όσο και τις αργίες. Θα ήταν χαρά μας να σας γνωρίσουμε από κοντά και να περάσουμε μαζί μια δημιουργική μέρα! Τα εργαστήρια απευθύνονται σε παιδιά και μεγάλους, δίνοντας σε κάθε οικογένεια την ευκαιρία να περάσει δημιουργικές στιγμές μαζί. Συμπληρώστε την φόρμα επικοινωνίας ή καλέστε στο 25622305 για περισσότερες πληροφορίες.'
-
-const BOOKING_BODY =
-  'Για να κλείσετε την εμπειρία σας, συμπληρώστε τη φόρμα ή καλέστε στο 25622305. Θα λάβετε σχετική ενημέρωση εντός 24 ωρών.'
 
 export default async function ErgastiriaPage() {
   const medusa = await getWorkshops()
@@ -103,17 +97,9 @@ export default async function ErgastiriaPage() {
             </p>
           </RevealStaggerItem>
         </RevealStagger>
-      </section>
 
-      {/* 3 · Workshops — card grid (like the Δραστηριότητες experiences) */}
-      <section className="bg-offwhite py-12 md:py-[70px]">
-        <div className="container-wide flex flex-col gap-10">
-          <SectionHead
-            eyebrow="Τα Εργαστήρια"
-            heading="Τα Εργαστήρια μας"
-            sub="Δείτε ποιο εργαστήρι τρέχει τώρα και πότε είναι διαθέσιμο το καθένα."
-          />
-          <RevealStagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Workshops — card grid, directly below the intro */}
+        <RevealStagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {workshops.map((w) => {
               const isNow = w.months.includes(currentMonth)
               const availability = monthsLabel(w.months)
@@ -159,36 +145,7 @@ export default async function ErgastiriaPage() {
                 </RevealStaggerItem>
               )
             })}
-          </RevealStagger>
-        </div>
-      </section>
-
-      {/* 5 · Booking CTA + enquiry form */}
-      <section id="cta" className="scroll-mt-24 bg-offwhite py-12 md:py-[70px]">
-        <div className="container-wide">
-          <Reveal className="relative isolate overflow-hidden rounded-[30px] bg-accent p-8 text-white md:p-14">
-            <FormVideoBg />
-            <div className="relative z-10 grid items-start gap-10 lg:grid-cols-2">
-              <div className="flex flex-col items-center gap-5 text-center lg:items-start lg:text-left">
-                <span className="text-[13px] font-semibold uppercase tracking-[0.12em] text-cream">
-                  Κράτηση
-                </span>
-                <h2 className="font-display text-[28px] font-bold leading-[1.15] text-white md:text-[38px]">
-                  Κλείστε την εμπειρία σας
-                </h2>
-                <p className="max-w-[520px] text-[16px] leading-[1.6] text-white/85">
-                  <BoldText
-                    text={BOOKING_BODY}
-                    bold={['φόρμα', '25622305']}
-                    links={{ '25622305': 'tel:+35725622305' }}
-                    className="font-semibold text-white"
-                  />
-                </p>
-              </div>
-              <WorkshopEnquiryForm startHour={8} endHour={16} />
-            </div>
-          </Reveal>
-        </div>
+        </RevealStagger>
       </section>
     </>
   )
