@@ -17,6 +17,14 @@ const inputCls =
 const labelCls = 'flex flex-col gap-1.5 text-[13px] font-medium text-foreground'
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
 
+/** True for a YYYY-MM-DD date on Mon–Fri (school visits run on weekdays only). */
+const isWeekday = (ds: string): boolean => {
+  if (!ds) return false
+  const [y, m, d] = ds.split('-').map(Number)
+  const wd = new Date(y, (m ?? 1) - 1, d ?? 1).getDay()
+  return wd >= 1 && wd <= 5
+}
+
 /**
  * School-visit booking request form (rendered inside SchoolBookingModal).
  * Captures the school, contact, headcount, preferred date and the chosen
@@ -31,7 +39,6 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [date, setDate] = useState('')
-  const [altDate, setAltDate] = useState('')
   const [students, setStudents] = useState('')
   const [grade, setGrade] = useState('')
   const [workshop, setWorkshop] = useState<SchoolWorkshopKey | ''>('')
@@ -65,6 +72,7 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
     if (count > MAX_STUDENTS) return `Ο μέγιστος αριθμός συμμετεχόντων είναι ${MAX_STUDENTS} μαθητές.`
     if (!workshop) return 'Επιλέξτε ένα από τα δύο εργαστήρια (Δραστηριότητα 2).'
     if (!date) return 'Επιλέξτε προτιμώμενη ημερομηνία.'
+    if (!isWeekday(date)) return 'Οι επισκέψεις γίνονται μόνο εργάσιμες ημέρες (Δευτέρα–Παρασκευή).'
     return null
   }
 
@@ -88,7 +96,6 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
           email: email.trim(),
           phone: phone.trim(),
           date,
-          altDate,
           students: count,
           grade: grade.trim(),
           workshop,
@@ -196,31 +203,23 @@ export function SchoolVisitForm({ onSuccess }: { onSuccess?: () => void }) {
         </label>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <label className={labelCls}>
-          Προτιμώμενη ημερομηνία
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-            min={minDate}
-            aria-label="Προτιμώμενη ημερομηνία"
-            className={inputCls}
-          />
-        </label>
-        <label className={labelCls}>
-          Εναλλακτική (προαιρετικό)
-          <input
-            type="date"
-            value={altDate}
-            onChange={(e) => setAltDate(e.target.value)}
-            min={minDate}
-            aria-label="Εναλλακτική ημερομηνία"
-            className={inputCls}
-          />
-        </label>
-      </div>
+      <label className={labelCls}>
+        Προτιμώμενη ημερομηνία <span className="text-muted">(Δευτέρα–Παρασκευή)</span>
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          required
+          min={minDate}
+          aria-label="Προτιμώμενη ημερομηνία (εργάσιμες ημέρες)"
+          className={inputCls}
+        />
+        {date && !isWeekday(date) ? (
+          <span className="text-[12.5px] font-medium text-red-600">
+            Οι επισκέψεις γίνονται μόνο εργάσιμες ημέρες (Δευτέρα–Παρασκευή).
+          </span>
+        ) : null}
+      </label>
 
       {/* Δραστηριότητα 2 workshop choice (required) */}
       <fieldset className="flex flex-col gap-2" aria-required="true">

@@ -14,7 +14,6 @@ const bodySchema = z.object({
   email: z.string().email(),
   phone: z.string().min(5).max(40),
   date: z.string().min(4).max(20),
-  altDate: z.string().max(20).optional(),
   students: z.coerce.number().int().min(1).max(MAX_STUDENTS),
   grade: z.string().max(120).optional(),
   workshop: z.enum(SCHOOL_WORKSHOP_KEYS),
@@ -65,7 +64,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Ελέγξτε τα στοιχεία της φόρμας.' }, { status: 400 })
   }
 
-  const { school, name, email, phone, date, altDate, students, grade, workshop, notes, website } =
+  const { school, name, email, phone, date, students, grade, workshop, notes, website } =
     parsed.data
   if (website && website.length > 0) {
     return NextResponse.json({ ok: true }) // silently drop bots
@@ -112,7 +111,6 @@ export async function POST(req: Request) {
         `Τάξη/Τάξεις: ${grade || '—'}`,
         `Εργαστήριο (Δραστηριότητα 2): ${workshopText}`,
         `Προτιμώμενη ημερομηνία: ${date}`,
-        `Εναλλακτική ημερομηνία: ${altDate || '—'}`,
         `Εκτιμώμενο κόστος παιδιών: €${students * perChild} (${students} × €${perChild})`,
         `Σημειώσεις / Αλλεργίες: ${notes || '—'}`,
       ].join('\n'),

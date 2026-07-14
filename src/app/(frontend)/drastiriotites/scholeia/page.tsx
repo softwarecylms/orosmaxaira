@@ -127,9 +127,6 @@ export default function SchoolVisitsPage() {
         {/* Header */}
         <RevealUp>
           <div className="flex flex-col gap-4">
-            <span className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">
-              Όρος Μαχαιρά Academy · Για Σχολεία
-            </span>
             <h1 className="font-display text-[32px] font-bold leading-[1.06] text-foreground md:text-[46px]">
               Εκπαιδευτικές Επισκέψεις Σχολείων
             </h1>
