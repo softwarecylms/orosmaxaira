@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { CalendarRange, Check, ChevronRight, Clock, Info } from 'lucide-react'
+import { CalendarRange, Check, ChevronRight, Clock, Info, Repeat } from 'lucide-react'
 import { RevealUp } from '@/components/home/reveal-up'
 import { SectionHead } from '@/components/shared/section-head'
 import { BoldText } from '@/components/shared/bold-text'
@@ -101,6 +101,12 @@ export default function MelissotherapeiaPage() {
                   <BoldText text={p} bold={data.intro.bold} />
                 </p>
               ))}
+              <p className="flex items-center gap-2.5 rounded-[12px] bg-offwhite px-4 py-3 text-[15px] leading-[1.5] text-foreground ring-1 ring-border/50">
+                <Repeat className="size-4 shrink-0 text-accent" aria-hidden="true" />
+                <span>
+                  <span className="font-semibold">Συχνότητα:</span> Κάθε 2η ημέρα, για 3 εβδομάδες.
+                </span>
+              </p>
               {data.intro.video ? (
                 <div className="relative mt-1 aspect-video w-full overflow-hidden rounded-[16px] bg-foreground shadow-card">
                   <iframe

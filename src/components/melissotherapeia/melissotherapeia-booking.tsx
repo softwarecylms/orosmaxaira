@@ -3,14 +3,13 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { CalendarCheck, CalendarRange, Clock, Phone, Repeat, ShieldCheck, X } from 'lucide-react'
+import { CalendarCheck, CalendarRange, Clock, Phone, ShieldCheck, X } from 'lucide-react'
 import { EASE, DURATION } from '@/lib/motion'
 import { BookingForm } from '@/components/booking/booking-form'
 
 const FACTS = [
   { icon: Clock, label: 'Διάρκεια', value: '20 λεπτά / συνεδρία' },
   { icon: CalendarRange, label: 'Περίοδος', value: 'Απρίλιος – Οκτώβριος' },
-  { icon: Repeat, label: 'Συχνότητα', value: 'Κάθε 2η ημέρα, για 3 εβδομάδες' },
 ]
 
 /**
