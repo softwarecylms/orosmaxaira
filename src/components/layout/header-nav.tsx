@@ -47,10 +47,6 @@ export function HeaderNav({
     setOpenItem(null)
   }
 
-  // The nav item that opens a grouped mega panel (Δραστηριότητες), rendered at
-  // the nav-container level so it shares the Προϊόντα mega menu's positioning.
-  const groupsItem = nav.find((item) => item.groups)
-
   return (
     <div
       className="relative hidden lg:block"
@@ -88,6 +84,48 @@ export function HeaderNav({
                     />
                   ) : null}
                 </Link>
+
+                {/* Grouped mega panel — aligned to the trigger's left edge,
+                    styled like the Προϊόντα mega (black bold headings). */}
+                {item.groups ? (
+                  <div
+                    onMouseEnter={() => openMenu(item.label)}
+                    onMouseLeave={scheduleClose}
+                    className={cn(
+                      'absolute left-0 top-full z-50 pt-3 transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none',
+                      isOpen
+                        ? 'visible translate-y-0 opacity-100'
+                        : 'pointer-events-none invisible -translate-y-1 opacity-0',
+                    )}
+                  >
+                    <div
+                      role="menu"
+                      aria-label={item.label}
+                      className="flex gap-[60px] rounded-[4px] bg-white p-[45px] shadow-[0_0_12px_rgba(35,31,32,0.1)]"
+                    >
+                      {item.groups.map((group) => (
+                        <div key={group.title} className="flex min-w-[220px] flex-col gap-[15px]">
+                          <span className="text-[17px] font-bold leading-[24px] text-foreground">
+                            {group.title}
+                          </span>
+                          <ul className="flex flex-col">
+                            {group.links.map((l) => (
+                              <li key={l.label}>
+                                <Link
+                                  href={l.href}
+                                  onClick={close}
+                                  className="block text-[17px] leading-[39px] text-muted transition-colors hover:text-accent"
+                                >
+                                  {l.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
 
                 {/* Simple dropdown for non-mega items with children */}
                 {item.children && item.label !== MEGA_LABEL ? (
@@ -182,48 +220,6 @@ export function HeaderNav({
           ))}
         </div>
       </div>
-
-      {/* Grouped mega panel — Δραστηριότητες. Same positioning + styling as the
-          Προϊόντα mega (container-left, black bold headings). */}
-      {groupsItem?.groups ? (
-        <div
-          onMouseEnter={() => openMenu(groupsItem.label)}
-          onMouseLeave={scheduleClose}
-          className={cn(
-            'absolute left-0 top-full z-50 pt-3 transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none',
-            openItem === groupsItem.label
-              ? 'visible translate-y-0 opacity-100'
-              : 'pointer-events-none invisible -translate-y-1 opacity-0',
-          )}
-        >
-          <div
-            role="menu"
-            aria-label={groupsItem.label}
-            className="flex gap-[60px] rounded-[4px] bg-white p-[45px] shadow-[0_0_12px_rgba(35,31,32,0.1)]"
-          >
-            {groupsItem.groups.map((group) => (
-              <div key={group.title} className="flex min-w-[220px] flex-col gap-[15px]">
-                <span className="text-[17px] font-bold leading-[24px] text-foreground">
-                  {group.title}
-                </span>
-                <ul className="flex flex-col">
-                  {group.links.map((l) => (
-                    <li key={l.label}>
-                      <Link
-                        href={l.href}
-                        onClick={close}
-                        className="block text-[17px] leading-[39px] text-muted transition-colors hover:text-accent"
-                      >
-                        {l.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
     </div>
   )
 }
