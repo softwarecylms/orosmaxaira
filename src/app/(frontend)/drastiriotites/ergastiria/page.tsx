@@ -9,10 +9,8 @@ import { FormVideoBg } from '@/components/adopt/form-video-bg'
 import { Reveal, RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
 import { publishedWorkshops } from '@/lib/data/workshops'
 import { getWorkshops } from '@/lib/medusa/workshops'
-import { SeasonCalendar, type CalWorkshop } from '@/components/ergastiria/season-calendar'
 import { WorkshopComboNotice } from '@/components/ergastiria/workshop-combo-notice'
 import { WorkshopEnquiryForm } from '@/components/ergastiria/workshop-enquiry-form'
-import { cn } from '@/lib/utils'
 
 // Live so admin edits reflect; falls back to the static workshops if Medusa is down.
 export const dynamic = 'force-dynamic'
@@ -69,12 +67,7 @@ export default async function ErgastiriaPage() {
         seasonLabel: w.seasonLabel,
         months: w.months,
       }))
-  const calWorkshops: CalWorkshop[] = workshops.map((w) => ({
-    slug: w.slug,
-    title: w.title,
-    seasonLabel: w.seasonLabel,
-    months: w.months,
-  }))
+  const currentMonth = new Date().getMonth() + 1
 
   return (
     <>
@@ -129,80 +122,63 @@ export default async function ErgastiriaPage() {
         </RevealStagger>
       </section>
 
-      {/* 3 · Seasonal calendar — the centrepiece */}
+      {/* 3 · Workshops — card grid (like the Δραστηριότητες experiences) */}
       <section className="bg-offwhite py-12 md:py-[70px]">
         <div className="container-wide flex flex-col gap-10">
           <SectionHead
-            eyebrow="Το Ημερολόγιο"
-            heading="Κάθε εποχή, το δικό της εργαστήρι"
-            sub="Το εργαστήρι της κάθε περιόδου καθορίζεται από εμάς, ανάλογα με τη σεζόν. Δείτε τι τρέχει κάθε μήνα."
-          />
-          <Reveal>
-            <SeasonCalendar workshops={calWorkshops} />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* 4 · Workshops — alternating rows, driven by the data module */}
-      <section className="py-12 md:py-[70px]">
-        <div className="container-wide flex flex-col gap-14 md:gap-20">
-          <SectionHead
             eyebrow="Τα Εργαστήρια"
             heading="Τα Εργαστήρια μας"
-            sub="Κάθε εποχή έχει το δικό της εργαστήρι. Το εργαστήρι της κάθε περιόδου καθορίζεται από εμάς, ανάλογα με τη σεζόν."
+            sub="Δείτε ποιο εργαστήρι τρέχει τώρα και πότε είναι διαθέσιμο το καθένα."
           />
-          {workshops.map((w, i) => (
-            <article key={w.slug} className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
-              <Reveal className={cn(i % 2 === 1 && 'lg:order-2')}>
-                <Link
-                  href={`/drastiriotites/ergastiria/${w.slug}`}
-                  className="group block"
-                  aria-label={w.title}
-                >
-                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[18px] bg-white shadow-card">
-                    <Image
-                      src={w.image}
-                      alt={w.title}
-                      fill
-                      sizes="(min-width:1024px) 50vw, 100vw"
-                      className="object-cover transition-transform duration-500 ease-soft group-hover:scale-[1.04]"
-                    />
-                  </div>
-                </Link>
-              </Reveal>
-              <RevealStagger
-                className={cn('flex flex-col gap-4', i % 2 === 1 && 'lg:order-1')}
-                stagger={0.07}
-              >
-                <RevealStaggerItem>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-3 py-1.5 text-[12.5px] font-semibold uppercase tracking-[0.08em] text-gold-strong">
-                    <CalendarRange className="size-3.5" aria-hidden="true" />
-                    {seasonBadge(w.seasonLabel, w.months)}
-                  </span>
-                </RevealStaggerItem>
-                <RevealStaggerItem>
-                  <h3 className="font-display text-[24px] font-bold leading-[1.15] text-foreground md:text-[30px]">
-                    {w.title}
-                  </h3>
-                </RevealStaggerItem>
-                <RevealStaggerItem>
-                  <p className="text-[15.5px] leading-[1.7] text-muted">{w.excerpt}</p>
-                </RevealStaggerItem>
-                <RevealStaggerItem>
+          <RevealStagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {workshops.map((w) => {
+              const isNow = w.months.includes(currentMonth)
+              const availability = w.months.length
+                ? seasonBadge(w.seasonLabel, w.months)
+                : 'Κατόπιν ραντεβού'
+              return (
+                <RevealStaggerItem key={w.slug} hoverLift className="flex">
                   <Link
                     href={`/drastiriotites/ergastiria/${w.slug}`}
-                    className="group mt-1 inline-flex items-center gap-1.5 self-start text-[15px] font-semibold text-accent"
+                    className="group flex w-full flex-col overflow-hidden rounded-[16px] bg-white shadow-card ring-1 ring-border/50 transition-shadow hover:shadow-card-lg"
                   >
-                    Δείτε το εργαστήρι
-                    <ArrowRight
-                      className="size-4 transition-transform duration-300 ease-soft group-hover:translate-x-1"
-                      aria-hidden="true"
-                    />
+                    <div className="relative aspect-[4/3] w-full overflow-hidden">
+                      <Image
+                        src={w.image}
+                        alt={w.title}
+                        fill
+                        sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+                        className="object-cover transition-transform duration-500 ease-soft group-hover:scale-[1.05]"
+                      />
+                      {isNow ? (
+                        <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-[12px] font-semibold text-white shadow-[0_6px_16px_-6px_rgba(35,31,32,0.4)]">
+                          <span className="size-1.5 rounded-full bg-white" aria-hidden="true" />
+                          Τώρα διαθέσιμο
+                        </span>
+                      ) : null}
+                    </div>
+                    <div className="flex flex-1 flex-col gap-2 p-5">
+                      <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.06em] text-gold-strong">
+                        <CalendarRange className="size-3.5 shrink-0" aria-hidden="true" />
+                        {availability}
+                      </span>
+                      <h3 className="font-display text-[18px] font-bold leading-[1.25] text-foreground transition-colors group-hover:text-accent">
+                        {w.title}
+                      </h3>
+                      <p className="text-[14px] leading-[1.55] text-muted">{w.excerpt}</p>
+                      <span className="mt-auto inline-flex items-center gap-1.5 pt-2 text-[14px] font-semibold text-accent">
+                        Περισσότερα
+                        <ArrowRight
+                          className="size-4 transition-transform duration-300 ease-soft group-hover:translate-x-1"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </div>
                   </Link>
                 </RevealStaggerItem>
-              </RevealStagger>
-            </article>
-          ))}
+              )
+            })}
+          </RevealStagger>
         </div>
       </section>
 
