@@ -6,7 +6,13 @@ import { Menu, X, Phone, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { HeaderSearch } from './header-search'
 
-type NavItem = { label: string; href: string; children?: { label: string; href: string }[] }
+type NavLink = { label: string; href: string }
+type NavItem = {
+  label: string
+  href: string
+  children?: NavLink[]
+  groups?: { title: string; links: NavLink[] }[]
+}
 
 export function HeaderMobile({
   nav,
@@ -49,8 +55,21 @@ export function HeaderMobile({
             <HeaderSearch />
 
             <nav className="flex flex-col" aria-label="Κινητή πλοήγηση">
-              {nav.map((item) =>
-                item.children ? (
+              {nav.map((item) => {
+                const hasMenu = Boolean(item.children || item.groups)
+                if (!hasMenu) {
+                  return (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      onClick={() => setOpen(false)}
+                      className="border-b border-border py-3 text-[17px] text-foreground"
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                }
+                return (
                   <div key={item.label} className="border-b border-border">
                     <button
                       type="button"
@@ -67,32 +86,48 @@ export function HeaderMobile({
                       />
                     </button>
                     {expanded === item.label ? (
-                      <ul className="flex flex-col pb-2">
-                        {item.children.map((c) => (
-                          <li key={c.label}>
-                            <Link
-                              href={c.href}
-                              onClick={() => setOpen(false)}
-                              className="block py-2 pl-4 text-[15px] text-muted transition-colors hover:text-accent"
-                            >
-                              {c.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
+                      item.groups ? (
+                        <div className="flex flex-col gap-2 pb-2">
+                          {item.groups.map((group) => (
+                            <div key={group.title} className="flex flex-col">
+                              <span className="py-1.5 text-[12px] font-bold uppercase tracking-[0.08em] text-gold-strong">
+                                {group.title}
+                              </span>
+                              <ul className="flex flex-col">
+                                {group.links.map((l) => (
+                                  <li key={l.label}>
+                                    <Link
+                                      href={l.href}
+                                      onClick={() => setOpen(false)}
+                                      className="block py-2 pl-4 text-[15px] text-muted transition-colors hover:text-accent"
+                                    >
+                                      {l.label}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <ul className="flex flex-col pb-2">
+                          {item.children!.map((c) => (
+                            <li key={c.label}>
+                              <Link
+                                href={c.href}
+                                onClick={() => setOpen(false)}
+                                className="block py-2 pl-4 text-[15px] text-muted transition-colors hover:text-accent"
+                              >
+                                {c.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )
                     ) : null}
                   </div>
-                ) : (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className="border-b border-border py-3 text-[17px] text-foreground"
-                  >
-                    {item.label}
-                  </Link>
-                ),
-              )}
+                )
+              })}
               <Link
                 href={adopt.href}
                 onClick={() => setOpen(false)}

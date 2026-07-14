@@ -8,8 +8,14 @@
 
 export type Cta = { label: string; href: string }
 
-/** Primary nav — Greek labels from the Figma header. */
-export const NAV: { label: string; href: string; children?: { label: string; href: string }[] }[] = [
+/** Primary nav — Greek labels from the Figma header. A nav item can carry a flat
+ *  `children` dropdown or a `groups` dropdown (titled sub-menus). */
+export const NAV: {
+  label: string
+  href: string
+  children?: { label: string; href: string }[]
+  groups?: { title: string; links: { label: string; href: string }[] }[]
+}[] = [
   { label: 'Αρχική', href: '/' },
   {
     label: 'Προϊόντα',
@@ -25,11 +31,23 @@ export const NAV: { label: string; href: string; children?: { label: string; hre
   {
     label: 'Δραστηριότητες',
     href: '/drastiriotites',
-    children: [
-      { label: 'Γνωρίζω τη Μέλισσα', href: '/drastiriotites/xenagiseis' },
-      { label: 'Εργαστήρια', href: '/drastiriotites/ergastiria' },
-      { label: 'Μελισσοθεραπεία', href: '/drastiriotites/melissotherapeia' },
-      { label: 'Περιπέτειες στις Κυψέλες', href: '/drastiriotites/peripeteies-stis-kypseles' },
+    groups: [
+      {
+        title: 'Εμπειρίες',
+        links: [
+          { label: 'Γνωρίζω τη Μέλισσα', href: '/drastiriotites/xenagiseis' },
+          { label: 'Περιπέτειες στις Κυψέλες', href: '/drastiriotites/peripeteies-stis-kypseles' },
+          { label: 'Εργαστήρια', href: '/drastiriotites/ergastiria' },
+          { label: 'Μελισσοθεραπεία', href: '/drastiriotites/melissotherapeia' },
+        ],
+      },
+      {
+        title: 'Προγράμματα',
+        links: [
+          { label: 'Εκπαιδευτικές Επισκέψεις Σχολείων', href: '/drastiriotites/scholeia' },
+          { label: 'Υιοθετώ μια κυψέλη', href: '/adopt-a-hive' },
+        ],
+      },
     ],
   },
   { label: 'Blog', href: '/blog' },

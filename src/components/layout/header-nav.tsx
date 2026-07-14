@@ -7,7 +7,13 @@ import { cn } from '@/lib/utils'
 import { ArrowRight } from '@/components/home/icons'
 import type { MegaColumn } from '@/components/home/home-content'
 
-type NavItem = { label: string; href: string; children?: { label: string; href: string }[] }
+type NavLink = { label: string; href: string }
+type NavItem = {
+  label: string
+  href: string
+  children?: NavLink[]
+  groups?: { title: string; links: NavLink[] }[]
+}
 
 const MEGA_LABEL = 'Προϊόντα'
 
@@ -51,7 +57,7 @@ export function HeaderNav({
       <nav className="flex items-center justify-between py-3.5" aria-label="Κύρια πλοήγηση">
         <ul className="flex items-center gap-[39px]">
           {nav.map((item) => {
-            const hasDropdown = Boolean(item.children)
+            const hasDropdown = Boolean(item.children || item.groups)
             const isOpen = openItem === item.label
             return (
               <li
@@ -78,6 +84,47 @@ export function HeaderNav({
                     />
                   ) : null}
                 </Link>
+
+                {/* Grouped dropdown (titled sub-menus) — e.g. Δραστηριότητες */}
+                {item.groups ? (
+                  <div
+                    onMouseEnter={() => openMenu(item.label)}
+                    onMouseLeave={scheduleClose}
+                    className={cn(
+                      'absolute left-0 top-full z-50 pt-3 transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none',
+                      isOpen
+                        ? 'visible translate-y-0 opacity-100'
+                        : 'pointer-events-none invisible -translate-y-1 opacity-0',
+                    )}
+                  >
+                    <div
+                      role="menu"
+                      aria-label={item.label}
+                      className="flex gap-10 rounded-[4px] bg-white p-6 shadow-[0_0_12px_rgba(35,31,32,0.1)]"
+                    >
+                      {item.groups.map((group) => (
+                        <div key={group.title} className="flex min-w-[210px] flex-col gap-2.5">
+                          <span className="px-3 text-[13px] font-bold uppercase tracking-[0.08em] text-gold-strong">
+                            {group.title}
+                          </span>
+                          <ul className="flex flex-col">
+                            {group.links.map((l) => (
+                              <li key={l.label}>
+                                <Link
+                                  href={l.href}
+                                  onClick={close}
+                                  className="block rounded-[4px] px-3 py-2 text-[16px] leading-[24px] text-muted transition-colors hover:bg-offwhite hover:text-accent"
+                                >
+                                  {l.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
 
                 {/* Simple dropdown for non-mega items with children */}
                 {item.children && item.label !== MEGA_LABEL ? (
