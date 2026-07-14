@@ -67,7 +67,6 @@ export default async function ErgastiriaPage() {
         image="/images/activities/ergastiria.webp"
         imageAlt="Κέρινες μελισσολαμπάδες και μελισσοκατασκευές"
         title="Εργαστήρια"
-        description="Δημιουργικά, βιωματικά εργαστήρια στο μελισσοκομείο μας — για μικρούς και μεγάλους."
         overlayClassName="bg-black/25"
       />
 
