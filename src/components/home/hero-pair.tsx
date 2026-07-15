@@ -69,7 +69,7 @@ export function HeroPair() {
             </RevealUp>
             <RevealUp
               delay={0.25}
-              className="pointer-events-none relative mt-2 aspect-[5/4] w-full lg:absolute lg:inset-y-0 lg:bottom-[-6%] lg:right-[-2%] lg:mx-0 lg:mt-0 lg:aspect-auto lg:h-auto lg:w-[58%] min-[1400px]:w-[60%] 2xl:w-[60%]"
+              className="pointer-events-none relative -mb-8 -ml-7 mt-[30px] aspect-[5/4] w-[calc(100%+1.75rem)] lg:absolute lg:inset-y-0 lg:bottom-[-6%] lg:right-[-2%] lg:mx-0 lg:mb-0 lg:mt-0 lg:aspect-auto lg:h-auto lg:w-[58%] min-[1400px]:w-[60%] 2xl:w-[60%]"
             >
               <Image
                 src={HERO.right.image}

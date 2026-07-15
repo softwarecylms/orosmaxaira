@@ -25,23 +25,23 @@ export default function AboutPage() {
 
   return (
     <>
-      {/* Hero — photo + intro */}
+      {/* Hero — photo + intro, centered single column */}
       <section className="container-wide py-8 md:py-12">
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center lg:gap-[60px]">
-          <RevealUp>
+        <div className="mx-auto flex max-w-[720px] flex-col items-center gap-10 text-center">
+          <RevealUp className="w-full">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-offwhite">
               <Image
                 src={a.hero.image}
                 alt={a.hero.imageAlt}
                 fill
                 priority
-                sizes="(min-width:1024px) 50vw, 100vw"
+                sizes="(min-width:768px) 720px, 100vw"
                 className="object-cover"
               />
             </div>
           </RevealUp>
 
-          <RevealGroup className="flex flex-col gap-5" stagger={0.08}>
+          <RevealGroup className="flex flex-col items-center gap-5 text-center" stagger={0.08}>
             <RevealItem>
               <p className="text-[14px] font-semibold uppercase tracking-[0.12em] text-accent">
                 {a.hero.eyebrow}
@@ -58,18 +58,18 @@ export default function AboutPage() {
               </RevealItem>
             ))}
             <RevealItem>
-              <div className="mt-1 flex items-center gap-3">
+              <div className="mt-1 flex items-center justify-center gap-3">
                 <span className="relative size-12 shrink-0 overflow-hidden rounded-full bg-offwhite">
                   <Image src={a.hero.author.avatar} alt={a.hero.author.name} fill sizes="48px" className="object-cover" />
                 </span>
-                <span className="flex flex-col">
+                <span className="flex flex-col text-left">
                   <span className="text-[17px] font-medium text-foreground">{a.hero.author.name}</span>
                   <span className="text-[14px] text-muted">{a.hero.author.role}</span>
                 </span>
               </div>
             </RevealItem>
             <RevealItem>
-              <CtaLink href="/awards" variant="gold" className="mt-2 self-start">
+              <CtaLink href="/awards" variant="gold" className="mt-2">
                 Βραβεία & Διακρίσεις
               </CtaLink>
             </RevealItem>
