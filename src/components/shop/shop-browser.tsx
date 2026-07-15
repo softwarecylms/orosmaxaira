@@ -300,7 +300,7 @@ export function ShopBrowser() {
             <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 2xl:grid-cols-4">
               {shown.map((p) => (
                 <RevealUp key={p.href} className="h-full">
-                  <ShopProductCard product={p} />
+                  <ShopProductCard product={p} shortCta />
                 </RevealUp>
               ))}
             </div>

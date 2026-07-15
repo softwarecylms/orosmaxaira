@@ -210,7 +210,15 @@ export function ProductPurchase({
           ) : (
             <ShoppingCart className="size-[18px]" strokeWidth={1.8} aria-hidden="true" />
           )}
-          {added ? 'Προστέθηκε' : 'Προσθήκη στο καλάθι'}
+          {added ? (
+            'Προστέθηκε'
+          ) : (
+            <>
+              {/* Mobile: short label; md+: full "…στο καλάθι". */}
+              <span className="md:hidden">Προσθήκη</span>
+              <span className="hidden md:inline">Προσθήκη στο καλάθι</span>
+            </>
+          )}
         </button>
       </RevealItem>
 
