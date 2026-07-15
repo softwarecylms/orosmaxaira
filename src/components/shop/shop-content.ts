@@ -97,8 +97,8 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
 ]
 
 /** Price-filter bounds derived from the catalogue (in whole euros). */
-export const SHOP_PRICE_MIN = Math.floor(Math.min(...SHOP_PRODUCTS.map((p) => p.sortPrice)) / 100)
-export const SHOP_PRICE_MAX = Math.ceil(Math.max(...SHOP_PRODUCTS.map((p) => p.sortPrice)) / 100)
+// SHOP_PRICE_MIN / SHOP_PRICE_MAX and productPriceRangeCents() are defined at
+// the end of this file — they read PRODUCT_DETAILS, which is declared below.
 
 // ─── Inner product page (detail) ────────────────────────────────────────────
 // Rich per-product content for the internal product page (Figma 237:1211).
@@ -223,3 +223,23 @@ export function getRelatedProducts(product: ShopProduct, limit = 4): ShopProduct
   const otherCategories = others.filter((p) => p.category !== product.category)
   return [...sameCategory.slice(0, 2), ...otherCategories].slice(0, limit)
 }
+
+/** Min/max price (in cents) across a product's variants, from the merged
+ *  product detail (hand-written + generated); products without variants fall
+ *  back to their starting price. The shop price filter uses this so a product
+ *  matches when ANY of its sizes is in range — e.g. a honey whose 1Kg/3Kg
+ *  sizes cost more than its 100g starting price. */
+export function productPriceRangeCents(product: ShopProduct): [number, number] {
+  const sizes = PRODUCT_DETAILS[handleOf(product)]?.variations?.sizes ?? []
+  const prices = sizes.map((s) => s.sortPrice).filter((n) => typeof n === 'number' && n > 0)
+  if (!prices.length) return [product.sortPrice, product.sortPrice]
+  return [Math.min(...prices), Math.max(...prices)]
+}
+
+// Slider bounds span the full variant price range across all products.
+export const SHOP_PRICE_MIN = Math.floor(
+  Math.min(...SHOP_PRODUCTS.map((p) => productPriceRangeCents(p)[0])) / 100,
+)
+export const SHOP_PRICE_MAX = Math.ceil(
+  Math.max(...SHOP_PRODUCTS.map((p) => productPriceRangeCents(p)[1])) / 100,
+)

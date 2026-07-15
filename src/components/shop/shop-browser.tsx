@@ -12,6 +12,7 @@ import {
   SHOP_PRICE_MIN,
   SHOP_PRODUCTS,
   SHOP_SORTS,
+  productPriceRangeCents,
   type ShopCategory,
   type ShopSort,
 } from './shop-content'
@@ -81,8 +82,10 @@ export function ShopBrowser() {
     let list = SHOP_PRODUCTS.filter((p) => {
       if (!p.inStock) return false // hide out-of-stock products
       if (cats.size > 0 && !cats.has(p.category)) return false
-      const euros = p.sortPrice / 100
-      return euros >= priceMin && euros <= priceMax
+      // Keep a product when its variant price range overlaps the selected range,
+      // so it isn't hidden just because its cheapest size is below priceMin.
+      const [minCents, maxCents] = productPriceRangeCents(p)
+      return minCents / 100 <= priceMax && maxCents / 100 >= priceMin
     })
     if (sort === 'price-asc') list = [...list].sort((a, b) => a.sortPrice - b.sortPrice)
     else if (sort === 'price-desc') list = [...list].sort((a, b) => b.sortPrice - a.sortPrice)
