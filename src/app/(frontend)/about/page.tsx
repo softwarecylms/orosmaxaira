@@ -25,23 +25,24 @@ export default function AboutPage() {
 
   return (
     <>
-      {/* Hero — photo + intro, centered single column */}
+      {/* Hero — photo + intro. Centered single column on mobile; original
+          image-left / text-right 2-column layout on desktop (lg+). */}
       <section className="container-wide py-8 md:py-12">
-        <div className="mx-auto flex max-w-[720px] flex-col items-center gap-10 text-center">
-          <RevealUp className="w-full">
+        <div className="mx-auto grid max-w-[720px] grid-cols-1 gap-10 text-center lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-center lg:gap-[60px] lg:text-left">
+          <RevealUp>
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-offwhite">
               <Image
                 src={a.hero.image}
                 alt={a.hero.imageAlt}
                 fill
                 priority
-                sizes="(min-width:768px) 720px, 100vw"
+                sizes="(min-width:1024px) 50vw, 100vw"
                 className="object-cover"
               />
             </div>
           </RevealUp>
 
-          <RevealGroup className="flex flex-col items-center gap-5 text-center" stagger={0.08}>
+          <RevealGroup className="flex flex-col items-center gap-5 text-center lg:items-stretch lg:text-left" stagger={0.08}>
             <RevealItem>
               <p className="text-[14px] font-semibold uppercase tracking-[0.12em] text-accent">
                 {a.hero.eyebrow}
@@ -58,7 +59,7 @@ export default function AboutPage() {
               </RevealItem>
             ))}
             <RevealItem>
-              <div className="mt-1 flex items-center justify-center gap-3">
+              <div className="mt-1 flex items-center justify-center gap-3 lg:justify-start">
                 <span className="relative size-12 shrink-0 overflow-hidden rounded-full bg-offwhite">
                   <Image src={a.hero.author.avatar} alt={a.hero.author.name} fill sizes="48px" className="object-cover" />
                 </span>
@@ -69,7 +70,7 @@ export default function AboutPage() {
               </div>
             </RevealItem>
             <RevealItem>
-              <CtaLink href="/awards" variant="gold" className="mt-2">
+              <CtaLink href="/awards" variant="gold" className="mt-2 lg:self-start">
                 Βραβεία & Διακρίσεις
               </CtaLink>
             </RevealItem>
