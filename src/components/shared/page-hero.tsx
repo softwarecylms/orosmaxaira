@@ -15,6 +15,7 @@ export function PageHero({
   title,
   description,
   overlayClassName,
+  className,
   logo,
   logoAlt,
   buttons,
@@ -26,6 +27,8 @@ export function PageHero({
   description?: string
   /** Override the default overlay (e.g. `bg-black/30` to match the contact hero). */
   overlayClassName?: string
+  /** Extra classes on the hero <section> (e.g. per-page vertical padding). */
+  className?: string
   /** Optional brand logo shown above the title (use a light/white version). */
   logo?: string
   logoAlt?: string
@@ -39,7 +42,11 @@ export function PageHero({
   const y = !ready || reduce ? '0%' : yRaw
 
   return (
-    <section className="relative isolate flex min-h-[42vh] items-center justify-center overflow-hidden md:min-h-[52vh]">
+    <section
+      className={`relative isolate flex min-h-[42vh] items-center justify-center overflow-hidden md:min-h-[52vh]${
+        className ? ` ${className}` : ''
+      }`}
+    >
       <motion.div style={{ y }} className="absolute inset-x-0 -inset-y-[10%] will-change-transform">
         <Image src={image} alt={imageAlt} fill priority sizes="100vw" className="object-cover object-center" />
       </motion.div>
