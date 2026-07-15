@@ -282,10 +282,12 @@ export function ProductPurchase({
                     })
                     flashDrawer()
                   }}
+                  aria-label={`Προσθήκη ${a.title} στο καλάθι`}
                   className="flex items-center gap-2 rounded-[4px] bg-accent px-[15px] py-2.5 text-[15px] leading-[20px] text-white transition-colors hover:bg-foreground"
                 >
                   <Plus className="size-4" strokeWidth={2} aria-hidden="true" />
-                  Προσθήκη
+                  {/* Mobile: icon only; md+: show the label. */}
+                  <span className="hidden md:inline">Προσθήκη</span>
                 </button>
               </div>
             ))}
