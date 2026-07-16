@@ -76,7 +76,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               {post.dateText}
             </span>
             <span className="ml-auto flex items-center gap-2">
-              <span className="text-[13px] uppercase tracking-wide">Κοινοποίηση</span>
+              {/* Label hidden on mobile — icons only. */}
+              <span className="hidden text-[13px] uppercase tracking-wide sm:inline">Κοινοποίηση</span>
               {shares.map((s) => {
                 const Icon = s.icon
                 return (
