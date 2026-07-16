@@ -47,7 +47,7 @@ export function CartView() {
                 <Image src={item.image} alt={item.title} fill sizes="88px" className="object-cover" />
               </Link>
 
-              <div className="flex flex-1 flex-col gap-1">
+              <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <Link
                   href={`/shop/${item.handle}`}
                   className="text-[17px] font-medium leading-[22px] text-foreground transition-colors hover:text-accent"
@@ -62,7 +62,7 @@ export function CartView() {
                 ) : null}
                 <p className="text-[15px] text-accent">{item.priceLabel}</p>
 
-                <div className="mt-auto flex items-center gap-4 pt-2">
+                <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 pt-2">
                   <div className="flex w-[104px] items-center justify-between rounded-[5px] border border-border px-3">
                     <button
                       type="button"
@@ -94,7 +94,7 @@ export function CartView() {
                 </div>
               </div>
 
-              <div className="text-right text-[16px] font-medium text-foreground">
+              <div className="shrink-0 whitespace-nowrap text-right text-[16px] font-medium text-foreground">
                 {formatCents(item.unitPrice * item.quantity)}
               </div>
             </div>
