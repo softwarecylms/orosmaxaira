@@ -39,9 +39,14 @@ export function AwardSection({ award, reversed = false }: { award: Award; revers
   const meta = [award.org, award.year].filter(Boolean).join(' · ')
   return (
     <article className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
-      {/* Copy */}
-      <div className={cn('flex flex-col gap-5', reversed && 'lg:order-2')}>
-        <div className="flex flex-wrap gap-2">
+      {/* Copy — centered on mobile, left-aligned on desktop */}
+      <div
+        className={cn(
+          'flex flex-col items-center gap-5 text-center lg:items-start lg:text-left',
+          reversed && 'lg:order-2',
+        )}
+      >
+        <div className="flex flex-wrap justify-center gap-2 lg:justify-start">
           {award.badges.map((b, i) => (
             <AwardBadge key={i} badge={b} />
           ))}
@@ -76,15 +81,19 @@ export function AwardSection({ award, reversed = false }: { award: Award; revers
           {award.highlights?.length ? (
             <ul className="mt-1 flex flex-col gap-2">
               {award.highlights.map((h, i) => (
-                <li key={i} className="flex gap-2.5">
-                  <span className="mt-[9px] size-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+                // Bullets read poorly when centered — hide them on mobile.
+                <li key={i} className="lg:flex lg:gap-2.5">
+                  <span
+                    className="mt-[9px] hidden size-1.5 shrink-0 rounded-full bg-accent lg:block"
+                    aria-hidden="true"
+                  />
                   <span>{h}</span>
                 </li>
               ))}
             </ul>
           ) : null}
           {award.note ? (
-            <p className="mt-1 border-l-2 border-accent/40 pl-3 text-[14px] italic leading-[22px] text-muted">
+            <p className="mt-1 text-[14px] italic leading-[22px] text-muted lg:border-l-2 lg:border-accent/40 lg:pl-3">
               {award.note}
             </p>
           ) : null}
