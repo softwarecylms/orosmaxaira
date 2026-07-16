@@ -84,8 +84,15 @@ export default function AboutPage() {
           className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-5 lg:divide-x lg:divide-accent"
           stagger={0.08}
         >
-          {a.stats.map((s) => (
-            <RevealItem key={s.label} className="flex flex-col items-center gap-1.5 px-2 text-center">
+          {a.stats.map((s, i) => (
+            <RevealItem
+              key={s.label}
+              className={`flex flex-col items-center gap-1.5 px-2 text-center${
+                // On the 2-col mobile grid, a lone last stat (odd count) spans
+                // both columns so it's centered instead of stuck in the left cell.
+                i === a.stats.length - 1 && a.stats.length % 2 === 1 ? ' max-sm:col-span-2' : ''
+              }`}
+            >
               <Counter
                 value={s.value}
                 className="font-display text-[34px] font-bold leading-none text-accent md:text-[41px]"
