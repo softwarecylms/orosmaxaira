@@ -16,10 +16,8 @@ export function AwardBadge({ badge }: { badge: AwardBadgeType }) {
   return (
     <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5', t.wrap)}>
       <Icon className={cn('size-[18px] shrink-0', t.icon)} strokeWidth={2} aria-hidden="true" />
+      {/* Tier wording only — grade/category (`badge.meta`) is intentionally not shown. */}
       <span className="text-[13px] font-semibold leading-none text-foreground">{badge.label}</span>
-      {badge.meta ? (
-        <span className="text-[12px] leading-none text-muted">· {badge.meta}</span>
-      ) : null}
     </span>
   )
 }
