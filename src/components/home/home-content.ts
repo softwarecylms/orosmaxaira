@@ -118,7 +118,7 @@ export const HERO = {
     eyebrow: 'ΑΥΘΕΝΤΙΚΗ ΠΑΡΑΔΟΣΗ',
     heading: 'Οι Θησαυροί της Κυψέλης',
     body: 'Ανακαλύψτε μεταξύ άλλων το βραβευμένο μας μέλι, το εκλεκτό υδρόμελο και τον βασιλικό πολτό μας.',
-    cta: { label: READ_MORE, href: '/' },
+    cta: { label: READ_MORE, href: '/shop' },
     image: '/images/home/hero-jars.webp',
     imageAlt: 'Βραβευμένο μέλι Όρος Μαχαιρά σε ξύλινη βάση',
   },
@@ -126,7 +126,7 @@ export const HERO = {
     eyebrow: 'ΒΙΩΜΑΤΙΚΗ ΕΜΠΕΙΡΙΑ',
     heading: 'Εργαστήρια & Εκδηλώσεις',
     body: 'Ελάτε στο βουνό και ζήστε τη μαγεία του μελισσιού μέσα από μοναδικά, διαδραστικά εργαστήρια για όλη την οικογένεια.',
-    cta: { label: READ_MORE, href: '/' },
+    cta: { label: READ_MORE, href: '/drastiriotites' },
     image: '/images/home/hero-bee-comb.webp',
     imageAlt: 'Μέλισσα πάνω σε κηρήθρα',
   },
@@ -178,18 +178,18 @@ export type HoneyProduct = {
 
 export const DEAL = {
   heading: 'Τα Διαμάντια του Μαχαιρά',
-  cta: { label: READ_MORE, href: '/' },
+  cta: { label: READ_MORE, href: '/shop' },
   featured: {
     title: 'Το Ελιξίριο των Θεών',
-    href: '/',
+    href: '/shop/ydromelo',
     image: '/images/home/deal-featured.webp',
     imageAlt: 'Υδρόμελο Melite — Όρος Μαχαιρά',
   },
   products: [
-    { category: 'Μέλι', title: 'Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-1.webp', href: '/' },
-    { category: 'Μέλι', title: 'Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-2.webp', href: '/' },
-    { category: 'Μέλι', title: 'Βασιλικός πολτός «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-3.webp', href: '/' },
-    { category: 'Μέλι', title: 'Υδρόμελο', price: '€3,50 – €31,00', image: '/images/home/deal-4.webp', href: '/' },
+    { category: 'Μέλι', title: 'Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-1.webp', href: '/shop/meli-antheon-oros-machaira' },
+    { category: 'Μέλι', title: 'Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-2.webp', href: '/shop/avrasto-meli-antheon-oros-machaira' },
+    { category: 'Μέλι', title: 'Βασιλικός πολτός «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-3.webp', href: '/shop/vasilikos-poltos-oros-machaira' },
+    { category: 'Μέλι', title: 'Υδρόμελο', price: '€3,50 – €31,00', image: '/images/home/deal-4.webp', href: '/shop/ydromelo' },
     { category: 'Μέλι', title: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-5.webp', href: '/shop/thymarisio-meli-oros-machaira' },
   ] satisfies HoneyProduct[],
 }
@@ -197,12 +197,12 @@ export const DEAL = {
 // --- Section 6: Product categories ---------------------------------------
 export const CATEGORIES = {
   heading: 'Τα προϊόντα μας',
-  cta: { label: READ_MORE, href: '/' },
+  cta: { label: READ_MORE, href: '/shop' },
   items: [
-    { title: 'Μέλι Όρος Μαχαιρά', image: '/images/home/cat-honey.webp', href: '/' },
-    { title: 'Προϊόντα Μέλισσας', image: '/images/home/cat-bee-products.webp', href: '/' },
-    { title: 'Φυσικά Καλλυντικά', image: '/images/home/cat-cosmetics.webp', href: '/' },
-    { title: 'Πακέτα δώρων', image: '/images/home/cat-gifts.webp', href: '/' },
+    { title: 'Μέλι Όρος Μαχαιρά', image: '/images/home/cat-honey.webp', href: '/shop?category=Μέλι' },
+    { title: 'Προϊόντα Μέλισσας', image: '/images/home/cat-bee-products.webp', href: '/shop?category=Προϊόντα%20Μέλισσας' },
+    { title: 'Φυσικά Καλλυντικά', image: '/images/home/cat-cosmetics.webp', href: '/shop?category=Καλλυντικά' },
+    { title: 'Πακέτα δώρων', image: '/images/home/cat-gifts.webp', href: '/shop?category=Πακέτα%20Δώρων' },
   ],
 }
 
@@ -211,7 +211,7 @@ export const ADOPT = {
   eyebrow: 'ΒΙΩΜΑΤΙΚΗ ΕΜΠΕΙΡΙΑ',
   heading: 'Υιοθετώ μια κυψέλη',
   body: 'Γίνε και εσύ με την ομάδα σου μέρος του προγράμματος "Υιοθετώ μια κυψέλη" και… "Bee-come a Hero" για τις μέλισσες και το περιβάλλον.',
-  cta: { label: READ_MORE, href: '/' },
+  cta: { label: READ_MORE, href: '/adopt-a-hive' },
   image: '/images/home/adopt-bee.webp',
   imageAlt: 'Μέλισσα πάνω σε κηρήθρα',
 }
@@ -220,7 +220,7 @@ export const ADOPT = {
 export type Segment = { text: string; bold?: boolean }
 export const HERITAGE = {
   heading: 'Από γενιά σε γενιά',
-  cta: { label: READ_MORE, href: '/' },
+  cta: { label: READ_MORE, href: '/about' },
   image: '/images/home/family-photo.webp',
   imageAlt: 'Η οικογένεια Όρος Μαχαιρά',
   paragraphs: [
