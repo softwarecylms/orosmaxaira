@@ -54,8 +54,8 @@ export default function ContactPage() {
       {/* Contact body — info + form */}
       <section className="bg-white py-14 md:py-[80px]">
         <div className="container-wide flex flex-col items-start gap-12 lg:flex-row lg:justify-center lg:gap-[77px]">
-          {/* Info column */}
-          <div className="flex w-full flex-col gap-10 lg:w-[651px]">
+          {/* Info column — centered on mobile, left-aligned on desktop */}
+          <div className="flex w-full flex-col items-center gap-10 text-center lg:w-[651px] lg:items-start lg:text-left">
             <RevealUp className="flex flex-col gap-[15px]">
               <h2 className="font-display text-[28px] font-semibold leading-[1.05] text-foreground md:text-[41px] md:leading-[40px]">
                 {c.connect.heading}
@@ -102,12 +102,12 @@ export default function ContactPage() {
                         {...(external
                           ? { target: '_blank', rel: 'noopener noreferrer' }
                           : {})}
-                        className="flex items-start gap-4"
+                        className="flex items-start justify-center gap-4 lg:justify-start"
                       >
                         {inner}
                       </a>
                     ) : (
-                      <div className="flex items-start gap-4">{inner}</div>
+                      <div className="flex items-start justify-center gap-4 lg:justify-start">{inner}</div>
                     )}
                   </RevealItem>
                 )

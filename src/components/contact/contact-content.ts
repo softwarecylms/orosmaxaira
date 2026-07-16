@@ -35,7 +35,8 @@ export const CONTACT_PAGE = {
       {
         text: 'Αν ενδιαφέρεστε να επισκεφτείτε το μελισσοκομείο μας και να ζήσετε τις βιωματικές δραστηριότητες που προσφέρει, μπορείτε να το κάνετε ',
       },
-      { text: 'εδώ.', href: '/', accent: true },
+      { text: 'εδώ', href: '/drastiriotites', accent: true },
+      { text: '.' },
     ] as { text: string; href?: string; accent?: boolean }[],
     items: [
       {
