@@ -74,6 +74,23 @@ export function ShopBrowser() {
 
   const [priceMin, setPriceMin] = useState(SHOP_PRICE_MIN)
   const [priceMax, setPriceMax] = useState(SHOP_PRICE_MAX)
+  // Editable text mirrors of the price bounds: free typing, clamped on commit.
+  const [minText, setMinText] = useState(String(SHOP_PRICE_MIN))
+  const [maxText, setMaxText] = useState(String(SHOP_PRICE_MAX))
+  useEffect(() => setMinText(String(priceMin)), [priceMin])
+  useEffect(() => setMaxText(String(priceMax)), [priceMax])
+  const commitMin = () => {
+    const v = Math.round(Number(minText))
+    const clamped = Number.isFinite(v) ? Math.min(Math.max(v, SHOP_PRICE_MIN), priceMax) : priceMin
+    setPriceMin(clamped)
+    setMinText(String(clamped))
+  }
+  const commitMax = () => {
+    const v = Math.round(Number(maxText))
+    const clamped = Number.isFinite(v) ? Math.max(Math.min(v, SHOP_PRICE_MAX), priceMin) : priceMax
+    setPriceMax(clamped)
+    setMaxText(String(clamped))
+  }
   const [sort, setSort] = useState<ShopSort>('default')
   const [visible, setVisible] = useState(PAGE_SIZE)
   const [filtersOpen, setFiltersOpen] = useState(false)
@@ -185,12 +202,36 @@ export function ShopBrowser() {
           />
         </div>
         <div className="flex items-center justify-between">
-          <span className="min-w-[60px] rounded-[4px] border border-foreground p-2.5 text-[14px] text-foreground">
-            €{priceMin}
-          </span>
-          <span className="min-w-[60px] rounded-[4px] border border-foreground p-2.5 text-right text-[14px] text-foreground">
-            €{priceMax}
-          </span>
+          <label className="flex min-w-[72px] items-center gap-1 rounded-[4px] border border-foreground px-2.5 py-2 text-[14px] text-foreground focus-within:ring-1 focus-within:ring-accent">
+            <span aria-hidden="true">€</span>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={minText}
+              aria-label="Ελάχιστη τιμή"
+              onChange={(e) => setMinText(e.target.value)}
+              onBlur={commitMin}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') e.currentTarget.blur()
+              }}
+              className="w-full min-w-0 bg-transparent outline-none"
+            />
+          </label>
+          <label className="flex min-w-[72px] items-center gap-1 rounded-[4px] border border-foreground px-2.5 py-2 text-[14px] text-foreground focus-within:ring-1 focus-within:ring-accent">
+            <span aria-hidden="true">€</span>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={maxText}
+              aria-label="Μέγιστη τιμή"
+              onChange={(e) => setMaxText(e.target.value)}
+              onBlur={commitMax}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') e.currentTarget.blur()
+              }}
+              className="w-full min-w-0 bg-transparent text-right outline-none"
+            />
+          </label>
         </div>
       </div>
 
