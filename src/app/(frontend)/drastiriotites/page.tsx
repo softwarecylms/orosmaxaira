@@ -28,7 +28,7 @@ export default function ActivitiesPage() {
         title={a.hero.title}
         description={a.hero.description}
         overlayClassName="bg-black/45"
-        className="max-md:py-12"
+        className="py-12 md:py-16"
         buttons={[
           { label: 'Εμπειρίες', href: '#experiences' },
           { label: 'Προγράμματα', href: '#programs' },
