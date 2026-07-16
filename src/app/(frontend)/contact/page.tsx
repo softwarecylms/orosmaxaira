@@ -73,7 +73,7 @@ export default function ContactPage() {
               </p>
             </RevealUp>
 
-            <RevealGroup className="grid grid-cols-1 gap-x-8 gap-y-9 sm:grid-cols-2" stagger={0.08}>
+            <RevealGroup className="grid w-full grid-cols-1 gap-x-8 gap-y-9 sm:grid-cols-2" stagger={0.08}>
               {c.connect.items.map((item) => {
                 const Icon = CONTACT_ICONS[item.icon]
                 const external = item.href?.startsWith('http')
@@ -102,19 +102,19 @@ export default function ContactPage() {
                         {...(external
                           ? { target: '_blank', rel: 'noopener noreferrer' }
                           : {})}
-                        className="flex items-start justify-center gap-4 lg:justify-start"
+                        className="flex items-start gap-4 text-left"
                       >
                         {inner}
                       </a>
                     ) : (
-                      <div className="flex items-start justify-center gap-4 lg:justify-start">{inner}</div>
+                      <div className="flex items-start gap-4 text-left">{inner}</div>
                     )}
                   </RevealItem>
                 )
               })}
             </RevealGroup>
 
-            <RevealUp className="flex items-center gap-3">
+            <RevealUp className="flex items-center gap-3 self-start">
               {FOOTER.social.map((s) => {
                 const Icon = SOCIAL_ICONS[s.name]
                 return (
