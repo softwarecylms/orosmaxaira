@@ -1,11 +1,15 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { BLOG } from './home-content'
+import { BLOG_POSTS } from '@/components/blog/blog-data'
 import { CtaLink } from './cta-link'
 import { RevealUp, RevealGroup, RevealItem } from './reveal-up'
 
-/** Section 10 — "Ο Κόσμος της Μέλισσας & της Φύσης" blog teaser (Figma 118:631). */
+/** Section 10 — "Ο Κόσμος της Μέλισσας & της Φύσης" blog teaser (Figma 118:631).
+ *  Shows the 3 most recent posts (a featured one + two), each linked to its page. */
 export function BlogTeaser() {
+  const recent = [...BLOG_POSTS].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)
+  const [featured, ...items] = recent
   return (
     <section data-testid="blog-teaser" className="bg-offwhite py-12 md:py-[70px]">
       <div className="container-wide flex flex-col gap-7 md:gap-[30px]">
@@ -25,13 +29,13 @@ export function BlogTeaser() {
           {/* Featured article */}
           <RevealItem className="h-full min-w-0">
             <Link
-              href={BLOG.featured.href}
+              href={`/blog/${featured.slug}`}
               className="group flex h-full w-full flex-col overflow-hidden rounded-[4px] bg-white sm:flex-row sm:items-center sm:gap-6 lg:gap-8 2xl:gap-[50px]"
             >
               <div className="relative aspect-[471/427] w-full shrink-0 overflow-hidden sm:aspect-auto sm:h-[360px] sm:w-[320px] lg:w-[280px] xl:w-[380px] 2xl:h-[427px] 2xl:w-[471px]">
                 <Image
-                  src={BLOG.featured.image}
-                  alt={BLOG.featured.imageAlt}
+                  src={featured.image}
+                  alt={featured.title}
                   fill
                   sizes="(min-width:1024px) 471px, 100vw"
                   className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
@@ -42,9 +46,11 @@ export function BlogTeaser() {
                   {BLOG.badge}
                 </span>
                 <h3 className="text-[22px] font-medium leading-[26.4px] text-foreground transition-colors group-hover:text-accent">
-                  {BLOG.featured.title}
+                  {featured.title}
                 </h3>
-                <p className="text-[17px] leading-[24px] text-muted">{BLOG.featured.excerpt}</p>
+                {featured.excerpt ? (
+                  <p className="line-clamp-3 text-[17px] leading-[24px] text-muted">{featured.excerpt}</p>
+                ) : null}
                 <div className="flex items-center gap-2.5">
                   <Image
                     src={BLOG.featured.avatar}
@@ -65,10 +71,10 @@ export function BlogTeaser() {
           {/* Two stacked articles */}
           <RevealItem className="h-full min-w-0">
             <div className="flex h-full flex-col justify-between gap-5">
-              {BLOG.items.map((item, i) => (
+              {items.map((item, i) => (
                 <Link
                   key={i}
-                  href={item.href}
+                  href={`/blog/${item.slug}`}
                   className="group flex items-stretch gap-4 overflow-hidden rounded-[4px] bg-white 2xl:gap-[25px]"
                 >
                   <div className="relative aspect-[262/203] w-[130px] shrink-0 overflow-hidden sm:aspect-auto sm:h-[170px] sm:w-[200px] lg:w-[150px] xl:w-[200px] 2xl:h-[203px] 2xl:w-[262px]">

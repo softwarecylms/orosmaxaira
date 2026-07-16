@@ -48,7 +48,9 @@ export function FlatlayHotspot({ item, index }: { item: FlatlayPrice; index: num
         className={cn(
           'absolute left-1/2 w-[240px] -translate-x-1/2 opacity-0 transition-all duration-300 ease-out',
           'pointer-events-none invisible',
-          openUp ? 'bottom-[calc(100%+12px)] translate-y-2' : 'top-[calc(100%+12px)] -translate-y-2',
+          // Bridge the 12px gap with padding (not a margin offset) so moving the
+          // pointer from the pill onto the card stays inside the hover area.
+          openUp ? 'bottom-full pb-3 translate-y-2' : 'top-full pt-3 -translate-y-2',
           'group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto',
           'group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-focus-within:pointer-events-auto',
         )}

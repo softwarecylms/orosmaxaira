@@ -341,7 +341,7 @@ export const FLATLAY: {
 // --- Section 10: Blog -----------------------------------------------------
 export const BLOG = {
   heading: 'Ο Κόσμος της Μέλισσας & της Φύσης',
-  cta: { label: READ_MORE, href: '/' },
+  cta: { label: READ_MORE, href: '/blog' },
   badge: 'Άρθρα',
   featured: {
     image: '/images/home/blog-featured.webp',
@@ -383,7 +383,7 @@ export const FOOTER = {
         { label: 'Αρχική', href: '/' },
         { label: 'Ποιοί είμαστε', href: '/about' },
         { label: 'Βραβεία', href: '/awards' },
-        { label: 'Προϊόντα', href: '/' },
+        { label: 'Προϊόντα', href: '/shop' },
         { label: 'Δραστηριότητες', href: '/drastiriotites' },
         { label: 'Υιοθετώ μια κυψέλη', href: '/adopt-a-hive' },
         { label: 'Αφανείς Ήρωες της Φύσης', href: '/afaneis-iroes-tis-fysis' },
@@ -395,9 +395,10 @@ export const FOOTER = {
     {
       title: 'Προϊόντα',
       links: [
-        { label: 'Μέλι', href: '/' },
-        { label: 'Φυσικά Καλλυντικά', href: '/' },
-        { label: 'Πακέτα δώρων', href: '/' },
+        { label: 'Μέλι', href: '/shop?category=Μέλι' },
+        { label: 'Προϊόντα Μέλισσας', href: '/shop?category=Προϊόντα%20Μέλισσας' },
+        { label: 'Φυσικά Καλλυντικά', href: '/shop?category=Καλλυντικά' },
+        { label: 'Πακέτα δώρων', href: '/shop?category=Πακέτα%20Δώρων' },
       ],
     },
     {
