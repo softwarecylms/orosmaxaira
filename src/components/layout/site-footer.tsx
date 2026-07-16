@@ -83,7 +83,7 @@ export function SiteFooter(_props: SiteFooterProps) {
                         <li key={l.label}>
                           <Link
                             href={l.href}
-                            className="text-[17px] leading-[27px] text-muted transition-colors hover:text-accent"
+                            className="inline-block text-[17px] leading-[36px] text-muted transition-colors hover:text-accent sm:leading-[27px]"
                           >
                             {l.label}
                           </Link>

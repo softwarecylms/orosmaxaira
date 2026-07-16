@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'framer-motion'
 
 /**
@@ -12,6 +13,20 @@ import { useReducedMotion } from 'framer-motion'
  */
 export function AdoptHiveScene({ image, alt }: { image: string; alt: string }) {
   const reduce = useReducedMotion()
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  // Mobile browsers (esp. iOS) often ignore the declarative `autoPlay` until
+  // play() is called explicitly; muted + playsInline keeps it inline.
+  useEffect(() => {
+    const v = videoRef.current
+    if (!v) return
+    const tryPlay = () => {
+      v.play().catch(() => {})
+    }
+    tryPlay()
+    v.addEventListener('loadeddata', tryPlay, { once: true })
+    return () => v.removeEventListener('loadeddata', tryPlay)
+  }, [])
 
   return (
     // Below lg: a banner across the top of the card (content sits beneath it).
@@ -21,6 +36,7 @@ export function AdoptHiveScene({ image, alt }: { image: string; alt: string }) {
         <Image src={image} alt={alt} fill sizes="(min-width:1024px) 58vw, 100vw" className="object-cover" />
       ) : (
         <video
+          ref={videoRef}
           className="absolute inset-0 size-full object-cover"
           autoPlay
           muted
