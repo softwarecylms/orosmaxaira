@@ -86,9 +86,9 @@ export async function SiteHeader(_props: SiteHeaderProps) {
 
             <span className="h-9 w-px bg-border" aria-hidden="true" />
 
-            <button type="button" aria-label="Λογαριασμός" className="text-foreground hover:text-accent">
+            <Link href="/account" aria-label="Λογαριασμός" className="text-foreground hover:text-accent">
               <User className="size-6" aria-hidden="true" />
-            </button>
+            </Link>
 
             <button
               type="button"
@@ -109,7 +109,7 @@ export async function SiteHeader(_props: SiteHeaderProps) {
           {/* Mobile utilities */}
           <div className="flex items-center gap-4 lg:hidden">
             <CartBadge variant="mobile" />
-            <Link href="/" aria-label="Λογαριασμός" className="text-foreground">
+            <Link href="/account" aria-label="Λογαριασμός" className="text-foreground">
               <User className="size-6" aria-hidden="true" />
             </Link>
             <HeaderMobile
