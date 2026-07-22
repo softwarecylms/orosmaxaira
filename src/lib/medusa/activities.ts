@@ -7,13 +7,28 @@ import { sdk } from './client'
  * always reflect immediately.
  */
 
+/** Per-age prices for a workshop experience combo (Half / Full). */
+export type ComboPrices = {
+  adult?: number | string
+  child?: number | string
+  infant?: number | string
+}
+
 export type PriceTier = {
   key: string
   label: string
   // Values originate from an admin-editable JSON blob → tolerate stringy numbers.
-  price: number | string
+  // `price` is a single flat price (activities + enquiry combos); a workshop
+  // seat combo instead carries per-age `prices`.
+  price?: number | string
+  prices?: ComboPrices | null
   /** Optional Sat/Sun price; when absent/blank, weekend uses `price`. */
   weekend_price?: number | string | null
+  /** Workshop combos: full experience label + session time + per-age labels. */
+  long_label?: string
+  start_time?: string
+  end_time?: string
+  age_labels?: { adult?: string; child?: string; infant?: string }
   note?: string
 }
 export type GalleryImage = { url: string; alt?: string }
@@ -61,6 +76,8 @@ export type AvailabilitySlot = {
   end_time?: string | null
   capacity: number
   remaining: number
+  /** Workshop slots only: which experience combo ("half" / "full") this is. */
+  combo_key?: string | null
 }
 
 /** Fetch a published activity by slug, or null if it isn't in Medusa. */

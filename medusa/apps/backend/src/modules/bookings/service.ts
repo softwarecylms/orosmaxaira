@@ -13,13 +13,18 @@ import {
 } from "./models/definitions"
 
 type GenerateSlotsInput = {
-  activityId: string
+  // Exactly one owner — a slot belongs to either an activity or a workshop.
+  activityId?: string
+  workshopId?: string
   weekday: number // 0 (Sun) – 6 (Sat)
   start_time: string // HH:mm
   end_time?: string | null
   capacity: number
   from: string // YYYY-MM-DD
   to: string // YYYY-MM-DD
+  // Workshop sessions only: tags each generated slot with its experience combo
+  // ("half" / "full"), so the Half and Full programs stay distinct.
+  combo_key?: string | null
 }
 
 /**
@@ -86,20 +91,28 @@ class BookingsModuleService extends MedusaService({
   }
 
   /**
-   * Create weekly recurring slots (e.g. every Saturday 10:00, Mar–Oct).
-   * Skips dates that already have a slot at the same start time.
+   * Create weekly recurring slots (e.g. every Saturday 10:00, Mar–Oct) for an
+   * activity or a workshop. Skips dates that already have a slot at the same
+   * start time (idempotent against the unique owner/date/start_time index).
    */
   async generateSlots(input: GenerateSlotsInput): Promise<{
     created: number
     skipped: number
   }> {
+    // Which owner column this batch writes/filters on.
+    const ownerFilter: Record<string, string> = input.workshopId
+      ? { workshop_id: input.workshopId }
+      : { activity_id: input.activityId as string }
+
     const candidates: {
-      activity_id: string
+      activity_id?: string
+      workshop_id?: string
       date: string
       start_time: string
       end_time: string | null
       capacity: number
       status: "open"
+      combo_key: string | null
     }[] = []
 
     const start = new Date(`${input.from}T00:00:00`)
@@ -115,19 +128,20 @@ class BookingsModuleService extends MedusaService({
         "0"
       )}-${String(d.getDate()).padStart(2, "0")}`
       candidates.push({
-        activity_id: input.activityId,
+        ...ownerFilter,
         date,
         start_time: input.start_time,
         end_time: input.end_time ?? null,
         capacity: input.capacity,
         status: "open",
+        combo_key: input.combo_key ?? null,
       })
     }
 
-    const existing = await this.listAvailabilitySlots(
-      { activity_id: input.activityId },
-      { select: ["date", "start_time"], take: 100000 }
-    )
+    const existing = await this.listAvailabilitySlots(ownerFilter, {
+      select: ["date", "start_time"],
+      take: 100000,
+    })
     const seen = new Set(
       existing.map((s) => `${(s as any).date}__${(s as any).start_time}`)
     )

@@ -3,7 +3,10 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronRight, CalendarRange, Clock, Users } from 'lucide-react'
-import { getWorkshop as getMedusaWorkshop } from '@/lib/medusa/workshops'
+import {
+  getWorkshop as getMedusaWorkshop,
+  workshopIsBookable,
+} from '@/lib/medusa/workshops'
 import type { PriceTier } from '@/lib/medusa/activities'
 import { getWorkshop as getStaticWorkshop } from '@/lib/data/workshops'
 import { RevealUp } from '@/components/home/reveal-up'
@@ -12,6 +15,7 @@ import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
 import { RichText } from '@/components/activities/detail/rich-text'
 import { WorkshopComboNotice } from '@/components/ergastiria/workshop-combo-notice'
 import { WorkshopBooking } from '@/components/ergastiria/workshop-booking'
+import { WorkshopSeatBooking } from '@/components/ergastiria/workshop-seat-booking'
 
 // Live so admin edits reflect immediately; falls back to static data if Medusa
 // is unavailable.
@@ -44,6 +48,7 @@ type WView = {
   image: string
   gallery: { src: string; alt: string }[]
   tiers: PriceTier[]
+  currency: string
   metaTitle: string
   metaDescription?: string
 }
@@ -71,6 +76,7 @@ async function loadWorkshop(slug: string): Promise<WView | null> {
       image: m.image ?? '',
       gallery: (m.gallery ?? []).filter((g) => g?.url).map((g) => ({ src: g.url, alt: g.alt ?? m.title })),
       tiers: m.price_tiers?.length ? m.price_tiers : DEFAULT_COMBOS,
+      currency: m.currency ?? 'eur',
       metaTitle: m.meta_title ?? `${m.title} — Βιωματικά Εργαστήρια | Όρος Μαχαιρά`,
       metaDescription: m.meta_description ?? m.excerpt ?? undefined,
     }
@@ -88,6 +94,7 @@ async function loadWorkshop(slug: string): Promise<WView | null> {
     image: s.image,
     gallery: (s.gallery ?? []).filter((g) => g?.src),
     tiers: DEFAULT_COMBOS,
+    currency: 'eur',
     metaTitle: `${s.title} — Βιωματικά Εργαστήρια | Όρος Μαχαιρά`,
     metaDescription: s.excerpt,
   }
@@ -122,7 +129,7 @@ export default async function WorkshopDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const w = await loadWorkshop(slug)
+  const [w, bookable] = await Promise.all([loadWorkshop(slug), workshopIsBookable(slug)])
   if (!w) notFound()
 
   const pills = [
@@ -236,9 +243,19 @@ export default async function WorkshopDetailPage({
             <WorkshopComboNotice />
           </div>
 
-          {/* Sticky booking card */}
+          {/* Sticky booking card — real seat booking when the workshop has
+              scheduled dates, otherwise the enquiry form. */}
           <div className="lg:sticky lg:top-[150px] lg:self-start">
-            <WorkshopBooking workshopTitle={w.title} tiers={w.tiers} />
+            {bookable ? (
+              <WorkshopSeatBooking
+                slug={w.slug}
+                workshopTitle={w.title}
+                combos={w.tiers}
+                currency={w.currency}
+              />
+            ) : (
+              <WorkshopBooking workshopTitle={w.title} tiers={w.tiers} />
+            )}
           </div>
         </div>
       </section>

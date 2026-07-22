@@ -9,7 +9,7 @@ import { EASE, DURATION } from '@/lib/motion'
 import type { PriceTier } from '@/lib/medusa/activities'
 
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
-const money = (p: number | string) => {
+const money = (p: number | string | undefined | null) => {
   const n = typeof p === 'number' ? p : Number(p)
   return Number.isFinite(n) ? `€${n}` : '—'
 }

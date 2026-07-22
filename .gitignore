@@ -59,3 +59,5 @@ playwright-report
 # local-only dev config + internal source docs (not shipped or publicly served)
 .mcp.json
 public/awards.docx
+# client-supplied source documents (specs, brief docx) — never shipped
+*.docx

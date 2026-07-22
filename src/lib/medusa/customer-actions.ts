@@ -15,7 +15,7 @@ function messageOf(e: unknown): string {
 /** POST helper that always carries the current customer's bearer token. */
 async function authedFetch<T>(
   path: string,
-  init: { method?: string; body?: unknown; query?: Record<string, unknown> } = {},
+  init: { method?: string; body?: Record<string, unknown>; query?: Record<string, unknown> } = {},
 ): Promise<T> {
   const token = await getAuthToken()
   return sdk.client.fetch<T>(path, {

@@ -33,3 +33,35 @@ export function tierPrice(t: PriceTier, weekend: boolean): number {
 export function hasWeekendPricing(tiers: PriceTier[]): boolean {
   return tiers.some((t) => weekendPrice(t) !== weekdayPrice(t))
 }
+
+// ── Workshop experience combos (Half / Full) ────────────────────────────────
+// A workshop combo is priced per person by age. `comboAgeTiers` flattens a
+// combo's `prices` + `age_labels` into the same {key,label,price} tier shape the
+// booking UI already uses for activities.
+
+const DEFAULT_AGE_LABELS = {
+  adult: 'Ενήλικες (12+ ετών)',
+  child: 'Παιδιά (4–11 ετών)',
+  infant: 'Βρέφη & Νήπια (0–3 ετών)',
+}
+
+export type AgeKey = 'adult' | 'child' | 'infant'
+export type AgeTier = { key: AgeKey; label: string; price: number; note?: string }
+
+/** Per-age tiers for a workshop combo (adults / children / infants). */
+export function comboAgeTiers(combo: PriceTier): AgeTier[] {
+  const prices = combo.prices ?? {}
+  const labels = combo.age_labels ?? {}
+  const keys: AgeKey[] = ['adult', 'child', 'infant']
+  return keys.map((key) => ({
+    key,
+    label: labels[key] ?? DEFAULT_AGE_LABELS[key],
+    price: Number(prices[key]) || 0,
+    note: key === 'infant' ? 'Δωρεάν' : undefined,
+  }))
+}
+
+/** The lowest (adult) "from" price of a combo, for the summary card. */
+export function comboFromPrice(combo: PriceTier): number {
+  return Number(combo.prices?.adult) || 0
+}

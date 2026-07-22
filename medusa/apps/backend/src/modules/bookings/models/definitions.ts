@@ -61,13 +61,25 @@ export const AvailabilitySlot = model
     capacity: model.number().default(0),
     booked_count: model.number().default(0),
     status: model.enum(["open", "closed"]).default("open"),
-    activity: model.belongsTo(() => Activity, { mappedBy: "slots" }),
+    // For workshop slots: which experience combo (price tier) this session is
+    // for — e.g. "half" (11:00) or "full" (09:30). The Half and Full programs
+    // run at different times, so the combo is fixed by the slot, not the
+    // customer. Null for activity slots (they price by age alone).
+    combo_key: model.text().nullable(),
+    // A slot belongs to EITHER an activity or a workshop (both nullable).
+    activity: model.belongsTo(() => Activity, { mappedBy: "slots" }).nullable(),
+    workshop: model.belongsTo(() => Workshop, { mappedBy: "slots" }).nullable(),
     bookings: model.hasMany(() => Booking, { mappedBy: "slot" }),
   })
   .indexes([
     {
       name: "IDX_slot_activity_date_time",
       on: ["activity_id", "date", "start_time"],
+      unique: true,
+    },
+    {
+      name: "IDX_slot_workshop_date_time",
+      on: ["workshop_id", "date", "start_time"],
       unique: true,
     },
   ])
@@ -88,7 +100,12 @@ export const Booking = model.define("booking", {
   payment_id: model.text().nullable(),
   status: model.enum(["pending", "confirmed", "cancelled"]).default("pending"),
   notes: model.text().nullable(),
-  activity: model.belongsTo(() => Activity, { mappedBy: "bookings" }),
+  // For workshop bookings: which experience combo was chosen (label for admin/email).
+  // `adults` doubles as the workshop people count (children/infants stay 0).
+  combo_label: model.text().nullable(),
+  // A booking belongs to EITHER an activity or a workshop (both nullable).
+  activity: model.belongsTo(() => Activity, { mappedBy: "bookings" }).nullable(),
+  workshop: model.belongsTo(() => Workshop, { mappedBy: "bookings" }).nullable(),
   slot: model.belongsTo(() => AvailabilitySlot, { mappedBy: "bookings" }),
 })
 
@@ -96,7 +113,8 @@ export const Booking = model.define("booking", {
  * A seasonal βιωματικό εργαστήρι — the /drastiriotites/ergastiria hub + each
  * per-workshop page. The farm runs one workshop per season; `months` (1–12, in
  * season order) drives the seasonal calendar. Empty `months` = "κατόπιν ραντεβού".
- * Content-only (booking is an enquiry), so no slots/pricing here.
+ * Workshops with `slots` use the seat/pay checkout (combo × people); undated
+ * workshops (no slots) fall back to the enquiry form on the storefront.
  */
 export const Workshop = model.define("workshop", {
   id: model.id({ prefix: "wsh" }).primaryKey(),
@@ -119,6 +137,8 @@ export const Workshop = model.define("workshop", {
   status: model.enum(["draft", "published"]).default("draft"),
   meta_title: model.text().nullable(),
   meta_description: model.text().nullable(),
+  slots: model.hasMany(() => AvailabilitySlot, { mappedBy: "workshop" }),
+  bookings: model.hasMany(() => Booking, { mappedBy: "workshop" }),
 })
 
 /**

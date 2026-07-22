@@ -51,15 +51,13 @@ export function SiteFooter(_props: SiteFooterProps) {
                 height={67}
                 className="size-[67px] object-contain"
               />
-              <div className="flex h-[67px] items-center justify-center bg-black px-3.5">
-                <Image
-                  src="/images/home/iso-20000-badge.webp"
-                  alt="Πιστοποίηση ISO 20000-1"
-                  width={400}
-                  height={518}
-                  className="h-[51px] w-auto object-contain"
-                />
-              </div>
+              <Image
+                src="/images/home/22000.jpg"
+                alt="Πιστοποίηση ISO 22000"
+                width={67}
+                height={67}
+                className="size-[67px] object-contain"
+              />
             </div>
           </div>
 

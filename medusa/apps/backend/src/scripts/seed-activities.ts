@@ -21,11 +21,96 @@ type SlotPlan = {
   capacity: number
 }
 
+// Explicit, hand-listed session dates (e.g. Γνωρίζω τη Μέλισσα runs only on the
+// specific days in the client's «Ημέρες-Ώρες» document, not on a weekly cadence).
+type DatedSlot = {
+  date: string // YYYY-MM-DD
+  start_time: string
+  end_time: string | null
+  capacity: number
+}
+
 type ActivityPlan = {
   data: Record<string, any>
   from: string
   to: string
   slots: SlotPlan[]
+  datedSlots?: DatedSlot[]
+}
+
+// Build ISO dates for a 2026 month from a list of day numbers.
+const days2026 = (month: number, ds: number[]) =>
+  ds.map(
+    (d) => `2026-${String(month).padStart(2, "0")}-${String(d).padStart(2, "0")}`
+  )
+
+// Γνωρίζω τη Μέλισσα (Single Tour & Tasting) — the exact operating dates from the
+// document, all at 12:00–13:00.
+const GNORIZW_DATES: string[] = [
+  ...days2026(7, [23, 24, 25, 26, 31]),
+  ...days2026(8, [1, 2, 6, 7, 8, 9, 13, 14]),
+  ...days2026(9, [3, 4, 5, 6, 10, 11, 12, 13, 17, 18, 19, 24, 25, 26, 27]),
+  ...days2026(10, [2, 3, 8, 9, 11, 15, 16, 17, 18, 22, 23, 24, 25, 29, 30]),
+  ...days2026(11, [1, 5, 6, 7, 8, 12, 13, 14, 15, 19, 20, 21, 22, 26, 27, 28, 29]),
+]
+
+/**
+ * Sync an activity's slots to an explicit list of dated sessions. Creates the
+ * missing ones, refreshes end_time on existing, and retires any slot no longer
+ * in the plan — unbooked → deleted, booked → closed (so the booking survives).
+ */
+async function syncActivityDatedSlots(
+  bookings: BookingsModuleService,
+  activityId: string,
+  datedSlots: DatedSlot[],
+  logger: { info: (m: string) => void },
+  slug: string
+) {
+  const existing = (await bookings.listAvailabilitySlots(
+    { activity_id: activityId },
+    { take: 100000 }
+  )) as any[]
+  const key = (d: string, t: string) => `${d}__${t}`
+  const existingByKey = new Map(existing.map((x) => [key(x.date, x.start_time), x]))
+  const plannedKeys = new Set(datedSlots.map((p) => key(p.date, p.start_time)))
+
+  const toCreate: any[] = []
+  for (const p of datedSlots) {
+    const ex = existingByKey.get(key(p.date, p.start_time))
+    if (!ex) {
+      toCreate.push({
+        activity_id: activityId,
+        date: p.date,
+        start_time: p.start_time,
+        end_time: p.end_time,
+        capacity: p.capacity,
+        status: "open",
+      })
+    } else if (ex.end_time !== p.end_time || ex.status !== "open") {
+      await bookings.updateAvailabilitySlots({
+        id: ex.id,
+        end_time: p.end_time,
+        status: "open",
+      } as any)
+    }
+  }
+  if (toCreate.length) await bookings.createAvailabilitySlots(toCreate)
+
+  let deleted = 0
+  let closed = 0
+  for (const x of existing) {
+    if (plannedKeys.has(key(x.date, x.start_time))) continue
+    if ((x.booked_count ?? 0) === 0) {
+      await bookings.deleteAvailabilitySlots(x.id)
+      deleted++
+    } else if (x.status !== "closed") {
+      await bookings.updateAvailabilitySlots({ id: x.id, status: "closed" } as any)
+      closed++
+    }
+  }
+  logger.info(
+    `[${slug}] dated slots: +${toCreate.length} created, ${deleted} removed, ${closed} closed (planned ${datedSlots.length})`
+  )
 }
 
 export default async function seedActivities({ container }: ExecArgs) {
@@ -136,12 +221,15 @@ export default async function seedActivities({ container }: ExecArgs) {
     {
       from,
       to: endOfYear,
-      // Year-round, every day, 1 ώρα, capacity 15. Weekend prices are lower
-      // (see price_tiers.weekend_price).
-      slots: [
-        { start_time: "10:00", end_time: "11:00", weekdays: [0, 1, 2, 3, 4, 5, 6], capacity: 15 },
-        { start_time: "15:00", end_time: "16:00", weekdays: [0, 1, 2, 3, 4, 5, 6], capacity: 15 },
-      ],
+      // Runs only on the specific dates in the client's document, all at
+      // 12:00–13:00 (Single Tour & Tasting). Capacity 15.
+      slots: [],
+      datedSlots: GNORIZW_DATES.map((date) => ({
+        date,
+        start_time: "12:00",
+        end_time: "13:00",
+        capacity: 15,
+      })),
       data: {
         slug: "xenagiseis",
         title: "Γνωρίζω τη Μέλισσα",
@@ -160,18 +248,18 @@ export default async function seedActivities({ container }: ExecArgs) {
         review_count: 300,
         duration_label: "1 ώρα",
         age_label: "Για όλες τις ηλικίες",
-        season_start_month: null,
-        season_end_month: null,
+        season_start_month: 7,
+        season_end_month: 11,
         currency: "eur",
         status: "published",
         meta_title: "Γνωρίζω τη Μέλισσα — Ξεναγήσεις | Όρος Μαχαιρά",
         meta_description:
           "Βιωματική ξενάγηση στο μελισσοκομείο του Όρους Μαχαιρά: παρατηρήστε τις μέλισσες μέσα από γυάλινες κυψέλες, γνωρίστε τα προϊόντα της κυψέλης και γευτείτε τα μέλια μας. Κλείστε online.",
-        // Weekday base price + a lower weekend (Σαββατοκύριακα) price per tier.
+        // Single flat price per age tier (no weekday/weekend split).
         price_tiers: [
-          { key: "adult", label: "Ενήλικες (12+ ετών)", price: 10, weekend_price: 8 },
-          { key: "child", label: "Παιδιά (4–11 ετών)", price: 5, weekend_price: 4 },
-          { key: "infant", label: "Βρέφη & Νήπια (0–3 ετών)", price: 0, weekend_price: 0, note: "Δωρεάν" },
+          { key: "adult", label: "Ενήλικες (12+ ετών)", price: 8 },
+          { key: "child", label: "Παιδιά (4–11 ετών)", price: 4 },
+          { key: "infant", label: "Βρέφη & Νήπια (0–3 ετών)", price: 0, note: "Δωρεάν" },
         ],
         gallery: Array.from({ length: 9 }, (_, i) => ({
           url: `/images/xenagiseis/${String(i + 1).padStart(2, "0")}.webp`,
@@ -253,6 +341,13 @@ export default async function seedActivities({ container }: ExecArgs) {
           `[${slug}] slots wd${weekday} @${s.start_time}: created ${r.created}, skipped ${r.skipped}`
         )
       }
+    }
+
+    // Explicit hand-listed dates (Γνωρίζω τη Μέλισσα): create the exact sessions
+    // and retire anything else (unbooked → deleted, booked → closed). This clears
+    // the old daily 10:00/15:00 slots when re-applying the document.
+    if (plan.datedSlots?.length) {
+      await syncActivityDatedSlots(bookings, activityId, plan.datedSlots, logger, slug)
     }
 
     // `generateSlots` never touches pre-existing rows, so normalise the (display-

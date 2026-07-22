@@ -1,5 +1,5 @@
 import { sdk } from './client'
-import type { Feature, GalleryImage, PriceTier } from './activities'
+import type { AvailabilitySlot, Feature, GalleryImage, PriceTier } from './activities'
 
 /**
  * Storefront data layer for the Εργαστήρια (Medusa `workshop` model). All calls
@@ -45,4 +45,36 @@ export async function getWorkshop(slug: string): Promise<Workshop | null> {
     })
     .then((r) => r.workshop)
     .catch(() => null)
+}
+
+/**
+ * Open slots (with remaining capacity) for a workshop over a date range. Each
+ * slot carries `combo_key` ("half" / "full") — the Half and Full programs run at
+ * different times, so the combo is fixed by the slot. Returns [] if Medusa is
+ * unavailable (the storefront then falls back to the enquiry form).
+ */
+export async function getWorkshopAvailability(
+  slug: string,
+  from?: string,
+  to?: string,
+): Promise<{ slots: AvailabilitySlot[]; currency: string }> {
+  const query: Record<string, string> = {}
+  if (from) query.from = from
+  if (to) query.to = to
+  return sdk.client
+    .fetch<{ slots: AvailabilitySlot[]; currency: string }>(
+      `/store/workshops/${slug}/availability`,
+      { method: 'GET', query, cache: 'no-store' },
+    )
+    .catch(() => ({ slots: [] as AvailabilitySlot[], currency: 'eur' }))
+}
+
+/** True when a workshop has any upcoming open slot → book online (else enquiry). */
+export async function workshopIsBookable(slug: string): Promise<boolean> {
+  const today = new Date()
+  const iso = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  const to = iso(new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()))
+  const { slots } = await getWorkshopAvailability(slug, iso(today), to)
+  return slots.length > 0
 }

@@ -7,7 +7,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
   const bookings = req.scope.resolve<BookingsModuleService>(BOOKINGS_MODULE)
   const b = req.body as any
   const patch: Record<string, unknown> = { id: req.params.id }
-  for (const k of ["capacity", "status", "start_time", "end_time", "date"]) {
+  for (const k of ["capacity", "status", "start_time", "end_time", "date", "combo_key"]) {
     if (b[k] !== undefined) patch[k] = b[k]
   }
   await bookings.updateAvailabilitySlots(patch as any)
