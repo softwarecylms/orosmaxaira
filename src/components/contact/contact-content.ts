@@ -84,7 +84,7 @@ export const CONTACT_PAGE = {
     {
       icon: 'eco' as ValueIcon,
       title: 'Περιβάλλον',
-      text: 'Πιστοποιημένοι με ISO 14001 & ISO 22001 - σεβασμός για τη γη και τις μέλισσες.',
+      text: 'Πιστοποιημένοι με ISO 14001 & ISO 22000 - σεβασμός για τη γη και τις μέλισσες.',
     },
     {
       icon: 'family' as ValueIcon,
