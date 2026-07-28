@@ -137,6 +137,8 @@ const WORKSHOPS: Record<string, any>[] = [
     season_label: "Πάσχα",
     months: [3, 4],
     image: "/images/activities/ergastiria/melissolampades.jpg",
+    // Seasonal (Easter) — bookings are closed until the season approaches.
+    booking_closed: true,
     meta_title: "Μελισσολαμπάδες — Εργαστήρι | Όρος Μαχαιρά",
     meta_description:
       "Φτιάξτε τις δικές σας μελισσολαμπάδες λίγο πριν το Πάσχα και πάρτε τες δωρεάν μαζί σας.",

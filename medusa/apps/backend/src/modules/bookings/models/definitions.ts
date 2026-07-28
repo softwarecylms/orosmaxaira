@@ -135,6 +135,9 @@ export const Workshop = model.define("workshop", {
   features: model.json().nullable(), // [{ title, text }]
   rank: model.number().default(0), // display order in the hub
   status: model.enum(["draft", "published"]).default("draft"),
+  // When true the storefront shows a "seasonal — bookings closed" notice instead
+  // of the seat-booking widget or enquiry form (e.g. Πάσχα workshop out of season).
+  booking_closed: model.boolean().default(false),
   meta_title: model.text().nullable(),
   meta_description: model.text().nullable(),
   slots: model.hasMany(() => AvailabilitySlot, { mappedBy: "workshop" }),

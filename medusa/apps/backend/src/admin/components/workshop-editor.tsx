@@ -202,6 +202,7 @@ export function WorkshopEditor({
         .map((x) => parseInt(x.trim(), 10))
         .filter((n) => Number.isFinite(n) && n >= 1 && n <= 12)
       payload.price_tiers = rowsToTiers(form._comboRows ?? [])
+      payload.booking_closed = !!form.booking_closed
       for (const k of ["gallery", "features"]) {
         if (form[k] !== undefined) payload[k] = form[k]
       }
@@ -349,6 +350,19 @@ export function WorkshopEditor({
                       >
                         <option value="draft">Πρόχειρο</option>
                         <option value="published">Δημοσιευμένο</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <Label size="small" weight="plus">
+                        Κρατήσεις
+                      </Label>
+                      <select
+                        className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm"
+                        value={form.booking_closed ? "closed" : "open"}
+                        onChange={(e) => set("booking_closed", e.target.value === "closed")}
+                      >
+                        <option value="open">Ανοιχτές</option>
+                        <option value="closed">Κλειστές (εποχιακά)</option>
                       </select>
                     </div>
                   </div>
