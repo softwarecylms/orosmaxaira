@@ -200,7 +200,7 @@ export function CartDrawer() {
                         <Truck className="size-4 shrink-0 text-accent" strokeWidth={2} aria-hidden="true" />
                         <span>
                           Προσθέστε <span className="font-semibold">{formatCents(remaining)}</span> ακόμη
-                          για δωρεάν μεταφορικά.
+                          για δωρεάν μεταφορικά στην Κύπρο.
                         </span>
                       </p>
                     ) : (

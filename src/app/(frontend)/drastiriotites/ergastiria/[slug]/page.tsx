@@ -16,6 +16,8 @@ import { RichText } from '@/components/activities/detail/rich-text'
 import { WorkshopComboNotice } from '@/components/ergastiria/workshop-combo-notice'
 import { WorkshopBooking } from '@/components/ergastiria/workshop-booking'
 import { WorkshopSeatBooking } from '@/components/ergastiria/workshop-seat-booking'
+import { WorkshopClosedNotice } from '@/components/ergastiria/workshop-closed-notice'
+import { CertificationsNote } from '@/components/certificates/certifications-note'
 
 // Live so admin edits reflect immediately; falls back to static data if Medusa
 // is unavailable.
@@ -43,6 +45,8 @@ type WView = {
   excerpt?: string
   description: string
   seasonBadge: string
+  seasonLabel?: string | null
+  bookingClosed: boolean
   durationLabel?: string
   ageLabel?: string
   image: string
@@ -71,6 +75,8 @@ async function loadWorkshop(slug: string): Promise<WView | null> {
       excerpt: m.excerpt ?? undefined,
       description: m.description ?? '',
       seasonBadge: badge(m.season_label, m.months),
+      seasonLabel: m.season_label,
+      bookingClosed: !!m.booking_closed,
       durationLabel: m.duration_label ?? undefined,
       ageLabel: m.age_label ?? undefined,
       image: m.image ?? '',
@@ -89,6 +95,8 @@ async function loadWorkshop(slug: string): Promise<WView | null> {
     excerpt: s.excerpt,
     description: s.description,
     seasonBadge: badge(s.seasonLabel, s.months),
+    seasonLabel: s.seasonLabel,
+    bookingClosed: !!s.bookingClosed,
     durationLabel: '45 λεπτά',
     ageLabel: 'Για όλες τις ηλικίες',
     image: s.image,
@@ -245,8 +253,10 @@ export default async function WorkshopDetailPage({
 
           {/* Sticky booking card — real seat booking when the workshop has
               scheduled dates, otherwise the enquiry form. */}
-          <div className="lg:sticky lg:top-[150px] lg:self-start">
-            {bookable ? (
+          <div className="flex flex-col gap-4 lg:sticky lg:top-[150px] lg:self-start">
+            {w.bookingClosed ? (
+              <WorkshopClosedNotice seasonLabel={w.seasonLabel} />
+            ) : bookable ? (
               <WorkshopSeatBooking
                 slug={w.slug}
                 workshopTitle={w.title}
@@ -256,6 +266,7 @@ export default async function WorkshopDetailPage({
             ) : (
               <WorkshopBooking workshopTitle={w.title} tiers={w.tiers} />
             )}
+            <CertificationsNote />
           </div>
         </div>
       </section>

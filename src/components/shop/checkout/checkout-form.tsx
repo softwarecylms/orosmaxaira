@@ -8,8 +8,9 @@ import { Check, Tag, Truck } from 'lucide-react'
 import { useCart, formatCents, type CartItem } from '@/components/commerce/cart-store'
 import { cn } from '@/lib/utils'
 
-const FREE_SHIPPING_THRESHOLD = 7000 // €70,00 — free delivery above this
-const SHIPPING = { Κύπρος: 450, Ελλάδα: 700 } as const // €4,50 / €7,00 below the threshold
+const FREE_SHIPPING_THRESHOLD = 7000 // €70,00 — free delivery above this (Cyprus only)
+const FREE_SHIPPING_COUNTRY = 'Κύπρος' // free delivery is offered only within Cyprus
+const SHIPPING = { Κύπρος: 450, Ελλάδα: 700 } as const // €4,50 / €7,00 (Greece is never free)
 
 type Country = keyof typeof SHIPPING
 
@@ -198,7 +199,9 @@ export function CheckoutForm() {
     )
   }
 
-  const freeShipping = subtotal >= FREE_SHIPPING_THRESHOLD
+  // Free delivery is offered only within Cyprus (and only above the threshold).
+  const freeShippingEligible = c.country === FREE_SHIPPING_COUNTRY
+  const freeShipping = freeShippingEligible && subtotal >= FREE_SHIPPING_THRESHOLD
   const acsCost = freeShipping ? 0 : SHIPPING[c.country]
   const shipping = c.delivery === 'store' ? 0 : acsCost
   const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal)
@@ -475,8 +478,8 @@ export function CheckoutForm() {
           <Row label="Υποσύνολο" value={formatCents(subtotal)} />
           {discount > 0 ? <Row label="Έκπτωση" value={`−${formatCents(discount)}`} accent /> : null}
           <Row label="Μεταφορικά" value={shipping === 0 ? 'Δωρεάν' : formatCents(shipping)} />
-          {/* Free-shipping progress */}
-          {freeShipping ? (
+          {/* Free-shipping progress — Cyprus only */}
+          {!freeShippingEligible ? null : freeShipping ? (
             <p className="flex items-center gap-2 pt-1 text-[13px] font-medium leading-[18px] text-success">
               <Check className="size-[18px] shrink-0" strokeWidth={2.5} aria-hidden="true" />
               Κερδίσατε δωρεάν μεταφορικά!
@@ -487,7 +490,7 @@ export function CheckoutForm() {
                 <Truck className="size-[18px] shrink-0 text-accent" strokeWidth={2} aria-hidden="true" />
                 <span>
                   Προσθέστε <span className="font-semibold">{formatCents(remaining)}</span> ακόμη για δωρεάν
-                  μεταφορικά.
+                  μεταφορικά στην Κύπρο.
                 </span>
               </p>
               <div

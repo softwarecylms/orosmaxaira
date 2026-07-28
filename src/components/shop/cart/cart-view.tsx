@@ -121,7 +121,7 @@ export function CartView() {
                   <Truck className="size-[18px] shrink-0 text-accent" strokeWidth={2} aria-hidden="true" />
                   <span>
                     Προσθέστε <span className="font-semibold">{formatCents(remaining)}</span> ακόμη για
-                    δωρεάν μεταφορικά.
+                    δωρεάν μεταφορικά στην Κύπρο.
                   </span>
                 </p>
               ) : (

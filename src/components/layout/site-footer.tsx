@@ -44,20 +44,32 @@ export function SiteFooter(_props: SiteFooterProps) {
             </Link>
             <p className="max-w-[300px] text-[17px] leading-[24px] text-muted">{FOOTER.tagline}</p>
             <div className="flex items-center gap-3">
-              <Image
-                src="/images/home/iso-badge.webp"
-                alt="Πιστοποίηση ISO 14001"
-                width={67}
-                height={67}
-                className="size-[67px] object-contain"
-              />
-              <Image
-                src="/images/home/22000.jpg"
-                alt="Πιστοποίηση ISO 22000"
-                width={67}
-                height={67}
-                className="size-[67px] object-contain"
-              />
+              <Link
+                href="/certificates#iso-14001"
+                aria-label="Πιστοποίηση ISO 14001 — δείτε το πιστοποιητικό"
+                className="transition-opacity hover:opacity-80"
+              >
+                <Image
+                  src="/images/home/iso-badge.webp"
+                  alt="Πιστοποίηση ISO 14001"
+                  width={67}
+                  height={67}
+                  className="size-[67px] object-contain"
+                />
+              </Link>
+              <Link
+                href="/certificates#iso-22000"
+                aria-label="Πιστοποίηση ISO 22000 — δείτε το πιστοποιητικό"
+                className="transition-opacity hover:opacity-80"
+              >
+                <Image
+                  src="/images/home/22000.jpg"
+                  alt="Πιστοποίηση ISO 22000"
+                  width={67}
+                  height={67}
+                  className="size-[67px] object-contain"
+                />
+              </Link>
             </div>
           </div>
 
@@ -146,7 +158,7 @@ export function SiteFooter(_props: SiteFooterProps) {
         </RevealUp>
 
         {/* Bottom legal bar */}
-        <div className="mt-12 flex flex-col items-center gap-3 border-t border-border py-5 text-center text-[15px] text-muted md:flex-row md:items-center md:justify-between md:text-left md:text-[17px]">
+        <div className="mt-12 flex flex-col items-center gap-3 border-t border-border py-5 text-center text-[13px] text-muted md:flex-row md:items-center md:justify-between md:text-left md:text-[15px]">
           <p>
             {FOOTER.legal}{' '}
             <Link

@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { ChevronRight } from 'lucide-react'
 
 /** A section of a legal document. `body` items are paragraphs (string) or bullet
  *  lists (string[]). An optional `id` lets the footer deep-link to it. */
@@ -19,21 +18,8 @@ export function LegalPage({
 }) {
   return (
     <>
-      <div className="container-wide pb-2 pt-4">
-        <nav
-          aria-label="breadcrumb"
-          className="flex items-center gap-1.5 text-[15px] text-muted md:text-[17px]"
-        >
-          <Link href="/" className="transition-colors hover:text-accent">
-            Αρχική
-          </Link>
-          <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
-          <span className="text-foreground">{title}</span>
-        </nav>
-      </div>
-
       <article className="container-wide py-10 md:py-14">
-        <div>
+        <div className="mx-auto max-w-[960px]">
           <h1 className="font-display text-[34px] font-bold leading-tight text-foreground md:text-[46px]">
             {title}
           </h1>

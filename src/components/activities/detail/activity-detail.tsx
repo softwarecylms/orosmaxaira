@@ -9,6 +9,7 @@ import { Stars } from './stars'
 import { ActivitySections } from './activity-sections'
 import { ActivityPolicies } from './activity-policies'
 import { ActivityBookingCard } from './activity-booking-card'
+import { CertificationsNote } from '@/components/certificates/certifications-note'
 import { ActivityRelated } from './activity-related'
 
 const MONTHS = [
@@ -125,8 +126,9 @@ export function ActivityDetail({ activity }: { activity: Activity }) {
 
           {/* Offset clears the sticky header (~142px) so the card's top price
               row isn't tucked underneath it. */}
-          <div className="lg:sticky lg:top-[150px] lg:self-start">
+          <div className="flex flex-col gap-4 lg:sticky lg:top-[150px] lg:self-start">
             <ActivityBookingCard activity={activity} />
+            <CertificationsNote />
           </div>
         </div>
       </section>

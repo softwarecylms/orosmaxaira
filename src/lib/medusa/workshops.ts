@@ -24,6 +24,8 @@ export type Workshop = {
   price_tiers?: PriceTier[] | null
   features?: Feature[] | null
   rank?: number
+  /** When true, the storefront shows a seasonal "bookings closed" notice. */
+  booking_closed?: boolean | null
   meta_title?: string | null
   meta_description?: string | null
 }

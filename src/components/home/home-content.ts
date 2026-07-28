@@ -103,7 +103,7 @@ export const MEGA_MENU: MegaColumn[] = [
 ]
 
 export const ANNOUNCEMENT =
-  'ΔΩΡΕΑΝ αποστολή σε όλες τις παραγγελίες άνω των €70'
+  'ΔΩΡΕΑΝ αποστολή στην Κύπρο για παραγγελίες άνω των €70'
 
 export const CONTACT = {
   phone: '+357 25622305',
@@ -227,7 +227,7 @@ export const HERITAGE = {
     [
       { text: 'Η ιστορία του μελιού ' },
       { text: '«Όρος Μαχαιρά» ', bold: true },
-      { text: 'πάει πίσω στο 1983. Τότε ο Μιχάλης Φιλίππου άρχισε τη μελισοκομία μαζί με τον γαμπρό του, τον Κώστα Χειμώνα έχοντας πέντε κυψέλες τις οποίες πήραν από τον πατέρα του Κώστα Χειμώνα. Για 30 περίπου χρόνια δούλεψα μαζί σκληρά και με ' },
+      { text: 'πάει πίσω στο 1983. Τότε ο Μιχάλης Φιλίππου άρχισε τη μελισοκομία μαζί με τον γαμπρό του, τον Κώστα Χειμώνα έχοντας πέντε κυψέλες τις οποίες πήραν από τον πατέρα του Κώστα Χειμώνα. Για 30 περίπου χρόνια δούλεψαν μαζί σκληρά και με ' },
       { text: 'αγάπη για τη φύση', bold: true },
       { text: ', τη μέλισσα και τα προϊόντα της.' },
     ],
@@ -386,7 +386,6 @@ export const FOOTER = {
         { label: 'Προϊόντα', href: '/shop' },
         { label: 'Δραστηριότητες', href: '/drastiriotites' },
         { label: 'Υιοθετώ μια κυψέλη', href: '/adopt-a-hive' },
-        { label: 'Αφανείς Ήρωες της Φύσης', href: '/afaneis-iroes-tis-fysis' },
         { label: 'Γνωρίζω τη Μέλισσα', href: '/drastiriotites/xenagiseis' },
         { label: 'Blog', href: '/blog' },
         { label: 'Επικοινωνία', href: '/contact' },
@@ -424,8 +423,8 @@ export const FOOTER = {
   legalBrand: 'SoftwareCy',
   legalBrandHref: 'https://softwarecy.com',
   policies: [
-    { label: 'Παραγγελίες & Επιστροφές', href: '/terms#epistrofes' },
-    { label: 'Πολιτική Αποστολών', href: '/terms#apostoles' },
+    { label: 'Παραγγελίες & Επιστροφές', href: '/paraggelies-kai-epistrofes' },
+    { label: 'Πολιτική Αποστολών', href: '/politiki-apostolis-proionton' },
     { label: 'Πολιτική Απορρήτου & Cookies', href: '/privacy' },
   ],
 }

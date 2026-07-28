@@ -10,6 +10,7 @@ import type { ShopProduct, ShopProductDetail, ShopVariationSize } from '../shop-
 import { useCart, parsePrice } from '@/components/commerce/cart-store'
 import { displayPrice, cn } from '@/lib/utils'
 import { RevealGroup, RevealItem } from '@/components/home/reveal-up'
+import { CertificationsNote } from '@/components/certificates/certifications-note'
 import {
   FacebookSolid,
   InstagramSolid,
@@ -295,24 +296,29 @@ export function ProductPurchase({
         </RevealItem>
       ) : null}
 
+      {/* Certifications — discreet, links to the certificates page */}
+      <RevealItem>
+        <CertificationsNote />
+      </RevealItem>
+
       {/* Delivery keypoints — animated icons */}
-      <RevealItem className="flex flex-col gap-4 border-y border-border-strong py-[15px] sm:flex-row sm:gap-6">
-        <div className="flex flex-1 items-center gap-[15px]">
+      <RevealItem className="flex flex-col gap-4 border-y border-border-strong py-[15px] sm:flex-row sm:items-center sm:gap-5">
+        <div className="flex items-center gap-[15px]">
           <motion.span className="block shrink-0" initial={false} {...(loop({ x: [0, 4, 0] }) ?? {})}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/images/icons/delivery-truck.svg" alt="" className="h-[15px] w-[26px]" />
           </motion.span>
-          <span className="text-[14px] leading-[21px] text-muted">
+          <span className="whitespace-nowrap text-[13px] leading-[19px] text-muted">
             Παραδίδουμε σε Κύπρο &amp; Ελλάδα
           </span>
         </div>
-        <div className="flex flex-1 items-center gap-[15px]">
+        <div className="flex items-center gap-[15px]">
           <motion.span className="block shrink-0" initial={false} {...(loop({ y: [0, -3, 0] }) ?? {})}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/images/icons/free-shipping.svg" alt="" className="h-[24px] w-[26px]" />
           </motion.span>
-          <span className="text-[14px] leading-[21px] text-muted">
-            Δωρεάν μεταφορικά για άνω των 70€
+          <span className="whitespace-nowrap text-[13px] leading-[19px] text-muted">
+            Δωρεάν μεταφορικά στην Κύπρο άνω των 70€
           </span>
         </div>
       </RevealItem>

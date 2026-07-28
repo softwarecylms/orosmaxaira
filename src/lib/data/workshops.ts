@@ -30,6 +30,9 @@ export type Workshop = {
   image: string
   gallery?: { src: string; alt: string }[]
   published: boolean
+  /** Seasonal workshop with bookings temporarily closed → storefront shows a
+   *  "bookings closed" notice instead of the booking/enquiry widget. */
+  bookingClosed?: boolean
 }
 
 export const WORKSHOPS: Workshop[] = [
@@ -44,6 +47,7 @@ export const WORKSHOPS: Workshop[] = [
     seasonLabel: 'Πάσχα',
     image: '/images/activities/ergastiria/melissolampades.jpg',
     published: true,
+    bookingClosed: true,
   },
   {
     slug: 'fytefsi-sporon',

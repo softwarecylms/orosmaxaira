@@ -193,7 +193,7 @@ export default function AboutPage() {
       </section>
 
       {/* Family */}
-      <section className="container-wide py-12 md:py-[70px]">
+      <section className="container-wide pb-6 pt-12 md:pb-8 md:pt-[70px]">
         <RevealUp>
           <h2 className="text-center font-display text-[26px] font-semibold leading-[1.1] text-foreground md:text-[41px]">
             {a.family.heading}
@@ -234,7 +234,7 @@ export default function AboutPage() {
       </section>
 
       {/* Goal — full-width gold banner, beeswax image bleeding on the left (Figma 156:1211) */}
-      <section className="container-wide py-14 md:py-24">
+      <section className="container-wide pb-14 pt-6 md:pb-24 md:pt-10">
         <div className="relative overflow-hidden rounded-[4px] bg-accent">
           {/* Desktop: exact Figma banner background, rendered proportionally so the
               blocks stay in the left ~40% and never collide with the copy */}

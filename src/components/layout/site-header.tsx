@@ -30,8 +30,8 @@ export async function SiteHeader(_props: SiteHeaderProps) {
         <Truck className="size-4 shrink-0" aria-hidden="true" />
         <p className="text-center text-[13px] leading-[21px] md:text-[14px]">
           <span className="font-display text-[15px] font-bold">ΔΩΡΕΑΝ </span>
-          <span className="md:hidden">αποστολή άνω των €70</span>
-          <span className="hidden md:inline">αποστολή σε όλες τις παραγγελίες άνω των €70</span>
+          <span className="md:hidden">αποστολή στην Κύπρο άνω των €70</span>
+          <span className="hidden md:inline">αποστολή στην Κύπρο για παραγγελίες άνω των €70</span>
         </p>
       </HeaderReveal>
 
