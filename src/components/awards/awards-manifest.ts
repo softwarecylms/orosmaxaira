@@ -174,7 +174,7 @@ export const AWARD_IMAGES: Record<string, AwardImage[]> = {
       "h": 910
     },
     {
-      "src": "/images/awards/specialist-awards-2026/02.webp?v=11908",
+      "src": "/images/awards/specialist-awards-2026/02.webp?v=33480",
       "w": 1200,
       "h": 910
     }
