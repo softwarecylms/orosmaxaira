@@ -2,9 +2,8 @@
  * Content for the /certificates page. Editable copy lives here (mirrors the
  * about/awards content-file pattern). Demo/indicative copy for now.
  *
- * PDFs live under /public/images/certificates. The ISO 14001 download currently
- * reuses the ISO 22000 PDF as a placeholder — swap `pdfGr`/`pdfEn` on the 14001
- * entry once the real 14001 certificate files are supplied.
+ * PDFs live under /public/images/certificates. The preview images are the PDFs'
+ * first page rendered to PNG. ISO 14001 has only a Greek certificate for now.
  */
 
 export type Certificate = {
@@ -47,9 +46,8 @@ export const CERTIFICATES_PAGE = {
         'Προστασία των μελισσών & της βιοποικιλότητας',
         'Συνεχής βελτίωση των περιβαλλοντικών επιδόσεων',
       ],
-      // Placeholder: reuses the ISO 22000 PDF until the real 14001 files arrive.
-      pdfGr: '/images/certificates/iso-22000-gr.pdf',
-      pdfEn: '/images/certificates/iso-22000-en.pdf',
+      // Real ISO 14001 (GR) certificate; no separate EN file supplied yet.
+      pdfGr: '/images/certificates/ISO_14001_GR.pdf',
     },
     {
       code: 'ISO 22000',

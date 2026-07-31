@@ -117,7 +117,7 @@ export const ABOUT_PAGE = {
     members: [
       { name: 'Μέλιος Φιλίππου', role: 'Διευθυντής', photo: '/images/about/family-melios.webp' },
       { name: 'Βαλεντίνος Φιλίππου', role: 'Υποδιευθυντής', photo: '/images/about/family-valentinos.webp' },
-      { name: 'Μαρία Σολωμονίδου', role: 'Υπεύθυνη εργοστασίου', photo: '/images/about/family-maria.webp' },
+      { name: 'Μαρία Σολομωνίδου', role: 'Υπεύθυνη εργοστασίου', photo: '/images/about/family-maria.webp' },
       { name: 'Νίκος Φιλίππου', role: 'Υπεύθυνος παραγωγής (Μελισσοκόμος)', photo: '/images/about/family-nikos.webp' },
       { name: 'Μιχάλης Φιλίππου', role: 'Υπεύθυνος παραγωγής (Μελισσοκόμος)', photo: '/images/about/family-michalis.webp' },
     ] as { name: string; role: string; photo?: string }[],

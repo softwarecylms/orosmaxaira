@@ -10,6 +10,7 @@ import type { ShopProduct, ShopProductDetail, ShopVariationSize } from '../shop-
 import { useCart, parsePrice } from '@/components/commerce/cart-store'
 import { displayPrice, cn } from '@/lib/utils'
 import { RevealGroup, RevealItem } from '@/components/home/reveal-up'
+import { RichText } from '@/components/activities/detail/rich-text'
 import { CertificationsNote } from '@/components/certificates/certifications-note'
 import {
   FacebookSolid,
@@ -120,8 +121,8 @@ export function ProductPurchase({
 
       {detail.description ? (
         <RevealItem>
-          <p className="max-w-[600px] text-[17px] leading-[24px] text-muted">
-            {detail.description}
+          <p className="max-w-[600px] whitespace-pre-line text-[17px] leading-[24px] text-muted">
+            <RichText text={detail.description} />
           </p>
         </RevealItem>
       ) : null}

@@ -24,6 +24,7 @@ type MelissoView = {
   metaDescription?: string
   title: string
   durationLabel?: string
+  costLabel?: string // "7€ / συνεδρία"
   seasonPill?: string // "Διαθέσιμη Απρίλιο–Οκτώβριο"
   periodLabel?: string // "Απρίλιος – Οκτώβριος"
   seasonStart?: number
@@ -45,11 +46,16 @@ async function loadView(): Promise<MelissoView> {
   if (a) {
     const s = a.season_start_month ?? undefined
     const e = a.season_end_month ?? undefined
+    // First price tier → "7€ / συνεδρία" (per-session, matching the duration).
+    const tier = a.price_tiers?.[0]
+    const price = tier?.price != null && tier.price !== '' ? Number(tier.price) : NaN
+    const costLabel = Number.isFinite(price) ? `${price}€ / συνεδρία` : undefined
     return {
       metaTitle: a.meta_title ?? a.title,
       metaDescription: a.meta_description ?? undefined,
       title: a.title,
       durationLabel: a.duration_label ?? undefined,
+      costLabel,
       seasonPill: s && e ? `Διαθέσιμη ${MONTHS_ACC[s - 1]}–${MONTHS_ACC[e - 1]}` : undefined,
       periodLabel: s && e ? `${MONTHS_NOM[s - 1]} – ${MONTHS_NOM[e - 1]}` : undefined,
       seasonStart: s,
@@ -74,6 +80,7 @@ async function loadView(): Promise<MelissoView> {
     metaDescription: d.metaDescription,
     title: d.hero.title,
     durationLabel: '20 λεπτά / συνεδρία',
+    costLabel: '7€ / συνεδρία',
     seasonPill: 'Διαθέσιμη Απρίλιο–Οκτώβριο',
     periodLabel: 'Απρίλιος – Οκτώβριος',
     seasonStart: d.booking.seasonStartMonth,
@@ -273,6 +280,7 @@ export default async function MelissotherapeiaPage() {
             <MelissotherapeiaBooking
               durationLabel={v.durationLabel}
               periodLabel={v.periodLabel}
+              costLabel={v.costLabel}
               seasonStartMonth={v.seasonStart}
               seasonEndMonth={v.seasonEnd}
               seasonLabel={v.seasonPill ? `${v.seasonPill}` : undefined}

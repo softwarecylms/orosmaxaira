@@ -97,6 +97,7 @@ export const WORKSHOPS: Workshop[] = [
     seasonLabel: 'Κατόπιν ραντεβού',
     image: '/images/activities/ergastiria/peritiligma-fagitou.jpg',
     published: true,
+    bookingClosed: true,
   },
   {
     slug: 'kerines-dimiourgies',
@@ -110,6 +111,7 @@ export const WORKSHOPS: Workshop[] = [
     seasonLabel: 'Κατόπιν ραντεβού',
     image: '/images/activities/ergastiria/kerines-dimiourgies.jpg',
     published: true,
+    bookingClosed: true,
   },
 ]
 

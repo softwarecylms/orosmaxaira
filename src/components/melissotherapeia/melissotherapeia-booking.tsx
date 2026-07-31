@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { CalendarCheck, CalendarRange, Clock, Phone, ShieldCheck, X } from 'lucide-react'
+import { CalendarCheck, CalendarRange, Clock, Euro, Phone, ShieldCheck, X } from 'lucide-react'
 import { EASE, DURATION } from '@/lib/motion'
 import { BookingForm } from '@/components/booking/booking-form'
 
@@ -17,12 +17,14 @@ import { BookingForm } from '@/components/booking/booking-form'
 export function MelissotherapeiaBooking({
   durationLabel = '20 λεπτά / συνεδρία',
   periodLabel = 'Απρίλιος – Οκτώβριος',
+  costLabel,
   seasonStartMonth = 4,
   seasonEndMonth = 10,
   seasonLabel = 'Διαθέσιμη μόνο Απρίλιο–Οκτώβριο',
 }: {
   durationLabel?: string
   periodLabel?: string
+  costLabel?: string
   seasonStartMonth?: number
   seasonEndMonth?: number
   seasonLabel?: string
@@ -32,6 +34,7 @@ export function MelissotherapeiaBooking({
 
   const FACTS = [
     { icon: Clock, label: 'Διάρκεια', value: durationLabel },
+    ...(costLabel ? [{ icon: Euro, label: 'Κόστος', value: costLabel }] : []),
     { icon: CalendarRange, label: 'Περίοδος', value: periodLabel },
   ]
 
