@@ -54,6 +54,26 @@ const GNORIZW_DATES: string[] = [
   ...days2026(11, [1, 5, 6, 7, 8, 12, 13, 14, 15, 19, 20, 21, 22, 26, 27, 28, 29]),
 ]
 
+// Περιπέτειες στις Κυψέλες is no longer sold on its own weekly cadence — it runs
+// only within the FULL programs. Its calendar therefore mirrors the workshops'
+// FULL-program dates, at the program's morning start (45′ session, capacity 15).
+// Jul–Sep FULL start 09:30, Oct–Nov FULL start 10:00 (see seed-workshops SEASONAL).
+const datedAt = (
+  month: number,
+  ds: number[],
+  start: string,
+  end: string,
+): DatedSlot[] =>
+  days2026(month, ds).map((date) => ({ date, start_time: start, end_time: end, capacity: 15 }))
+
+const PERIPETEIES_SESSIONS: DatedSlot[] = [
+  ...datedAt(7, [25, 26], "09:30", "10:15"),
+  ...datedAt(8, [1, 2, 8, 9], "09:30", "10:15"),
+  ...datedAt(9, [5, 6, 12, 13, 19, 26, 27], "09:30", "10:15"),
+  ...datedAt(10, [3, 11, 17, 18, 24, 25], "10:00", "10:45"),
+  ...datedAt(11, [1, 7, 8, 14, 15, 21, 22, 28, 29], "10:00", "10:45"),
+]
+
 /**
  * Sync an activity's slots to an explicit list of dated sessions. Creates the
  * missing ones, refreshes end_time on existing, and retires any slot no longer
@@ -129,12 +149,12 @@ export default async function seedActivities({ container }: ExecArgs) {
     // ── Περιπέτειες στις Κυψέλες ────────────────────────────────────────────
     {
       from,
-      to: `${today.getFullYear()}-10-31`,
-      // Weekends only (Σαββατοκύριακα), 45′, capacity 15.
-      slots: [
-        { start_time: "10:00", end_time: "10:45", weekdays: [6, 0], capacity: 15 },
-        { start_time: "14:00", end_time: "14:45", weekdays: [6, 0], capacity: 15 },
-      ],
+      to: endOfYear,
+      // Combination-only: availability follows the workshops' FULL-program dates
+      // (Jul–Nov weekends) instead of a weekly cadence. Old weekend 10:00/14:00
+      // slots are retired on re-seed (unbooked → deleted, booked → closed).
+      slots: [],
+      datedSlots: PERIPETEIES_SESSIONS,
       data: {
         slug: "peripeteies-stis-kypseles",
         title: "Περιπέτειες στις Κυψέλες",
@@ -149,18 +169,18 @@ export default async function seedActivities({ container }: ExecArgs) {
           "Μια **βιωματική εμπειρία**, κατάλληλη για παιδιά και ενήλικες, όπου ο επισκέπτης ντύνεται με τη στολή του μελισσοκόμου και επισκέπτεται τις κυψέλες μας. Με τη βοήθεια του έμπειρου προσωπικού μας, ανοίγετε την κυψέλη και παρατηρείτε από κοντά την κοινωνία της μέλισσας.\n\nΗ εμπειρία πραγματοποιείται μόνο Σαββατοκύριακα και είναι απαραίτητη η κράτηση εκ των προτέρων μέσα από τη σελίδα.",
         details:
           "**Διάρκεια:** 45 λεπτά\n**Ηλικίες:** δεν υπάρχει κάποιο όριο — η δραστηριότητα είναι κατάλληλη για όλη την οικογένεια. Παρέχονται στολές μελισσοκόμου για όλους τους συμμετέχοντες και όλη η εμπειρία γίνεται υπό την καθοδήγηση έμπειρου μελισσοκόμου. Συνιστάται να φοράτε κλειστά παπούτσια και μακρύ παντελόνι.",
-        note: "Η εμπειρία πραγματοποιείται μόνο από τον Μάρτιο έως τον Οκτώβριο, καθώς τον χειμώνα οι μέλισσες κρυώνουν και γίνονται επιθετικές όταν ανοίγουμε την κυψέλη τους.",
+        note: "Η εμπειρία προσφέρεται μόνο σε συνδυασμό με το πρόγραμμα «Γνωρίζω τη Μέλισσα» ή κάποιο εργαστήρι, τα Σαββατοκύριακα από τον Ιούλιο έως τον Νοέμβριο. Δεν πραγματοποιείται τον χειμώνα, καθώς οι μέλισσες κρυώνουν και γίνονται επιθετικές όταν ανοίγουμε την κυψέλη τους.",
         rating: 4.9,
         review_count: 300,
         duration_label: "45 λεπτά",
         age_label: "Χωρίς όριο ηλικίας",
-        season_start_month: 3,
-        season_end_month: 10,
+        season_start_month: 7,
+        season_end_month: 11,
         currency: "eur",
         status: "published",
         meta_title: "Περιπέτειες στις Κυψέλες — Όρος Μαχαιρά",
         meta_description:
-          "Περιπέτειες στις κυψέλες: ντυθείτε μελισσοκόμοι και ανοίξτε την κυψέλη με τη βοήθεια του προσωπικού μας. Μια βιωματική εμπειρία για μικρούς και μεγάλους, μόνο Σαββατοκύριακα, Μάρτιο–Οκτώβριο.",
+          "Περιπέτειες στις κυψέλες: ντυθείτε μελισσοκόμοι και ανοίξτε την κυψέλη με τη βοήθεια του προσωπικού μας. Μια βιωματική εμπειρία για μικρούς και μεγάλους — σε συνδυασμό με «Γνωρίζω τη Μέλισσα» ή κάποιο εργαστήρι, μόνο Σαββατοκύριακα, Ιούλιο–Νοέμβριο.",
         // Weekends only → a single price set (no weekday/weekend split).
         price_tiers: [
           { key: "adult", label: "Ενήλικες (12+ ετών)", price: 15 },
