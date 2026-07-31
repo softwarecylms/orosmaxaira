@@ -206,6 +206,8 @@ const WORKSHOPS: Record<string, any>[] = [
     season_label: "Κατόπιν ραντεβού",
     months: [],
     image: "/images/activities/ergastiria/peritiligma-fagitou.jpg",
+    // Bookings closed for now (offered κατόπιν ραντεβού only).
+    booking_closed: true,
     meta_title: "Περιτύλιγμα φαγητού με κερί μέλισσας — Εργαστήρι | Όρος Μαχαιρά",
     meta_description:
       "Φτιάξτε ένα επαναχρησιμοποιούμενο, οικολογικό περιτύλιγμα τροφίμων από μελισσοκέρι και μειώστε τη χρήση πλαστικού.",
@@ -220,6 +222,8 @@ const WORKSHOPS: Record<string, any>[] = [
     season_label: "Κατόπιν ραντεβού",
     months: [],
     image: "/images/activities/ergastiria/kerines-dimiourgies.jpg",
+    // Bookings closed for now (offered κατόπιν ραντεβού only).
+    booking_closed: true,
     meta_title: "Χειροποίητες Γύψινες Φιγούρες — Εργαστήρι | Όρος Μαχαιρά",
     meta_description:
       "Ζωγραφίστε χειροποίητες γύψινες φιγούρες εμπνευσμένες από τον κόσμο της μέλισσας και πάρτε τη δημιουργία σας δωρεάν μαζί σας.",

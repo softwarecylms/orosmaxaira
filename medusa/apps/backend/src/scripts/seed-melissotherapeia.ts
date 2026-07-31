@@ -31,6 +31,8 @@ export default async function seedMelissotherapeia({ container }: ExecArgs) {
     currency: "eur",
     status: "published",
     booking_type: "enquiry",
+    // Shown as the "Κόστος" line on the booking card (editable in admin).
+    price_tiers: [{ key: "session", label: "Ανά συνεδρία", price: 7 }],
     meta_title: "Μελισσοθεραπεία στην Κύπρο — Όρος Μαχαιρά",
     meta_description:
       "Μελισσοθεραπεία στο Όρος Μαχαιρά: μια θεραπευτική πρακτική της εναλλακτικής ιατρικής με τα προϊόντα της κυψέλης και την εισπνοή του αέρα της. Ραντεβού Απρίλιο–Οκτώβριο.",
