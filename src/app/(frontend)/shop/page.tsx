@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
 import { SHOP_PAGE } from '@/components/shop/shop-content'
 import { ShopBrowser } from '@/components/shop/shop-browser'
+import { listShopProducts } from '@/lib/medusa/shop'
 
 export const metadata: Metadata = {
   title: 'Προϊόντα',
@@ -11,8 +12,12 @@ export const metadata: Metadata = {
 }
 
 /** Shop / products listing (Figma 209:4095). Header + footer come from the
- *  shared layout; the filterable, infinite-scrolling grid is <ShopBrowser>. */
-export default function ShopPage() {
+ *  shared layout; the filterable, infinite-scrolling grid is <ShopBrowser>.
+ *  Products come from Medusa (source of truth); falls back to the static
+ *  snapshot if Medusa is unreachable. */
+export default async function ShopPage() {
+  const catalogue = await listShopProducts().catch(() => null)
+
   return (
     <>
       {/* Breadcrumb */}
@@ -37,7 +42,7 @@ export default function ShopPage() {
       </div>
 
       <Suspense fallback={<div className="container-wide min-h-[60vh]" aria-hidden="true" />}>
-        <ShopBrowser />
+        <ShopBrowser products={catalogue?.products} />
       </Suspense>
     </>
   )

@@ -14,6 +14,7 @@ import {
   SHOP_SORTS,
   productPriceRangeCents,
   type ShopCategory,
+  type ShopProduct,
   type ShopSort,
 } from './shop-content'
 import { ShopProductCard } from './shop-product-card'
@@ -47,7 +48,7 @@ const DEFAULT_CATEGORY_RANK: Record<string, number> = {
   Καλλυντικά: 2,
   'Πακέτα Δώρων': 3,
 }
-function defaultOrderRank(p: (typeof SHOP_PRODUCTS)[number]): number {
+function defaultOrderRank(p: ShopProduct): number {
   const cat = DEFAULT_CATEGORY_RANK[p.category] ?? 4
   const lead =
     p.category === 'Προϊόντα Μέλισσας' &&
@@ -57,7 +58,7 @@ function defaultOrderRank(p: (typeof SHOP_PRODUCTS)[number]): number {
   return cat * 10 + lead
 }
 
-export function ShopBrowser() {
+export function ShopBrowser({ products = SHOP_PRODUCTS }: { products?: ShopProduct[] } = {}) {
   // A `?category=…` query (set by clicking a category on a product card)
   // pre-selects that filter, and keeps it in sync on navigation.
   const categoryParam = useSearchParams().get('category')
@@ -96,7 +97,7 @@ export function ShopBrowser() {
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   const filtered = useMemo(() => {
-    let list = SHOP_PRODUCTS.filter((p) => {
+    let list = products.filter((p) => {
       if (!p.inStock) return false // hide out-of-stock products
       if (cats.size > 0 && !cats.has(p.category)) return false
       // Keep a product when its variant price range overlaps the selected range,
@@ -109,7 +110,7 @@ export function ShopBrowser() {
     else if (sort === 'name-asc') list = [...list].sort((a, b) => a.title.localeCompare(b.title, 'el'))
     else list = [...list].sort((a, b) => defaultOrderRank(a) - defaultOrderRank(b)) // 'default'
     return list
-  }, [cats, priceMin, priceMax, sort])
+  }, [products, cats, priceMin, priceMax, sort])
 
   // Reset the infinite-scroll window whenever the result set changes.
   useEffect(() => setVisible(PAGE_SIZE), [cats, priceMin, priceMax, sort])

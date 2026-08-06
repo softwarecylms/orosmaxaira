@@ -30,6 +30,8 @@ export type CartItem = {
   /** unit price in cents — used for totals */
   unitPrice: number
   quantity: number
+  /** Medusa variant id — used to build the real Medusa cart/order at checkout */
+  variantId?: string
 }
 
 type CartContextValue = {

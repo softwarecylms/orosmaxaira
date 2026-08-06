@@ -23,6 +23,8 @@ export type AddonProduct = {
   title: string
   image: string
   price: string
+  /** Medusa variant id (default variant) for add-to-cart. */
+  variantId?: string
 }
 
 /** Right-hand purchase panel of the product page (Figma 239:1022). */
@@ -77,6 +79,7 @@ export function ProductPurchase({
         container: selected.container,
         priceLabel: selected.price,
         unitPrice: selected.sortPrice,
+        variantId: selected.variantId,
       }
     }
     return {
@@ -85,6 +88,7 @@ export function ProductPurchase({
       image: product.image,
       priceLabel: displayPrice(product.price),
       unitPrice: product.sortPrice,
+      variantId: product.variantId,
     }
   }
 
@@ -281,6 +285,7 @@ export function ProductPurchase({
                       image: a.image,
                       priceLabel: displayPrice(a.price),
                       unitPrice: parsePrice(a.price),
+                      variantId: a.variantId,
                     })
                     flashDrawer()
                   }}

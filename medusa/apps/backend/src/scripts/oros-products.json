@@ -1,0 +1,773 @@
+{
+  "categories": [
+    "Πακέτα Δώρων",
+    "Καλλυντικά",
+    "Προϊόντα Μέλισσας",
+    "Μέλι"
+  ],
+  "products": [
+    {
+      "handle": "balance-care-gift-set",
+      "title": "Balance Care Gift Set",
+      "category": "Πακέτα Δώρων",
+      "description": "Φροντίδα για ισορροπημένη και υγιή επιδερμίδα Ένα ολοκληρωμένο σετ περιποίησης για την καθημερινή φροντίδα του προσώπου. Το Balance Care συνδυάζει προϊόντα που στοχεύουν στην ενυδάτωση, την αναζωογόνηση και τη διατήρηση της φυσικής ισορροπίας της επιδερμίδας. Με φυσικά συστατικά, εμπλουτισμένα με πολύτιμα στοιχεία από την κυψέλη, προσφέρει στοχευμένη φροντίδα σε πρόσωπο, μάτια και χείλη, συμβάλλοντας σε μια πιο υγιή και περιποιημένη όψη. Περιλαμβάνει: Ενυδατική Κρέμα Προσώπου 50 ml e | 1.69 fl. oz. US Κρέμα Ματιών 30 ml e | 1 fl. oz. US Βάλσαμο για τα Χείλη . 4 ml e | 0.13 fl. oz. US ΔΩΡΕΑΝ μεταφορικά για αγορές άνω των €50",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2026/04/BALANCE-CARE-SET-WEBSITE.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2026/04/BALANCE-CARE-SET-WEBSITE.jpg"
+      ],
+      "inStock": false,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 49.9,
+          "sku": "balance-care-gift-set"
+        }
+      ]
+    },
+    {
+      "handle": "nourish-care-gift-set",
+      "title": "Nourish Care Gift Set",
+      "category": "Πακέτα Δώρων",
+      "description": "Βαθιά θρέψη & απαλότητα που διαρκεί για όλο το σώμα Ένα ολοκληρωμένο σετ περιποίησης που προσφέρει ενυδάτωση και θρέψη στην επιδερμίδα. Το Nourish Care συνδυάζει προϊόντα για το σώμα, τα χέρια και τα χείλη, καλύπτοντας καθημερινές ανάγκες φροντίδας με έναν απλό και ουσιαστικό τρόπο. Με φυσικά συστατικά, εμπλουτισμένα με πολύτιμα στοιχεία από την κυψέλη, συμβάλλει στην ενυδάτωση, την προστασία και τη διατήρηση της απαλότητας της επιδερμίδας. Περιλαμβάνει: Κρέμα Σώματος 100 ml e | 3.38 fl. oz. US Κρέμα Χεριών (Red Grape) 50 ml e | 1.69 fl. oz. US Βάλσαμο για τα Χείλη . 4 ml e | 0.13 fl. oz. US ΔΩΡΕΑΝ μεταφορικά για αγορές άνω των €50",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2026/04/NOURISH-SET-WEBSITE.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2026/04/NOURISH-SET-WEBSITE.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 28.5,
+          "sku": "nourish-care-gift-set"
+        }
+      ]
+    },
+    {
+      "handle": "everyday-care-duo-gift-set",
+      "title": "Everyday Care Duo Gift Set",
+      "category": "Πακέτα Δώρων",
+      "description": "Καθημερινή ενυδάτωση & προστασία για χέρια και χείλη Ένα πρακτικό και ουσιαστικό σετ για την καθημερινή φροντίδα των χεριών και των χειλιών. Το Everyday Care Duo συνδυάζει δύο βασικά προϊόντα περιποίησης, ιδανικά για ενυδάτωση, προστασία και απαλότητα μέσα στην ημέρα. Με φυσικά συστατικά εμπλουτισμένα με πολύτιμα στοιχεία από την κυψέλη, προσφέρει την απαραίτητη φροντίδα που χρειάζεται η επιδερμίδα, όπου κι αν βρίσκεσαι. Περιλαμβάνει: Κρέμα Χεριών (Milk & Honey) 50 ml e | 1.69 fl. oz. US Βάλσαμο για τα Χείλη . 4 ml e | 0.13 fl. oz. US ΔΩΡΕΑΝ μεταφορικά για αγορές άνω των €50",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2026/04/EVERYDAY-CARE-DUO-SET-WEBSITE.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2026/04/EVERYDAY-CARE-DUO-SET-WEBSITE.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 14.25,
+          "sku": "everyday-care-duo-gift-set"
+        }
+      ]
+    },
+    {
+      "handle": "kit-cheiropoiitis-paschalinis-melissolampadas-quot-oros-machaira-quot-special-easter-release-2",
+      "title": "Κιτ Χειροποίητης Πασχαλινής Μελισσολαμπάδας «Όρος Μαχαιρά» – Special Easter Release",
+      "category": "Πακέτα Δώρων",
+      "description": "Φέτος το Πάσχα, χαρίστε στο παιδί σας μια μοναδική εμπειρία δημιουργίας και σύνδεσης! Με το Κιτ Χειροποίητης Πασχαλινής Μελισσολαμπάδας «Όρος Μαχαιρά», το παιδάκι σας θα έχει τη χαρά να φτιάξει τη δική του λαμπάδα, χρησιμοποιώντας αγνό κερί μέλισσας και πασχαλινά στολίδια. Ένα δώρο που χαρίζει αγάπη, έμπνευση και ποιοτικό χρόνο, ιδανικό για γονείς και νονούς που αναζητούν κάτι ουσιαστικό και δημιουργικό για τα παιδιά τους. Εάν λοιπόν αναζητάτε ένα διαφορετικό δώρο για το παιδάκι σας αυτό το κιτ δεν προσφέρει απλώς μια λαμπάδα, αλλά μια όμορφη εμπειρία που θα του μείνει αξέχαστη. Το κιτ περιλαμβάνει • 3 φύλλα φυσικής κηρήθρας μέλισσας • 3 φυτίλια • πασχαλινά στολίδια και κορδέλες • οδηγίες κατασκευής της λαμπάδας • interactive label με παιχνίδια και δραστηριότητες Το παιδί μπορεί να δημιουργήσει μέχρι και τρεις λαμπάδες , να πειραματιστεί με τα στολίδια και να αφήσει τη φαντασία του ελεύθερη. Περιορισμένα τεμάχια διαθέσιμα.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2026/03/kit-pasxalinis-lampadas-2.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2026/03/kit-pasxalinis-lampadas-2.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2026/03/kit-pasxalinis-lampadas-1.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2025/04/kit-xiropiitis-pasxalinis-melissolampadas-limited-edition-5.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2025/04/kit-xiropiitis-pasxalinis-melissolampadas-limited-edition-4.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2025/04/kit-xiropiitis-pasxalinis-melissolampadas-limited-edition-2.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2026/03/kit-pasxalinis-lampadas-odigies.jpg"
+      ],
+      "inStock": false,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 12.5,
+          "sku": "kit-cheiropoiitis-paschalinis-melissolampadas-quot-oros-machaira-quot-special-easter-release-2"
+        }
+      ]
+    },
+    {
+      "handle": "krema-somatos",
+      "title": "Κρέμα Σώματος",
+      "category": "Καλλυντικά",
+      "description": "Ενυδατική κρέμα σώματος με ελαφριά υφή που απορροφάται εύκολα, αφήνοντας την επιδερμίδα απαλή και προστατευμένη. Με βιολογικό μέλι, πρόπολη, βασιλικό πολτό και κερί μέλισσας. Κατάλληλη για καθημερινή χρήση και όλους τους τύπους δέρματος. Η κρέμα σώματος Όρος Μαχαιρά έχει σχεδιαστεί για να προσφέρει εντατική ενυδάτωση και ολοκληρωμένη φροντίδα στην επιδερμίδα του σώματος, χαρίζοντάς της αίσθηση απαλότητας και φυσικής λάμψης. Η ελαφριά της υφή απορροφάται εύκολα, συμβάλλοντας στη διατήρηση της ελαστικότητας του δέρματος και στη μείωση της ξηρότητας. Η σύνθεσή της περιλαμβάνει βιολογικό μέλι, πρόπολη, βασιλικό πολτό και κερί μέλισσας , συστατικά γνωστά για τις θρεπτικές, ενυδατικές και προστατευτικές τους ιδιότητες. Ιδανική για καθημερινή χρήση, αφήνει την επιδερμίδα απαλή, ενυδατωμένη και προστατευμένη, χωρίς αίσθηση λιπαρότητας. Κατάλληλη για όλους τους τύπους δέρματος. 100 ml e 3.38 fl. oz. US ΔΩΡΕΑΝ μεταφορικά για αγορές άνω των €50",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2026/02/body-lotion-oros-maxaira.png",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2026/02/body-lotion-oros-maxaira.png"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 15.9,
+          "sku": "krema-somatos"
+        }
+      ]
+    },
+    {
+      "handle": "ydromelo-valentine-gift-box",
+      "title": "Υδρόμελο – Valentine’s Gift Box",
+      "category": "Πακέτα Δώρων",
+      "description": "Ίσως τελικά, η αγάπη δεν χρειάζεται πολλά. Μόνο τη σωστή στιγμή και τη σωστή παρέα. Δύο ανθρώπους. Το υδρόμελο είναι ένα από τα αρχαιότερα ποτά του κόσμου. Από την αρχαιότητα, συνδέεται με τον έρωτα και τον γάμο. Από αυτή τη σχέση γεννήθηκε και η παράδοση του «μήνα του μέλιτος», όταν τα νεόνυμφα ζευγάρια έπιναν υδρόμελο τον πρώτο μήνα του γάμου τους, ως σύμβολο ευτυχίας, τύχης και κοινής πορείας. Με αυτή την ιστορία ως αφετηρία, δημιουργήσαμε το Valentine’s Gift Box. Ένα πακέτο που αντλεί το νόημά του από μια παράδοση βαθιά συνδεδεμένη με την αγάπη και την ένωση. Για τον Άγιο Βαλεντίνο, το υδρόμελο παρουσιάζεται σε κουτί, συνδυασμένο με σοκολατάκια. Ως μια γλυκιά αφορμή να χαριστεί μια στιγμή με ουσία. Για να ανοίξει το βράδυ και να τιμήσει την αγάπη, τον έρωτα και την κοινή πορεία μέσα σε μια σχέση ή έναν γάμο.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2026/02/melite.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2026/02/melite.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2026/02/0-02-0b-76f3229bebf9ee427714e3ce12612c940e15f3be2d85c07584d89f5fe5974790_a38491a361aca865.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2026/02/0-02-0b-e5d63ca7361a0273f41fb1baa160c209fb7f72eb211c18db8052a93d1722e9a9_5270ba0fc5a55e73.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2026/02/viber_image_2026-02-02_18-28-20-709.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 22,
+          "sku": "ydromelo-valentine-gift-box"
+        }
+      ]
+    },
+    {
+      "handle": "meli-me-foyntoykia",
+      "title": "Μέλι με Φουντούκια",
+      "category": "Προϊόντα Μέλισσας",
+      "description": "Η αλοιφή από Μέλι και Φουντούκια αποτελεί μέρος της νέας σειράς προϊόντων «Όρος Μαχαιρά», «Premium Blends». Συνδυάζει την υπέροχη γεύση και τις ευεργετικές ιδιότητες του γνήσιου Κυπριακού μελιού «Όρος Μαχαιρά» με τα θρεπτικά οφέλη των φουντουκιών. Αυτός ο απολαυστικός συνδυασμός είναι πλούσιος σε θρεπτικά συστατικά.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-fountoukia-2.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-fountoukia-2.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-fountoukia.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 5.4,
+          "sku": "meli-me-foyntoykia"
+        }
+      ]
+    },
+    {
+      "handle": "meli-me-fistikia",
+      "title": "Μέλι με Φυστίκια",
+      "category": "Προϊόντα Μέλισσας",
+      "description": "Η αλοιφή από Μέλι και Φυστίκια αποτελεί μέρος της νέας σειράς προϊόντων «Όρος Μαχαιρά», «Premium Blends». Συνδυάζει την υπέροχη γεύση και τις ευεργετικές ιδιότητες του γνήσιου Κυπριακού μελιού «Όρος Μαχαιρά» με τα θρεπτικά οφέλη των φυστικιών. Αυτός ο απολαυστικός συνδυασμός αποτελεί μία πραγματική υπερτροφή, πλούσια σε θρεπτικά συστατικά.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-fistikia-2.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-fistikia-2.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-fistikia.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 4.8,
+          "sku": "meli-me-fistikia"
+        }
+      ]
+    },
+    {
+      "handle": "meli-me-gyri",
+      "title": "Μέλι με Γύρη",
+      "category": "Προϊόντα Μέλισσας",
+      "description": "Η αλοιφή από Μέλι και Γύρη αποτελεί μέρος της νέας σειράς προϊόντων «Όρος Μαχαιρά», «Premium Blends». Συνδυάζει την υπέροχη, πλούσια γεύση και τις μοναδικές ευεργετικές ιδιότητες του αυθεντικού Κυπριακού μελιού «Όρος Μαχαιρά» με τα εξαιρετικά θρεπτικά οφέλη της γύρης, δημιουργώντας μια υπερτροφή πλούσια σε θρεπτικά συστατικά.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-gyri.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-gyri.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-gyri-2.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 6.2,
+          "sku": "meli-me-gyri"
+        }
+      ]
+    },
+    {
+      "handle": "meli-me-charoypi-kai-foyntoykia",
+      "title": "Μέλι με Χαρούπι και Φουντούκια",
+      "category": "Προϊόντα Μέλισσας",
+      "description": "Η αλοιφή από Μέλι, Χαρούπι και Φουντούκια αποτελεί μέρος της νέας σειράς προϊόντων «Όρος Μαχαιρά», «Premium Blends”. Συνδυάζει την εκλεκτή γεύση και τις ευεργετικές ιδιότητες του αυθεντικού Κυπριακού μελιού «Όρος Μαχαιρά» με τα θρεπτικά οφέλη του χαρουπιού και των φουντουκιών. Πρόκειται για έναν μοναδικό συνδυασμό γεμάτο φυσικά αντιοξειδωτικά και θρεπτικά συστατικά.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-charoupi-fountouki-2.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-charoupi-fountouki-2.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2024/08/Oros-Maxaira-meli-me-charoupi-fountouki.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 5.4,
+          "sku": "meli-me-charoypi-kai-foyntoykia"
+        }
+      ]
+    },
+    {
+      "handle": "kiraloifi-gia-entrives-sto-stithos-kai-myiko-masaz",
+      "title": "Φυσική Κηραλοιφή για Εντριβές στο Στήθος και Μυϊκό Μασάζ",
+      "category": "Καλλυντικά",
+      "description": "Φτιαγμένο για διπλή δράση, αυτή η κηραλοιφή είναι ο σύμμαχος σας για κρυολογήματα και ενοχλήσεις στους μύες. Το μείγμα των συστατικών που περιέχει τονώνει και αναζωογονεί τους πνεύμονες και βοηθά στην ανακούφιση της συμφόρησης, αλλά και του πόνου των μυών και των αρθρώσεων.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2024/04/Oros-Maxaira-kiraloifi-gia-entrives-sto-stithos-miiko-masaz-1.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2024/04/Oros-Maxaira-kiraloifi-gia-entrives-sto-stithos-miiko-masaz-1.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 17.9,
+          "sku": "kiraloifi-gia-entrives-sto-stithos-kai-myiko-masaz"
+        }
+      ]
+    },
+    {
+      "handle": "kiraloifi-gia-kyttaritida",
+      "title": "Φυσική Κηραλοιφή για Κυτταρίτιδα",
+      "category": "Καλλυντικά",
+      "description": "Διαμορφωμένη με ένα ισχυρό μείγμα φυσικών συστατικών, αυτή η ισχυρή φυσική φόρμουλα έχει σχεδιαστεί για την βελτίωση της υφής και του τόνου του δέρματος ενώ προάγει την κυκλοφορία και μειώνει τα λακκάκια.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2024/04/Oros-Maxaira-kiraloifi-gia-kittaritida-1.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2024/04/Oros-Maxaira-kiraloifi-gia-kittaritida-1.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 17.9,
+          "sku": "kiraloifi-gia-kyttaritida"
+        }
+      ]
+    },
+    {
+      "handle": "meigma-melioy-gyris-kai-vasilikoy-poltoy",
+      "title": "Μείγμα μελιού γύρης και βασιλικού πολτού",
+      "category": "Προϊόντα Μέλισσας",
+      "description": "Οι Τέλειες Τροφές της Φύσης σε συνδυασμό! Αυτό είναι ένα μείγμα με όλους τους θησαυρούς της κυψέλης για να γίνει μία σούπερ τροφή υγείας και ευεξίας. Περιλαμβάνει μέλι, βασιλικό πολτό και γύρη. Σε αυτό το προϊόν βρίσκουμε σε συνδυασμό, τις θρεπτικές ουσίες αυτών των τροφών με μεγάλη παράδοση προσφοράς στην ανθρωπότητα ενός μεγάλου αριθμού διατροφικών οφέλων. Στο μείγμα είναι αναμεμειγμένες οι αντιοξειδωτικές ιδιότητες του μελιού του βασιλικού πολτού- της σούπερ τροφής της βασίλισσας και της γύρης ενός εξαιρετικού συμπληρώματος διατροφής για ενίσχυση του ανοσοποιητικού, ενισχύοντας φυσικά και την ενέργεια του σώματος.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-meigma-melioy-gyris-kai-vasilikoy-poltoy.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-meigma-melioy-gyris-kai-vasilikoy-poltoy.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 3.5,
+          "sku": "meigma-melioy-gyris-kai-vasilikoy-poltoy"
+        }
+      ]
+    },
+    {
+      "handle": "ydromelo",
+      "title": "Υδρόμελο",
+      "category": "Προϊόντα Μέλισσας",
+      "description": "Τι είναι το υδρόμελο; Το υδρόμελο είναι ένα αλκοολούχο ποτό που παρασκευάζεται με ζύμωση μελιού με νερό και μαγιά. Το μέλι που χρησιμοποιείται, καθώς και η προσθήκη φρούτων, μπαχαρικών και βοτάνων, έχει ως αποτέλεσμα μια μεγάλη ποικιλία από γεύσεις και στυλ. Η διαδικασία ζύμωσης μπορεί να διαρκέσει από μερικές εβδομάδες έως μερικούς μήνες, ανάλογα με το επιθυμητό αποτέλεσμα.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-ydromelo.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-ydromelo.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 16,
+          "sku": "ydromelo"
+        }
+      ]
+    },
+    {
+      "handle": "kiraloifi-gia-eyaisthites-epidermides",
+      "title": "Φυσική Κηραλοιφή για Ευαίσθητες Επιδερμίδες",
+      "category": "Καλλυντικά",
+      "description": "100% ΦΥΣΙΚΗ ΚΗΡΑΛΟΙΦΗ ΓΙΑ ΕΥΑΙΣΘΗΤΕΣ ΕΠΙΔΕΡΜΙΔΕΣ, ΧΩΡΙΣ ΑΡΩΜΑ ΜΕ ΒΙΟΛΟΓΙΚΟ ΚΕΡΙ ΜΕΛΙΣΣΑΣ, ΜΕΛΙ, ΠΡΟΠΟΛΗ ΚΑΙ ΒΑΣΙΛΙΚΟ ΠΟΛΤΟ 98% βιολογικά συστατικά Αγνή, θεραπευτική κηραλοιφή με βιολογικό κερί μέλισσας, μέλι, πρόπολη, βασιλικό πολτό, εκχύλισμα καλέντουλας σε βιολογικό ελαιόλαδο και βιολογικό αμυγδαλέλαιο. Χωρίς άρωμα, ιδανική για ευαίσθητες επιδερμίδες. Κατάλληλη για ευαίσθητες επιδερμίδες, συγκάματα και ερεθισμούς 50 ml e 1.69 fl. oz. US ΔΩΡΕΑΝ μεταφορικά για αγορές άνω των €50",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-kiraloifi-gia-eyaisthites-epidermides-1.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-kiraloifi-gia-eyaisthites-epidermides-1.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 17.9,
+          "sku": "kiraloifi-gia-eyaisthites-epidermides"
+        }
+      ]
+    },
+    {
+      "handle": "kiraloifi-gia-skasmena-cheria",
+      "title": "Φυσική Κηραλοιφή για Σκασμένα Χέρια",
+      "category": "Καλλυντικά",
+      "description": "100% ΦΥΣΙΚΗ ΚΗΡΑΛΟΙΦΗ ΓΙΑ ΠΟΛΥ ΞΗΡΑ ΚΑΙ ΣΚΑΣΜΕΝΑ ΧΕΡΙΑ ΜΕ ΒΙΟΛΟΓΙΚΟ ΚΕΡΙ ΜΕΛΙΣΣΑΣ, ΜΕΛΙ, ΠΡΟΠΟΛΗ ΚΑΙ ΒΑΣΙΛΙΚΟ ΠΟΛΤΟ 97% βιολογικά συστατικά Αναπλαστική, θεραπευτική κηραλοιφή με αγνό, βιολογικό κερί μέλισσας, μέλι, πρόπολη, βασιλικό πολτό, εκχύλισμα καλέντουλας σε βιολογικό ελαιόλαδο, βαλσαμέλαιο, αμυγδαλέλαιο και βούτυρο καριτέ, όλα προερχόμενα από πιστοποιημένες βιολογικές καλλιέργειες. Ιδανική για σκασμένο δέρμα, χέρια, πόδια και αγκώνες Ανακουφίζει από ελαφριά εγκαύματα και ερεθισμούς 50 ml e 1.69 fl. oz. US ΔΩΡΕΑΝ μεταφορικά για αγορές άνω των €50",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-kiraloifi-gia-skasmena-cheria-1.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-kiraloifi-gia-skasmena-cheria-1.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 17.9,
+          "sku": "kiraloifi-gia-skasmena-cheria"
+        }
+      ]
+    },
+    {
+      "handle": "fysiki-kiraloifi-gia-prosopo",
+      "title": "Φυσική Κηραλοιφή Προσώπου",
+      "category": "Καλλυντικά",
+      "description": "Η ομορφιά σου βρίσκεται σε κάθε σου έκφραση. Τα μάτια, το στόμα, τα μάγουλα, το πρόσωπο σου ολόκληρο, έχει τη δική σου λάμψη και σπιρτάδα. Με την κηραλοιφή προσώπου του Όρος Μαχαιρά εξασφαλίζετε λαμπερή επιδερμίδα με φυσικό τρόπο. Κατάλληλη για όλoυς τους τύπους δέρματος εκτός από τις πολύ λιπαρές επιδερμίδες.\n**30 ml e**\n**1 fl. oz. US**",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2024/04/Oros-Maxaira-fysiki-kiraloifi-gia-prosopo-1.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2024/04/Oros-Maxaira-fysiki-kiraloifi-gia-prosopo-1.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 24.9,
+          "sku": "fysiki-kiraloifi-gia-prosopo"
+        }
+      ]
+    },
+    {
+      "handle": "fysiki-kiraloifi-gia-spyrakia-kai-tsimpimata-entomon",
+      "title": "Φυσική Κηραλοιφή για Σπυράκια και Τσιμπήματα Εντόμων",
+      "category": "Καλλυντικά",
+      "description": "Το δέρμα μας αν και αποτελείται από ένα πολύ λεπτό στρώμα μερικών εκατοστών, εντούτοις έχει τεράστια αντοχή. Μερικές φορές όμως, παράγοντες που πιθανόν να μην μπορείς να ελέγξεις φέρνουν ανεπιθύμητους “επισκέπτες” μαζί τους όπως είναι τα σπυράκια. 50 ml e 0.68 fl. oz. US ΔΩΡΕΑΝ μεταφορικά για αγορές άνω των €50",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-fysiki-kiraloifi-gia-spyrakia-kai-tsimpimata-entomon-1.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-fysiki-kiraloifi-gia-spyrakia-kai-tsimpimata-entomon-1.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 17.9,
+          "sku": "fysiki-kiraloifi-gia-spyrakia-kai-tsimpimata-entomon"
+        }
+      ]
+    },
+    {
+      "handle": "enydatiki-krema-prosopoy",
+      "title": "Φυσική Ενυδατική Κρέμα Προσώπου",
+      "category": "Καλλυντικά",
+      "description": "Φυσική ενυδατική κρέμα προσώπου με αγνό μέλι, πρόπολη, βασιλικό πολτό, υαλουρονικό οξύ για όλους τους τύπους δέρματος. 50 ml e 1.69 fl. oz. US ΔΩΡΕΑΝ μεταφορικά για αγορές άνω των €50",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-enydatiki-krema-prosopoy.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-enydatiki-krema-prosopoy.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 24.9,
+          "sku": "enydatiki-krema-prosopoy"
+        }
+      ]
+    },
+    {
+      "handle": "fysiki-antigirantiki-krema-mation",
+      "title": "Φυσική Αντιγηραντική Κρέμα Ματιών",
+      "category": "Καλλυντικά",
+      "description": "Ειδικά σχεδιασμένη για τη φροντίδα της ευαίσθητης περιοχής των ματιών, μειώνει αποτελεσματικά τις ρυτίδες, απαλύνει το πρήξιμο και εξαφανίζει τους μαύρους κύκλους. Το αγνό μείγμα βιολογικών συστατικών μας περιλαμβάνει μέλι για απαλότητα, πρόπολη και βασιλικό πολτό για αναζωογόνηση, κερί μέλισσας για προστασία, υαλουρονικό οξύ για έντονη ενυδάτωση και καφεΐνη για αναζωογόνηση.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2024/04/Oros-Maxaira-krema-matiwn.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2024/04/Oros-Maxaira-krema-matiwn.jpg"
+      ],
+      "inStock": false,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 24.9,
+          "sku": "fysiki-antigirantiki-krema-mation"
+        }
+      ]
+    },
+    {
+      "handle": "krema-cherion-milk-amp-honey",
+      "title": "Κρέμα Χεριών (Milk & Honey)",
+      "category": "Καλλυντικά",
+      "description": "Η ενυδάτωση είναι το παν για την υγεία της επιδερμίδας. Ενυδατωμένα χέρια, σημαίνει υγιή χέρια, απαλά σε κάθε άγγιγμα, ξεκούραστα και σίγουρα λαμπερά. 50 ml e 1.69 fl. oz. US ΔΩΡΕΑΝ μεταφορικά για αγορές άνω των €50",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-krema-cherion-milk-amp-honey.pg_.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-krema-cherion-milk-amp-honey.pg_.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 9.9,
+          "sku": "krema-cherion-milk-amp-honey"
+        }
+      ]
+    },
+    {
+      "handle": "krema-cherion-red-grape",
+      "title": "Κρέμα Χεριών (Red Grape)",
+      "category": "Καλλυντικά",
+      "description": "Η ενυδάτωση είναι το παν για την υγεία της επιδερμίδας. Ενυδατωμένα χέρια, σημαίνει υγιή χέρια, απαλά σε κάθε άγγιγμα, ξεκούραστα και σίγουρα λαμπερά. 50 ml e 1.69 fl. oz. US ΔΩΡΕΑΝ μεταφορικά για αγορές άνω των €50",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-krema-cherion-red-grape.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-krema-cherion-red-grape.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 9.9,
+          "sku": "krema-cherion-red-grape"
+        }
+      ]
+    },
+    {
+      "handle": "valsamo-gia-ta-cheili",
+      "title": "Βάλσαμο για τα Χείλη",
+      "category": "Καλλυντικά",
+      "description": "100 % ΦΥΣΙΚΟ ΒΑΛΣΑΜΟ ΓΙΑ ΤΑ ΧΕΙΛΗ ΓΙΑ ΣΚΑΣΜΕΝΑ ΧΕΙΛΗ ΜΕ ΑΓΝΟ, ΒΙΟΛΟΓΙΚΟ ΚΕΡΙ ΜΕΛΙΣΣΑΣ, ΜΕΛΙ, ΠΡΟΠΟΛΗ, ΒΑΣΙΛΙΚΟ ΠΟΛΤΟ ΚΑΙ ΚΑΛΕΝΤΟΥΛΑ 99% βιολογικά συστατικά Αγνό, φυσικό βάλσαμο για τα χείλη με βιολογικό κερί μέλισσας, μέλι, πρόπολη, βασιλικό πολτό, εκχύλισμα καλέντουλας σε βιολογικό ελαιόλαδο, βούτυρο καριτέ, αμυγδαλέλαιο, λάδι αβοκάντο, καστορέλαιο, ηλιέλαιο, όλα από πιστοποιημένες βιολογικές καλλιέργειες. 4 ml e 0.13 fl. oz. US ΔΩΡΕΑΝ μεταφορικά για αγορές άνω των €50",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-lip-balm.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-lip-balm.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 5.9,
+          "sku": "valsamo-gia-ta-cheili"
+        }
+      ]
+    },
+    {
+      "handle": "gyri-oros-machaira",
+      "title": "Γύρη Μελισσών «Όρος Μαχαιρά»",
+      "category": "Προϊόντα Μέλισσας",
+      "description": "Οι άνθρωποι απο την αρχαιότητα χρησιμοποιούν τη γύρη κυρίως για τις αντιοξειδωτικές της ιδιότητες και την αντιμικροβιακή και αντιγηραντική της δράση. Η γύρη «Όρος Μαχαιρά» συλλέγεται από τα δικά μας μελίσσια, διατίθεται στην αγορά φρέσκα και δεν υπόκειται σε καμία απολύτως επεξεργασία. Είναι ένα δώρο των μελισσών μας σε εσάς.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-gyri.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-gyri.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/cyprus-pollen-230.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "230g",
+          "size": "230g",
+          "container": null,
+          "amount": 15,
+          "sku": "gyri-oros-machaira-v1"
+        },
+        {
+          "title": "500g · Γυάλινο",
+          "size": "500g",
+          "container": "Γυάλινο",
+          "amount": 24,
+          "sku": "gyri-oros-machaira-v2"
+        }
+      ]
+    },
+    {
+      "handle": "vasilikos-poltos-oros-machaira",
+      "title": "Βασιλικός πολτός «Όρος Μαχαιρά»",
+      "category": "Προϊόντα Μέλισσας",
+      "description": "Ο βασιλικός πολτός χρησιμοποιείται από την αρχαιότητα αφού δίνει ενέργεια, τονώνει τη λίμπιντο και είναι βασικός παράγοντας μακροζωίας. Είναι εξαιρετικά αποτελεσματικός στην καταπολέμηση πάρα πολλών εξωτερικών απειλών για την υγεία και την ευημερία του ανθρώπου. Ο βασιλικός πολτός μας, παράγεται από τους μελισσοκόμους μας και διατίθεται στην αγορά φρέσκο.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-vasilikos-poltos.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-vasilikos-poltos.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 22,
+          "sku": "vasilikos-poltos-oros-machaira"
+        }
+      ]
+    },
+    {
+      "handle": "kirithra-oros-machaira",
+      "title": "Κηρήθρα με μέλι «Όρος Μαχαιρά»",
+      "category": "Προϊόντα Μέλισσας",
+      "description": "Η κηρήθρα «Όρος Μαχαιρά» είναι ένα ακόμη δώρο της μέλισσας στον άνθρωπο. Τρώγοντας κηρήθρα, τρώτε το μέλι στην ίδια μορφή που το προτιμούν οι μέλισσες. Την ίδια στιγμή παίρνετε όλες τις θρεπτικές ιδιότητες όχι μόνο του μελιού αλλά και του μελισσοκεριού. Η κηρήθρα είναι εξαιρετική επιλογή όταν έχουμε ανάγκη από κάτι γλυκό. Τρώγοντας κηρήθρα, ικανοποιούμε την ανάγκη μας για γλυκό και την ίδια στιγμή προσφέρουμε στον οργανισμό μας ένα θρεπτικό θησαυρό. Η κηρήθρα «Όρος Μαχαιρά» προέρχεται από τις ίδιες κηρήθρες από τις οποίες παράγεται το μέλι «Όρος Μαχαιρά» και κόβεται και συσκευάζεται σε βολικές συσκευασίες για να σας επιτρέπει να την απολαμβάνετε άνετα.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-kirithra.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-kirithra.jpg"
+      ],
+      "inStock": false,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 7,
+          "sku": "kirithra-oros-machaira"
+        }
+      ]
+    },
+    {
+      "handle": "vamma-propolis-oros-machaira",
+      "title": "Βάμμα πρόπολης «Όρος Μαχαιρά»",
+      "category": "Προϊόντα Μέλισσας",
+      "description": "Το βάμμα πρόπολης είναι ένα αλκοολούχο διάλυμα από αλκόολ και πρόπολη, και ένα φυσικό αντισηπτικό θαύμα. Η λήψη βάμματος πρόπολης καθημερινά σε μικρές δόσεις μπορεί να βοηθήσει στην ενίσχυση του ανοσοποιητικού συστήματος έναντι βακτηρίων, μυκήτων και ιών, συμπεριλαμβανομένης της γρίπης. Σε αντίθεση με τα φάρμακα που προσβάλλουν τόσο τα ευεργετικά βακτήρια όσο και τα επιβλαβή, το βάμμα πρόπολης προσβάλλει μόνο τα επιβλαβή για την υγεία μας βακτήρια και γενικά δεν επηρεάζεται από τις διάφορες βακτηριακές μεταλλάξεις τους. Το βάμμα πρόπολης «Όρος Μαχαιρά» παρασκευάζεται στο εργαστήριο μας με πρώτες ύλες το αλκόολ και πρόπολη από τα μελίσσια των μελισσοκόμων μας.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-vamma-propolis.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-vamma-propolis.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 11,
+          "sku": "vamma-propolis-oros-machaira"
+        }
+      ]
+    },
+    {
+      "handle": "meli-antheon-oros-machaira",
+      "title": "Μέλι Ανθέων «Όρος Μαχαιρά»",
+      "category": "Μέλι",
+      "description": "Η πλούσια χλωρίδα της Κύπρου μας επιτρέπει να παράγουμε μέλι ανθέων πλούσιο και μοναδικό. Το μέλι ανθέων αποτελείται κυρίως από ανθούς πορτοκαλιάς, μυροφόρας, μερσινιάς, αλενιάς και άλλων άγριων φυτών της Κύπρου.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-meli-anthewn-100g.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-250g.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-330g.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2021/09/Oros-Maxaira-meli-anthewn-480g.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-500g.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-790g.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-1kg.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-3kg.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "100g",
+          "size": "100g",
+          "container": null,
+          "amount": 3,
+          "sku": "meli-antheon-oros-machaira-v1"
+        },
+        {
+          "title": "250g · Squeeze μπουκάλι",
+          "size": "250g",
+          "container": "Squeeze μπουκάλι",
+          "amount": 3.9,
+          "sku": "meli-antheon-oros-machaira-v2"
+        },
+        {
+          "title": "330g · Πλαστικό",
+          "size": "330g",
+          "container": "Πλαστικό",
+          "amount": 4.8,
+          "sku": "meli-antheon-oros-machaira-v3"
+        },
+        {
+          "title": "480g · Squeeze μπουκάλι",
+          "size": "480g",
+          "container": "Squeeze μπουκάλι",
+          "amount": 6.5,
+          "sku": "meli-antheon-oros-machaira-v4"
+        },
+        {
+          "title": "500g · Γυάλινο",
+          "size": "500g",
+          "container": "Γυάλινο",
+          "amount": 6.5,
+          "sku": "meli-antheon-oros-machaira-v5"
+        },
+        {
+          "title": "790g · Γυάλινο",
+          "size": "790g",
+          "container": "Γυάλινο",
+          "amount": 8.9,
+          "sku": "meli-antheon-oros-machaira-v6"
+        },
+        {
+          "title": "1Kg · Πλαστικό",
+          "size": "1Kg",
+          "container": "Πλαστικό",
+          "amount": 9.95,
+          "sku": "meli-antheon-oros-machaira-v7"
+        },
+        {
+          "title": "3Kg · Πλαστικό",
+          "size": "3Kg",
+          "container": "Πλαστικό",
+          "amount": 27.5,
+          "sku": "meli-antheon-oros-machaira-v8"
+        }
+      ]
+    },
+    {
+      "handle": "avrasto-meli-antheon-oros-machaira",
+      "title": "Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»",
+      "category": "Μέλι",
+      "description": "Άβραστο θεωρείται το ακατέργαστο μέλι που εξάγεται απ’ την κηρήθρα χωρίς καμία επεξεργασία και παρέχεται στον καταναλωτή όπως ακριβώς το παράγουν οι μέλισσες. Σε αντίθεση με το μέλι που υπόκειται σε θερμική επεξεργασία και φιλτράρισμα, το άβραστο μέλι διατηρεί όλους τους ζυμομύκητες και τους γυρεόκοκκους του, οι οποίοι είναι αυτοί που του προσδίδουν και την υψηλή θρεπτική του αξία.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-meli.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-meli.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-avrasto-100g.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-500g.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-790g.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-3kg.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "100g",
+          "size": "100g",
+          "container": null,
+          "amount": 3.5,
+          "sku": "avrasto-meli-antheon-oros-machaira-v1"
+        },
+        {
+          "title": "500g · Γυάλινο",
+          "size": "500g",
+          "container": "Γυάλινο",
+          "amount": 7.5,
+          "sku": "avrasto-meli-antheon-oros-machaira-v2"
+        },
+        {
+          "title": "790g · Γυάλινο",
+          "size": "790g",
+          "container": "Γυάλινο",
+          "amount": 10.5,
+          "sku": "avrasto-meli-antheon-oros-machaira-v3"
+        },
+        {
+          "title": "3Kg · Πλαστικό",
+          "size": "3Kg",
+          "container": "Πλαστικό",
+          "amount": 31,
+          "sku": "avrasto-meli-antheon-oros-machaira-v4"
+        }
+      ]
+    },
+    {
+      "handle": "thymarisio-meli-oros-machaira",
+      "title": "Θυμαρίσιο Μέλι «Όρος Μαχαιρά»",
+      "category": "Μέλι",
+      "description": "Το Θυμαρίσιο μέλι «Όρος Μαχαιρά» έχει δυνατό άρωμα και γεμάτη γεύση. Θεωρείται το καλύτερο και πιο ακριβό μέλι της Κύπρου.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-thimarisio-meli.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-thimarisio-meli.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-thimarisio-meli-100g-600x600.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-thimarisio-meli-330g-600x600.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-thimarisio-meli-480g-600x600.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-thimarisio-meli-500g-600x600.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-thimarisio-meli-790g-600x600.jpg",
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-thimarisio-meli-3kg-600x600.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "100g · Γυάλινο",
+          "size": "100g",
+          "container": "Γυάλινο",
+          "amount": 3.5,
+          "sku": "thymarisio-meli-oros-machaira-v1"
+        },
+        {
+          "title": "330g · Πλαστικό",
+          "size": "330g",
+          "container": "Πλαστικό",
+          "amount": 5.7,
+          "sku": "thymarisio-meli-oros-machaira-v2"
+        },
+        {
+          "title": "480g · Squeeze Μπουκάλι",
+          "size": "480g",
+          "container": "Squeeze Μπουκάλι",
+          "amount": 8,
+          "sku": "thymarisio-meli-oros-machaira-v3"
+        },
+        {
+          "title": "500g · Γυάλινο",
+          "size": "500g",
+          "container": "Γυάλινο",
+          "amount": 8.5,
+          "sku": "thymarisio-meli-oros-machaira-v4"
+        },
+        {
+          "title": "790g · Γυάλινο",
+          "size": "790g",
+          "container": "Γυάλινο",
+          "amount": 12,
+          "sku": "thymarisio-meli-oros-machaira-v5"
+        },
+        {
+          "title": "3kg · Πλαστικό",
+          "size": "3kg",
+          "container": "Πλαστικό",
+          "amount": 31,
+          "sku": "thymarisio-meli-oros-machaira-v6"
+        }
+      ]
+    },
+    {
+      "handle": "melissokeri",
+      "title": "Κερί Μέλισσας (200-250γρ)",
+      "category": "Προϊόντα Μέλισσας",
+      "description": "Το αγνό μελισσοκέρι είναι ένα από τα πολλά προϊόντα της μέλισσας. Η μέλισσα το χρησιμοποιεί για να αποθηκεύει μέσα το μέλι. Το μελισσοκέρι μπορεί να χρησιμοποιηθεί από τον άνθρωπο σε μια ποικιλία σπιτικών καλλυντικών. Μπορείτε να φτιάξετε κρέμες χεριών, λοσιόν, βάλσαμο για τα χείλη, προϊόντα για τα μαλλιά και πολλά άλλα φυσικά και οικονομικά καλλυντικά. Έχει καταπραϋντικές και μαλακτικές ιδιότητες, και όταν χρησιμοποιείται στο δέρμα βοηθά στη διατήρηση της υγρασίας του.",
+      "thumbnail": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-melissokeri.jpg",
+      "images": [
+        "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-melissokeri.jpg"
+      ],
+      "inStock": true,
+      "variants": [
+        {
+          "title": "Default",
+          "size": null,
+          "container": null,
+          "amount": 4.5,
+          "sku": "melissokeri"
+        }
+      ]
+    }
+  ]
+}

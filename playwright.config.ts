@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:3001',
+    baseURL: process.env.E2E_BASE_URL || 'http://localhost:3001',
     trace: 'on-first-retry',
   },
   projects: [
@@ -17,12 +17,14 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: {
-    // Use webpack mode (no --turbo): Turbopack hangs intermittently when
-    // compiling routes that import the full Puck config (many components).
-    command: 'pnpm exec next dev -p 3001',
-    url: 'http://localhost:3001',
-    reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
-  },
+  webServer: process.env.E2E_BASE_URL
+    ? undefined
+    : {
+        // Use webpack mode (no --turbo): Turbopack hangs intermittently when
+        // compiling routes that import the full Puck config (many components).
+        command: 'pnpm exec next dev -p 3001',
+        url: 'http://localhost:3001',
+        reuseExistingServer: !process.env.CI,
+        timeout: 180_000,
+      },
 })

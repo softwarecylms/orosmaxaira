@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Check, Tag, Truck } from 'lucide-react'
 import { useCart, formatCents, type CartItem } from '@/components/commerce/cart-store'
+import { placeMedusaOrder } from '@/lib/medusa/place-order'
 import { cn } from '@/lib/utils'
 
 const FREE_SHIPPING_THRESHOLD = 7000 // €70,00 — free delivery above this (Cyprus only)
@@ -179,6 +180,7 @@ export function CheckoutForm() {
   const { items, subtotal, ready, clear } = useCart()
   const [c, setC] = useState<Contact>(EMPTY)
   const [submitting, setSubmitting] = useState(false)
+  const [orderError, setOrderError] = useState('')
   const [couponInput, setCouponInput] = useState('')
   const [coupon, setCoupon] = useState<string | null>(null)
   const [couponError, setCouponError] = useState('')
@@ -240,10 +242,70 @@ export function CheckoutForm() {
   const onCountry = (e: React.ChangeEvent<HTMLSelectElement>) =>
     setC((prev) => ({ ...prev, country: e.target.value as Country, acsPoint: '' }))
 
-  function placeOrder(e: React.FormEvent) {
+  async function placeOrder(e: React.FormEvent) {
     e.preventDefault()
+    setOrderError('')
+
+    // Every line must carry a Medusa variant id to become a real order line.
+    if (items.some((i) => !i.variantId)) {
+      setOrderError(
+        'Κάποια προϊόντα στο καλάθι σας χρειάζονται ανανέωση — αφαιρέστε τα και προσθέστε τα ξανά.',
+      )
+      return
+    }
+
     setSubmitting(true)
-    const id = `OM-${Date.now().toString(36).toUpperCase()}`
+    const countryCode = c.country === 'Κύπρος' ? ('cy' as const) : ('gr' as const)
+    const shippingAddr = {
+      first_name: c.shipDifferent ? c.shipFirstName : c.firstName,
+      last_name: c.shipDifferent ? c.shipLastName : c.lastName,
+      address_1: c.shipDifferent ? c.shipAddress : c.address,
+      address_2: c.shipDifferent ? c.shipAddress2 : c.address2,
+      city: c.shipDifferent ? c.shipCity : c.city,
+      postal_code: c.shipDifferent ? c.shipPostal : c.postal,
+      country_code: countryCode,
+      phone: c.phone,
+      company: c.company,
+    }
+    const billingAddr = {
+      first_name: c.firstName,
+      last_name: c.lastName,
+      address_1: c.address,
+      address_2: c.address2,
+      city: c.city,
+      postal_code: c.postal,
+      country_code: countryCode,
+      phone: c.phone,
+      company: c.company,
+    }
+
+    const res = await placeMedusaOrder({
+      items: items.map((i) => ({ variantId: i.variantId!, quantity: i.quantity })),
+      email: c.email,
+      shipping: shippingAddr,
+      billing: billingAddr,
+      countryCode,
+      freeShipping: shipping === 0,
+      coupon,
+      metadata: {
+        customer_name: `${c.firstName} ${c.lastName}`,
+        phone: c.phone,
+        delivery: c.delivery,
+        acs_point: c.acsPoint,
+        payment_method: c.payment,
+        vat: c.vat,
+        company: c.company,
+        notes: c.notes,
+      },
+    })
+
+    if ('error' in res) {
+      setSubmitting(false)
+      setOrderError(res.error)
+      return
+    }
+
+    const id = res.orderId
     const snapshot: OrderSnapshot = { id, date: new Date().toISOString(), items, subtotal, shipping, discount, coupon, total, contact: c }
     try {
       localStorage.setItem(`oros_order_${id}`, JSON.stringify(snapshot))
@@ -543,6 +605,12 @@ export function CheckoutForm() {
             <Req />
           </Checkbox>
         </div>
+
+        {orderError ? (
+          <p className="rounded-[4px] bg-red-50 px-3 py-2.5 text-[13px] leading-[18px] text-red-700">
+            {orderError}
+          </p>
+        ) : null}
 
         <button
           type="submit"

@@ -19,6 +19,12 @@ export type ShopProduct = {
   image: string
   imageAlt: string
   href: string
+  /** Medusa product handle (when sourced from Medusa); falls back to parsing `href`. */
+  handle?: string
+  /** [min, max] variant price in cents (when sourced from Medusa); else derived from PRODUCT_DETAILS. */
+  priceRange?: [number, number]
+  /** Medusa variant id for a single-variant product (add-to-cart / order). */
+  variantId?: string
 }
 
 /** Filter sidebar categories, in Figma order. */
@@ -116,6 +122,8 @@ export type ShopVariationSize = {
   sortPrice: number
   /** gallery image shown when this size is selected */
   image?: string
+  /** Medusa variant id — used to add the real variant to the cart / order */
+  variantId?: string
 }
 export type ShopVariations = {
   sizes: ShopVariationSize[]
@@ -203,6 +211,7 @@ export const PRODUCT_DETAILS: Record<string, ShopProductDetail> = {
 /** Slug used for the internal product URL (/shop/<handle>), derived from the
  *  live-site href so we don't have to duplicate it on every product row. */
 export function handleOf(product: ShopProduct): string {
+  if (product.handle) return product.handle
   const m = product.href.match(/\/product\/([^/]+)\/?$/)
   return m ? m[1] : ''
 }
@@ -230,6 +239,7 @@ export function getRelatedProducts(product: ShopProduct, limit = 4): ShopProduct
  *  matches when ANY of its sizes is in range — e.g. a honey whose 1Kg/3Kg
  *  sizes cost more than its 100g starting price. */
 export function productPriceRangeCents(product: ShopProduct): [number, number] {
+  if (product.priceRange) return product.priceRange
   const sizes = PRODUCT_DETAILS[handleOf(product)]?.variations?.sizes ?? []
   const prices = sizes.map((s) => s.sortPrice).filter((n) => typeof n === 'number' && n > 0)
   if (!prices.length) return [product.sortPrice, product.sortPrice]

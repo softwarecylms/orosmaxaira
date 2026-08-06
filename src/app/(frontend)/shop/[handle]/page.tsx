@@ -8,6 +8,7 @@ import {
   getRelatedProducts,
   handleOf,
 } from '@/components/shop/shop-content'
+import { getShopProduct, getAddonVariants } from '@/lib/medusa/shop'
 import { ProductView } from '@/components/shop/product/product-view'
 import type { AddonProduct } from '@/components/shop/product/product-purchase'
 import { ProductTabs } from '@/components/shop/product/product-tabs'
@@ -27,16 +28,28 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function ProductPage({ params }: Params) {
   const { handle } = await params
-  const product = getProductByHandle(handle)
-  if (!product) notFound()
 
-  const detail = getProductDetail(handle)
+  // Prefer Medusa (catalogue + price + stock + variant ids); fall back to the
+  // static snapshot if Medusa is unreachable so the page still renders.
+  const live = await getShopProduct(handle).catch(() => null)
+  const product = live?.product ?? getProductByHandle(handle)
+  if (!product) notFound()
+  const detail = live?.detail ?? getProductDetail(handle)
+
   const related = getRelatedProducts(product)
 
-  const addons: AddonProduct[] = (detail.addons ?? [])
+  const addonHandles = detail.addons ?? []
+  const addonVariants = await getAddonVariants(addonHandles).catch(() => ({}))
+  const addons: AddonProduct[] = addonHandles
     .map((h) => getProductByHandle(h))
     .filter((p): p is NonNullable<typeof p> => Boolean(p))
-    .map((p) => ({ handle: handleOf(p), title: p.title, image: p.image, price: p.price }))
+    .map((p) => ({
+      handle: handleOf(p),
+      title: p.title,
+      image: p.image,
+      price: p.price,
+      variantId: addonVariants[handleOf(p)]?.variantId,
+    }))
 
   return (
     <>
