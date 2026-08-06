@@ -39,7 +39,9 @@ export default async function ProductPage({ params }: Params) {
   const related = getRelatedProducts(product)
 
   const addonHandles = detail.addons ?? []
-  const addonVariants = await getAddonVariants(addonHandles).catch(() => ({}))
+  const addonVariants = await getAddonVariants(addonHandles).catch(
+    () => ({}) as Awaited<ReturnType<typeof getAddonVariants>>,
+  )
   const addons: AddonProduct[] = addonHandles
     .map((h) => getProductByHandle(h))
     .filter((p): p is NonNullable<typeof p> => Boolean(p))
