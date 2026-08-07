@@ -9,11 +9,18 @@ import { useCart, formatCents, type CartItem } from '@/components/commerce/cart-
 import { placeMedusaOrder } from '@/lib/medusa/place-order'
 import { cn } from '@/lib/utils'
 
-const FREE_SHIPPING_THRESHOLD = 7000 // €70,00 — free delivery above this (Cyprus only)
-const FREE_SHIPPING_COUNTRY = 'Κύπρος' // free delivery is offered only within Cyprus
-const SHIPPING = { Κύπρος: 450, Ελλάδα: 700 } as const // €4,50 / €7,00 (Greece is never free)
+const FREE_SHIPPING_THRESHOLD = 7000 // €70,00 — free HOME delivery above this (Cyprus)
+const HOME_SHIPPING = 500 // €5,00 home delivery (Cyprus, below threshold)
+const ACS_SHIPPING = 250 // €2,50 ACS pickup (Cyprus)
+const GREECE_SHIPPING = 700 // €7,00 (Greece — never free)
 
-type Country = keyof typeof SHIPPING
+type Country = 'Κύπρος' | 'Ελλάδα'
+
+// Refrigerated products: delivered ONLY to home (no ACS pickup) and NOT to
+// Paphos / Famagusta (Cyprus) or Greece.
+const REFRIGERATED_HANDLES = ['vasilikos-poltos-oros-machaira', 'gyri-oros-machaira']
+const CY_DISTRICTS = ['Λευκωσία', 'Λεμεσός', 'Λάρνακα', 'Πάφος', 'Αμμόχωστος'] as const
+const REFRIGERATED_BLOCKED_DISTRICTS: string[] = ['Πάφος', 'Αμμόχωστος']
 
 /** Demo discount codes (client-side only — swap for a real promotions engine later). */
 const COUPONS: Record<string, { kind: 'pct' | 'fixed'; value: number }> = {
@@ -104,7 +111,7 @@ const ACS_STORES: Record<Country, { town: string; points: string[] }[]> = {
   ],
 }
 
-type Delivery = 'store' | 'acs'
+type Delivery = 'acs' | 'home'
 type Payment = 'card' | 'cod' | 'bank'
 
 export type Contact = {
@@ -132,6 +139,8 @@ export type Contact = {
   notes: string
   delivery: Delivery
   acsPoint: string
+  /** Cyprus district — used for home delivery + the refrigerated-area restriction */
+  district: string
   payment: Payment
 }
 
@@ -169,6 +178,7 @@ const EMPTY: Contact = {
   notes: '',
   delivery: 'acs',
   acsPoint: '',
+  district: '',
   payment: 'card',
 }
 
@@ -201,11 +211,36 @@ export function CheckoutForm() {
     )
   }
 
-  // Free delivery is offered only within Cyprus (and only above the threshold).
-  const freeShippingEligible = c.country === FREE_SHIPPING_COUNTRY
-  const freeShipping = freeShippingEligible && subtotal >= FREE_SHIPPING_THRESHOLD
-  const acsCost = freeShipping ? 0 : SHIPPING[c.country]
-  const shipping = c.delivery === 'store' ? 0 : acsCost
+  // Refrigerated products (royal jelly / bee pollen) can only ship to a Cyprus
+  // home address — never ACS pickup, never Paphos/Famagusta, never Greece.
+  const hasRefrigerated = items.some((i) => REFRIGERATED_HANDLES.includes(i.handle))
+  const inGreece = c.country === 'Ελλάδα'
+  // Refrigerated orders force home delivery.
+  const delivery: Delivery = hasRefrigerated ? 'home' : c.delivery
+  const refrigeratedBlocked =
+    hasRefrigerated && (inGreece || REFRIGERATED_BLOCKED_DISTRICTS.includes(c.district))
+
+  // Free shipping applies to Cyprus HOME delivery over the threshold.
+  const homeDelivery = !inGreece && delivery === 'home'
+  const homeFree = homeDelivery && subtotal >= FREE_SHIPPING_THRESHOLD
+
+  const shipping = inGreece
+    ? GREECE_SHIPPING
+    : delivery === 'acs'
+      ? ACS_SHIPPING
+      : homeFree
+        ? 0
+        : HOME_SHIPPING
+
+  // Exact Medusa shipping-option name to book for this choice.
+  const shippingOptionName = inGreece
+    ? 'Παράδοση Ελλάδα'
+    : delivery === 'acs'
+      ? 'ACS Κύπρος'
+      : homeFree
+        ? 'Δωρεάν μεταφορικά'
+        : 'Παράδοση στο σπίτι'
+
   const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal)
   const shippingProgress = Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100))
   const appliedCoupon = coupon ? COUPONS[coupon] : null
@@ -240,7 +275,7 @@ export function CheckoutForm() {
     setC((prev) => ({ ...prev, [k]: e.target.checked }))
   // Country drives the ACS store list, so clear a stale pickup point on change.
   const onCountry = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    setC((prev) => ({ ...prev, country: e.target.value as Country, acsPoint: '' }))
+    setC((prev) => ({ ...prev, country: e.target.value as Country, acsPoint: '', district: '' }))
 
   async function placeOrder(e: React.FormEvent) {
     e.preventDefault()
@@ -250,6 +285,16 @@ export function CheckoutForm() {
     if (items.some((i) => !i.variantId)) {
       setOrderError(
         'Κάποια προϊόντα στο καλάθι σας χρειάζονται ανανέωση — αφαιρέστε τα και προσθέστε τα ξανά.',
+      )
+      return
+    }
+
+    // Refrigerated products can't reach Paphos/Famagusta or Greece.
+    if (refrigeratedBlocked) {
+      setOrderError(
+        `Τα προϊόντα ψυγείου (Βασιλικός πολτός, Γύρη) δεν αποστέλλονται ${
+          inGreece ? 'στην Ελλάδα' : `στην επαρχία ${c.district}`
+        }. Αφαιρέστε τα ή επιλέξτε άλλη περιοχή παράδοσης.`,
       )
       return
     }
@@ -284,14 +329,14 @@ export function CheckoutForm() {
       email: c.email,
       shipping: shippingAddr,
       billing: billingAddr,
-      countryCode,
-      freeShipping: shipping === 0,
+      shippingOptionName,
       coupon,
       metadata: {
         customer_name: `${c.firstName} ${c.lastName}`,
         phone: c.phone,
-        delivery: c.delivery,
+        delivery,
         acs_point: c.acsPoint,
+        district: c.district,
         payment_method: c.payment,
         vat: c.vat,
         company: c.company,
@@ -446,14 +491,45 @@ export function CheckoutForm() {
         {/* Delivery method */}
         <fieldset className="flex flex-col gap-2.5 border-t border-border pt-4">
           <legend className="mb-1 text-[15px] font-semibold text-foreground">Τρόπος παράδοσης</legend>
-          <RadioRow
-            name="delivery"
-            checked={c.delivery === 'acs'}
-            onChange={() => setC((p) => ({ ...p, delivery: 'acs' }))}
-            label="Παραλαβή από κατάστημα ACS"
-            price={freeShipping ? 'Δωρεάν' : formatCents(SHIPPING[c.country])}
-          />
-          {c.delivery === 'acs' ? (
+
+          {hasRefrigerated ? (
+            <p className="rounded-[4px] bg-accent-soft px-3 py-2.5 text-[13px] leading-[18px] text-foreground">
+              ❄️ Η παραγγελία περιέχει προϊόντα ψυγείου (Βασιλικός πολτός, Γύρη) — παραδίδονται μόνο
+              κατ’ οίκον και όχι σε Πάφο, Αμμόχωστο ή Ελλάδα.
+            </p>
+          ) : null}
+
+          {inGreece ? (
+            <RadioRow
+              name="delivery"
+              checked
+              readOnly
+              onChange={() => {}}
+              label="Αποστολή με courier"
+              price={formatCents(GREECE_SHIPPING)}
+            />
+          ) : (
+            <>
+              <RadioRow
+                name="delivery"
+                checked={delivery === 'acs'}
+                disabled={hasRefrigerated}
+                onChange={() => setC((p) => ({ ...p, delivery: 'acs' }))}
+                label="Παραλαβή από κατάστημα ACS"
+                price={formatCents(ACS_SHIPPING)}
+              />
+              <RadioRow
+                name="delivery"
+                checked={delivery === 'home'}
+                onChange={() => setC((p) => ({ ...p, delivery: 'home' }))}
+                label="Παράδοση κατ’ οίκον"
+                price={homeFree ? 'Δωρεάν' : formatCents(HOME_SHIPPING)}
+              />
+            </>
+          )}
+
+          {/* ACS pickup point — Cyprus ACS only */}
+          {!inGreece && delivery === 'acs' ? (
             <label className="mt-0.5 flex flex-col gap-1.5">
               <span className="text-[13px] text-muted">
                 Επιλέξτε σημείο παραλαβής ACS<Req />
@@ -465,7 +541,7 @@ export function CheckoutForm() {
                 className="w-full min-w-0 rounded-[4px] border border-border bg-white px-3 py-2.5 text-[14px] text-foreground outline-none focus:border-accent"
               >
                 <option value="">Επιλέξτε σημείο παραλαβής…</option>
-                {ACS_STORES[c.country].map((group) => (
+                {ACS_STORES['Κύπρος'].map((group) => (
                   <optgroup key={group.town} label={group.town}>
                     {group.points.map((pt) => (
                       <option key={pt} value={pt}>
@@ -476,6 +552,35 @@ export function CheckoutForm() {
                 ))}
               </select>
             </label>
+          ) : null}
+
+          {/* District — Cyprus home delivery (enforces the refrigerated-area rule) */}
+          {!inGreece && delivery === 'home' ? (
+            <label className="mt-0.5 flex flex-col gap-1.5">
+              <span className="text-[13px] text-muted">
+                Επαρχία<Req />
+              </span>
+              <select
+                value={c.district}
+                onChange={set('district')}
+                required
+                className="w-full min-w-0 rounded-[4px] border border-border bg-white px-3 py-2.5 text-[14px] text-foreground outline-none focus:border-accent"
+              >
+                <option value="">Επιλέξτε επαρχία…</option>
+                {CY_DISTRICTS.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : null}
+
+          {refrigeratedBlocked ? (
+            <p className="text-[13px] leading-[18px] text-red-600">
+              Δεν είναι δυνατή η παράδοση προϊόντων ψυγείου{' '}
+              {inGreece ? 'στην Ελλάδα' : `στην επαρχία ${c.district}`}.
+            </p>
           ) : null}
         </fieldset>
 
@@ -540,11 +645,11 @@ export function CheckoutForm() {
           <Row label="Υποσύνολο" value={formatCents(subtotal)} />
           {discount > 0 ? <Row label="Έκπτωση" value={`−${formatCents(discount)}`} accent /> : null}
           <Row label="Μεταφορικά" value={shipping === 0 ? 'Δωρεάν' : formatCents(shipping)} />
-          {/* Free-shipping progress — Cyprus only */}
-          {!freeShippingEligible ? null : freeShipping ? (
+          {/* Free-shipping progress — Cyprus home delivery only */}
+          {!homeDelivery ? null : homeFree ? (
             <p className="flex items-center gap-2 pt-1 text-[13px] font-medium leading-[18px] text-success">
               <Check className="size-[18px] shrink-0" strokeWidth={2.5} aria-hidden="true" />
-              Κερδίσατε δωρεάν μεταφορικά!
+              Κερδίσατε δωρεάν παράδοση κατ’ οίκον!
             </p>
           ) : (
             <div className="flex flex-col gap-2 pt-1">
@@ -552,7 +657,7 @@ export function CheckoutForm() {
                 <Truck className="size-[18px] shrink-0 text-accent" strokeWidth={2} aria-hidden="true" />
                 <span>
                   Προσθέστε <span className="font-semibold">{formatCents(remaining)}</span> ακόμη για δωρεάν
-                  μεταφορικά στην Κύπρο.
+                  παράδοση κατ’ οίκον.
                 </span>
               </p>
               <div
@@ -614,8 +719,8 @@ export function CheckoutForm() {
 
         <button
           type="submit"
-          disabled={submitting}
-          className="flex w-full items-center justify-center rounded-[4px] bg-accent p-[15px] text-[17px] text-white transition-colors hover:bg-foreground disabled:opacity-75"
+          disabled={submitting || refrigeratedBlocked}
+          className="flex w-full items-center justify-center rounded-[4px] bg-accent p-[15px] text-[17px] text-white transition-colors hover:bg-foreground disabled:cursor-not-allowed disabled:opacity-75"
         >
           {submitting ? 'Επεξεργασία…' : 'Ολοκλήρωση παραγγελίας'}
         </button>
@@ -678,16 +783,22 @@ function RadioRow({
   label,
   price,
   checked,
+  disabled,
   ...props
 }: { label: string; price?: string; checked: boolean } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <label
       className={cn(
-        'flex cursor-pointer items-center gap-3 rounded-[4px] border px-4 py-3 transition-colors',
-        checked ? 'border-accent bg-accent-soft' : 'border-border hover:border-border-strong',
+        'flex items-center gap-3 rounded-[4px] border px-4 py-3 transition-colors',
+        disabled
+          ? 'cursor-not-allowed border-border opacity-50'
+          : cn(
+              'cursor-pointer',
+              checked ? 'border-accent bg-accent-soft' : 'border-border hover:border-border-strong',
+            ),
       )}
     >
-      <input type="radio" checked={checked} {...props} className="sr-only" />
+      <input type="radio" checked={checked} disabled={disabled} {...props} className="sr-only" />
       <span
         className={cn(
           'flex size-[18px] shrink-0 items-center justify-center rounded-full border',

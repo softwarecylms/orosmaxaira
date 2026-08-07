@@ -19,20 +19,13 @@ export type PlaceOrderInput = {
   email: string
   shipping: HttpTypes.StoreAddAddress
   billing: HttpTypes.StoreAddAddress
-  /** 'cy' | 'gr' — used to pick the matching shipping option */
-  countryCode: 'cy' | 'gr'
-  /** free delivery unlocked (Cyprus, over threshold) */
-  freeShipping: boolean
+  /** exact Medusa shipping-option name to book (the client picks it from the
+   *  delivery method + destination + free-shipping rules) */
+  shippingOptionName: string
   coupon?: string | null
-  /** ACS point, notes, VAT, payment method, delivery method — stored on the order */
+  /** ACS point, district, notes, VAT, payment method, delivery method — stored on the order */
   metadata?: Record<string, string>
 }
-
-const SHIPPING_NAME = {
-  free: 'Δωρεάν μεταφορικά',
-  cy: 'Παράδοση Κύπρος',
-  gr: 'Παράδοση Ελλάδα',
-} as const
 
 export async function placeMedusaOrder(
   input: PlaceOrderInput,
@@ -79,8 +72,7 @@ export async function placeMedusaOrder(
       }
     }
 
-    // 5. Shipping method — match the option the custom checkout displayed
-    const wantName = input.freeShipping ? SHIPPING_NAME.free : SHIPPING_NAME[input.countryCode]
+    // 5. Shipping method — book the exact option the custom checkout displayed
     const { shipping_options } = await sdk.client.fetch<{
       shipping_options: HttpTypes.StoreCartShippingOption[]
     }>('/store/shipping-options', {
@@ -89,7 +81,8 @@ export async function placeMedusaOrder(
       cache: 'no-store',
     })
     const option =
-      shipping_options.find((o) => o.name === wantName) ?? shipping_options[0]
+      shipping_options.find((o) => o.name === input.shippingOptionName) ??
+      shipping_options[0]
     if (!option) return { error: 'Δεν υπάρχει διαθέσιμος τρόπος αποστολής.' }
     await sdk.store.cart.addShippingMethod(cartId, { option_id: option.id })
 

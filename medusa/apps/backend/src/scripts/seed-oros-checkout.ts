@@ -16,9 +16,10 @@ import {
  */
 
 const SHIPPING = [
-  { name: "Παράδοση Κύπρος", code: "cy-standard", amount: 4.5 },
+  { name: "ACS Κύπρος", code: "cy-acs", amount: 2.5 }, // pickup point
+  { name: "Παράδοση στο σπίτι", code: "cy-home", amount: 5 }, // home delivery (< €70)
+  { name: "Δωρεάν μεταφορικά", code: "free", amount: 0 }, // home delivery ≥ €70
   { name: "Παράδοση Ελλάδα", code: "gr-standard", amount: 7 },
-  { name: "Δωρεάν μεταφορικά", code: "free", amount: 0 },
 ]
 
 export default async function seedOrosCheckout({ container }: ExecArgs) {
