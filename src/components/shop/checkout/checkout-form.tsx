@@ -554,7 +554,8 @@ export function CheckoutForm() {
           ) : hasRefrigerated ? (
             <RadioRow
               name="delivery"
-              checked
+              checked={!refrigeratedBlocked}
+              disabled={refrigeratedBlocked}
               readOnly
               onChange={() => {}}
               label="Παράδοση κατ’ οίκον"

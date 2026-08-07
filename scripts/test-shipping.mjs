@@ -41,6 +41,8 @@ const homeRadio = (p) => p.getByRole('radio', { name: /Παράδοση κατ�
   const submit = page.getByRole('button', { name: /Ολοκλήρωση παραγγελίας/ })
   check((await page.getByText(/δεν είναι δυνατή η παράδοση/i).count()) > 0, 'Paphos → block message')
   check(await submit.isDisabled(), 'Paphos → submit disabled')
+  check(await homeRadio(page).isDisabled(), 'Paphos → home delivery disabled')
+  check(!(await homeRadio(page).isChecked()), 'Paphos → home delivery not selected')
 
   await page.getByLabel(/^Πόλη/).first().selectOption('Λευκωσία')
   await page.waitForTimeout(300)
