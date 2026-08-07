@@ -138,7 +138,8 @@ export function ProductPurchase({
           <p className="flex items-start gap-2 text-[13px] leading-[19px] text-muted">
             <span aria-hidden="true">❄️</span>
             <span>
-              Προϊόν ψυγείου — παράδοση μόνο κατ’ οίκον (όχι σε Πάφο, Αμμόχωστο ή Ελλάδα).
+              <strong className="font-semibold text-foreground">Προϊόν ψυγείου</strong> — παράδοση
+              μόνο κατ’ οίκον (όχι σε Πάφο, Αμμόχωστο ή Ελλάδα).
             </span>
           </p>
         </RevealItem>

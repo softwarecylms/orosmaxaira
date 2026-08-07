@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Check, Minus, Plus, Tag, Truck, X } from 'lucide-react'
+import { Check, Minus, Plus, Tag, Truck } from 'lucide-react'
 import { useCart, formatCents, type CartItem } from '@/components/commerce/cart-store'
 import { placeMedusaOrder } from '@/lib/medusa/place-order'
 import { REFRIGERATED_HANDLES } from '@/components/shop/shop-content'
@@ -187,7 +187,7 @@ const EMPTY: Contact = {
  *  field set (in Greek). No real payment — places a local order snapshot. */
 export function CheckoutForm() {
   const router = useRouter()
-  const { items, subtotal, ready, clear, setQty, removeItem } = useCart()
+  const { items, subtotal, ready, clear, setQty } = useCart()
   const [c, setC] = useState<Contact>(EMPTY)
   const [submitting, setSubmitting] = useState(false)
   const [orderError, setOrderError] = useState('')
@@ -481,34 +481,23 @@ export function CheckoutForm() {
                   {item.title}
                 </Link>
                 {item.size ? <span className="text-[13px] text-muted">{item.size}</span> : null}
-                <div className="mt-1 flex items-center gap-3">
-                  <div className="flex w-[88px] items-center justify-between rounded-[5px] border border-border px-2">
-                    <button
-                      type="button"
-                      onClick={() => setQty(item.key, item.quantity - 1)}
-                      aria-label="Μείωση ποσότητας"
-                      className="flex size-6 items-center justify-center text-foreground transition-colors hover:text-accent"
-                    >
-                      <Minus className="size-3.5" strokeWidth={2} />
-                    </button>
-                    <span className="text-[14px] font-semibold text-foreground">{item.quantity}</span>
-                    <button
-                      type="button"
-                      onClick={() => setQty(item.key, item.quantity + 1)}
-                      aria-label="Αύξηση ποσότητας"
-                      className="flex size-6 items-center justify-center text-foreground transition-colors hover:text-accent"
-                    >
-                      <Plus className="size-3.5" strokeWidth={2} />
-                    </button>
-                  </div>
+                <div className="mt-1 flex w-[88px] items-center justify-between rounded-[5px] border border-border px-2">
                   <button
                     type="button"
-                    onClick={() => removeItem(item.key)}
-                    aria-label={`Αφαίρεση ${item.title}`}
-                    className="flex items-center gap-1 text-[13px] text-muted transition-colors hover:text-accent"
+                    onClick={() => setQty(item.key, item.quantity - 1)}
+                    aria-label="Μείωση ποσότητας"
+                    className="flex size-6 items-center justify-center text-foreground transition-colors hover:text-accent"
                   >
-                    <X className="size-3.5" aria-hidden="true" />
-                    Αφαίρεση
+                    <Minus className="size-3.5" strokeWidth={2} />
+                  </button>
+                  <span className="text-[14px] font-semibold text-foreground">{item.quantity}</span>
+                  <button
+                    type="button"
+                    onClick={() => setQty(item.key, item.quantity + 1)}
+                    aria-label="Αύξηση ποσότητας"
+                    className="flex size-6 items-center justify-center text-foreground transition-colors hover:text-accent"
+                  >
+                    <Plus className="size-3.5" strokeWidth={2} />
                   </button>
                 </div>
               </div>
