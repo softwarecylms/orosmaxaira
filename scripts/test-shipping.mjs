@@ -92,6 +92,47 @@ const homeRadio = (p) => p.getByRole('radio', { name: /Παράδοση κατ�
   await page.close()
 }
 
+// ── D: Cyprus order ≥ €70 → free shipping (ACS) ─────────────────────────────
+{
+  const page = await browser.newPage({ viewport: { width: 1280, height: 950 } })
+  log('D) Cyprus ≥ €70 — free shipping:')
+  await page.goto(`${base}/shop/ydromelo`, { waitUntil: 'networkidle' }) // €16
+  await page.getByRole('button', { name: /Προσθήκη στο καλάθι/ }).first().click()
+  await page.waitForTimeout(600)
+  await page.goto(`${base}/checkout`, { waitUntil: 'networkidle' })
+  for (let i = 0; i < 4; i++) {
+    await page.getByRole('button', { name: 'Αύξηση ποσότητας' }).first().click() // → 5 × €16 = €80
+    await page.waitForTimeout(150)
+  }
+  check((await page.getByText('€80,00').count()) > 0, 'subtotal €80,00 (qty 5)')
+  check((await page.getByText('Κερδίσατε δωρεάν μεταφορικά').count()) > 0, '≥€70 → free-shipping earned')
+  await fillCyBilling(page, 'Λάρνακα')
+  await page.getByLabel(/σημείο παραλαβής ACS/i).selectOption({ index: 1 })
+  await page.getByRole('button', { name: /Ολοκλήρωση παραγγελίας/ }).click()
+  await page.waitForURL(/\/order\//, { timeout: 20000 }).catch(() => {})
+  const id = page.url().split('/order/')[1]
+  check(!!id && id.startsWith('order_'), `free-shipping order created (${id})`)
+  await page.close()
+}
+
+// ── E: refrigerated + ship-to Πάφος (different address) → blocked ───────────
+{
+  const page = await browser.newPage({ viewport: { width: 1280, height: 950 } })
+  log('E) Refrigerated + ship-to Πάφος (different address) — blocked:')
+  await page.goto(`${base}/shop/vasilikos-poltos-oros-machaira`, { waitUntil: 'networkidle' })
+  await page.getByRole('button', { name: /Προσθήκη στο καλάθι/ }).first().click()
+  await page.waitForTimeout(600)
+  await page.goto(`${base}/checkout`, { waitUntil: 'networkidle' })
+  await fillCyBilling(page, 'Λευκωσία') // billing city allowed
+  await page.getByRole('checkbox', { name: /Αποστολή σε διαφορετική διεύθυνση/ }).check()
+  await page.waitForTimeout(200)
+  await page.getByLabel(/^Πόλη/).nth(1).selectOption('Πάφος') // ship-to city
+  await page.waitForTimeout(300)
+  check((await page.getByText(/δεν είναι δυνατή η παράδοση/i).count()) > 0, 'ship-to Πάφος → block message')
+  check(await page.getByRole('button', { name: /Ολοκλήρωση παραγγελίας/ }).isDisabled(), 'ship-to Πάφος → submit disabled')
+  await page.close()
+}
+
 await browser.close()
 log(failed ? '\n✗ SOME CHECKS FAILED' : '\n✓ ALL CHECKS PASSED')
 process.exitCode = failed ? 1 : 0

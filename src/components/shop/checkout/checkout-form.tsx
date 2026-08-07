@@ -234,28 +234,29 @@ export function CheckoutForm() {
   const inGreece = c.country === 'Ελλάδα'
   // Refrigerated orders force home delivery; everything else uses ACS pickup.
   const delivery: Delivery = hasRefrigerated ? 'home' : 'acs'
+  // The city the parcel actually goes to (ship-to overrides billing).
+  const deliveryCity = c.shipDifferent ? c.shipCity : c.city
   const refrigeratedBlocked =
-    hasRefrigerated && (inGreece || REFRIGERATED_BLOCKED_DISTRICTS.includes(c.city))
+    hasRefrigerated && (inGreece || REFRIGERATED_BLOCKED_DISTRICTS.includes(deliveryCity))
 
-  // Free shipping applies to Cyprus HOME delivery over the threshold.
-  const homeDelivery = !inGreece && delivery === 'home'
-  const homeFree = homeDelivery && subtotal >= FREE_SHIPPING_THRESHOLD
+  // Free shipping applies to any Cyprus delivery over the threshold.
+  const cyprusFree = !inGreece && subtotal >= FREE_SHIPPING_THRESHOLD
 
   const shipping = inGreece
     ? GREECE_SHIPPING
-    : delivery === 'acs'
-      ? ACS_SHIPPING
-      : homeFree
-        ? 0
+    : cyprusFree
+      ? 0
+      : delivery === 'acs'
+        ? ACS_SHIPPING
         : HOME_SHIPPING
 
   // Exact Medusa shipping-option name to book for this choice.
   const shippingOptionName = inGreece
     ? 'Παράδοση Ελλάδα'
-    : delivery === 'acs'
-      ? 'ACS Κύπρος'
-      : homeFree
-        ? 'Δωρεάν μεταφορικά'
+    : cyprusFree
+      ? 'Δωρεάν μεταφορικά'
+      : delivery === 'acs'
+        ? 'ACS Κύπρος'
         : 'Παράδοση στο σπίτι'
 
   const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal)
@@ -293,7 +294,7 @@ export function CheckoutForm() {
   // Country drives the ACS store list, so clear a stale pickup point on change.
   const onCountry = (e: React.ChangeEvent<HTMLSelectElement>) =>
     // City is a select for Cyprus but free text for Greece — reset on switch.
-    setC((prev) => ({ ...prev, country: e.target.value as Country, city: '', acsPoint: '' }))
+    setC((prev) => ({ ...prev, country: e.target.value as Country, city: '', shipCity: '', acsPoint: '' }))
 
   async function placeOrder(e: React.FormEvent) {
     e.preventDefault()
@@ -311,7 +312,7 @@ export function CheckoutForm() {
     if (refrigeratedBlocked) {
       setOrderError(
         `Τα προϊόντα ψυγείου (Βασιλικός πολτός, Γύρη) δεν αποστέλλονται ${
-          inGreece ? 'στην Ελλάδα' : `στην περιοχή ${c.city}`
+          inGreece ? 'στην Ελλάδα' : `στην περιοχή ${deliveryCity}`
         }. Αφαιρέστε τα ή επιλέξτε άλλη περιοχή παράδοσης.`,
       )
       return
@@ -472,7 +473,28 @@ export function CheckoutForm() {
               placeholder="Διαμέρισμα, όροφος, κ.λπ. (προαιρετικό)"
             />
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Πόλη" value={c.shipCity} onChange={set('shipCity')} required />
+              {inGreece ? (
+                <Field label="Πόλη" value={c.shipCity} onChange={set('shipCity')} required />
+              ) : (
+                <label className="flex flex-col gap-1.5">
+                  <span className="text-[14px] text-muted">
+                    Πόλη<Req />
+                  </span>
+                  <select
+                    value={c.shipCity}
+                    onChange={set('shipCity')}
+                    required
+                    className="w-full min-w-0 rounded-[4px] border border-border bg-white px-4 py-3 text-[16px] text-foreground outline-none focus:border-accent"
+                  >
+                    <option value="">Επιλέξτε πόλη…</option>
+                    {CY_CITIES.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
               <Field label="Ταχ. Κώδικας" value={c.shipPostal} onChange={set('shipPostal')} required />
             </div>
           </div>
@@ -578,7 +600,7 @@ export function CheckoutForm() {
               readOnly
               onChange={() => {}}
               label="Παράδοση κατ’ οίκον"
-              price={homeFree ? 'Δωρεάν' : formatCents(HOME_SHIPPING)}
+              price={cyprusFree ? 'Δωρεάν' : formatCents(HOME_SHIPPING)}
             />
           ) : (
             <RadioRow
@@ -587,7 +609,7 @@ export function CheckoutForm() {
               readOnly
               onChange={() => {}}
               label="Παραλαβή από κατάστημα ACS"
-              price={formatCents(ACS_SHIPPING)}
+              price={cyprusFree ? 'Δωρεάν' : formatCents(ACS_SHIPPING)}
             />
           )}
 
@@ -620,7 +642,7 @@ export function CheckoutForm() {
           {refrigeratedBlocked ? (
             <p className="text-[13px] leading-[18px] text-red-600">
               Δεν είναι δυνατή η παράδοση προϊόντων ψυγείου{' '}
-              {inGreece ? 'στην Ελλάδα' : `στην περιοχή ${c.city}`}.
+              {inGreece ? 'στην Ελλάδα' : `στην περιοχή ${deliveryCity}`}.
             </p>
           ) : null}
         </fieldset>
@@ -686,11 +708,11 @@ export function CheckoutForm() {
           <Row label="Υποσύνολο" value={formatCents(subtotal)} />
           {discount > 0 ? <Row label="Έκπτωση" value={`−${formatCents(discount)}`} accent /> : null}
           <Row label="Μεταφορικά" value={shipping === 0 ? 'Δωρεάν' : formatCents(shipping)} />
-          {/* Free-shipping progress — Cyprus home delivery only */}
-          {!homeDelivery ? null : homeFree ? (
+          {/* Free-shipping progress — Cyprus only (any method, over €70) */}
+          {inGreece ? null : cyprusFree ? (
             <p className="flex items-center gap-2 pt-1 text-[13px] font-medium leading-[18px] text-success">
               <Check className="size-[18px] shrink-0" strokeWidth={2.5} aria-hidden="true" />
-              Κερδίσατε δωρεάν παράδοση κατ’ οίκον!
+              Κερδίσατε δωρεάν μεταφορικά!
             </p>
           ) : (
             <div className="flex flex-col gap-2 pt-1">
@@ -698,7 +720,7 @@ export function CheckoutForm() {
                 <Truck className="size-[18px] shrink-0 text-accent" strokeWidth={2} aria-hidden="true" />
                 <span>
                   Προσθέστε <span className="font-semibold">{formatCents(remaining)}</span> ακόμη για δωρεάν
-                  παράδοση κατ’ οίκον.
+                  μεταφορικά στην Κύπρο.
                 </span>
               </p>
               <div
