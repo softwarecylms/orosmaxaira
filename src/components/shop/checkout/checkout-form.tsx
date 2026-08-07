@@ -23,6 +23,11 @@ type Country = 'Κύπρος' | 'Ελλάδα'
 // refrigerated-area restriction.
 const CY_CITIES = ['Λευκωσία', 'Λεμεσός', 'Λάρνακα', 'Πάφος', 'Αμμόχωστος'] as const
 const REFRIGERATED_BLOCKED_DISTRICTS: string[] = ['Πάφος', 'Αμμόχωστος']
+// Nominative article per refrigerated product, for the delivery-notice grammar.
+const REFRIGERATED_ARTICLE: Record<string, string> = {
+  'vasilikos-poltos-oros-machaira': 'Ο',
+  'gyri-oros-machaira': 'Η',
+}
 
 /** Demo discount codes (client-side only — swap for a real promotions engine later). */
 const COUPONS: Record<string, { kind: 'pct' | 'fixed'; value: number }> = {
@@ -214,7 +219,18 @@ export function CheckoutForm() {
   // home address — never ACS pickup, never Paphos/Famagusta, never Greece.
   const refrigeratedItems = items.filter((i) => REFRIGERATED_HANDLES.includes(i.handle))
   const hasRefrigerated = refrigeratedItems.length > 0
-  const refrigeratedNames = [...new Set(refrigeratedItems.map((i) => i.title))]
+  // Unique refrigerated products in the cart → the delivery notice sentence.
+  const refrigeratedUnique = [...new Map(refrigeratedItems.map((i) => [i.handle, i])).values()]
+  const refrigeratedSubject = refrigeratedUnique
+    .map((it, idx) => {
+      const article = REFRIGERATED_ARTICLE[it.handle] ?? 'Το'
+      return `${idx === 0 ? article : article.toLowerCase()} ${it.title}`
+    })
+    .join(' και ')
+  const refrigeratedNotice =
+    refrigeratedUnique.length === 1
+      ? `${refrigeratedSubject} είναι προϊόν ψυγείου και παραδίδεται μόνο κατ’ οίκον (εξαιρούνται Πάφος, Αμμόχωστος & Ελλάδα).`
+      : `${refrigeratedSubject} είναι προϊόντα ψυγείου και παραδίδονται μόνο κατ’ οίκον (εξαιρούνται Πάφος, Αμμόχωστος & Ελλάδα).`
   const inGreece = c.country === 'Ελλάδα'
   // Refrigerated orders force home delivery; everything else uses ACS pickup.
   const delivery: Delivery = hasRefrigerated ? 'home' : 'acs'
@@ -539,10 +555,7 @@ export function CheckoutForm() {
 
           {hasRefrigerated ? (
             <p className="rounded-[4px] bg-accent-soft px-3 py-2.5 text-[13px] font-semibold leading-[18px] text-foreground">
-              ❄️ Η παραγγελία περιέχει {refrigeratedNames.length === 1 ? 'προϊόν' : 'προϊόντα'}{' '}
-              ψυγείου ({refrigeratedNames.join(', ')}) —{' '}
-              {refrigeratedNames.length === 1 ? 'παραδίδεται' : 'παραδίδονται'} μόνο κατ’ οίκον (όχι σε
-              Πάφο, Αμμόχωστο ή Ελλάδα).
+              ❄️ {refrigeratedNotice}
             </p>
           ) : null}
 

@@ -139,7 +139,7 @@ export function ProductPurchase({
             <span aria-hidden="true">❄️</span>
             <span>
               <strong className="font-semibold text-foreground">Προϊόν ψυγείου</strong> — παράδοση
-              μόνο κατ’ οίκον (όχι σε Πάφο, Αμμόχωστο ή Ελλάδα).
+              μόνο κατ’ οίκον (εξαιρούνται Πάφος, Αμμόχωστος & Ελλάδα).
             </span>
           </p>
         </RevealItem>
