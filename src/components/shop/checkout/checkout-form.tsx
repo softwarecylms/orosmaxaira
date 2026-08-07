@@ -19,7 +19,9 @@ type Country = 'Κύπρος' | 'Ελλάδα'
 
 // Refrigerated products (REFRIGERATED_HANDLES): home delivery only (no ACS
 // pickup) and NOT to Paphos / Famagusta (Cyprus) or Greece.
-const CY_DISTRICTS = ['Λευκωσία', 'Λεμεσός', 'Λάρνακα', 'Πάφος', 'Αμμόχωστος'] as const
+// The five Cyprus cities/districts — used for the Cyprus city selector and the
+// refrigerated-area restriction.
+const CY_CITIES = ['Λευκωσία', 'Λεμεσός', 'Λάρνακα', 'Πάφος', 'Αμμόχωστος'] as const
 const REFRIGERATED_BLOCKED_DISTRICTS: string[] = ['Πάφος', 'Αμμόχωστος']
 
 /** Demo discount codes (client-side only — swap for a real promotions engine later). */
@@ -139,8 +141,6 @@ export type Contact = {
   notes: string
   delivery: Delivery
   acsPoint: string
-  /** Cyprus district — used for home delivery + the refrigerated-area restriction */
-  district: string
   payment: Payment
 }
 
@@ -178,7 +178,6 @@ const EMPTY: Contact = {
   notes: '',
   delivery: 'acs',
   acsPoint: '',
-  district: '',
   payment: 'card',
 }
 
@@ -217,10 +216,10 @@ export function CheckoutForm() {
   const hasRefrigerated = refrigeratedItems.length > 0
   const refrigeratedNames = [...new Set(refrigeratedItems.map((i) => i.title))]
   const inGreece = c.country === 'Ελλάδα'
-  // Refrigerated orders force home delivery.
-  const delivery: Delivery = hasRefrigerated ? 'home' : c.delivery
+  // Refrigerated orders force home delivery; everything else uses ACS pickup.
+  const delivery: Delivery = hasRefrigerated ? 'home' : 'acs'
   const refrigeratedBlocked =
-    hasRefrigerated && (inGreece || REFRIGERATED_BLOCKED_DISTRICTS.includes(c.district))
+    hasRefrigerated && (inGreece || REFRIGERATED_BLOCKED_DISTRICTS.includes(c.city))
 
   // Free shipping applies to Cyprus HOME delivery over the threshold.
   const homeDelivery = !inGreece && delivery === 'home'
@@ -277,7 +276,8 @@ export function CheckoutForm() {
     setC((prev) => ({ ...prev, [k]: e.target.checked }))
   // Country drives the ACS store list, so clear a stale pickup point on change.
   const onCountry = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    setC((prev) => ({ ...prev, country: e.target.value as Country, acsPoint: '', district: '' }))
+    // City is a select for Cyprus but free text for Greece — reset on switch.
+    setC((prev) => ({ ...prev, country: e.target.value as Country, city: '', acsPoint: '' }))
 
   async function placeOrder(e: React.FormEvent) {
     e.preventDefault()
@@ -295,7 +295,7 @@ export function CheckoutForm() {
     if (refrigeratedBlocked) {
       setOrderError(
         `Τα προϊόντα ψυγείου (Βασιλικός πολτός, Γύρη) δεν αποστέλλονται ${
-          inGreece ? 'στην Ελλάδα' : `στην επαρχία ${c.district}`
+          inGreece ? 'στην Ελλάδα' : `στην περιοχή ${c.city}`
         }. Αφαιρέστε τα ή επιλέξτε άλλη περιοχή παράδοσης.`,
       )
       return
@@ -338,7 +338,6 @@ export function CheckoutForm() {
         phone: c.phone,
         delivery,
         acs_point: c.acsPoint,
-        district: c.district,
         payment_method: c.payment,
         vat: c.vat,
         company: c.company,
@@ -409,7 +408,28 @@ export function CheckoutForm() {
           placeholder="Διαμέρισμα, όροφος, κ.λπ. (προαιρετικό)"
         />
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Πόλη" value={c.city} onChange={set('city')} required autoComplete="address-level2" />
+          {inGreece ? (
+            <Field label="Πόλη" value={c.city} onChange={set('city')} required autoComplete="address-level2" />
+          ) : (
+            <label className="flex flex-col gap-1.5">
+              <span className="text-[14px] text-muted">
+                Πόλη<Req />
+              </span>
+              <select
+                value={c.city}
+                onChange={set('city')}
+                required
+                className="w-full min-w-0 rounded-[4px] border border-border bg-white px-4 py-3 text-[16px] text-foreground outline-none focus:border-accent"
+              >
+                <option value="">Επιλέξτε πόλη…</option>
+                {CY_CITIES.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <Field label="Ταχ. Κώδικας" value={c.postal} onChange={set('postal')} required autoComplete="postal-code" />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -521,6 +541,7 @@ export function CheckoutForm() {
             </p>
           ) : null}
 
+          {/* Greece → courier · Cyprus refrigerated → home only · otherwise ACS only */}
           {inGreece ? (
             <RadioRow
               name="delivery"
@@ -530,24 +551,24 @@ export function CheckoutForm() {
               label="Αποστολή με courier"
               price={formatCents(GREECE_SHIPPING)}
             />
+          ) : hasRefrigerated ? (
+            <RadioRow
+              name="delivery"
+              checked
+              readOnly
+              onChange={() => {}}
+              label="Παράδοση κατ’ οίκον"
+              price={homeFree ? 'Δωρεάν' : formatCents(HOME_SHIPPING)}
+            />
           ) : (
-            <>
-              <RadioRow
-                name="delivery"
-                checked={delivery === 'acs'}
-                disabled={hasRefrigerated}
-                onChange={() => setC((p) => ({ ...p, delivery: 'acs' }))}
-                label="Παραλαβή από κατάστημα ACS"
-                price={formatCents(ACS_SHIPPING)}
-              />
-              <RadioRow
-                name="delivery"
-                checked={delivery === 'home'}
-                onChange={() => setC((p) => ({ ...p, delivery: 'home' }))}
-                label="Παράδοση κατ’ οίκον"
-                price={homeFree ? 'Δωρεάν' : formatCents(HOME_SHIPPING)}
-              />
-            </>
+            <RadioRow
+              name="delivery"
+              checked
+              readOnly
+              onChange={() => {}}
+              label="Παραλαβή από κατάστημα ACS"
+              price={formatCents(ACS_SHIPPING)}
+            />
           )}
 
           {/* ACS pickup point — Cyprus ACS only */}
@@ -576,32 +597,10 @@ export function CheckoutForm() {
             </label>
           ) : null}
 
-          {/* District — Cyprus home delivery (enforces the refrigerated-area rule) */}
-          {!inGreece && delivery === 'home' ? (
-            <label className="mt-0.5 flex flex-col gap-1.5">
-              <span className="text-[13px] text-muted">
-                Επαρχία<Req />
-              </span>
-              <select
-                value={c.district}
-                onChange={set('district')}
-                required
-                className="w-full min-w-0 rounded-[4px] border border-border bg-white px-3 py-2.5 text-[14px] text-foreground outline-none focus:border-accent"
-              >
-                <option value="">Επιλέξτε επαρχία…</option>
-                {CY_DISTRICTS.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ) : null}
-
           {refrigeratedBlocked ? (
             <p className="text-[13px] leading-[18px] text-red-600">
               Δεν είναι δυνατή η παράδοση προϊόντων ψυγείου{' '}
-              {inGreece ? 'στην Ελλάδα' : `στην επαρχία ${c.district}`}.
+              {inGreece ? 'στην Ελλάδα' : `στην περιοχή ${c.city}`}.
             </p>
           ) : null}
         </fieldset>
