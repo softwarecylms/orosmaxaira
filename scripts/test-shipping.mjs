@@ -74,6 +74,24 @@ const homeRadio = (p) => p.getByRole('radio', { name: /Παράδοση κατ�
   await page.close()
 }
 
+// ── C: refrigerated + Greece → courier disabled + unselected ────────────────
+{
+  const page = await browser.newPage({ viewport: { width: 1280, height: 950 } })
+  log('C) Refrigerated (Βασιλικός πολτός) + Greece — courier blocked:')
+  await page.goto(`${base}/shop/vasilikos-poltos-oros-machaira`, { waitUntil: 'networkidle' })
+  await page.getByRole('button', { name: /Προσθήκη στο καλάθι/ }).first().click()
+  await page.waitForTimeout(600)
+  await page.goto(`${base}/checkout`, { waitUntil: 'networkidle' })
+  await page.getByLabel(/Χώρα/).first().selectOption('Ελλάδα')
+  await page.waitForTimeout(300)
+  const courier = page.getByRole('radio', { name: /Αποστολή με courier/ })
+  check(await courier.isDisabled(), 'Greece + frozen → courier disabled')
+  check(!(await courier.isChecked()), 'Greece + frozen → courier not selected')
+  check((await page.getByText(/δεν είναι δυνατή η παράδοση.*Ελλάδα/i).count()) > 0, 'Greece + frozen → block message')
+  check(await page.getByRole('button', { name: /Ολοκλήρωση παραγγελίας/ }).isDisabled(), 'Greece + frozen → submit disabled')
+  await page.close()
+}
+
 await browser.close()
 log(failed ? '\n✗ SOME CHECKS FAILED' : '\n✓ ALL CHECKS PASSED')
 process.exitCode = failed ? 1 : 0

@@ -541,8 +541,8 @@ export function CheckoutForm() {
             <p className="rounded-[4px] bg-accent-soft px-3 py-2.5 text-[13px] font-semibold leading-[18px] text-foreground">
               ❄️ Η παραγγελία περιέχει {refrigeratedNames.length === 1 ? 'προϊόν' : 'προϊόντα'}{' '}
               ψυγείου ({refrigeratedNames.join(', ')}) —{' '}
-              {refrigeratedNames.length === 1 ? 'παραδίδεται' : 'παραδίδονται'} μόνο κατ’ οίκον και όχι
-              σε Πάφο, Αμμόχωστο ή Ελλάδα.
+              {refrigeratedNames.length === 1 ? 'παραδίδεται' : 'παραδίδονται'} μόνο κατ’ οίκον (όχι σε
+              Πάφο, Αμμόχωστο ή Ελλάδα).
             </p>
           ) : null}
 
@@ -550,7 +550,8 @@ export function CheckoutForm() {
           {inGreece ? (
             <RadioRow
               name="delivery"
-              checked
+              checked={!refrigeratedBlocked}
+              disabled={refrigeratedBlocked}
               readOnly
               onChange={() => {}}
               label="Αποστολή με courier"
