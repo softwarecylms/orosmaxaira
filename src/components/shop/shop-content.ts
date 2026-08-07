@@ -27,6 +27,14 @@ export type ShopProduct = {
   variantId?: string
 }
 
+/**
+ * Refrigerated products (royal jelly + bee pollen): home delivery only — no ACS
+ * pickup, and not to Paphos / Famagusta (Cyprus) or Greece. Used by the checkout
+ * rules and the product-page notice.
+ */
+export const REFRIGERATED_HANDLES = ['vasilikos-poltos-oros-machaira', 'gyri-oros-machaira']
+export const isRefrigerated = (handle: string) => REFRIGERATED_HANDLES.includes(handle)
+
 /** Filter sidebar categories, in Figma order. */
 export const SHOP_CATEGORIES: ShopCategory[] = [
   'Μέλι',

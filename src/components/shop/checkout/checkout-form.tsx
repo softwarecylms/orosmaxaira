@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { Check, Tag, Truck } from 'lucide-react'
 import { useCart, formatCents, type CartItem } from '@/components/commerce/cart-store'
 import { placeMedusaOrder } from '@/lib/medusa/place-order'
+import { REFRIGERATED_HANDLES } from '@/components/shop/shop-content'
 import { cn } from '@/lib/utils'
 
 const FREE_SHIPPING_THRESHOLD = 7000 // €70,00 — free HOME delivery above this (Cyprus)
@@ -16,9 +17,8 @@ const GREECE_SHIPPING = 700 // €7,00 (Greece — never free)
 
 type Country = 'Κύπρος' | 'Ελλάδα'
 
-// Refrigerated products: delivered ONLY to home (no ACS pickup) and NOT to
-// Paphos / Famagusta (Cyprus) or Greece.
-const REFRIGERATED_HANDLES = ['vasilikos-poltos-oros-machaira', 'gyri-oros-machaira']
+// Refrigerated products (REFRIGERATED_HANDLES): home delivery only (no ACS
+// pickup) and NOT to Paphos / Famagusta (Cyprus) or Greece.
 const CY_DISTRICTS = ['Λευκωσία', 'Λεμεσός', 'Λάρνακα', 'Πάφος', 'Αμμόχωστος'] as const
 const REFRIGERATED_BLOCKED_DISTRICTS: string[] = ['Πάφος', 'Αμμόχωστος']
 
@@ -493,7 +493,7 @@ export function CheckoutForm() {
           <legend className="mb-1 text-[15px] font-semibold text-foreground">Τρόπος παράδοσης</legend>
 
           {hasRefrigerated ? (
-            <p className="rounded-[4px] bg-accent-soft px-3 py-2.5 text-[13px] leading-[18px] text-foreground">
+            <p className="rounded-[4px] bg-accent-soft px-3 py-2.5 text-[13px] font-semibold leading-[18px] text-foreground">
               ❄️ Η παραγγελία περιέχει προϊόντα ψυγείου (Βασιλικός πολτός, Γύρη) — παραδίδονται μόνο
               κατ’ οίκον και όχι σε Πάφο, Αμμόχωστο ή Ελλάδα.
             </p>

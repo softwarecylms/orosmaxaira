@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Minus, Plus, ShoppingCart, Check } from 'lucide-react'
 import type { ShopProduct, ShopProductDetail, ShopVariationSize } from '../shop-content'
+import { isRefrigerated } from '../shop-content'
 import { useCart, parsePrice } from '@/components/commerce/cart-store'
 import { displayPrice, cn } from '@/lib/utils'
 import { RevealGroup, RevealItem } from '@/components/home/reveal-up'
@@ -127,6 +128,18 @@ export function ProductPurchase({
         <RevealItem>
           <p className="max-w-[600px] whitespace-pre-line text-[17px] leading-[24px] text-muted">
             <RichText text={detail.description} />
+          </p>
+        </RevealItem>
+      ) : null}
+
+      {/* Refrigerated products: quiet delivery caveat */}
+      {isRefrigerated(handle) ? (
+        <RevealItem>
+          <p className="flex items-start gap-2 text-[13px] leading-[19px] text-muted">
+            <span aria-hidden="true">❄️</span>
+            <span>
+              Προϊόν ψυγείου — παράδοση μόνο κατ’ οίκον (όχι σε Πάφο, Αμμόχωστο ή Ελλάδα).
+            </span>
           </p>
         </RevealItem>
       ) : null}
