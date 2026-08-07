@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { Check, Minus, Plus, Tag, Truck } from 'lucide-react'
 import { useCart, formatCents, type CartItem } from '@/components/commerce/cart-store'
 import { placeMedusaOrder } from '@/lib/medusa/place-order'
-import { REFRIGERATED_HANDLES } from '@/components/shop/shop-content'
+import { REFRIGERATED_HANDLES, isRefrigerated } from '@/components/shop/shop-content'
 import { cn } from '@/lib/utils'
 
 const FREE_SHIPPING_THRESHOLD = 7000 // €70,00 — free HOME delivery above this (Cyprus)
@@ -498,6 +498,11 @@ export function CheckoutForm() {
                   href={`/shop/${item.handle}`}
                   className="text-[14px] font-medium leading-[18px] text-foreground transition-colors hover:text-accent"
                 >
+                  {isRefrigerated(item.handle) ? (
+                    <span aria-hidden="true" className="mr-1">
+                      ❄️
+                    </span>
+                  ) : null}
                   {item.title}
                 </Link>
                 {item.size ? <span className="text-[13px] text-muted">{item.size}</span> : null}
