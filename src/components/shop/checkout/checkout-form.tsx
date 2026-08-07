@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Check, Tag, Truck } from 'lucide-react'
+import { Check, Minus, Plus, Tag, Truck, X } from 'lucide-react'
 import { useCart, formatCents, type CartItem } from '@/components/commerce/cart-store'
 import { placeMedusaOrder } from '@/lib/medusa/place-order'
 import { REFRIGERATED_HANDLES } from '@/components/shop/shop-content'
@@ -187,7 +187,7 @@ const EMPTY: Contact = {
  *  field set (in Greek). No real payment — places a local order snapshot. */
 export function CheckoutForm() {
   const router = useRouter()
-  const { items, subtotal, ready, clear } = useCart()
+  const { items, subtotal, ready, clear, setQty, removeItem } = useCart()
   const [c, setC] = useState<Contact>(EMPTY)
   const [submitting, setSubmitting] = useState(false)
   const [orderError, setOrderError] = useState('')
@@ -460,7 +460,7 @@ export function CheckoutForm() {
 
         <div className="flex flex-col divide-y divide-border">
           {items.map((item) => (
-            <div key={item.key} className="flex items-center gap-3 py-3">
+            <div key={item.key} className="flex gap-3 py-3">
               <Link
                 href={`/shop/${item.handle}`}
                 className="relative size-[52px] shrink-0 overflow-hidden rounded-[4px] bg-offwhite"
@@ -472,11 +472,8 @@ export function CheckoutForm() {
                   sizes="52px"
                   className="object-cover transition-transform duration-300 hover:scale-105"
                 />
-                <span className="absolute -right-1.5 -top-1.5 flex size-[18px] items-center justify-center rounded-full bg-foreground text-[10px] font-medium text-white">
-                  {item.quantity}
-                </span>
               </Link>
-              <div className="flex flex-1 flex-col">
+              <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <Link
                   href={`/shop/${item.handle}`}
                   className="text-[14px] font-medium leading-[18px] text-foreground transition-colors hover:text-accent"
@@ -484,8 +481,40 @@ export function CheckoutForm() {
                   {item.title}
                 </Link>
                 {item.size ? <span className="text-[13px] text-muted">{item.size}</span> : null}
+                <div className="mt-1 flex items-center gap-3">
+                  <div className="flex w-[88px] items-center justify-between rounded-[5px] border border-border px-2">
+                    <button
+                      type="button"
+                      onClick={() => setQty(item.key, item.quantity - 1)}
+                      aria-label="Μείωση ποσότητας"
+                      className="flex size-6 items-center justify-center text-foreground transition-colors hover:text-accent"
+                    >
+                      <Minus className="size-3.5" strokeWidth={2} />
+                    </button>
+                    <span className="text-[14px] font-semibold text-foreground">{item.quantity}</span>
+                    <button
+                      type="button"
+                      onClick={() => setQty(item.key, item.quantity + 1)}
+                      aria-label="Αύξηση ποσότητας"
+                      className="flex size-6 items-center justify-center text-foreground transition-colors hover:text-accent"
+                    >
+                      <Plus className="size-3.5" strokeWidth={2} />
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeItem(item.key)}
+                    aria-label={`Αφαίρεση ${item.title}`}
+                    className="flex items-center gap-1 text-[13px] text-muted transition-colors hover:text-accent"
+                  >
+                    <X className="size-3.5" aria-hidden="true" />
+                    Αφαίρεση
+                  </button>
+                </div>
               </div>
-              <span className="text-[14px] text-foreground">{formatCents(item.unitPrice * item.quantity)}</span>
+              <span className="shrink-0 whitespace-nowrap text-[14px] text-foreground">
+                {formatCents(item.unitPrice * item.quantity)}
+              </span>
             </div>
           ))}
         </div>
