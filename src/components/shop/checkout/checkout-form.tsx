@@ -213,7 +213,9 @@ export function CheckoutForm() {
 
   // Refrigerated products (royal jelly / bee pollen) can only ship to a Cyprus
   // home address — never ACS pickup, never Paphos/Famagusta, never Greece.
-  const hasRefrigerated = items.some((i) => REFRIGERATED_HANDLES.includes(i.handle))
+  const refrigeratedItems = items.filter((i) => REFRIGERATED_HANDLES.includes(i.handle))
+  const hasRefrigerated = refrigeratedItems.length > 0
+  const refrigeratedNames = [...new Set(refrigeratedItems.map((i) => i.title))]
   const inGreece = c.country === 'Ελλάδα'
   // Refrigerated orders force home delivery.
   const delivery: Delivery = hasRefrigerated ? 'home' : c.delivery
@@ -494,8 +496,10 @@ export function CheckoutForm() {
 
           {hasRefrigerated ? (
             <p className="rounded-[4px] bg-accent-soft px-3 py-2.5 text-[13px] font-semibold leading-[18px] text-foreground">
-              ❄️ Η παραγγελία περιέχει προϊόντα ψυγείου (Βασιλικός πολτός, Γύρη) — παραδίδονται μόνο
-              κατ’ οίκον και όχι σε Πάφο, Αμμόχωστο ή Ελλάδα.
+              ❄️ Η παραγγελία περιέχει {refrigeratedNames.length === 1 ? 'προϊόν' : 'προϊόντα'}{' '}
+              ψυγείου ({refrigeratedNames.join(', ')}) —{' '}
+              {refrigeratedNames.length === 1 ? 'παραδίδεται' : 'παραδίδονται'} μόνο κατ’ οίκον και όχι
+              σε Πάφο, Αμμόχωστο ή Ελλάδα.
             </p>
           ) : null}
 

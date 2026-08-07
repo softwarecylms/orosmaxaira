@@ -28,7 +28,10 @@ async function fillBilling(page) {
   await page.waitForTimeout(600)
   await page.goto(`${base}/checkout`, { waitUntil: 'networkidle' })
 
-  check(await page.getByText(/προϊόντα ψυγείου/).count() > 0, 'refrigerated notice shown')
+  check(await page.getByText(/ψυγείου/).count() > 0, 'refrigerated notice shown')
+  const noticeText = (await page.getByText(/ψυγείου/).first().textContent()) ?? ''
+  check(noticeText.includes('Βασιλικός πολτός'), 'notice names the cart product')
+  check(!noticeText.includes('Γύρη'), 'notice omits products not in the cart')
   const acs = page.getByRole('radio', { name: /Παραλαβή από κατάστημα ACS/ })
   check(await acs.isDisabled(), 'ACS pickup is disabled')
   check(await page.getByText(/Επαρχία/).count() > 0, 'district selector shown (home forced)')
