@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { HoneyProduct } from './home-content'
+import { proiontaHref, type ShopCategory } from '@/components/shop/shop-content'
 import { displayPrice } from '@/lib/utils'
 
 /** Bespoke product card used in the Deal-of-the-Month row (Figma "Product w price"). */
@@ -20,7 +21,7 @@ export function ProductCardHoney({ product }: { product: HoneyProduct }) {
         />
       </Link>
       <Link
-        href={`/shop?category=${encodeURIComponent(product.category)}`}
+        href={proiontaHref(product.category as ShopCategory)}
         className="text-[14px] leading-[21px] text-muted transition-colors hover:text-accent"
       >
         {product.category}

@@ -43,6 +43,26 @@ export const SHOP_CATEGORIES: ShopCategory[] = [
   'Πακέτα Δώρων',
 ]
 
+/** Greek URL slugs per category (match the live site: /proionta/<slug>/). */
+export const CATEGORY_SLUGS: Record<ShopCategory, string> = {
+  Μέλι: 'meli',
+  'Προϊόντα Μέλισσας': 'proionta-melissas',
+  Καλλυντικά: 'kallyntika',
+  'Πακέτα Δώρων': 'paketa-doron',
+}
+export const CATEGORY_BY_SLUG: Record<string, ShopCategory> = Object.fromEntries(
+  (Object.entries(CATEGORY_SLUGS) as [ShopCategory, string][]).map(([name, slug]) => [slug, name]),
+) as Record<string, ShopCategory>
+
+/** Path to the products page, optionally filtered by category. */
+export function proiontaHref(category?: ShopCategory): string {
+  return category ? `/proionta/${CATEGORY_SLUGS[category]}` : '/proionta'
+}
+/** Internal path to a product detail page. */
+export function productHref(handle: string): string {
+  return `/product/${handle}`
+}
+
 export const SHOP_SORTS = [
   { value: 'default', label: 'Προεπιλεγμένη ταξινόμηση' },
   { value: 'price-asc', label: 'Τιμή: από χαμηλή σε υψηλή' },
@@ -216,7 +236,7 @@ export const PRODUCT_DETAILS: Record<string, ShopProductDetail> = {
   ...GENERATED_PRODUCT_DETAILS,
 }
 
-/** Slug used for the internal product URL (/shop/<handle>), derived from the
+/** Slug used for the internal product URL (/product/<handle>), derived from the
  *  live-site href so we don't have to duplicate it on every product row. */
 export function handleOf(product: ShopProduct): string {
   if (product.handle) return product.handle

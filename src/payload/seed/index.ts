@@ -21,7 +21,7 @@ const HOME_CONTENT = {
         heading: 'Your headline goes here',
         subheading:
           'A short supporting sentence about what you do. Open /admin and edit this in the visual editor.',
-        primaryCta: { label: 'Get in touch', href: '/contact', newTab: false },
+        primaryCta: { label: 'Get in touch', href: '/epikoinonia', newTab: false },
         logos: [],
       },
     },

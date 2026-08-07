@@ -6,6 +6,19 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  // Match the live site's URL scheme (Greek permalinks with trailing slashes).
+  trailingSlash: true,
+  async redirects() {
+    // Old storefront paths → new Greek permalinks (safety net for bookmarks).
+    return [
+      { source: '/shop', destination: '/proionta', permanent: true },
+      { source: '/shop/:handle', destination: '/product/:handle', permanent: true },
+      { source: '/about', destination: '/poioi-eimaste', permanent: true },
+      { source: '/contact', destination: '/epikoinonia', permanent: true },
+      { source: '/adopt-a-hive', destination: '/yiotheto-mia-kypseli', permanent: true },
+      { source: '/privacy', destination: '/privacy-amp-cookie-policy', permanent: true },
+    ]
+  },
   // Lint runs in the editor/CI, not as a deploy gate.
   eslint: { ignoreDuringBuilds: true },
   images: {

@@ -32,7 +32,7 @@ export default async function AccountOrdersPage() {
           </p>
         </div>
         <Link
-          href="/shop"
+          href="/proionta"
           className="mt-1 inline-flex items-center justify-center rounded-[4px] bg-accent px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-foreground"
         >
           Στο κατάστημα

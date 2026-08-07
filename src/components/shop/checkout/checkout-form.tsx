@@ -206,7 +206,7 @@ export function CheckoutForm() {
       <div className="container-wide flex flex-col items-start gap-5 py-16 md:py-24">
         <p className="text-[17px] text-muted">Το καλάθι σας είναι άδειο.</p>
         <Link
-          href="/shop"
+          href="/proionta"
           className="inline-flex items-center rounded-[4px] bg-accent px-5 py-3 text-[17px] text-white transition-colors hover:bg-foreground"
         >
           Συνεχίστε τις αγορές
@@ -520,7 +520,7 @@ export function CheckoutForm() {
           {items.map((item) => (
             <div key={item.key} className="flex gap-3 py-3">
               <Link
-                href={`/shop/${item.handle}`}
+                href={`/product/${item.handle}`}
                 className="relative size-[52px] shrink-0 overflow-hidden rounded-[4px] bg-offwhite"
               >
                 <Image
@@ -533,7 +533,7 @@ export function CheckoutForm() {
               </Link>
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <Link
-                  href={`/shop/${item.handle}`}
+                  href={`/product/${item.handle}`}
                   className="text-[14px] font-medium leading-[18px] text-foreground transition-colors hover:text-accent"
                 >
                   {isRefrigerated(item.handle) ? (
@@ -750,7 +750,7 @@ export function CheckoutForm() {
             υποστήριξη της εμπειρίας σας σε αυτόν τον ιστότοπο και για άλλους σκοπούς που περιγράφονται
             στην{' '}
             <Link
-              href="/privacy"
+              href="/privacy-amp-cookie-policy"
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent underline underline-offset-2"

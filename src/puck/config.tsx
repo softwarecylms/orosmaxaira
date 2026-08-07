@@ -326,7 +326,7 @@ export const puckConfig = {
         heading: 'Your headline here',
         eyebrow: 'Your eyebrow text',
         subheading: '',
-        primaryCta: { label: 'Request a callback', href: '/contact', newTab: false },
+        primaryCta: { label: 'Request a callback', href: '/epikoinonia', newTab: false },
         logos: [],
       },
       render: ({ eyebrow, heading, subheading, primaryCta, logos }) => (

@@ -11,7 +11,7 @@ page.on('pageerror', (e) => log('  [pageerror]', e.message.slice(0, 200)))
 
 try {
   // 1. Add a simple product to the cart from its detail page.
-  await page.goto(`${base}/shop/ydromelo`, { waitUntil: 'networkidle' })
+  await page.goto(`${base}/product/ydromelo`, { waitUntil: 'networkidle' })
   await page.getByRole('button', { name: /Προσθήκη στο καλάθι/ }).first().click()
   await page.waitForTimeout(800)
 

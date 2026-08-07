@@ -113,7 +113,7 @@ export function HeaderSearch({ className }: { className?: string }) {
       const r = results[active] ?? results[0]
       if (r) {
         close()
-        router.push(`/shop/${handleOf(r)}`)
+        router.push(`/product/${handleOf(r)}`)
       }
     }
   }
@@ -129,7 +129,7 @@ export function HeaderSearch({ className }: { className?: string }) {
         const r = results[active] ?? results[0]
         if (r) {
           close()
-          router.push(`/shop/${handleOf(r)}`)
+          router.push(`/product/${handleOf(r)}`)
         }
       }}
       className={cn('relative', className)}
@@ -199,7 +199,7 @@ export function HeaderSearch({ className }: { className?: string }) {
                     return (
                       <li key={handle} role="option" aria-selected={idx === active}>
                         <Link
-                          href={`/shop/${handle}`}
+                          href={`/product/${handle}`}
                           onMouseEnter={() => setActive(idx)}
                           className={cn(
                             'flex items-center gap-3 px-4 py-2.5 transition-colors',
@@ -229,7 +229,7 @@ export function HeaderSearch({ className }: { className?: string }) {
                   })}
                 </ul>
                 <Link
-                  href="/shop"
+                  href="/proionta"
                   className="block border-t border-border px-4 py-3 text-center text-[14px] font-medium text-accent transition-colors hover:bg-cream"
                 >
                   Όλα τα προϊόντα

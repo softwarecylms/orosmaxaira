@@ -146,7 +146,7 @@ export function HeaderMobile({
                 Όροι &amp; Προϋποθέσεις
               </Link>
               <Link
-                href="/privacy"
+                href="/privacy-amp-cookie-policy"
                 onClick={() => setOpen(false)}
                 className="py-2 text-[15px] text-muted transition-colors hover:text-accent"
               >

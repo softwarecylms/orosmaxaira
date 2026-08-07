@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 test.describe('OROS MACHAIRA shop page', () => {
   test('renders the breadcrumb, sidebar filters and a product grid', async ({ page }) => {
-    await page.goto('/shop')
+    await page.goto('/proionta')
     await expect(page.getByRole('navigation', { name: 'breadcrumb' })).toContainText('Προϊόντα')
     await expect(page.getByTestId('shop-browser')).toBeVisible()
     // Category filter labels from the Figma sidebar
@@ -14,7 +14,7 @@ test.describe('OROS MACHAIRA shop page', () => {
   })
 
   test('infinite scroll loads more products (no pagination)', async ({ page }) => {
-    await page.goto('/shop')
+    await page.goto('/proionta')
     await expect(page.getByTestId('shop-card')).toHaveCount(12)
     // No pagination controls anywhere on the page
     await expect(page.getByRole('navigation', { name: /pagination/i })).toHaveCount(0)
@@ -30,7 +30,7 @@ test.describe('OROS MACHAIRA shop page', () => {
   })
 
   test('category filter narrows the result set', async ({ page }) => {
-    await page.goto('/shop')
+    await page.goto('/proionta')
     await expect(page.getByTestId('shop-card')).toHaveCount(12)
     // Selecting "Μέλι" narrows the grid to fewer products than the initial page.
     await page.getByRole('checkbox', { name: 'Μέλι', exact: true }).check()

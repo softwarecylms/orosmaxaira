@@ -62,7 +62,7 @@ export default async function ProductPage({ params }: Params) {
             aria-label="breadcrumb"
             className="flex flex-wrap items-center gap-1.5 text-[15px] text-muted md:text-[17px]"
           >
-            <Link href="/shop" className="transition-colors hover:text-accent">
+            <Link href="/proionta" className="transition-colors hover:text-accent">
               Προϊόντα
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />

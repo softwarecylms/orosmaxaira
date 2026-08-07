@@ -219,7 +219,7 @@ export function BlogPostRender({ post, relatedPosts = [] }: Props) {
                 Need help with your website or SEO?
               </p>
               <LinkButton
-                href="/contact"
+                href="/epikoinonia"
                 variant="light"
                 withIcon
                 className="rounded-[40px]"

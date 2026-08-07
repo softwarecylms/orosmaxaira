@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
 import { ArrowRight, SlidersHorizontal, X } from 'lucide-react'
 import {
   SHOP_CATEGORIES,
@@ -58,20 +57,22 @@ function defaultOrderRank(p: ShopProduct): number {
   return cat * 10 + lead
 }
 
-export function ShopBrowser({ products = SHOP_PRODUCTS }: { products?: ShopProduct[] } = {}) {
-  // A `?category=…` query (set by clicking a category on a product card)
-  // pre-selects that filter, and keeps it in sync on navigation.
-  const categoryParam = useSearchParams().get('category')
-  const validCat =
-    categoryParam && (SHOP_CATEGORIES as readonly string[]).includes(categoryParam)
-      ? (categoryParam as ShopCategory)
-      : null
+export function ShopBrowser({
+  products = SHOP_PRODUCTS,
+  initialCategory,
+}: {
+  products?: ShopProduct[]
+  /** Pre-selected category from the /proionta/<slug> route. */
+  initialCategory?: ShopCategory
+} = {}) {
+  // The category comes from the URL path (/proionta/<slug>); keep the filter in
+  // sync when navigating between category pages.
   const [cats, setCats] = useState<Set<ShopCategory>>(() =>
-    validCat ? new Set([validCat]) : new Set(),
+    initialCategory ? new Set([initialCategory]) : new Set(),
   )
   useEffect(() => {
-    setCats(validCat ? new Set([validCat]) : new Set())
-  }, [validCat])
+    setCats(initialCategory ? new Set([initialCategory]) : new Set())
+  }, [initialCategory])
 
   const [priceMin, setPriceMin] = useState(SHOP_PRICE_MIN)
   const [priceMax, setPriceMax] = useState(SHOP_PRICE_MAX)

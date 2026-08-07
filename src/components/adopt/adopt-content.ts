@@ -226,7 +226,7 @@ export const ADOPT_PAGE = {
       'Επικοινωνήστε μαζί μας σήμερα και γίνετε κι εσείς μέρος αυτής της προσπάθειας.',
     body:
       'Η ομάδα μας θα σχεδιάσει μαζί σας την εμπειρία που ταιριάζει στην εταιρεία σας.',
-    primary: { label: 'Επικοινωνήστε μαζί μας', href: '/contact' },
+    primary: { label: 'Επικοινωνήστε μαζί μας', href: '/epikoinonia' },
     tel: { label: '25622305', href: 'tel:+35725622305' },
     contact: {
       company: 'M.F. (OROS MAXAIRA) LTD',

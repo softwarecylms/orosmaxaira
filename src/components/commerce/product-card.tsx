@@ -9,7 +9,7 @@ export function ProductCard({ product }: { product: HttpTypes.StoreProduct }) {
 
   return (
     <Link
-      href={`/shop/${product.handle}`}
+      href={`/product/${product.handle}`}
       className="group flex flex-col gap-3"
     >
       <div className="relative aspect-square overflow-hidden rounded-2xl border border-border bg-card">

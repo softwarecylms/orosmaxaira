@@ -105,7 +105,7 @@ export default async function AccountOverviewPage() {
           )}
         </Card>
 
-        <Card title="Συνέχεια αγορών" icon={Package} href="/shop" cta="Στο κατάστημα">
+        <Card title="Συνέχεια αγορών" icon={Package} href="/proionta" cta="Στο κατάστημα">
           <p>Ανακαλύψτε το αγνό μας μέλι, τα προϊόντα της κυψέλης και τα φυσικά καλλυντικά.</p>
         </Card>
       </div>

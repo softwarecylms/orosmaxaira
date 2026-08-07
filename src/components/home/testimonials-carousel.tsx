@@ -45,7 +45,7 @@ export function TestimonialsCarousel({ heading, items }: TestimonialsCarouselPro
           {heading ?? 'What Our Clients Are Expressing About Their Growth Experience'}
         </h2>
         <Link
-          href="/contact"
+          href="/epikoinonia"
           aria-label="Contact us"
           className="inline-flex size-12 shrink-0 items-center justify-center rounded-[24px] bg-surface-dark text-white transition-transform duration-200 hover:scale-105"
         >
@@ -129,7 +129,7 @@ type CtaPanelProps = {
 export function JourneyCtaPanel({
   heading = 'Ready to Begin Your Journey Toward Lasting Success?',
   body = 'Get in touch for anything related to your online presence.',
-  href = '/contact',
+  href = '/epikoinonia',
 }: CtaPanelProps) {
   const reduceMotion = useReducedMotion()
 

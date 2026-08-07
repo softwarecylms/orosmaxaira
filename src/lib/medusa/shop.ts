@@ -74,7 +74,7 @@ function mapProduct(p: HttpTypes.StoreProduct): ShopProduct | null {
     inStock,
     image: p.thumbnail ?? p.images?.[0]?.url ?? '',
     imageAlt: p.title,
-    href: `/shop/${p.handle}`,
+    href: `/product/${p.handle}`,
   }
 }
 
@@ -165,8 +165,12 @@ export async function getShopProduct(
     const staticSizes = staticDetail.variations?.sizes ?? []
     sizes = variants
       .map((v) => {
+        // Multi-variant honeys have a single "Μέγεθος" option → its value is the
+        // size label (e.g. "330g"). Fall back to the first option value, then title.
         const label =
-          v.options?.find((o) => o.option?.title === 'Μέγεθος')?.value ?? v.title
+          v.options?.find((o) => o.option?.title === 'Μέγεθος')?.value ??
+          v.options?.[0]?.value ??
+          v.title
         const st = staticSizes.find((s) => s.label === label)
         const amount = v.calculated_price?.calculated_amount ?? 0
         return {

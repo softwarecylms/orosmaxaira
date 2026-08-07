@@ -19,7 +19,7 @@ export function FooterCTA({ settings }: FooterCtaProps) {
     cta?.body ??
     'Get in touch for anything related to your online presence.'
   const ctaLabel = cta?.cta?.label ?? 'Request a callback'
-  const ctaHref = cta?.cta?.href ?? '/contact'
+  const ctaHref = cta?.cta?.href ?? '/epikoinonia'
 
   return (
     <section aria-labelledby="footer-cta-heading" className="container-page pb-10 md:pb-14">

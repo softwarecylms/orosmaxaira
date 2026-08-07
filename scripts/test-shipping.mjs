@@ -26,7 +26,7 @@ const homeRadio = (p) => p.getByRole('radio', { name: /Παράδοση κατ�
 {
   const page = await browser.newPage({ viewport: { width: 1280, height: 950 } })
   log('A) Refrigerated (Βασιλικός πολτός) — home only + area block:')
-  await page.goto(`${base}/shop/vasilikos-poltos-oros-machaira`, { waitUntil: 'networkidle' })
+  await page.goto(`${base}/product/vasilikos-poltos-oros-machaira`, { waitUntil: 'networkidle' })
   await page.getByRole('button', { name: /Προσθήκη στο καλάθι/ }).first().click()
   await page.waitForTimeout(600)
   await page.goto(`${base}/checkout`, { waitUntil: 'networkidle' })
@@ -58,7 +58,7 @@ const homeRadio = (p) => p.getByRole('radio', { name: /Παράδοση κατ�
 {
   const page = await browser.newPage({ viewport: { width: 1280, height: 950 } })
   log('B) Non-refrigerated (Υδρόμελο) — ACS only:')
-  await page.goto(`${base}/shop/ydromelo`, { waitUntil: 'networkidle' })
+  await page.goto(`${base}/product/ydromelo`, { waitUntil: 'networkidle' })
   await page.getByRole('button', { name: /Προσθήκη στο καλάθι/ }).first().click()
   await page.waitForTimeout(600)
   await page.goto(`${base}/checkout`, { waitUntil: 'networkidle' })
@@ -78,7 +78,7 @@ const homeRadio = (p) => p.getByRole('radio', { name: /Παράδοση κατ�
 {
   const page = await browser.newPage({ viewport: { width: 1280, height: 950 } })
   log('C) Refrigerated (Βασιλικός πολτός) + Greece — courier blocked:')
-  await page.goto(`${base}/shop/vasilikos-poltos-oros-machaira`, { waitUntil: 'networkidle' })
+  await page.goto(`${base}/product/vasilikos-poltos-oros-machaira`, { waitUntil: 'networkidle' })
   await page.getByRole('button', { name: /Προσθήκη στο καλάθι/ }).first().click()
   await page.waitForTimeout(600)
   await page.goto(`${base}/checkout`, { waitUntil: 'networkidle' })
@@ -96,7 +96,7 @@ const homeRadio = (p) => p.getByRole('radio', { name: /Παράδοση κατ�
 {
   const page = await browser.newPage({ viewport: { width: 1280, height: 950 } })
   log('D) Cyprus ≥ €70 — free shipping:')
-  await page.goto(`${base}/shop/ydromelo`, { waitUntil: 'networkidle' }) // €16
+  await page.goto(`${base}/product/ydromelo`, { waitUntil: 'networkidle' }) // €16
   await page.getByRole('button', { name: /Προσθήκη στο καλάθι/ }).first().click()
   await page.waitForTimeout(600)
   await page.goto(`${base}/checkout`, { waitUntil: 'networkidle' })
@@ -119,7 +119,7 @@ const homeRadio = (p) => p.getByRole('radio', { name: /Παράδοση κατ�
 {
   const page = await browser.newPage({ viewport: { width: 1280, height: 950 } })
   log('E) Refrigerated + ship-to Πάφος (different address) — blocked:')
-  await page.goto(`${base}/shop/vasilikos-poltos-oros-machaira`, { waitUntil: 'networkidle' })
+  await page.goto(`${base}/product/vasilikos-poltos-oros-machaira`, { waitUntil: 'networkidle' })
   await page.getByRole('button', { name: /Προσθήκη στο καλάθι/ }).first().click()
   await page.waitForTimeout(600)
   await page.goto(`${base}/checkout`, { waitUntil: 'networkidle' })

@@ -117,6 +117,6 @@ export const ACTIVITIES_PAGE = {
     heading: 'Κλείστε τη δική σας εμπειρία',
     body: 'Επιλέξτε τη δραστηριότητα που σας ενδιαφέρει και κλείστε online, ή επικοινωνήστε μαζί μας για ομαδικές και σχολικές κρατήσεις.',
     primary: { label: 'Δείτε τις εμπειρίες', href: '#experiences' },
-    secondary: { label: 'Επικοινωνία', href: '/contact' },
+    secondary: { label: 'Επικοινωνία', href: '/epikoinonia' },
   },
 } as const

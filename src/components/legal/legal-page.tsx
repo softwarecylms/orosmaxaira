@@ -55,7 +55,7 @@ export function LegalPage({
 
           <p className="mt-10 border-t border-border pt-6 text-[15px] leading-[24px] text-muted">
             Για οποιαδήποτε απορία, επικοινωνήστε μαζί μας μέσω του{' '}
-            <Link href="/contact" className="text-accent hover:underline">
+            <Link href="/epikoinonia" className="text-accent hover:underline">
               τμήματος επικοινωνίας
             </Link>
             .

@@ -142,7 +142,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 </a>
               </div>
               <Link
-                href="/contact"
+                href="/epikoinonia"
                 className="mt-5 inline-flex items-center justify-center rounded-[4px] bg-white px-5 py-2.5 text-[14px] font-medium text-foreground transition-colors hover:bg-foreground hover:text-white"
               >
                 Επικοινωνία

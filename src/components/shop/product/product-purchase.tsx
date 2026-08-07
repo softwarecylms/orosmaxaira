@@ -277,7 +277,7 @@ export function ProductPurchase({
                   i > 0 && 'border-t border-border',
                 )}
               >
-                <Link href={`/shop/${a.handle}`} className="group flex flex-1 items-center gap-2.5">
+                <Link href={`/product/${a.handle}`} className="group flex flex-1 items-center gap-2.5">
                   <span className="relative size-[59px] shrink-0 overflow-hidden rounded-[4px] bg-offwhite">
                     <Image src={a.image} alt={a.title} fill sizes="59px" className="object-cover" />
                   </span>

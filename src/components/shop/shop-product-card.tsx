@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart } from 'lucide-react'
 import type { ShopProduct } from './shop-content'
-import { SHOP_PAGE, handleOf } from './shop-content'
+import { SHOP_PAGE, handleOf, productHref, proiontaHref } from './shop-content'
 import { displayPrice } from '@/lib/utils'
 
 /**
@@ -18,7 +18,7 @@ export function ShopProductCard({
   /** Use the short "Προσθήκη" label instead of "Προσθήκη στο καλάθι" (tight grids). */
   shortCta?: boolean
 }) {
-  const href = `/shop/${handleOf(product)}`
+  const href = productHref(handleOf(product))
 
   return (
     <article
@@ -44,7 +44,7 @@ export function ShopProductCard({
       </Link>
 
       <Link
-        href={`/shop?category=${encodeURIComponent(product.category)}`}
+        href={proiontaHref(product.category)}
         className="w-fit text-[14px] leading-[21px] text-[#555] transition-colors hover:text-accent"
       >
         {product.category}

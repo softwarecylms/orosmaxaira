@@ -20,7 +20,7 @@ export function CartView() {
       <div className="container-wide flex flex-col items-start gap-5 py-16 md:py-24">
         <p className="text-[17px] text-muted">Το καλάθι σας είναι άδειο.</p>
         <Link
-          href="/shop"
+          href="/proionta"
           className="inline-flex items-center gap-3 rounded-[4px] bg-accent px-5 py-3 text-[17px] text-white transition-colors hover:bg-foreground"
         >
           Συνεχίστε τις αγορές
@@ -41,7 +41,7 @@ export function CartView() {
           {items.map((item) => (
             <div key={item.key} className="flex gap-4 py-5">
               <Link
-                href={`/shop/${item.handle}`}
+                href={`/product/${item.handle}`}
                 className="relative size-[88px] shrink-0 overflow-hidden rounded-[4px] bg-offwhite"
               >
                 <Image src={item.image} alt={item.title} fill sizes="88px" className="object-cover" />
@@ -49,7 +49,7 @@ export function CartView() {
 
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <Link
-                  href={`/shop/${item.handle}`}
+                  href={`/product/${item.handle}`}
                   className="text-[17px] font-medium leading-[22px] text-foreground transition-colors hover:text-accent"
                 >
                   {item.title}
@@ -161,7 +161,7 @@ export function CartView() {
             <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
           <Link
-            href="/shop"
+            href="/proionta"
             className="text-center text-[14px] text-muted transition-colors hover:text-foreground"
           >
             Συνεχίστε τις αγορές

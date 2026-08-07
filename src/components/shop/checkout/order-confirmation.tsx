@@ -84,7 +84,7 @@ export function OrderConfirmation({ id }: { id: string }) {
       )}
 
       <Link
-        href="/shop"
+        href="/proionta"
         className="inline-flex items-center rounded-[4px] bg-accent px-5 py-3 text-[17px] text-white transition-colors hover:bg-foreground"
       >
         Συνεχίστε τις αγορές

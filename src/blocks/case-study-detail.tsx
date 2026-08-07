@@ -129,7 +129,7 @@ export function CaseStudyDetailRender({ caseStudy }: Props) {
                 Want a similar result for your business?
               </p>
               <LinkButton
-                href="/contact"
+                href="/epikoinonia"
                 variant="light"
                 withIcon
                 className="rounded-[40px]"

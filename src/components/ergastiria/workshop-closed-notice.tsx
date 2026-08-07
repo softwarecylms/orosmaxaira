@@ -28,7 +28,7 @@ export function WorkshopClosedNotice({
         </p>
       </div>
       <Link
-        href="/contact"
+        href="/epikoinonia"
         className="inline-flex items-center justify-center gap-2 rounded-[4px] bg-accent px-5 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-foreground"
       >
         Επικοινωνήστε μαζί μας
