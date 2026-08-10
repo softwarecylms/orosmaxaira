@@ -24,7 +24,7 @@ try {
   await page.locator('input[type=tel]').first().fill('99123456')
   await page.locator('input[type=email]').first().fill('playwright@oros.cy')
   await page.getByPlaceholder('Αριθμός και όνομα οδού').first().fill('Οδός Μελισσών 1')
-  await page.getByLabel(/^Πόλη/).first().fill('Λάρνακα')
+  await page.getByLabel(/^Πόλη/).first().selectOption('Λάρνακα')
   await page.getByLabel(/Ταχ\. Κώδικας/).first().fill('7716')
 
   // ACS pickup point (required select) + terms checkbox (required).

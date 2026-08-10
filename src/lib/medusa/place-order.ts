@@ -97,7 +97,14 @@ export async function placeMedusaOrder(
       query: { region_id: region.id },
       cache: 'no-store',
     })
-    const providerId = payment_providers?.[0]?.id
+    // Pick the provider explicitly. Stay on the manual/system provider even after
+    // Stripe is enabled on the region — the Stripe card flow (Elements +
+    // confirmCardPayment before complete()) doesn't exist yet, so blindly taking
+    // payment_providers[0] could hijack checkout with an unconfirmed Stripe session.
+    // Switch this to 'pp_stripe_stripe' when the Stripe Elements flow lands (see STRIPE.md).
+    const providerId =
+      payment_providers.find((p) => p.id === 'pp_system_default')?.id ??
+      payment_providers?.[0]?.id
     if (!providerId) return { error: 'Δεν υπάρχει διαθέσιμος τρόπος πληρωμής.' }
     await sdk.store.payment.initiatePaymentSession(fresh.cart, { provider_id: providerId })
 

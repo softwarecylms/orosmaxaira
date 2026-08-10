@@ -171,7 +171,12 @@ export async function initiatePayment(): Promise<void> {
     cache: 'no-store',
   })
 
-  const providerId = payment_providers?.[0]?.id
+  // Explicit pick — stay on the manual/system provider until the Stripe Elements
+  // flow exists (see place-order.ts + STRIPE.md). Avoids payment_providers[0]
+  // silently becoming Stripe once it's enabled on the region.
+  const providerId =
+    payment_providers.find((p) => p.id === 'pp_system_default')?.id ??
+    payment_providers?.[0]?.id
   if (!providerId) throw new Error('No payment provider available.')
 
   // Skip if an active session for this provider already exists.

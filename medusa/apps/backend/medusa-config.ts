@@ -31,5 +31,31 @@ module.exports = defineConfig({
         ],
       },
     },
+    // Payment module. The built-in system/manual provider (pp_system_default) is
+    // always registered automatically. Stripe is registered ONLY when
+    // STRIPE_API_KEY is set — so with no key (dev + prod today) behaviour is
+    // identical: only pp_system_default exists and checkout takes no real charge.
+    // To go live: set STRIPE_API_KEY + STRIPE_WEBHOOK_SECRET, redeploy, then
+    // attach the provider to the region (npm run … src/scripts/seed-oros-stripe.ts).
+    // See STRIPE.md. Provider id once enabled: "pp_stripe_stripe".
+    {
+      resolve: "@medusajs/payment",
+      options: {
+        providers: process.env.STRIPE_API_KEY
+          ? [
+              {
+                resolve: "@medusajs/payment-stripe",
+                id: "stripe",
+                options: {
+                  apiKey: process.env.STRIPE_API_KEY,
+                  webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+                  capture: true, // auto-capture on authorization
+                  automaticPaymentMethods: true, // cards + wallets (Apple/Google Pay)
+                },
+              },
+            ]
+          : [],
+      },
+    },
   ],
 })
