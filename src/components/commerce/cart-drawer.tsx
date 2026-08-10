@@ -161,9 +161,16 @@ export function CartDrawer() {
                             >
                               <Minus className="size-3" strokeWidth={2} />
                             </button>
-                            <span className="w-7 text-center text-[14px] font-semibold text-foreground">
-                              {item.quantity}
-                            </span>
+                            <input
+                              type="number"
+                              min={1}
+                              value={item.quantity}
+                              onChange={(e) =>
+                                setQty(item.key, Math.max(1, Math.floor(Number(e.target.value) || 1)))
+                              }
+                              aria-label="Ποσότητα"
+                              className="w-7 bg-transparent text-center text-[14px] font-semibold text-foreground outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                            />
                             <button
                               type="button"
                               onClick={() => setQty(item.key, item.quantity + 1)}
