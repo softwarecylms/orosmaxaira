@@ -311,9 +311,11 @@ export function CheckoutForm() {
     // Refrigerated products can't reach Paphos/Famagusta or Greece.
     if (refrigeratedBlocked) {
       setOrderError(
-        `Τα προϊόντα ψυγείου (Βασιλικός πολτός, Γύρη) δεν αποστέλλονται ${
+        `Τα προϊόντα ψυγείου δεν αποστέλλονται ${
           inGreece ? 'στην Ελλάδα' : `στην περιοχή ${deliveryCity}`
-        }. Αφαιρέστε τα ή επιλέξτε άλλη περιοχή παράδοσης.`,
+        }. Αφαιρέστε τα προϊόντα ψυγείου από το καλάθι σας ή επιλέξτε άλλη ${
+          inGreece ? 'χώρα' : 'περιοχή'
+        } παράδοσης για να συνεχίσετε.`,
       )
       return
     }
@@ -642,7 +644,9 @@ export function CheckoutForm() {
           {refrigeratedBlocked ? (
             <p className="text-[13px] leading-[18px] text-red-600">
               Δεν είναι δυνατή η παράδοση προϊόντων ψυγείου{' '}
-              {inGreece ? 'στην Ελλάδα' : `στην περιοχή ${deliveryCity}`}.
+              {inGreece ? 'στην Ελλάδα' : `στην περιοχή ${deliveryCity}`}. Αφαιρέστε τα προϊόντα
+              ψυγείου από το καλάθι σας ή επιλέξτε άλλη {inGreece ? 'χώρα' : 'περιοχή'} παράδοσης για
+              να συνεχίσετε.
             </p>
           ) : null}
         </fieldset>
