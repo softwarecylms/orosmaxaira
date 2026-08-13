@@ -54,9 +54,38 @@ export const CATEGORY_BY_SLUG: Record<string, ShopCategory> = Object.fromEntries
   (Object.entries(CATEGORY_SLUGS) as [ShopCategory, string][]).map(([name, slug]) => [slug, name]),
 ) as Record<string, ShopCategory>
 
-/** Path to the products page, optionally filtered by category. */
-export function proiontaHref(category?: ShopCategory): string {
-  return category ? `/proionta/${CATEGORY_SLUGS[category]}` : '/proionta'
+/** English display labels per (Greek canonical) category. */
+export const CATEGORY_LABELS_EN: Record<ShopCategory, string> = {
+  Μέλι: 'Honey',
+  'Προϊόντα Μέλισσας': 'Bee Products',
+  Καλλυντικά: 'Natural Cosmetics',
+  'Πακέτα Δώρων': 'Gift Sets',
+}
+
+/** Slug lookup that accepts EITHER the Greek canonical name or the English label,
+ *  so category tags work in both locales. */
+const CATEGORY_SLUG_BY_LABEL: Record<string, string> = {
+  ...CATEGORY_SLUGS,
+  ...Object.fromEntries(
+    (Object.entries(CATEGORY_LABELS_EN) as [ShopCategory, string][]).map(([name, en]) => [
+      en,
+      CATEGORY_SLUGS[name],
+    ]),
+  ),
+}
+
+/** Localized category display label (el = the canonical Greek name). */
+export function categoryLabel(category: string, locale: string): string {
+  return locale === 'en'
+    ? CATEGORY_LABELS_EN[category as ShopCategory] ?? category
+    : category
+}
+
+/** Path to the products page, optionally filtered by category. Accepts a Greek
+ *  or English category label; unknown labels fall back to the all-products page. */
+export function proiontaHref(category?: string): string {
+  const slug = category ? CATEGORY_SLUG_BY_LABEL[category] : undefined
+  return slug ? `/proionta/${slug}` : '/proionta'
 }
 /** Internal path to a product detail page. */
 export function productHref(handle: string): string {

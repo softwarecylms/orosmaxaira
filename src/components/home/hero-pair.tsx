@@ -1,5 +1,6 @@
 import Image from 'next/image'
-import { HERO } from './home-content'
+import { getLocale } from 'next-intl/server'
+import { getHomeContent } from './home-content'
 import { CtaLink } from './cta-link'
 import { CardSpotlight } from './card-spotlight'
 import { RevealUp } from './reveal-up'
@@ -10,7 +11,8 @@ import { RevealUp } from './reveal-up'
  * lg+: text left + photo absolutely overlapping on the right.
  * Left: off-white card, honey-jars photo. Right: gold card, bee photo.
  */
-export function HeroPair() {
+export async function HeroPair() {
+  const { HERO } = getHomeContent(await getLocale())
   return (
     <section data-testid="hero-pair" className="bg-white pt-6 md:pt-9">
       <div className="container-wide">

@@ -1,13 +1,15 @@
 import Image from 'next/image'
-import Link from 'next/link'
-import { DEAL, type HoneyProduct } from './home-content'
+import { getLocale } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
+import { getHomeContent, type HoneyProduct } from './home-content'
 import { CtaLink } from './cta-link'
 import { DealCarousel } from './deal-carousel'
 import { ArrowRight } from './icons'
 import { RevealUp } from './reveal-up'
 
 /** Section 4 — "Τα Διαμάντια του Μαχαιρά" (Figma 118:456). */
-export function DealOfMonth({ products }: { products?: HoneyProduct[] }) {
+export async function DealOfMonth({ products }: { products?: HoneyProduct[] }) {
+  const { DEAL } = getHomeContent(await getLocale())
   const items = (products?.length ? products : DEAL.products).slice(0, 5)
 
   return (

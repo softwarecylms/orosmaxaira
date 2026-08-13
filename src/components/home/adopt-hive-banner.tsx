@@ -1,4 +1,5 @@
-import { ADOPT } from './home-content'
+import { getLocale } from 'next-intl/server'
+import { getHomeContent } from './home-content'
 import { CtaLink } from './cta-link'
 import { RevealUp } from './reveal-up'
 import { AdoptHiveScene } from './adopt-hive-scene'
@@ -6,7 +7,9 @@ import { AdoptHiveScene } from './adopt-hive-scene'
 /** Section 7 — "Υιοθετώ μια κυψέλη" gold banner (Figma 118:547).
  *  The photo comes alive: a Ken Burns drift plus bees on the wing (see
  *  AdoptHiveScene) — the page's signature flourish. */
-export function AdoptHiveBanner({ body = ADOPT.body }: { body?: string } = {}) {
+export async function AdoptHiveBanner({ body }: { body?: string } = {}) {
+  const { ADOPT } = getHomeContent(await getLocale())
+  const text = body ?? ADOPT.body
   return (
     <section data-testid="adopt-hive" className="bg-white pb-12 pt-6 md:pb-[70px] md:pt-[35px]">
       <div className="container-wide">
@@ -20,7 +23,7 @@ export function AdoptHiveBanner({ body = ADOPT.body }: { body?: string } = {}) {
               <h2 className="font-display text-[28px] font-semibold leading-[1.05] text-white md:text-[41px] md:leading-[40px]">
                 {ADOPT.heading}
               </h2>
-              <p className="max-w-[600px] text-[17px] leading-[24px] text-cream">{body}</p>
+              <p className="max-w-[600px] text-[17px] leading-[24px] text-cream">{text}</p>
             </div>
             <CtaLink href={ADOPT.cta.href} variant="white" className="mt-1">
               {ADOPT.cta.label}

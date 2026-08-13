@@ -1,11 +1,13 @@
-import { TICKER } from './home-content'
+import { getLocale } from 'next-intl/server'
+import { getHomeContent } from './home-content'
 
 /** Section 5 — honey-gold marquee strip (Figma 156:1431): uppercase white
  *  labels, no separators. Seamless CSS loop — the track is two identical
  *  groups translated -50%; each group repeats the labels enough times to be
  *  wider than any viewport, so the bar is never empty at the wrap point.
  *  CSS-driven so it pauses cleanly under prefers-reduced-motion. */
-export function Ticker() {
+export async function Ticker() {
+  const { TICKER } = getHomeContent(await getLocale())
   // One group repeats the labels so it always exceeds the viewport width; the
   // second (identical) group then fills the bar exactly when the track wraps.
   const group = Array.from({ length: 3 }, () => TICKER).flat()

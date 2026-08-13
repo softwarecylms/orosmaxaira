@@ -3,7 +3,8 @@
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
-import { FLATLAY } from './home-content'
+import { useLocale } from 'next-intl'
+import { getHomeContent } from './home-content'
 import { FlatlayHotspot } from './flatlay-hotspot'
 
 /** Section 9 — full-bleed marble flatlay with floating price pills that reveal
@@ -12,6 +13,7 @@ import { FlatlayHotspot } from './flatlay-hotspot'
  *  image carries a vertical buffer so no edges show. Off on mobile / reduced
  *  motion so the carefully-placed pills stay aligned. */
 export function FlatlayBand() {
+  const { FLATLAY } = getHomeContent(useLocale())
   const ref = useRef<HTMLElement | null>(null)
   const reduce = useReducedMotion()
   const [lg, setLg] = useState(false)
