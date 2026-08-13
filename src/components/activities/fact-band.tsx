@@ -2,8 +2,9 @@
 
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'framer-motion'
+import { useLocale } from 'next-intl'
 import { CtaLink } from '@/components/home/cta-link'
-import { ACTIVITIES_PAGE } from './activities-content'
+import { getActivitiesContent } from './activities-content'
 
 /**
  * "Ήξερες ότι…" — the adopt "Ο Στόχος μας" goal-band design: a gold band with
@@ -12,7 +13,7 @@ import { ACTIVITIES_PAGE } from './activities-content'
  * match; paused under reduced motion.
  */
 export function FactBand() {
-  const f = ACTIVITIES_PAGE.fact
+  const f = getActivitiesContent(useLocale()).fact
   const reduce = useReducedMotion()
   const videoRef = useRef<HTMLVideoElement>(null)
 

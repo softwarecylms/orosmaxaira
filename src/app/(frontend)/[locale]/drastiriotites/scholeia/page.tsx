@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
+import { getLocale } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
 import {
   BookOpenText,
   Check,
@@ -24,6 +25,39 @@ import {
   SCHOOL_WORKSHOP_OPTIONS,
 } from '@/lib/data/school-visit'
 import { getSchoolProgram } from '@/lib/medusa/school-program'
+import { getActivitiesUi } from '@/components/activities/activities-content'
+import { hreflangAlternates } from '@/lib/seo'
+
+/** Page-level chrome copy (labels not part of the shared UI or the Medusa data). */
+function pageCopy(locale: string) {
+  return locale === 'en'
+    ? {
+        activityLabel: (n: string) => `Activity ${n} · 45 min`,
+        workshopTitle: 'Creative Workshop',
+        or: 'or',
+        pillDuration: '≈ 2h 30′ · 09:30–12:00',
+        pillMax: (n: number) => `Up to ${n} students`,
+        pillLevel: 'Primary schools',
+        sectionProgram: 'The programme',
+        sectionDuration: 'Duration & flow',
+        sectionNotes: 'Important notes',
+        maxParticipants: 'Maximum number of participants: ',
+        studentsUnit: (n: number) => `${n} students.`,
+      }
+    : {
+        activityLabel: (n: string) => `Δραστηριότητα ${n} · 45 λεπτά`,
+        workshopTitle: 'Δημιουργικό Εργαστήριο',
+        or: 'ή',
+        pillDuration: '≈ 2ω 30′ · 09:30–12:00',
+        pillMax: (n: number) => `Έως ${n} μαθητές`,
+        pillLevel: 'Δημοτικά σχολεία',
+        sectionProgram: 'Το πρόγραμμα',
+        sectionDuration: 'Διάρκεια & ροή',
+        sectionNotes: 'Σημαντικές σημειώσεις',
+        maxParticipants: 'Μέγιστος αριθμός συμμετεχόντων: ',
+        studentsUnit: (n: number) => `${n} μαθητές.`,
+      }
+}
 
 // Live so admin edits reflect; falls back to the static copy if Medusa is down.
 export const dynamic = 'force-dynamic'
@@ -56,7 +90,7 @@ type PView = {
   metaDescription?: string
 }
 
-const FALLBACK: PView = {
+const FALLBACK_EL: PView = {
   title: 'Εκπαιδευτικές Επισκέψεις Σχολείων',
   heroImage: '/images/adopt/visit-2.webp',
   heroAlt: 'Μαθητές σε εκπαιδευτική επίσκεψη στο μελισσοκομείο του Όρους Μαχαιρά',
@@ -109,7 +143,63 @@ const FALLBACK: PView = {
     'Οργανωμένο εκπαιδευτικό πρόγραμμα για δημοτικά σχολεία στο μελισσοκομείο του Όρους Μαχαιρά: ξενάγηση, δημιουργικό εργαστήριο και ελεύθερο παιχνίδι.',
 }
 
-async function loadProgram(): Promise<PView> {
+// English fallback. The workshop options + pricing come from the (Greek)
+// school-visit data module and are reused verbatim.
+const FALLBACK_EN: PView = {
+  title: 'School Educational Visits',
+  heroImage: '/images/adopt/visit-2.webp',
+  heroAlt: 'Students on an educational visit to the Oros Machaira apiary',
+  intro:
+    'Our apiary is open for visits by primary schools. We have shaped a programme that meets the educational needs of pupils, combining information, creativity and contact with nature.',
+  closing:
+    'We look forward to welcoming you and the children for a beautiful, educational day full of knowledge and fun.',
+  programNote:
+    'The children are split into two or three groups, depending on the number of pupils, and rotate through the following three activities — every 45 minutes.',
+  tourTitle: 'Educational Tour',
+  tourIntro:
+    'An organised tour of our indoor and outdoor educational spaces, which includes:',
+  tourStops: [
+    {
+      text: 'A visit to the bee-therapy house to get to know the products of the bee and their uses, and to learn about the roles of the bees within the hive.',
+    },
+    {
+      text: 'A screening of an educational video showing a queen bee laying eggs, along with interesting facts about the anatomy and communication of bees.',
+    },
+    { text: 'A knowledge quiz with small gifts from our shop for the participants.' },
+    { text: 'A honey tasting and important information about honey.' },
+  ],
+  workshopIntro: 'You choose one of the two hands-on workshops:',
+  workshopOptions: SCHOOL_WORKSHOP_OPTIONS as unknown as PView['workshopOptions'],
+  workshopNote: 'In both workshops, the children take their creation home with them.',
+  playTitle: 'Free Play in the Playground',
+  playText:
+    'The children will enjoy free play in the playground area, with time to rest and have a snack.',
+  durationText:
+    'The programme lasts approximately 2 hours and 30 minutes, between 09:30–12:00 (including the time the children will need to eat the breakfast they bring with them). It is flexible depending on your arrival time, with all groups rotating every 45 minutes.',
+  maxStudents: MAX_STUDENTS,
+  pricing: SCHOOL_PRICING,
+  notes: [
+    {
+      title: 'Snacks & Drinks',
+      body: 'The children should bring their own snacks. Only honey and bee products are available at our premises.',
+    },
+    {
+      title: 'Supervision',
+      body: 'During free play, supervision remains solely the responsibility of the accompanying adults.',
+    },
+  ],
+  allergyTitle: 'Allergies & Medical Conditions',
+  allergyBody: [
+    'Please inform us in advance of any medical conditions or allergies (mainly to nuts, honey, bees).',
+    'As bees are naturally present in our environment, children or staff with a bee allergy are strongly advised not to take part in the visit.',
+  ],
+  metaTitle: 'School Educational Visits',
+  metaDescription:
+    'An organised educational programme for primary schools at the Oros Machaira apiary: a tour, a creative workshop and free play.',
+}
+
+async function loadProgram(locale: string): Promise<PView> {
+  const FALLBACK = locale === 'en' ? FALLBACK_EN : FALLBACK_EL
   const p = await getSchoolProgram()
   if (!p) return FALLBACK
   const s = <T,>(v: T | null | undefined, d: T): T => (v == null || v === '' ? d : v)
@@ -142,8 +232,13 @@ async function loadProgram(): Promise<PView> {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const v = await loadProgram()
-  return { title: v.metaTitle, description: v.metaDescription }
+  const locale = await getLocale()
+  const v = await loadProgram(locale)
+  return {
+    title: v.metaTitle,
+    description: v.metaDescription,
+    alternates: hreflangAlternates(locale, '/drastiriotites/scholeia'),
+  }
 }
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
@@ -158,10 +253,12 @@ function ActivityHead({
   n,
   icon: Icon,
   title,
+  label,
 }: {
   n: string
   icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>
   title: string
+  label: string
 }) {
   return (
     <div className="flex items-center gap-3">
@@ -171,7 +268,7 @@ function ActivityHead({
       <div className="flex flex-col">
         <span className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold uppercase tracking-[0.08em] text-gold-strong">
           <Icon className="size-3.5" aria-hidden={true} />
-          Δραστηριότητα {n} · 45 λεπτά
+          {label}
         </span>
         <h3 className="font-display text-[18px] font-bold leading-[1.2] text-foreground md:text-[20px]">
           {title}
@@ -182,11 +279,14 @@ function ActivityHead({
 }
 
 export default async function SchoolVisitsPage() {
-  const v = await loadProgram()
+  const locale = await getLocale()
+  const ui = getActivitiesUi(locale)
+  const t = pageCopy(locale)
+  const v = await loadProgram(locale)
   const pills = [
-    { icon: Clock, label: '≈ 2ω 30′ · 09:30–12:00' },
-    { icon: Users, label: `Έως ${v.maxStudents} μαθητές` },
-    { icon: GraduationCap, label: 'Δημοτικά σχολεία' },
+    { icon: Clock, label: t.pillDuration },
+    { icon: Users, label: t.pillMax(v.maxStudents) },
+    { icon: GraduationCap, label: t.pillLevel },
   ]
 
   return (
@@ -199,11 +299,11 @@ export default async function SchoolVisitsPage() {
             className="flex flex-wrap items-center gap-1.5 text-[15px] text-muted md:text-[17px]"
           >
             <Link href="/" className="transition-colors hover:text-accent">
-              Αρχική
+              {ui.breadcrumbHome}
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
             <Link href="/drastiriotites" className="transition-colors hover:text-accent">
-              Δραστηριότητες
+              {ui.breadcrumbActivities}
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
             <span className="text-foreground">{v.title}</span>
@@ -251,20 +351,20 @@ export default async function SchoolVisitsPage() {
           <div className="flex min-w-0 flex-col gap-11">
             {/* Περιγραφή */}
             <section className="flex flex-col gap-4">
-              <SectionHeading>Περιγραφή</SectionHeading>
+              <SectionHeading>{ui.sectionDescription}</SectionHeading>
               <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">{v.intro}</p>
               <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">{v.closing}</p>
             </section>
 
             {/* Το πρόγραμμα — three rotating activities */}
             <section className="flex flex-col gap-6">
-              <SectionHeading>Το πρόγραμμα</SectionHeading>
+              <SectionHeading>{t.sectionProgram}</SectionHeading>
               <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">{v.programNote}</p>
 
               <div className="flex flex-col gap-4">
                 {/* Δ1 */}
                 <div className="flex flex-col gap-5 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50 md:p-6">
-                  <ActivityHead n="1" icon={BookOpenText} title={v.tourTitle} />
+                  <ActivityHead n="1" icon={BookOpenText} title={v.tourTitle} label={t.activityLabel('1')} />
                   <p className="text-[15px] leading-[1.7] text-muted">{v.tourIntro}</p>
                   <ul className="grid gap-3 sm:grid-cols-2">
                     {v.tourStops.map((s, i) => {
@@ -286,7 +386,7 @@ export default async function SchoolVisitsPage() {
 
                 {/* Δ2 */}
                 <div className="flex flex-col gap-5 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50 md:p-6">
-                  <ActivityHead n="2" icon={Palette} title="Δημιουργικό Εργαστήριο" />
+                  <ActivityHead n="2" icon={Palette} title={t.workshopTitle} label={t.activityLabel('2')} />
                   <p className="text-[15px] leading-[1.7] text-muted">{v.workshopIntro}</p>
                   <div className="grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr]">
                     {v.workshopOptions.map((opt, i) => (
@@ -300,7 +400,7 @@ export default async function SchoolVisitsPage() {
                         {i === 0 && v.workshopOptions.length > 1 ? (
                           <div className="flex items-center justify-center">
                             <span className="flex size-9 items-center justify-center rounded-full bg-white text-[13px] font-bold uppercase text-muted ring-1 ring-border">
-                              ή
+                              {t.or}
                             </span>
                           </div>
                         ) : null}
@@ -315,7 +415,7 @@ export default async function SchoolVisitsPage() {
 
                 {/* Δ3 */}
                 <div className="flex flex-col gap-4 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50 md:p-6">
-                  <ActivityHead n="3" icon={PartyPopper} title={v.playTitle} />
+                  <ActivityHead n="3" icon={PartyPopper} title={v.playTitle} label={t.activityLabel('3')} />
                   <p className="text-[15px] leading-[1.7] text-muted">{v.playText}</p>
                 </div>
               </div>
@@ -323,22 +423,20 @@ export default async function SchoolVisitsPage() {
 
             {/* Διάρκεια & ροή */}
             <section className="flex flex-col gap-5">
-              <SectionHeading>Διάρκεια & ροή</SectionHeading>
+              <SectionHeading>{t.sectionDuration}</SectionHeading>
               <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">{v.durationText}</p>
               <p className="flex items-start gap-2.5 rounded-[14px] bg-accent-soft p-4 text-[14px] leading-[1.6] text-foreground/80 ring-1 ring-accent/15">
                 <Info className="mt-0.5 size-4 shrink-0 text-gold-strong" aria-hidden="true" />
                 <span>
-                  <span className="font-semibold text-foreground/90">
-                    Μέγιστος αριθμός συμμετεχόντων:{' '}
-                  </span>
-                  {v.maxStudents} μαθητές.
+                  <span className="font-semibold text-foreground/90">{t.maxParticipants}</span>
+                  {t.studentsUnit(v.maxStudents)}
                 </span>
               </p>
             </section>
 
             {/* Σημαντικές σημειώσεις */}
             <section className="flex flex-col gap-5">
-              <SectionHeading>Σημαντικές σημειώσεις</SectionHeading>
+              <SectionHeading>{t.sectionNotes}</SectionHeading>
               <div className="grid gap-4 sm:grid-cols-2">
                 {v.notes.map((n, i) => {
                   const Icon = NOTE_ICONS[i] ?? Info

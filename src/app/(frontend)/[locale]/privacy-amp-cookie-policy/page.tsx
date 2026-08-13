@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import { LegalPage, type LegalSection } from '@/components/legal/legal-page'
+import { hreflangAlternates } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Πολιτική Απορρήτου & Cookies',
-  description:
-    'Πώς η Όρος Μαχαιρά συλλέγει, χρησιμοποιεί και προστατεύει τα προσωπικά σας δεδομένα, σύμφωνα με τον Γενικό Κανονισμό Προστασίας Δεδομένων (GDPR).',
-}
+const TITLE = 'Πολιτική Απορρήτου & Cookies'
+const LAST_UPDATED = 'Τελευταία ενημέρωση: Ιούνιος 2026'
+const INTRO =
+  'Η προστασία των προσωπικών σας δεδομένων είναι σημαντική για εμάς. Παρακάτω εξηγούμε ποια δεδομένα συλλέγουμε και πώς τα χρησιμοποιούμε.'
 
 const SECTIONS: LegalSection[] = [
   {
@@ -69,13 +69,114 @@ const SECTIONS: LegalSection[] = [
   },
 ]
 
-export default function PrivacyPage() {
+const TITLE_EN = 'Privacy & Cookie Policy'
+const LAST_UPDATED_EN = 'Last updated: June 2026'
+const INTRO_EN =
+  'Protecting your personal data is important to us. Below we explain what data we collect and how we use it.'
+
+const SECTIONS_EN: LegalSection[] = [
+  {
+    heading: 'Introduction',
+    body: [
+      'Oros Maxaira respects your privacy and is committed to protecting your personal data. This policy describes how we collect, use and protect your data, in accordance with the General Data Protection Regulation (EU) 2016/679 (GDPR).',
+    ],
+  },
+  {
+    heading: 'Data we collect',
+    body: [
+      'When you place an order or contact us, we may collect:',
+      [
+        'Identity & contact details: first name, last name, email, phone',
+        'Address details: billing and shipping address, city, postal code, country',
+        'Order details: products, value, shipping and payment method',
+        'Technical data: IP address and browsing data via cookies',
+      ],
+    ],
+  },
+  {
+    heading: 'Purposes & legal basis of processing',
+    body: [
+      'We process your data to fulfil and ship your order (performance of a contract), for customer service, to comply with legal obligations (e.g. tax) and, where you have consented, for marketing communications.',
+    ],
+  },
+  {
+    heading: 'Sharing with third parties',
+    body: [
+      'We share data only to the extent necessary:',
+      [
+        'Courier companies (ACS) for the delivery of your order',
+        'Payment service providers for the secure completion of the transaction',
+      ],
+      'We do not sell or rent your personal data to third parties.',
+    ],
+  },
+  {
+    heading: 'Cookies',
+    body: [
+      'The website uses cookies for its proper operation (e.g. keeping your cart), for usage statistics and to improve your experience. You can manage or disable cookies through your browser settings.',
+    ],
+  },
+  {
+    heading: 'Data retention',
+    body: [
+      'We keep your personal data only for as long as required to fulfil the purposes described or as required by law (e.g. tax records).',
+    ],
+  },
+  {
+    heading: 'Your rights',
+    body: [
+      'Under the GDPR you have the right to access, rectify, erase, restrict and port your data, as well as the right to object to processing and to withdraw your consent at any time.',
+    ],
+  },
+  {
+    heading: 'Security',
+    body: [
+      'We apply appropriate technical and organizational measures to protect your data against unauthorized access, loss or misuse.',
+    ],
+  },
+]
+
+const META = {
+  el: {
+    title: 'Πολιτική Απορρήτου & Cookies',
+    description:
+      'Πώς η Όρος Μαχαιρά συλλέγει, χρησιμοποιεί και προστατεύει τα προσωπικά σας δεδομένα, σύμφωνα με τον Γενικό Κανονισμό Προστασίας Δεδομένων (GDPR).',
+  },
+  en: {
+    title: 'Privacy & Cookie Policy',
+    description:
+      'How Oros Maxaira collects, uses and protects your personal data, in accordance with the General Data Protection Regulation (GDPR).',
+  },
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const m = locale === 'en' ? META.en : META.el
+  return {
+    title: m.title,
+    description: m.description,
+    alternates: hreflangAlternates(locale, '/privacy-amp-cookie-policy'),
+  }
+}
+
+export default async function PrivacyPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const isEn = locale === 'en'
   return (
     <LegalPage
-      title="Πολιτική Απορρήτου & Cookies"
-      lastUpdated="Τελευταία ενημέρωση: Ιούνιος 2026"
-      intro="Η προστασία των προσωπικών σας δεδομένων είναι σημαντική για εμάς. Παρακάτω εξηγούμε ποια δεδομένα συλλέγουμε και πώς τα χρησιμοποιούμε."
-      sections={SECTIONS}
+      locale={locale}
+      title={isEn ? TITLE_EN : TITLE}
+      lastUpdated={isEn ? LAST_UPDATED_EN : LAST_UPDATED}
+      intro={isEn ? INTRO_EN : INTRO}
+      sections={isEn ? SECTIONS_EN : SECTIONS}
     />
   )
 }

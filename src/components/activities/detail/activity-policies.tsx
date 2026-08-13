@@ -7,14 +7,21 @@ import {
   AccordionContent,
 } from '@/components/ui/accordion'
 import type { Policy } from '@/lib/medusa/activities'
+import { getActivitiesUi } from '@/components/activities/activities-content'
 import { RichText } from './rich-text'
 
 /** Cancellation / booking-change policies as a collapsible accordion. */
-export function ActivityPolicies({ policies }: { policies: Policy[] }) {
+export function ActivityPolicies({
+  policies,
+  locale = 'el',
+}: {
+  policies: Policy[]
+  locale?: string
+}) {
   return (
     <div className="flex flex-col gap-4">
       <h2 className="font-display text-[22px] font-bold leading-[1.2] text-foreground md:text-[26px]">
-        Χρήσιμες πληροφορίες
+        {getActivitiesUi(locale).sectionUsefulInfo}
       </h2>
       <Accordion
         type="single"

@@ -1,11 +1,13 @@
 'use client'
 
+import { useLocale } from 'next-intl'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Hexagon } from 'lucide-react'
 import { Counter } from '@/components/motion/counter'
 import { CtaLink } from '@/components/home/cta-link'
 import { Reveal } from '@/components/motion/reveal'
 import { EASE } from '@/lib/motion'
+import { getAdoptContent } from './adopt-content'
 
 const ADOPTED = 40
 const TARGET = 200
@@ -15,16 +17,17 @@ const PCT = Math.round((ADOPTED / TARGET) * 100) // 20
  *  fills on scroll-in, with a honeycomb marker on the leading edge. */
 export function AdoptProgress() {
   const reduce = useReducedMotion()
+  const p = getAdoptContent(useLocale()).progress
 
   return (
     <section className="bg-white py-12 md:py-[70px]">
       <div className="container-wide flex flex-col gap-8">
         <Reveal className="mx-auto flex max-w-[720px] flex-col items-center gap-3 text-center">
           <span className="text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">
-            Η Πρόοδός μας
+            {p.eyebrow}
           </span>
           <h2 className="font-display text-[28px] font-bold leading-[1.14] text-foreground md:text-[35px]">
-            Μαζί, προς τις 200 κυψέλες
+            {p.heading}
           </h2>
         </Reveal>
 
@@ -36,16 +39,16 @@ export function AdoptProgress() {
                   value="40"
                   className="font-display text-[46px] font-bold leading-none text-accent md:text-[54px]"
                 />
-                <span className="text-[18px] text-muted">/ {TARGET} κυψέλες</span>
+                <span className="text-[18px] text-muted">/ {TARGET} {p.unit}</span>
               </p>
-              <span className="text-[14px] text-muted">υιοθετήθηκαν μέχρι σήμερα</span>
+              <span className="text-[14px] text-muted">{p.adopted}</span>
             </div>
             <div className="flex flex-col items-end">
               <Counter
                 value={`${PCT}%`}
                 className="font-display text-[32px] font-bold leading-none text-accent md:text-[40px]"
               />
-              <span className="text-[13px] uppercase tracking-wide text-muted">του στόχου</span>
+              <span className="text-[13px] uppercase tracking-wide text-muted">{p.ofGoal}</span>
             </div>
           </div>
 
@@ -66,12 +69,14 @@ export function AdoptProgress() {
 
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-[14px] text-muted">
-              Απομένουν{' '}
-              <span className="font-semibold text-foreground">{TARGET - ADOPTED} κυψέλες</span> για να
-              πετύχουμε τον στόχο μας.
+              {p.remainingPre}{' '}
+              <span className="font-semibold text-foreground">
+                {TARGET - ADOPTED} {p.unit}
+              </span>{' '}
+              {p.remainingPost}
             </p>
             <CtaLink href="#cta" variant="link" className="text-[15px]">
-              Υιοθετήστε μια κυψέλη
+              {p.cta}
             </CtaLink>
           </div>
         </div>

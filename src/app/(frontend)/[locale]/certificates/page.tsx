@@ -1,32 +1,48 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import { CERTIFICATES_PAGE, type Certificate } from '@/components/certificates/certificates-content'
+import { getLocale } from 'next-intl/server'
+import { getCertificatesContent, type Certificate } from '@/components/certificates/certificates-content'
 import { PageHero } from '@/components/shared/page-hero'
 import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
 import { RichText } from '@/components/activities/detail/rich-text'
+import { hreflangAlternates } from '@/lib/seo'
 import { cn } from '@/lib/utils'
 
 const SITE = 'https://orosmaxaira.vercel.app'
 
-export const metadata: Metadata = {
-  title: 'Πιστοποιήσεις',
-  description:
-    'Οι πιστοποιήσεις του Όρος Μαχαιρά — ISO 22000 (Ασφάλεια Τροφίμων) και ISO 14001 (Περιβαλλοντική Διαχείριση). Δείτε και κατεβάστε τα επίσημα πιστοποιητικά.',
-  alternates: { canonical: `${SITE}/certificates` },
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
+  const en = locale === 'en'
+  return {
+    title: en ? 'Certifications' : 'Πιστοποιήσεις',
+    description: en
+      ? 'The certifications of Oros Machaira — ISO 22000 (Food Safety) and ISO 14001 (Environmental Management). View and download the official certificates.'
+      : 'Οι πιστοποιήσεις του Όρος Μαχαιρά — ISO 22000 (Ασφάλεια Τροφίμων) και ISO 14001 (Περιβαλλοντική Διαχείριση). Δείτε και κατεβάστε τα επίσημα πιστοποιητικά.',
+    alternates: hreflangAlternates(locale, '/certificates'),
+  }
 }
 
 /** Πιστοποιήσεις showcase — title banner + one full-width section per certificate
  *  (alternating 50/50 layout, live PDF preview, download links). Mirrors the
  *  Awards page structure. */
-export default function CertificatesPage() {
-  const { hero, certificates } = CERTIFICATES_PAGE
+export default async function CertificatesPage() {
+  const locale = await getLocale()
+  const en = locale === 'en'
+  const { hero, certificates } = getCertificatesContent(locale)
 
+  const homeUrl = en ? `${SITE}/en` : SITE
+  const pageUrl = en ? `${SITE}/en/certificates` : `${SITE}/certificates`
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Αρχική', item: SITE },
-      { '@type': 'ListItem', position: 2, name: 'Πιστοποιήσεις', item: `${SITE}/certificates` },
+      { '@type': 'ListItem', position: 1, name: en ? 'Home' : 'Αρχική', item: homeUrl },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: en ? 'Certifications' : 'Πιστοποιήσεις',
+        item: pageUrl,
+      },
     ],
   }
 

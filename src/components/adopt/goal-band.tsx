@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { useLocale } from 'next-intl'
 import { useReducedMotion } from 'framer-motion'
 import { Counter } from '@/components/motion/counter'
 import { CtaLink } from '@/components/home/cta-link'
-import { ADOPT_PAGE } from './adopt-content'
+import { getAdoptContent } from './adopt-content'
 
 /** §8 "Ο Στόχος μας" — a gold band with the honeybee footage bleeding in on the
  *  right (same video + accent colour as the home "Υιοθετώ μια κυψέλη" banner). A
@@ -12,7 +13,7 @@ import { ADOPT_PAGE } from './adopt-content'
  *  transparent on the right so the video reads there. Video plays via effect
  *  (no autoPlay attr) so server/client markup match; paused under reduced motion. */
 export function GoalBand() {
-  const g = ADOPT_PAGE.goal
+  const g = getAdoptContent(useLocale()).goal
   const reduce = useReducedMotion()
   const videoRef = useRef<HTMLVideoElement>(null)
 
@@ -62,11 +63,11 @@ export function GoalBand() {
             </h2>
             <p className="text-[16px] leading-[1.7] text-white/85">{g.body}</p>
             <CtaLink
-              href="/afaneis-iroes-tis-fysis"
+              href={g.linkHref}
               variant="link"
               className="mt-1 self-start text-white hover:text-white/75"
             >
-              Αφανείς Ήρωες της Φύσης
+              {g.linkLabel}
             </CtaLink>
           </div>
 

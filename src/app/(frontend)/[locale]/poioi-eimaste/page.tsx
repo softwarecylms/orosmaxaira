@@ -1,16 +1,22 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import { getLocale } from 'next-intl/server'
 import { User, Building2 } from 'lucide-react'
-import { ABOUT_PAGE, type AboutValueIcon } from '@/components/about/about-content'
+import { getAboutContent, type AboutValueIcon } from '@/components/about/about-content'
 import { OutdoorCarousel } from '@/components/about/outdoor-carousel'
 import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
 import { CtaLink } from '@/components/home/cta-link'
 import { Counter } from '@/components/motion/counter'
+import { hreflangAlternates } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Ποιοί είμαστε',
-  description:
-    'Είμαστε μία μελισσοκομική οικογένεια. Ασχολούμαστε επαγγελματικά με τη μελισσοκομία από το 1983 — αγνό κυπριακό μέλι από τα άνθη και τα βότανα του Μαχαιρά.',
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
+  const { meta } = getAboutContent(locale)
+  return {
+    title: meta.title,
+    description: meta.description,
+    alternates: hreflangAlternates(locale, '/poioi-eimaste'),
+  }
 }
 
 /** Brand value icons (white cut-outs from Figma) shown on the gold discs. */
@@ -20,8 +26,8 @@ const VALUE_ICONS: Record<AboutValueIcon, string> = {
   family: '/images/about/value-family.png',
 }
 
-export default function AboutPage() {
-  const a = ABOUT_PAGE
+export default async function AboutPage() {
+  const a = getAboutContent(await getLocale())
 
   return (
     <>
@@ -71,7 +77,7 @@ export default function AboutPage() {
             </RevealItem>
             <RevealItem>
               <CtaLink href="/awards" variant="gold" className="mt-2 lg:self-start">
-                Βραβεία & Διακρίσεις
+                {a.hero.awardsCta}
               </CtaLink>
             </RevealItem>
           </RevealGroup>

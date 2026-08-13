@@ -8,6 +8,7 @@ import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
 import { CtaLink } from '@/components/home/cta-link'
 import { Reveal, RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
 import { Calendar, Check, Info } from 'lucide-react'
+import { getActivitiesUi } from './activities-content'
 
 export type ActivityExperienceData = {
   slug: string
@@ -49,7 +50,14 @@ export type ActivityExperienceData = {
 
 /** Shared layout for an individual activity page (hero → intro → feature cards →
  *  note callout → booking form). Modelled on the "Γνωρίζω τη Μέλισσα" (/drastiriotites/xenagiseis) page. */
-export function ActivityExperience({ data }: { data: ActivityExperienceData }) {
+export function ActivityExperience({
+  data,
+  locale = 'el',
+}: {
+  data: ActivityExperienceData
+  locale?: string
+}) {
+  const ui = getActivitiesUi(locale)
   return (
     <>
       {/* 1 · Hero */}
@@ -99,7 +107,7 @@ export function ActivityExperience({ data }: { data: ActivityExperienceData }) {
                   <p className="flex items-start gap-2 text-[13px] leading-[1.55] text-muted">
                     <Info className="mt-0.5 size-4 shrink-0 text-gold-strong" aria-hidden="true" />
                     <span>
-                      <span className="font-semibold text-foreground/80">Σημαντική σημείωση:</span>{' '}
+                      <span className="font-semibold text-foreground/80">{ui.importantNote}</span>{' '}
                       {data.intro.note}
                     </span>
                   </p>

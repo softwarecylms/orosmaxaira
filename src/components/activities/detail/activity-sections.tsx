@@ -1,5 +1,6 @@
 import { Info } from 'lucide-react'
 import type { Activity } from '@/lib/medusa/activities'
+import { getActivitiesUi } from '@/components/activities/activities-content'
 import { Stars } from './stars'
 import { RichText } from './rich-text'
 
@@ -23,7 +24,14 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
  * Κριτικές. Each section only renders when it has content. Server component
  * (no interactivity).
  */
-export function ActivitySections({ activity }: { activity: Activity }) {
+export function ActivitySections({
+  activity,
+  locale = 'el',
+}: {
+  activity: Activity
+  locale?: string
+}) {
+  const ui = getActivitiesUi(locale)
   const hasReviews = (activity.reviews?.length ?? 0) > 0
   const hasDesc = !!(activity.description?.trim() || activity.features?.length)
   const hasDetails = !!(activity.details?.trim() || activity.note?.trim())
@@ -32,7 +40,7 @@ export function ActivitySections({ activity }: { activity: Activity }) {
     <div className="flex flex-col gap-11">
       {hasDesc ? (
         <section className="flex flex-col gap-6">
-          <SectionHeading>Περιγραφή</SectionHeading>
+          <SectionHeading>{ui.sectionDescription}</SectionHeading>
           <div className="flex flex-col gap-4">
             {paragraphs(activity.description).map((p, i) => (
               <p
@@ -66,7 +74,7 @@ export function ActivitySections({ activity }: { activity: Activity }) {
 
       {hasDetails ? (
         <section className="flex flex-col gap-5">
-          <SectionHeading>Λεπτομέρειες</SectionHeading>
+          <SectionHeading>{ui.sectionDetails}</SectionHeading>
           {paragraphs(activity.details).map((p, i) => (
             <p
               key={i}
@@ -79,7 +87,7 @@ export function ActivitySections({ activity }: { activity: Activity }) {
             <p className="flex items-start gap-2.5 rounded-[14px] bg-accent-soft p-4 text-[14px] leading-[1.6] text-foreground/80 ring-1 ring-accent/15">
               <Info className="mt-0.5 size-4 shrink-0 text-gold-strong" aria-hidden="true" />
               <span>
-                <span className="font-semibold text-foreground/90">Σημαντική σημείωση: </span>
+                <span className="font-semibold text-foreground/90">{ui.importantNote} </span>
                 {activity.note}
               </span>
             </p>
@@ -89,17 +97,17 @@ export function ActivitySections({ activity }: { activity: Activity }) {
 
       {hasReviews ? (
         <section className="flex flex-col gap-5">
-          <SectionHeading>Κριτικές</SectionHeading>
+          <SectionHeading>{ui.sectionReviews}</SectionHeading>
           {activity.rating ? (
             <div className="flex items-center gap-3">
               <span className="font-display text-[32px] font-bold text-foreground">
                 {activity.rating.toFixed(1)}
               </span>
               <span className="flex flex-col">
-                <Stars value={activity.rating} />
+                <Stars value={activity.rating} locale={locale} />
                 {activity.review_count ? (
                   <span className="text-[13px] text-muted">
-                    Βασισμένο σε {activity.review_count} κριτικές
+                    {ui.reviewsBasedOn(activity.review_count)}
                   </span>
                 ) : null}
               </span>
@@ -115,7 +123,7 @@ export function ActivitySections({ activity }: { activity: Activity }) {
                   <figcaption className="text-[15px] font-semibold text-foreground">
                     {r.name}
                   </figcaption>
-                  {r.rating ? <Stars value={r.rating} /> : null}
+                  {r.rating ? <Stars value={r.rating} locale={locale} /> : null}
                 </div>
                 {r.date ? <time className="text-[13px] text-muted">{r.date}</time> : null}
                 <blockquote className="text-[14.5px] leading-[1.65] text-muted">

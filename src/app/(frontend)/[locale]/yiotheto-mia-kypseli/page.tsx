@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
+import { getLocale } from 'next-intl/server'
 import { Sprout, Users, GraduationCap } from 'lucide-react'
-import { ADOPT_PAGE, type AdoptBenefitIcon } from '@/components/adopt/adopt-content'
+import { getAdoptContent, type AdoptBenefitIcon } from '@/components/adopt/adopt-content'
+import { hreflangAlternates } from '@/lib/seo'
 import { AdoptHero } from '@/components/adopt/adopt-hero'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
 import { LogoCarousel } from '@/components/adopt/logo-carousel'
@@ -21,10 +23,18 @@ import { CtaLink } from '@/components/home/cta-link'
 import { FaqSchema } from '@/components/seo/faq-schema'
 import { cn } from '@/lib/utils'
 
-export const metadata: Metadata = {
-  title: 'Υιοθετώ μια Κυψέλη',
-  description:
-    'Εταιρικό πρόγραμμα «Υιοθετώ μια Κυψέλη» του Όρους Μαχαιρά: υιοθετήστε μια κυψέλη, ζήστε μια μοναδική βιωματική εμπειρία με την ομάδα σας και στηρίξτε τις μέλισσες και το περιβάλλον.',
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const { meta } = getAdoptContent(locale)
+  return {
+    title: meta.title,
+    description: meta.description,
+    alternates: hreflangAlternates(locale, '/yiotheto-mia-kypseli'),
+  }
 }
 
 const BENEFIT_ICONS: Record<AdoptBenefitIcon, typeof Sprout> = {
@@ -58,8 +68,8 @@ function SectionHead({
   )
 }
 
-export default function AdoptAHivePage() {
-  const a = ADOPT_PAGE
+export default async function AdoptAHivePage() {
+  const a = getAdoptContent(await getLocale())
 
   return (
     <>
@@ -78,7 +88,7 @@ export default function AdoptAHivePage() {
             </p>
             <p className="text-[16px] leading-[1.7] text-muted">{a.intro.body}</p>
             <CtaLink href="#cta" variant="gold" className="mt-1 self-start">
-              Υιοθετήστε μια κυψέλη
+              {a.intro.ctaLabel}
             </CtaLink>
           </Reveal>
 

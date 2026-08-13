@@ -5,12 +5,13 @@ import Image from 'next/image'
 import { CalendarCheck, Phone, ShieldCheck } from 'lucide-react'
 import type { Activity } from '@/lib/medusa/activities'
 import { hasWeekendPricing, weekdayPrice, weekendPrice } from '@/lib/pricing'
+import { getActivitiesUi } from '@/components/activities/activities-content'
 import { Stars } from './stars'
 import { BookingModal } from '@/components/booking/booking-modal'
 
-/** Format a tier price; €0 renders as its `note` (e.g. "Δωρεάν"). */
-export function formatTierPrice(amount: number, currency = 'eur'): string {
-  return new Intl.NumberFormat('el-GR', {
+/** Format a tier price; €0 renders as its `note` (e.g. "Δωρεάν"/"Free"). */
+export function formatTierPrice(amount: number, currency = 'eur', priceLocale = 'el-GR'): string {
+  return new Intl.NumberFormat(priceLocale, {
     style: 'currency',
     currency: currency.toUpperCase(),
     maximumFractionDigits: Number.isInteger(amount) ? 0 : 2,
@@ -18,17 +19,24 @@ export function formatTierPrice(amount: number, currency = 'eur'): string {
 }
 
 /**
- * Sticky sidebar booking card: price tiers → rating → the "ΔΕΙΤΕ
- * ΔΙΑΘΕΣΙΜΟΤΗΤΑ" button (opens the booking modal) → cancellation note + help box.
+ * Sticky sidebar booking card: price tiers → rating → the "check availability"
+ * button (opens the booking modal) → cancellation note + help box.
  */
-export function ActivityBookingCard({ activity }: { activity: Activity }) {
+export function ActivityBookingCard({
+  activity,
+  locale = 'el',
+}: {
+  activity: Activity
+  locale?: string
+}) {
+  const ui = getActivitiesUi(locale)
   const [open, setOpen] = useState(false)
   const tiers = activity.price_tiers ?? []
   const currency = activity.currency ?? 'eur'
   // Show a weekday/weekend split only if some tier actually prices them apart.
   const hasWeekend = hasWeekendPricing(tiers)
   const priceCell = (amount: number, note?: string) =>
-    amount === 0 ? (note ?? 'Δωρεάν') : formatTierPrice(amount, currency)
+    amount === 0 ? (note ?? ui.bookingFree) : formatTierPrice(amount, currency, ui.priceLocale)
 
   return (
     <>
@@ -40,10 +48,10 @@ export function ActivityBookingCard({ activity }: { activity: Activity }) {
             <div className="grid grid-cols-[1fr_auto_auto] items-baseline gap-x-4 gap-y-2.5">
               <span />
               <span className="text-right text-[11px] font-semibold uppercase tracking-[0.04em] text-muted">
-                Καθημ.
+                {ui.bookingWeekday}
               </span>
               <span className="text-right text-[11px] font-semibold uppercase tracking-[0.04em] text-muted">
-                Σαβ/Κυρ
+                {ui.bookingWeekend}
               </span>
               {tiers.map((t) => (
                 <Fragment key={t.key}>
@@ -73,7 +81,7 @@ export function ActivityBookingCard({ activity }: { activity: Activity }) {
 
         {activity.rating ? (
           <div className="flex items-center gap-2 border-t border-border pt-4">
-            <Stars value={activity.rating} />
+            <Stars value={activity.rating} locale={locale} />
             <span className="text-[14px] font-semibold text-foreground">
               {activity.rating.toFixed(1)}
             </span>
@@ -89,12 +97,12 @@ export function ActivityBookingCard({ activity }: { activity: Activity }) {
           className="flex w-full items-center justify-center gap-2 rounded-[4px] bg-accent p-[15px] text-[16px] font-semibold uppercase tracking-[0.02em] text-white transition-colors hover:bg-foreground"
         >
           <CalendarCheck className="size-5" aria-hidden="true" />
-          Δείτε διαθεσιμότητα
+          {ui.bookingCheckAvailability}
         </button>
 
         <p className="flex items-center gap-2 text-[13px] text-muted">
           <ShieldCheck className="size-4 shrink-0 text-success" aria-hidden="true" />
-          Δωρεάν ακύρωση έως 72 ώρες πριν.
+          {ui.bookingFreeCancellation}
         </p>
 
         <div className="flex items-center gap-3 rounded-[14px] bg-cream p-4">
@@ -102,7 +110,7 @@ export function ActivityBookingCard({ activity }: { activity: Activity }) {
             <Phone className="size-5" aria-hidden="true" />
           </span>
           <div className="flex flex-col">
-            <span className="text-[13px] text-muted">Έχετε απορίες για την κράτηση;</span>
+            <span className="text-[13px] text-muted">{ui.bookingQuestions}</span>
             <a
               href="tel:+35799130092"
               className="text-[15px] font-semibold text-foreground transition-colors hover:text-accent"
@@ -115,7 +123,7 @@ export function ActivityBookingCard({ activity }: { activity: Activity }) {
         {/* Bee Academy — the experience's brand, woven into the booking panel. */}
         <div className="flex flex-col items-center gap-2 border-t border-border pt-4 text-center">
           <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
-            Μια εμπειρία του
+            {ui.bookingExperienceBy}
           </span>
           <Image
             src="/images/activities/bee-academy-logo.png"

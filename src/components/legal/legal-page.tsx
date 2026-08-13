@@ -1,21 +1,26 @@
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 
 /** A section of a legal document. `body` items are paragraphs (string) or bullet
  *  lists (string[]). An optional `id` lets the footer deep-link to it. */
 export type LegalSection = { id?: string; heading: string; body: Array<string | string[]> }
 
-/** Shared layout for the static legal pages (Όροι, Πολιτική Απορρήτου). */
+/** Presentational, locale-aware layout for the static legal pages
+ *  (Όροι, Πολιτική Απορρήτου, …). The calling server component selects the
+ *  el/en content bundle and passes the active `locale` (defaults to Greek). */
 export function LegalPage({
   title,
   lastUpdated,
   intro,
   sections,
+  locale = 'el',
 }: {
   title: string
   lastUpdated: string
   intro: string
   sections: LegalSection[]
+  locale?: string
 }) {
+  const isEn = locale === 'en'
   return (
     <>
       <article className="container-wide py-10 md:py-14">
@@ -54,11 +59,23 @@ export function LegalPage({
           </div>
 
           <p className="mt-10 border-t border-border pt-6 text-[15px] leading-[24px] text-muted">
-            Για οποιαδήποτε απορία, επικοινωνήστε μαζί μας μέσω του{' '}
-            <Link href="/epikoinonia" className="text-accent hover:underline">
-              τμήματος επικοινωνίας
-            </Link>
-            .
+            {isEn ? (
+              <>
+                For any questions, please contact us through our{' '}
+                <Link href="/epikoinonia" className="text-accent hover:underline">
+                  contact page
+                </Link>
+                .
+              </>
+            ) : (
+              <>
+                Για οποιαδήποτε απορία, επικοινωνήστε μαζί μας μέσω του{' '}
+                <Link href="/epikoinonia" className="text-accent hover:underline">
+                  τμήματος επικοινωνίας
+                </Link>
+                .
+              </>
+            )}
           </p>
         </div>
       </article>

@@ -3,13 +3,29 @@
  * Copy sourced from orosmaxaira.com/yiotheto-mia-kypseli (lightly tightened).
  * Assets optimised into /public/images/adopt/ (hero, 14 gallery photos, 11 logos).
  * Data-only module mirroring the site's *-content.ts convention.
+ *
+ * Bilingual: the Greek object (ADOPT_EL) is the source of truth and stays the
+ * default. ADOPT_EN overrides only user-facing text — images, hrefs, video,
+ * logos, gallery, icons and stat values are locale-invariant and reused from EL.
+ * English copy is the live site's own English where it exists
+ * (orosmaxaira.com/en/yiotheto-mia-kypseli) and faithful translations for the
+ * bespoke sections the live EN site lays out differently. Read the active locale
+ * via next-intl's `getLocale()` (server) / `useLocale()` (client) and pass it to
+ * `getAdoptContent()` at the call site.
  */
 
 export type AdoptBenefitIcon = 'Sprout' | 'Users' | 'GraduationCap'
 
-export const ADOPT_PAGE = {
+const ADOPT_EL = {
+  meta: {
+    title: 'Υιοθετώ μια Κυψέλη',
+    description:
+      'Εταιρικό πρόγραμμα «Υιοθετώ μια Κυψέλη» του Όρους Μαχαιρά: υιοθετήστε μια κυψέλη, ζήστε μια μοναδική βιωματική εμπειρία με την ομάδα σας και στηρίξτε τις μέλισσες και το περιβάλλον.',
+  },
+
   hero: {
     wordmark: '/images/adopt/adopt-logo.webp',
+    wordmarkAlt: 'Adopt a Hive — Όρος Μαχαιρά',
     image: '/images/adopt/hero.webp',
     imageAlt:
       'Ομάδα εργαζομένων με στολές μελισσοκόμου γύρω από μια κηρήθρα στο μελισσοκομείο του Όρους Μαχαιρά',
@@ -35,6 +51,7 @@ export const ADOPT_PAGE = {
       'Τι θα γινόταν άραγε αν κάθε εταιρεία δεν περιοριζόταν μόνο σε επιχειρηματικούς στόχους, αλλά διεύρυνε τις δράσεις της και σε περιβαλλοντικά θέματα;',
     body:
       'Το πρόγραμμα “Υιοθετώ μια κυψέλη” είναι μια πρωτοποριακή πρωτοβουλία από το «Όρος Μαχαιρά» η οποία προσφέρει μια μοναδική ευκαιρία σε κάθε εταιρεία να συνεισφέρει άμεσα στην ευημερία του πλανήτη μας ενισχύοντας παράλληλα το πνεύμα της ομαδικότητας και συνεργασίας μεταξύ των εργαζομένων.',
+    ctaLabel: 'Υιοθετήστε μια κυψέλη',
     whyHeading: 'Γιατί να Υιοθετήσετε μια Κυψέλη;',
     benefits: [
       {
@@ -141,6 +158,8 @@ export const ADOPT_PAGE = {
     headingLines: ['200 κυψέλες.', '6.000.000 μέλισσες.'],
     body:
       'Δεν πρόκειται μόνο για τη διάσωση των μελισσών. Πρόκειται για τη διάσωση του πλανήτη μας και της βιοποικιλότητας που τον συντηρεί.',
+    linkLabel: 'Αφανείς Ήρωες της Φύσης',
+    linkHref: '/afaneis-iroes-tis-fysis',
     impactHeading: 'Γιατί Έχει Σημασία;',
     impact: [
       { value: '75%', text: 'των παγκόσμιων καλλιεργειών τροφίμων εξαρτώνται από επικονιαστές.' },
@@ -148,6 +167,17 @@ export const ADOPT_PAGE = {
     ],
     closing:
       'Υιοθετώντας μια κυψέλη, η εταιρεία σας προστατεύει αυτά τα ανεκτίμητα έντομα — και μαζί, τον πλανήτη μας.',
+  },
+
+  progress: {
+    eyebrow: 'Η Πρόοδός μας',
+    heading: 'Μαζί, προς τις 200 κυψέλες',
+    unit: 'κυψέλες',
+    adopted: 'υιοθετήθηκαν μέχρι σήμερα',
+    ofGoal: 'του στόχου',
+    remainingPre: 'Απομένουν',
+    remainingPost: 'για να πετύχουμε τον στόχο μας.',
+    cta: 'Υιοθετήστε μια κυψέλη',
   },
 
   faq: {
@@ -220,6 +250,17 @@ export const ADOPT_PAGE = {
     ] as { quote: string; name: string; role: string }[],
   },
 
+  form: {
+    firstName: 'Όνομα*',
+    lastName: 'Επίθετο*',
+    email: 'Email*',
+    phone: 'Τηλέφωνο',
+    message: 'Μήνυμα*',
+    submit: 'Αποστολή',
+    thankYou:
+      'Σας ευχαριστούμε! Το μήνυμά σας στάλθηκε — θα επικοινωνήσουμε σύντομα μαζί σας. 🐝',
+  },
+
   cta: {
     eyebrow: 'Υιοθετώ μια κυψέλη',
     heading:
@@ -236,4 +277,236 @@ export const ADOPT_PAGE = {
       hours: 'Δευτ – Παρ 08:00–16:00 · Σαβ – Κυρ κατόπιν ραντεβού',
     },
   },
-} as const
+}
+
+export type AdoptContent = typeof ADOPT_EL
+
+// English bundle. Live-site English (orosmaxaira.com/en/yiotheto-mia-kypseli)
+// where it exists; faithful translations for the bespoke sections. Images,
+// hrefs, video, logos, gallery, icons and stat values are reused from EL.
+const ADOPT_EN: AdoptContent = {
+  meta: {
+    title: 'Adopt a Hive',
+    description:
+      'The “Adopt a Hive” corporate programme by Oros Machaira: adopt a hive, share a unique hands-on experience with your team and support the bees and the environment.',
+  },
+
+  hero: {
+    wordmark: ADOPT_EL.hero.wordmark,
+    wordmarkAlt: 'Adopt a Hive — Oros Machaira',
+    image: ADOPT_EL.hero.image,
+    imageAlt:
+      'A team of employees in beekeeper suits gathered around a honeycomb at the Oros Machaira apiary',
+    taglinePre:
+      'Join our «Adopt a Hive» programme with your team and…',
+    taglineAccent: '«Bee-come a Hero»',
+    taglinePost: 'for the bees and the environment.',
+    ctaPrimary: { label: 'Adopt a Hive', href: ADOPT_EL.hero.ctaPrimary.href },
+    ctaSecondary: { label: 'See the package', href: ADOPT_EL.hero.ctaSecondary.href },
+  },
+
+  stats: [
+    { value: '200', label: 'hives — our goal' },
+    { value: '6,000,000', label: 'bees' },
+    { value: '11', label: 'member companies' },
+    { value: '1', label: 'year, renewable' },
+  ],
+
+  intro: {
+    eyebrow: 'The Initiative',
+    hook:
+      'What if every business were not only limited to business goals, but broadened its vision to environmental issues and needs as well?',
+    body:
+      'The “Adopt a Hive” programme is a pioneering initiative by “Oros Machaira” that offers your company a unique opportunity to directly contribute to the well-being of our planet, while fostering the spirit of teamwork and cooperation among your employees.',
+    ctaLabel: 'Adopt a Hive',
+    whyHeading: 'Why Adopt a Hive?',
+    benefits: [
+      {
+        icon: 'Sprout',
+        title: 'You save the pollinators',
+        text: 'Every hive strengthens the bee population and the propagation of plants.',
+      },
+      {
+        icon: 'Users',
+        title: 'You connect your team',
+        text: 'A unique team experience away from the office, out in nature.',
+      },
+      {
+        icon: 'GraduationCap',
+        title: 'You gain knowledge & experience',
+        text: 'Hands-on contact with the world of beekeeping and the ecosystem.',
+      },
+    ],
+  },
+
+  package: {
+    eyebrow: 'The Programme',
+    heading: 'What Does the Package Include?',
+    steps: [
+      {
+        num: '01',
+        title: 'Hive Adoption',
+        text: 'A hive is adopted and maintained by us in the name of your company.',
+      },
+      {
+        num: '02',
+        title: 'Visits to the Apiary',
+        text: 'Two hands-on visits for your team — up to 25 people per visit.',
+        link: { label: 'See the two visits', href: '#visits' },
+      },
+      {
+        num: '03',
+        title: 'Certificate of Adoption',
+        text: 'An official certificate recognising your contribution to the preservation of bees.',
+      },
+    ],
+  },
+
+  visits: {
+    eyebrow: 'The Experience',
+    heading: 'The Two Visits',
+    sub: 'Two distinct days of hands-on experience for your teams.',
+    items: [
+      {
+        title: 'First Visit',
+        image: ADOPT_EL.visits.items[0].image,
+        imageClass: ADOPT_EL.visits.items[0].imageClass,
+        pills: ['April – August', 'up to 25 people'],
+        activities: [
+          {
+            text:
+              'Educational tour & introduction to the bees — the team dresses as beekeepers and visits the hives under the guidance of our experienced beekeepers.',
+          },
+          {
+            text:
+              'An educational seminar on the role of bees in the ecosystem and their importance to the environment.',
+          },
+          { text: 'Honey tasting & bottling of fresh honey straight from the hive.' },
+          { text: 'Painting the hive in your company’s colours — a creative team-building activity.' },
+        ],
+      },
+      {
+        title: 'Second Visit',
+        image: ADOPT_EL.visits.items[1].image,
+        imageClass: ADOPT_EL.visits.items[1].imageClass,
+        pills: ['June – October', 'up to 25 people'],
+        activities: [
+          {
+            text:
+              'The second group of your team experiences all the activities of the first visit — except for the hive painting.',
+          },
+          {
+            text:
+              '≈20 kilos of honey per hive, in 250g jars — exclusive corporate gifts for your employees or clients.',
+          },
+          {
+            text:
+              'The hive is maintained by experienced beekeepers in the name of your company throughout the adoption.',
+          },
+          { text: 'You receive regular reports & videos on the real status of your hive.' },
+        ],
+      },
+    ],
+  },
+
+  gallery: {
+    eyebrow: 'Moments',
+    heading: 'The Experience in Pictures',
+    images: ADOPT_EL.gallery.images,
+  },
+
+  goal: {
+    eyebrow: 'Our Goal',
+    headingLines: ['200 hives.', '6,000,000 bees.'],
+    body:
+      'This is not only about saving the bees. It is about saving our planet and the biodiversity that sustains it.',
+    linkLabel: 'The Unsung Heroes of Nature',
+    linkHref: ADOPT_EL.goal.linkHref,
+    impactHeading: 'Why Does It Matter?',
+    impact: [
+      { value: '75%', text: 'of the world’s food crops depend on pollinators.' },
+      { value: '80%', text: 'of all pollination worldwide is carried out by bees.' },
+    ],
+    closing:
+      'By adopting a hive, your company protects these invaluable insects — and, with them, our planet.',
+  },
+
+  progress: {
+    eyebrow: 'Our Progress',
+    heading: 'Together, toward 200 hives',
+    unit: 'hives',
+    adopted: 'adopted so far',
+    ofGoal: 'of the goal',
+    remainingPre: '',
+    remainingPost: 'remaining to reach our goal.',
+    cta: 'Adopt a Hive',
+  },
+
+  faq: {
+    eyebrow: 'Questions',
+    heading: 'Frequently Asked Questions',
+    intro: 'Everything you need to know before joining the programme.',
+    cta: { label: 'Have another question?', href: ADOPT_EL.faq.cta.href },
+    items: [
+      {
+        q: 'Do I need any beekeeping knowledge to take part?',
+        a: 'No. The hive is fully managed by our team and its expert beekeepers.',
+      },
+      {
+        q: 'Where are the hives located?',
+        a: 'The hives are hosted in controlled natural areas within the premises of Oros Machaira.',
+      },
+      {
+        q: 'How long does a hive adoption last?',
+        a: 'Each adoption lasts one year, with the option to renew.',
+      },
+    ],
+  },
+
+  partners: {
+    eyebrow: 'Member companies',
+    heading: 'The Companies That Trusted Us',
+    logos: ADOPT_EL.partners.logos,
+  },
+
+  testimonials: {
+    eyebrow: 'Testimonials',
+    heading: 'What the Teams Who Visited Us Say',
+    items: ADOPT_EL.testimonials.items,
+  },
+
+  form: {
+    firstName: 'Name*',
+    lastName: 'Surname*',
+    email: 'Email*',
+    phone: 'Telephone',
+    message: 'Message*',
+    submit: 'Send',
+    thankYou:
+      'Thank you! Your message has been sent — we will get in touch with you soon. 🐝',
+  },
+
+  cta: {
+    eyebrow: 'Adopt a Hive',
+    heading:
+      'Get in touch with us today and become part of this effort too.',
+    body:
+      'Our team will design, together with you, the experience that best suits your company.',
+    primary: { label: 'Contact us', href: ADOPT_EL.cta.primary.href },
+    tel: ADOPT_EL.cta.tel,
+    contact: {
+      company: ADOPT_EL.cta.contact.company,
+      phone: ADOPT_EL.cta.contact.phone,
+      phoneHref: ADOPT_EL.cta.contact.phoneHref,
+      address: ADOPT_EL.cta.contact.address,
+      hours: 'Mon – Fri 08:00–16:00 · Sat – Sun by appointment',
+    },
+  },
+}
+
+/** Locale-aware Adopt-a-Hive content. el = the Greek source of truth, en = the
+ *  English bundle above. Read the active locale via next-intl's `getLocale()`
+ *  (server) / `useLocale()` (client) at the call site. */
+export function getAdoptContent(locale: string): AdoptContent {
+  return locale === 'en' ? ADOPT_EN : ADOPT_EL
+}

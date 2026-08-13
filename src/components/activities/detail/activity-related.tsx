@@ -1,23 +1,26 @@
-import Link from 'next/link'
 import Image from 'next/image'
+import { Link } from '@/i18n/navigation'
 import { ArrowRight } from 'lucide-react'
-import { ACTIVITIES_PAGE } from '@/components/activities/activities-content'
+import { getActivitiesContent, getActivitiesUi } from '@/components/activities/activities-content'
 import { SectionHead } from '@/components/shared/section-head'
 import { RevealUp } from '@/components/home/reveal-up'
 
 /**
- * "Ανακαλύψτε Περισσότερα" — related activity cards. Sourced from
- * `ACTIVITIES_PAGE.experiences.items`, filtered by the activity's `related_slugs`
- * (the other activities' hrefs), excluding the current page.
+ * "Ανακαλύψτε Περισσότερα" / "Discover More" — related activity cards. Sourced
+ * from the localized activities content, filtered by the activity's
+ * `related_slugs` (the other activities' hrefs), excluding the current page.
  */
 export function ActivityRelated({
   slugs,
   currentSlug,
+  locale = 'el',
 }: {
   slugs: string[]
   currentSlug: string
+  locale?: string
 }) {
-  const items = ACTIVITIES_PAGE.experiences.items
+  const ui = getActivitiesUi(locale)
+  const items = getActivitiesContent(locale).experiences.items
   // Match on the last path segment so `related_slugs` works whether the admin
   // stored a bare slug ("xenagiseis") or a full href ("/drastiriotites/xenagiseis").
   const lastSeg = (s: string) => s.replace(/\/+$/, '').split('/').pop() ?? s
@@ -32,7 +35,7 @@ export function ActivityRelated({
   return (
     <section className="py-12 md:py-[70px]">
       <div className="container-page flex flex-col gap-8 md:gap-10">
-        <SectionHead eyebrow="Δείτε επίσης" heading="Ανακαλύψτε Περισσότερα" />
+        <SectionHead eyebrow={ui.relatedEyebrow} heading={ui.relatedHeading} />
         <RevealUp>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             {picked.map((it) => (
@@ -56,7 +59,7 @@ export function ActivityRelated({
                   </h3>
                   <p className="line-clamp-2 text-[14.5px] leading-[1.55] text-muted">{it.text}</p>
                   <span className="mt-auto inline-flex items-center gap-1.5 pt-2 text-[14px] font-semibold text-accent">
-                    Περισσότερα
+                    {ui.more}
                     <ArrowRight
                       className="size-4 transition-transform group-hover:translate-x-0.5"
                       aria-hidden="true"

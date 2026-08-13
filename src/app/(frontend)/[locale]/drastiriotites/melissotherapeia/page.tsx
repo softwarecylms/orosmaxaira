@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
+import { getLocale } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
 import { CalendarRange, Check, ChevronRight, Clock, Info, Repeat } from 'lucide-react'
 import { RevealUp } from '@/components/home/reveal-up'
 import { SectionHead } from '@/components/shared/section-head'
@@ -8,16 +9,32 @@ import { RichText } from '@/components/activities/detail/rich-text'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
 import { MelissotherapeiaBooking } from '@/components/melissotherapeia/melissotherapeia-booking'
 import { getActivity } from '@/lib/medusa/activities'
-import { EXPERIENCES } from '@/components/activities/experiences'
+import { getExperiences } from '@/components/activities/experiences'
+import { getActivitiesUi } from '@/components/activities/activities-content'
+import { hreflangAlternates } from '@/lib/seo'
 
-const MONTHS_NOM = [
-  'Ιανουάριος', 'Φεβρουάριος', 'Μάρτιος', 'Απρίλιος', 'Μάιος', 'Ιούνιος',
-  'Ιούλιος', 'Αύγουστος', 'Σεπτέμβριος', 'Οκτώβριος', 'Νοέμβριος', 'Δεκέμβριος',
-]
-const MONTHS_ACC = [
-  'Ιανουάριο', 'Φεβρουάριο', 'Μάρτιο', 'Απρίλιο', 'Μάιο', 'Ιούνιο',
-  'Ιούλιο', 'Αύγουστο', 'Σεπτέμβριο', 'Οκτώβριο', 'Νοέμβριο', 'Δεκέμβριο',
-]
+/** Page-level copy that isn't part of the shared UI chrome or the experiences bundle. */
+function pageCopy(locale: string) {
+  return locale === 'en'
+    ? {
+        eyebrow: 'Alternative Medicine',
+        sessionWord: 'session',
+        fallbackDuration: '20 min / session',
+        fallbackCost: '€7 / session',
+        fallbackSeasonPill: 'Available April–October',
+        fallbackPeriod: 'April – October',
+        fallbackFrequency: 'Every 2nd day, for 3 weeks',
+      }
+    : {
+        eyebrow: 'Εναλλακτική Ιατρική',
+        sessionWord: 'συνεδρία',
+        fallbackDuration: '20 λεπτά / συνεδρία',
+        fallbackCost: '7€ / συνεδρία',
+        fallbackSeasonPill: 'Διαθέσιμη Απρίλιο–Οκτώβριο',
+        fallbackPeriod: 'Απρίλιος – Οκτώβριος',
+        fallbackFrequency: 'Κάθε 2η ημέρα, για 3 εβδομάδες',
+      }
+}
 
 type MelissoView = {
   metaTitle: string
@@ -40,8 +57,10 @@ type MelissoView = {
   gallery: { src: string; alt: string }[]
 }
 
-/** Load from Medusa; fall back to the static `experiences.ts` if unavailable. */
-async function loadView(): Promise<MelissoView> {
+/** Load from Medusa; fall back to the localized static `experiences.ts` if unavailable. */
+async function loadView(locale: string): Promise<MelissoView> {
+  const ui = getActivitiesUi(locale)
+  const t = pageCopy(locale)
   const a = await getActivity('melissotherapeia')
   if (a) {
     const s = a.season_start_month ?? undefined
@@ -49,15 +68,15 @@ async function loadView(): Promise<MelissoView> {
     // First price tier → "7€ / συνεδρία" (per-session, matching the duration).
     const tier = a.price_tiers?.[0]
     const price = tier?.price != null && tier.price !== '' ? Number(tier.price) : NaN
-    const costLabel = Number.isFinite(price) ? `${price}€ / συνεδρία` : undefined
+    const costLabel = Number.isFinite(price) ? `${price}€ / ${t.sessionWord}` : undefined
     return {
       metaTitle: a.meta_title ?? a.title,
       metaDescription: a.meta_description ?? undefined,
       title: a.title,
       durationLabel: a.duration_label ?? undefined,
       costLabel,
-      seasonPill: s && e ? `Διαθέσιμη ${MONTHS_ACC[s - 1]}–${MONTHS_ACC[e - 1]}` : undefined,
-      periodLabel: s && e ? `${MONTHS_NOM[s - 1]} – ${MONTHS_NOM[e - 1]}` : undefined,
+      seasonPill: s && e ? `${ui.availablePrefix} ${ui.monthsAcc[s - 1]}–${ui.monthsAcc[e - 1]}` : undefined,
+      periodLabel: s && e ? `${ui.monthsNom[s - 1]} – ${ui.monthsNom[e - 1]}` : undefined,
       seasonStart: s,
       seasonEnd: e,
       heroImage: a.hero_image ?? '',
@@ -73,22 +92,22 @@ async function loadView(): Promise<MelissoView> {
         .map((g) => ({ src: g.url, alt: g.alt ?? a.title })),
     }
   }
-  // Static fallback.
-  const d = EXPERIENCES.melissotherapeia
+  // Static fallback (localized).
+  const d = getExperiences(locale).melissotherapeia
   return {
     metaTitle: d.metaTitle,
     metaDescription: d.metaDescription,
     title: d.hero.title,
-    durationLabel: '20 λεπτά / συνεδρία',
-    costLabel: '7€ / συνεδρία',
-    seasonPill: 'Διαθέσιμη Απρίλιο–Οκτώβριο',
-    periodLabel: 'Απρίλιος – Οκτώβριος',
+    durationLabel: t.fallbackDuration,
+    costLabel: t.fallbackCost,
+    seasonPill: t.fallbackSeasonPill,
+    periodLabel: t.fallbackPeriod,
     seasonStart: d.booking.seasonStartMonth,
     seasonEnd: d.booking.seasonEndMonth,
     heroImage: d.hero.image,
     heroAlt: d.hero.imageAlt,
     body: d.intro.body,
-    frequency: 'Κάθε 2η ημέρα, για 3 εβδομάδες',
+    frequency: t.fallbackFrequency,
     video: d.intro.video,
     features: d.features?.items ?? [],
     benefits: d.benefits ? { intro: d.benefits.intro, items: d.benefits.items } : undefined,
@@ -98,12 +117,20 @@ async function loadView(): Promise<MelissoView> {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const v = await loadView()
-  return { title: v.metaTitle, description: v.metaDescription }
+  const locale = await getLocale()
+  const v = await loadView(locale)
+  return {
+    title: v.metaTitle,
+    description: v.metaDescription,
+    alternates: hreflangAlternates(locale, '/drastiriotites/melissotherapeia'),
+  }
 }
 
 export default async function MelissotherapeiaPage() {
-  const v = await loadView()
+  const locale = await getLocale()
+  const ui = getActivitiesUi(locale)
+  const t = pageCopy(locale)
+  const v = await loadView(locale)
   const pills = [
     v.durationLabel ? { icon: Clock, label: v.durationLabel } : null,
     v.seasonPill ? { icon: CalendarRange, label: v.seasonPill } : null,
@@ -119,11 +146,11 @@ export default async function MelissotherapeiaPage() {
             className="flex flex-wrap items-center gap-1.5 text-[15px] text-muted md:text-[17px]"
           >
             <Link href="/" className="transition-colors hover:text-accent">
-              Αρχική
+              {ui.breadcrumbHome}
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
             <Link href="/drastiriotites" className="transition-colors hover:text-accent">
-              Δραστηριότητες
+              {ui.breadcrumbActivities}
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
             <span className="text-foreground">{v.title}</span>
@@ -136,7 +163,7 @@ export default async function MelissotherapeiaPage() {
         <RevealUp>
           <div className="flex flex-col gap-4">
             <span className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">
-              Εναλλακτική Ιατρική
+              {t.eyebrow}
             </span>
             <h1 className="font-display text-[32px] font-bold leading-[1.06] text-foreground md:text-[46px]">
               {v.title}
@@ -179,7 +206,7 @@ export default async function MelissotherapeiaPage() {
             {/* Περιγραφή */}
             <section className="flex flex-col gap-5">
               <h2 className="font-display text-[22px] font-bold leading-[1.2] text-foreground md:text-[26px]">
-                Περιγραφή
+                {ui.sectionDescription}
               </h2>
               {v.body.map((p, i) => (
                 <p key={i} className="text-[16px] leading-[1.8] text-muted md:text-[17px]">
@@ -190,7 +217,7 @@ export default async function MelissotherapeiaPage() {
                 <p className="flex items-center gap-2.5 rounded-[12px] bg-offwhite px-4 py-3 text-[15px] leading-[1.5] text-foreground ring-1 ring-border/50">
                   <Repeat className="size-4 shrink-0 text-accent" aria-hidden="true" />
                   <span>
-                    <span className="font-semibold">Συχνότητα:</span> {v.frequency}.
+                    <span className="font-semibold">{ui.frequency}</span> {v.frequency}.
                   </span>
                 </p>
               ) : null}
@@ -213,7 +240,7 @@ export default async function MelissotherapeiaPage() {
             {v.features.length ? (
               <section className="flex flex-col gap-6">
                 <h2 className="font-display text-[22px] font-bold leading-[1.2] text-foreground md:text-[26px]">
-                  Πώς Λειτουργεί
+                  {ui.sectionHowItWorks}
                 </h2>
                 <div className="grid gap-3 sm:grid-cols-3">
                   {v.features.map((f, i) => (
@@ -238,7 +265,7 @@ export default async function MelissotherapeiaPage() {
             {v.benefits?.items?.length ? (
               <section className="flex flex-col gap-5">
                 <h2 className="font-display text-[22px] font-bold leading-[1.2] text-foreground md:text-[26px]">
-                  Οφέλη
+                  {ui.sectionBenefits}
                 </h2>
                 {v.benefits.intro ? (
                   <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">
@@ -268,7 +295,7 @@ export default async function MelissotherapeiaPage() {
               <p className="flex items-start gap-2.5 rounded-[14px] bg-accent-soft p-4 text-[14px] leading-[1.6] text-foreground/80 ring-1 ring-accent/15">
                 <Info className="mt-0.5 size-4 shrink-0 text-gold-strong" aria-hidden="true" />
                 <span>
-                  <span className="font-semibold text-foreground/90">Σημαντική σημείωση: </span>
+                  <span className="font-semibold text-foreground/90">{ui.importantNote} </span>
                   {v.disclaimer}
                 </span>
               </p>
@@ -293,7 +320,7 @@ export default async function MelissotherapeiaPage() {
       {v.gallery.length ? (
         <section className="bg-offwhite py-12 md:py-[70px]">
           <div className="container-wide flex flex-col gap-8">
-            <SectionHead eyebrow="Στιγμές" heading="Στιγμές από τη Μελισσοθεραπεία" />
+            <SectionHead eyebrow={ui.moments} heading={getExperiences(locale).melissotherapeia.gallery!.heading} />
             <GalleryCarousel images={v.gallery} />
           </div>
         </section>

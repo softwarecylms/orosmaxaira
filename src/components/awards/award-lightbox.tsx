@@ -2,10 +2,16 @@
 
 import { useEffect } from 'react'
 import Image from 'next/image'
+import { useLocale } from 'next-intl'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { EASE } from '@/lib/motion'
 import type { AwardImage } from './awards-manifest'
+
+const T = {
+  el: { view: 'Προβολή φωτογραφίας', close: 'Κλείσιμο', prev: 'Προηγούμενη', next: 'Επόμενη', photo: 'φωτογραφία' },
+  en: { view: 'Photo viewer', close: 'Close', prev: 'Previous', next: 'Next', photo: 'photo' },
+}
 
 /** Full-screen image viewer. Controlled: `index` is the open photo (null = closed).
  *  Esc / ← / → keyboard nav, click-backdrop to close, body-scroll lock. */
@@ -22,6 +28,7 @@ export function AwardLightbox({
   onClose: () => void
   onIndex: (i: number) => void
 }) {
+  const t = useLocale() === 'en' ? T.en : T.el
   const open = index !== null
   const len = images.length
 
@@ -47,7 +54,7 @@ export function AwardLightbox({
         <motion.div
           role="dialog"
           aria-modal="true"
-          aria-label="Προβολή φωτογραφίας"
+          aria-label={t.view}
           className="fixed inset-0 z-[60] flex items-center justify-center bg-foreground/92 p-4 sm:p-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -58,7 +65,7 @@ export function AwardLightbox({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Κλείσιμο"
+            aria-label={t.close}
             className="absolute right-4 top-4 z-10 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
           >
             <X className="size-5" aria-hidden="true" />
@@ -68,7 +75,7 @@ export function AwardLightbox({
             <>
               <button
                 type="button"
-                aria-label="Προηγούμενη"
+                aria-label={t.prev}
                 onClick={(e) => {
                   e.stopPropagation()
                   onIndex(((index as number) - 1 + len) % len)
@@ -79,7 +86,7 @@ export function AwardLightbox({
               </button>
               <button
                 type="button"
-                aria-label="Επόμενη"
+                aria-label={t.next}
                 onClick={(e) => {
                   e.stopPropagation()
                   onIndex(((index as number) + 1) % len)
@@ -101,7 +108,7 @@ export function AwardLightbox({
           >
             <Image
               src={images[index as number].src}
-              alt={`${alt} — φωτογραφία ${(index as number) + 1}`}
+              alt={`${alt} — ${t.photo} ${(index as number) + 1}`}
               fill
               sizes="(min-width:1100px) 1100px, 92vw"
               className="object-contain"

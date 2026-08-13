@@ -1,14 +1,15 @@
 import Image from 'next/image'
+import { getLocale } from 'next-intl/server'
 import { Check } from 'lucide-react'
 import { Reveal, RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
 import { cn } from '@/lib/utils'
-import { ADOPT_PAGE } from './adopt-content'
+import { getAdoptContent } from './adopt-content'
 
 /** "Οι Δύο Επισκέψεις" — cinematic image cards with a dark gradient scrim, an
  *  overlaid season badge + title, a big ghost numeral, and a gold check-list of
  *  what each visit includes. */
-export function VisitsShowcase() {
-  const v = ADOPT_PAGE.visits
+export async function VisitsShowcase() {
+  const v = getAdoptContent(await getLocale()).visits
 
   return (
     <section id="visits" className="scroll-mt-24 pb-14 pt-6 md:pb-20 md:pt-8">

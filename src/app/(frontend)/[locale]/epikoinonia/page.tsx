@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import { getLocale } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
 import { BadgeCheck, Clock, Leaf, Mail, MapPin, Phone, Users } from 'lucide-react'
 import {
-  CONTACT_PAGE,
+  getContactContent,
   type ContactIcon,
   type ValueIcon,
 } from '@/components/contact/contact-content'
@@ -10,7 +11,8 @@ import { ContactHero } from '@/components/contact/contact-hero'
 import { ContactMap } from '@/components/contact/contact-map'
 import { ContactMessageForm } from '@/components/contact/contact-message-form'
 import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
-import { FOOTER } from '@/components/home/home-content'
+import { getHomeContent } from '@/components/home/home-content'
+import { hreflangAlternates } from '@/lib/seo'
 import {
   FacebookSolid,
   InstagramSolid,
@@ -19,7 +21,17 @@ import {
   LinkedinSolid,
 } from '@/components/layout/social-icons'
 
-export const metadata: Metadata = { title: 'Επικοινωνία' }
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  return {
+    title: getContactContent(locale).meta.title,
+    alternates: hreflangAlternates(locale, '/epikoinonia'),
+  }
+}
 
 const CONTACT_ICONS: Record<ContactIcon, typeof Clock> = {
   hours: Clock,
@@ -43,8 +55,11 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
 }
 
 /** Contact page (Figma 146:957) — header/footer come from the shared layout. */
-export default function ContactPage() {
-  const c = CONTACT_PAGE
+export default async function ContactPage() {
+  const locale = await getLocale()
+  const c = getContactContent(locale)
+  const { FOOTER } = getHomeContent(locale)
+  const social = getHomeContent(locale).FOOTER.social
 
   return (
     <>

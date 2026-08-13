@@ -1,19 +1,25 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useLocale } from 'next-intl'
 import { useReducedMotion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { ADOPT_PAGE } from './adopt-content'
+import { getAdoptContent } from './adopt-content'
 
 /** Testimonials carousel — 2 cards per view (1 on mobile), seamless looped
  *  autoplay (the set is duplicated so it wraps invisibly), prev/next arrows.
  *  Pauses on hover, autoplay off under reduced motion. */
 export function AdoptTestimonials() {
-  const raw = ADOPT_PAGE.testimonials.items
+  const locale = useLocale()
+  const raw = getAdoptContent(locale).testimonials.items
   const items = [...raw, ...raw] // duplicate for a seamless loop
   const trackRef = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()
   const [paused, setPaused] = useState(false)
+  const aria =
+    locale === 'en'
+      ? { prev: 'Previous testimonials', next: 'Next testimonials' }
+      : { prev: 'Προηγούμενες μαρτυρίες', next: 'Επόμενες μαρτυρίες' }
 
   const stepPx = () => {
     const el = trackRef.current
@@ -76,7 +82,7 @@ export function AdoptTestimonials() {
       <button
         type="button"
         onClick={() => go(-1)}
-        aria-label="Προηγούμενες μαρτυρίες"
+        aria-label={aria.prev}
         className="absolute -left-2 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground shadow-card ring-1 ring-border transition hover:bg-accent hover:text-white md:-left-5"
       >
         <ChevronLeft className="size-5" aria-hidden="true" />
@@ -84,7 +90,7 @@ export function AdoptTestimonials() {
       <button
         type="button"
         onClick={() => go(1)}
-        aria-label="Επόμενες μαρτυρίες"
+        aria-label={aria.next}
         className="absolute -right-2 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground shadow-card ring-1 ring-border transition hover:bg-accent hover:text-white md:-right-5"
       >
         <ChevronRight className="size-5" aria-hidden="true" />

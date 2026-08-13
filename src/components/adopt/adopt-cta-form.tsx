@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { CONTACT_PAGE } from '@/components/contact/contact-content'
+import { useLocale } from 'next-intl'
+import { getAdoptContent } from './adopt-content'
 
 // Glass fields on the gold band — same treatment as the visit pills.
 const inputCls =
@@ -10,7 +11,7 @@ const inputCls =
 /** Contact form on the adopt CTA band — same fields/labels as the contact page
  *  form (front-end only; a thank-you state on submit). Sits directly on the gold. */
 export function AdoptCtaForm() {
-  const f = CONTACT_PAGE.form
+  const f = getAdoptContent(useLocale()).form
   const [sent, setSent] = useState(false)
 
   return (
@@ -23,7 +24,7 @@ export function AdoptCtaForm() {
     >
       {sent ? (
         <p className="rounded-[8px] border border-white/30 bg-white/15 px-5 py-10 text-center text-[16px] leading-[24px] text-white backdrop-blur">
-          Σας ευχαριστούμε! Το μήνυμά σας στάλθηκε — θα επικοινωνήσουμε σύντομα μαζί σας. 🐝
+          {f.thankYou}
         </p>
       ) : (
         <>

@@ -2,11 +2,33 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+import { useLocale } from 'next-intl'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react'
 import { EASE } from '@/lib/motion'
 
 type GalleryImage = { src: string; alt: string }
+
+const ARIA = {
+  el: {
+    open: (i: number, n: number) => `Άνοιγμα φωτογραφίας ${i} από ${n}`,
+    prev: 'Προηγούμενες φωτογραφίες',
+    next: 'Επόμενες φωτογραφίες',
+    dialog: 'Προβολή φωτογραφίας',
+    close: 'Κλείσιμο',
+    prevOne: 'Προηγούμενη',
+    nextOne: 'Επόμενη',
+  },
+  en: {
+    open: (i: number, n: number) => `Open photo ${i} of ${n}`,
+    prev: 'Previous photos',
+    next: 'Next photos',
+    dialog: 'Photo viewer',
+    close: 'Close',
+    prevOne: 'Previous',
+    nextOne: 'Next',
+  },
+} as const
 
 /** Autoplay image carousel (~5 per view at desktop) with prev/next arrows and a
  *  full-screen lightbox on click (←/→/Esc + backdrop to close). Autoplay pauses
@@ -17,6 +39,7 @@ export function GalleryCarousel({ images }: { images: GalleryImage[] }) {
   const reduce = useReducedMotion()
   const [paused, setPaused] = useState(false)
   const [lightbox, setLightbox] = useState<number | null>(null)
+  const t = useLocale() === 'en' ? ARIA.en : ARIA.el
 
   const stepPx = () => {
     const el = trackRef.current
@@ -71,7 +94,7 @@ export function GalleryCarousel({ images }: { images: GalleryImage[] }) {
             data-tile
             type="button"
             onClick={() => setLightbox(i)}
-            aria-label={`Άνοιγμα φωτογραφίας ${i + 1} από ${images.length}`}
+            aria-label={t.open(i + 1, images.length)}
             className="group relative aspect-square shrink-0 basis-[calc(50%-0.375rem)] cursor-zoom-in snap-start overflow-hidden rounded-[8px] bg-offwhite sm:basis-[calc(33.333%-0.5rem)] lg:basis-[calc(25%-0.5625rem)]"
           >
             <Image
@@ -93,7 +116,7 @@ export function GalleryCarousel({ images }: { images: GalleryImage[] }) {
       <button
         type="button"
         onClick={() => scrollByTiles(-1)}
-        aria-label="Προηγούμενες φωτογραφίες"
+        aria-label={t.prev}
         className="absolute -left-2 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground shadow-card ring-1 ring-border transition hover:bg-accent hover:text-white md:-left-4"
       >
         <ChevronLeft className="size-5" aria-hidden="true" />
@@ -101,7 +124,7 @@ export function GalleryCarousel({ images }: { images: GalleryImage[] }) {
       <button
         type="button"
         onClick={() => scrollByTiles(1)}
-        aria-label="Επόμενες φωτογραφίες"
+        aria-label={t.next}
         className="absolute -right-2 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground shadow-card ring-1 ring-border transition hover:bg-accent hover:text-white md:-right-4"
       >
         <ChevronRight className="size-5" aria-hidden="true" />
@@ -113,7 +136,7 @@ export function GalleryCarousel({ images }: { images: GalleryImage[] }) {
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label="Προβολή φωτογραφίας"
+            aria-label={t.dialog}
             className="fixed inset-0 z-[70] flex items-center justify-center bg-foreground/92 p-4 sm:p-8"
             onClick={() => setLightbox(null)}
             initial={{ opacity: 0 }}
@@ -124,7 +147,7 @@ export function GalleryCarousel({ images }: { images: GalleryImage[] }) {
             <button
               type="button"
               onClick={() => setLightbox(null)}
-              aria-label="Κλείσιμο"
+              aria-label={t.close}
               className="absolute right-4 top-4 flex size-11 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
             >
               <X className="size-5" aria-hidden="true" />
@@ -132,7 +155,7 @@ export function GalleryCarousel({ images }: { images: GalleryImage[] }) {
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); setLightbox((i) => (i === null ? i : (i - 1 + images.length) % images.length)) }}
-              aria-label="Προηγούμενη"
+              aria-label={t.prevOne}
               className="absolute left-3 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 sm:left-6"
             >
               <ChevronLeft className="size-6" aria-hidden="true" />
@@ -156,7 +179,7 @@ export function GalleryCarousel({ images }: { images: GalleryImage[] }) {
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); setLightbox((i) => (i === null ? i : (i + 1) % images.length)) }}
-              aria-label="Επόμενη"
+              aria-label={t.nextOne}
               className="absolute right-3 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 sm:right-6"
             >
               <ChevronRight className="size-6" aria-hidden="true" />

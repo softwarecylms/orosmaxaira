@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { CONTACT_PAGE } from './contact-content'
+import { useLocale } from 'next-intl'
+import { getContactContent } from './contact-content'
 import { RevealUp } from '@/components/home/reveal-up'
 
 const inputCls =
@@ -13,7 +14,7 @@ const inputCls =
  * exists and can be wired in later.
  */
 export function ContactMessageForm() {
-  const f = CONTACT_PAGE.form
+  const f = getContactContent(useLocale()).form
   const [sent, setSent] = useState(false)
 
   return (
@@ -31,7 +32,7 @@ export function ContactMessageForm() {
 
         {sent ? (
           <p className="rounded-[4px] bg-white px-5 py-10 text-center text-[17px] leading-[24px] text-foreground">
-            Σας ευχαριστούμε! Το μήνυμά σας στάλθηκε — θα επικοινωνήσουμε σύντομα μαζί σας. 🐝
+            {f.thankYou}
           </p>
         ) : (
           <div className="flex flex-col gap-5">

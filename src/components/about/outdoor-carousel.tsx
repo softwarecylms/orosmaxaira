@@ -2,10 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import { useLocale } from 'next-intl'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react'
+import { Link } from '@/i18n/navigation'
 import { EASE, DURATION } from '@/lib/motion'
+import { getAboutContent } from './about-content'
 
 export type OutdoorSlide = {
   title: string
@@ -30,6 +32,7 @@ export function OutdoorCarousel({
   cta: { label: string; href: string }
 }) {
   const reduce = useReducedMotion()
+  const arrows = getAboutContent(useLocale()).outdoor.arrows
   const [index, setIndex] = useState(0)
   const [dir, setDir] = useState(1)
   const paused = useRef(false)
@@ -76,7 +79,7 @@ export function OutdoorCarousel({
       onFocusCapture={hold}
       onBlurCapture={release}
     >
-      <NavArrow dir="prev" onClick={() => go(-1)} />
+      <NavArrow dir="prev" label={arrows.prev} onClick={() => go(-1)} />
 
       <div className="relative flex-1 overflow-hidden rounded-[4px]">
         <AnimatePresence mode="wait" custom={dir} initial={false}>
@@ -116,18 +119,18 @@ export function OutdoorCarousel({
         </AnimatePresence>
       </div>
 
-      <NavArrow dir="next" onClick={() => go(1)} />
+      <NavArrow dir="next" label={arrows.next} onClick={() => go(1)} />
     </div>
   )
 }
 
-function NavArrow({ dir, onClick }: { dir: 'prev' | 'next'; onClick: () => void }) {
+function NavArrow({ dir, label, onClick }: { dir: 'prev' | 'next'; label: string; onClick: () => void }) {
   const Icon = dir === 'prev' ? ChevronLeft : ChevronRight
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label={dir === 'prev' ? 'Προηγούμενο' : 'Επόμενο'}
+      aria-label={label}
       className="flex size-11 shrink-0 items-center justify-center rounded-full border border-foreground text-foreground transition-colors hover:border-accent hover:text-accent active:scale-95 md:size-12"
     >
       <Icon className="size-5" strokeWidth={2} />

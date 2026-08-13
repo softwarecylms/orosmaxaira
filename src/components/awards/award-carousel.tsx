@@ -2,11 +2,17 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { useLocale } from 'next-intl'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { EASE } from '@/lib/motion'
 import { AwardLightbox } from './award-lightbox'
 import type { AwardImage } from './awards-manifest'
+
+const T = {
+  el: { open: 'Άνοιγμα φωτογραφίας σε πλήρη οθόνη', prev: 'Προηγούμενη', next: 'Επόμενη', photo: 'φωτογραφία' },
+  en: { open: 'Open photo in full screen', prev: 'Previous', next: 'Next', photo: 'photo' },
+}
 
 const slide = {
   enter: (d: number) => ({ opacity: 0, x: d > 0 ? 36 : -36 }),
@@ -18,6 +24,7 @@ const slide = {
  *  click-to-zoom (full-screen lightbox). Images are `object-contain` on a soft
  *  frame so nothing is cropped (mixed portrait/landscape + the wide banner). */
 export function AwardCarousel({ images, alt }: { images: AwardImage[]; alt: string }) {
+  const t = useLocale() === 'en' ? T.en : T.el
   const [[i, dir], setState] = useState<[number, number]>([0, 0])
   const [open, setOpen] = useState<number | null>(null)
   const len = images.length
@@ -42,12 +49,12 @@ export function AwardCarousel({ images, alt }: { images: AwardImage[]; alt: stri
             <button
               type="button"
               onClick={() => setOpen(i)}
-              aria-label="Άνοιγμα φωτογραφίας σε πλήρη οθόνη"
+              aria-label={t.open}
               className="block size-full cursor-zoom-in"
             >
               <Image
                 src={images[i].src}
-                alt={`${alt} — φωτογραφία ${i + 1}`}
+                alt={`${alt} — ${t.photo} ${i + 1}`}
                 fill
                 sizes="(min-width:1024px) 45vw, 100vw"
                 className="object-contain"
@@ -60,7 +67,7 @@ export function AwardCarousel({ images, alt }: { images: AwardImage[]; alt: stri
           <>
             <button
               type="button"
-              aria-label="Προηγούμενη"
+              aria-label={t.prev}
               onClick={() => goto(i - 1, -1)}
               className="absolute left-2.5 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-foreground shadow-sm backdrop-blur transition-colors hover:bg-white hover:text-accent"
             >
@@ -68,7 +75,7 @@ export function AwardCarousel({ images, alt }: { images: AwardImage[]; alt: stri
             </button>
             <button
               type="button"
-              aria-label="Επόμενη"
+              aria-label={t.next}
               onClick={() => goto(i + 1, 1)}
               className="absolute right-2.5 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-foreground shadow-sm backdrop-blur transition-colors hover:bg-white hover:text-accent"
             >

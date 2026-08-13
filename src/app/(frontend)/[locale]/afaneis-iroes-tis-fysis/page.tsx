@@ -1,22 +1,30 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import { NATURE_PAGE } from '@/components/nature/nature-content'
+import { getLocale } from 'next-intl/server'
+import { getNatureContent, type NatureSection } from '@/components/nature/nature-content'
 import { PageHero } from '@/components/shared/page-hero'
 import { CtaLink } from '@/components/home/cta-link'
 import { AdoptHiveBanner } from '@/components/home/adopt-hive-banner'
 import { Reveal, RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
 import { Counter } from '@/components/motion/counter'
 import { BoldText } from '@/components/shared/bold-text'
+import { hreflangAlternates } from '@/lib/seo'
 import { cn } from '@/lib/utils'
 
-export const metadata: Metadata = {
-  title: 'Μέλισσες, οι Αφανείς Ήρωες της Φύσης',
-  description:
-    'Οι μέλισσες είναι απαραίτητες για την ισορροπία του περιβάλλοντος και τη βιοποικιλότητα. Μάθετε γιατί κάθε μέλισσα μετράει και πώς μπορείτε να βοηθήσετε.',
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
+  const en = locale === 'en'
+  return {
+    title: en ? 'Bees, Nature’s Unsung Heroes' : 'Μέλισσες, οι Αφανείς Ήρωες της Φύσης',
+    description: en
+      ? 'Bees are essential to the balance of the environment and to biodiversity. Learn why every single bee matters and how you can help.'
+      : 'Οι μέλισσες είναι απαραίτητες για την ισορροπία του περιβάλλοντος και τη βιοποικιλότητα. Μάθετε γιατί κάθε μέλισσα μετράει και πώς μπορείτε να βοηθήσετε.',
+    alternates: hreflangAlternates(locale, '/afaneis-iroes-tis-fysis'),
+  }
 }
 
 /** One alternating image/text story block. */
-function StorySection({ s }: { s: (typeof NATURE_PAGE.sections)[number] }) {
+function StorySection({ s }: { s: NatureSection }) {
   return (
     <section className="container-wide py-12 md:py-[70px]">
       <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
@@ -62,8 +70,8 @@ function StorySection({ s }: { s: (typeof NATURE_PAGE.sections)[number] }) {
   )
 }
 
-export default function NatureHeroesPage() {
-  const n = NATURE_PAGE
+export default async function NatureHeroesPage() {
+  const n = getNatureContent(await getLocale())
 
   return (
     <>
@@ -103,7 +111,7 @@ export default function NatureHeroesPage() {
       ))}
 
       {/* 5 · Adopt-a-hive banner (homepage section, tailored copy) */}
-      <AdoptHiveBanner body="Το πρόγραμμα «Υιοθετώ μια κυψέλη» είναι ένα σημαντικό βήμα προς αυτήν την κατεύθυνση, προσφέροντας έναν τρόπο στους ανθρώπους να συνεισφέρουν άμεσα στη διατήρηση αυτών των ζωτικής σημασίας πλασμάτων." />
+      <AdoptHiveBanner body={n.adoptBody} />
 
       {/* 6 · Why every bee matters — image left, content right */}
       <section className="container-wide py-12 md:py-[70px]">

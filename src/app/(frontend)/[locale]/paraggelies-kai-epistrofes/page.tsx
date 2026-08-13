@@ -1,12 +1,10 @@
 import type { Metadata } from 'next'
 import { LegalPage, type LegalSection } from '@/components/legal/legal-page'
+import { hreflangAlternates } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Παραγγελίες & Επιστροφές',
-  description:
-    'Παραγγελίες και επιστροφές στο ηλεκτρονικό κατάστημα Όρος Μαχαιρά — ακυρώσεις, επιστροφές προϊόντων και όροι παραγγελιών.',
-  alternates: { canonical: 'https://orosmaxaira.vercel.app/paraggelies-kai-epistrofes' },
-}
+const TITLE = 'Παραγγελίες & Επιστροφές'
+const LAST_UPDATED = 'Τελευταία ενημέρωση: Ιούλιος 2026'
+const INTRO = 'Οι όροι αυτοί ισχύουν μόνο για προϊόντα που αγοράστηκαν από αυτόν τον ιστότοπο.'
 
 const SECTIONS: LegalSection[] = [
   {
@@ -40,13 +38,83 @@ const SECTIONS: LegalSection[] = [
   },
 ]
 
-export default function OrdersReturnsPage() {
+const TITLE_EN = 'Orders & Returns'
+const LAST_UPDATED_EN = 'Last updated: July 2026'
+const INTRO_EN = 'This applies to items purchased from this site only.'
+
+const SECTIONS_EN: LegalSection[] = [
+  {
+    heading: 'Product returns',
+    body: [
+      'We hope you’ll love every purchase you make from our website, but if you are not completely satisfied with your purchase, you can cancel your order by simply notifying us by email within 3 days from the date you received the items and return them to us within 14 days from the cancellation date. We will issue a full refund or credit note for the price you paid for the item.',
+      'Please note that you will be responsible for the costs of returning the goods to us unless we delivered the item to you in error, or if the item is faulty. Please package the relevant item securely in at least the packaging it was received and send it to us with a copy of your invoice so that we receive it within seven working days of the day after the date that the item was delivered to you.',
+    ],
+  },
+  {
+    heading: 'Order terms',
+    body: [
+      [
+        'Prices are subject to change without notice. Minor specification variations do not entitle the purchaser to rescind the contract.',
+        'Claims for damaged goods must notify within 24 hours of receipt, please inspect goods immediately.',
+        'Orders delivered may be subject to a delivery charge, check our Shipping Policy.',
+        'The cardholder’s name and address and delivery address must be the same for the 1st order.',
+        'We do not deliver to P.O. Box numbers.',
+        'The company policy is to dispatch goods within 4 working days of receiving your order, however this can vary subject to availability of stock. Times quoted are made in good faith, but shall not be binding.',
+        'M.F. Oros Maxaira Ltd cannot accept responsibility for transport delays causing late delivery.',
+        'Late delivery does not entitle you to refuse or cancel the order.',
+      ],
+    ],
+  },
+  {
+    heading: 'Limitation of liability',
+    body: [
+      'The user will indemnify M.F. Oros Maxaira Ltd against all claims, liabilities, damages, costs and expenses, including legal fees which may or may not arise out of the use of information of any kind contained within this website.',
+      'Whilst all reasonable endeavors have been made to check the accuracy of the information contained within this site, M.F. Oros Maxaira Ltd does not warrant the accuracy of the information contained herein. Further, M.F. Oros Maxaira Ltd or any other associated company or companies will not be liable for any direct, indirect or consequential loss arising from the use of the information and material contained within this website or any other site which the user may access through this website.',
+    ],
+  },
+]
+
+const META = {
+  el: {
+    title: 'Παραγγελίες & Επιστροφές',
+    description:
+      'Παραγγελίες και επιστροφές στο ηλεκτρονικό κατάστημα Όρος Μαχαιρά — ακυρώσεις, επιστροφές προϊόντων και όροι παραγγελιών.',
+  },
+  en: {
+    title: 'Orders & Returns',
+    description:
+      'Orders and returns at the Oros Maxaira online store — cancellations, product returns and order terms.',
+  },
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const m = locale === 'en' ? META.en : META.el
+  return {
+    title: m.title,
+    description: m.description,
+    alternates: hreflangAlternates(locale, '/paraggelies-kai-epistrofes'),
+  }
+}
+
+export default async function OrdersReturnsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const isEn = locale === 'en'
   return (
     <LegalPage
-      title="Παραγγελίες & Επιστροφές"
-      lastUpdated="Τελευταία ενημέρωση: Ιούλιος 2026"
-      intro="Οι όροι αυτοί ισχύουν μόνο για προϊόντα που αγοράστηκαν από αυτόν τον ιστότοπο."
-      sections={SECTIONS}
+      locale={locale}
+      title={isEn ? TITLE_EN : TITLE}
+      lastUpdated={isEn ? LAST_UPDATED_EN : LAST_UPDATED}
+      intro={isEn ? INTRO_EN : INTRO}
+      sections={isEn ? SECTIONS_EN : SECTIONS}
     />
   )
 }

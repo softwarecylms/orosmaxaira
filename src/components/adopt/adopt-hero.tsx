@@ -1,19 +1,20 @@
 'use client'
 
 import Image from 'next/image'
+import { useLocale } from 'next-intl'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { RevealMountStagger, RevealMountItem } from '@/components/motion/reveal'
 import { useMotionReady } from '@/components/motion/motion-ready'
 import { CtaLink } from '@/components/home/cta-link'
 import { floatY } from '@/lib/motion'
-import { ADOPT_PAGE } from './adopt-content'
+import { getAdoptContent } from './adopt-content'
 
 /** Full-bleed programme hero — parallax photo, dark overlay, wordmark + tagline
  *  («Bee-come a Hero» in accent) and the primary CTA. Parallax is driven off the
  *  page scroll (the hero sits at the top), avoiding element-target scroll
  *  measurement; both parallax and mount-stagger disable under reduced motion. */
 export function AdoptHero() {
-  const h = ADOPT_PAGE.hero
+  const h = getAdoptContent(useLocale()).hero
   const reduce = useReducedMotion()
   const ready = useMotionReady()
   const { scrollY } = useScroll()
@@ -49,7 +50,7 @@ export function AdoptHero() {
             >
               <Image
                 src={h.wordmark}
-                alt="Adopt a Hive — Όρος Μαχαιρά"
+                alt={h.wordmarkAlt}
                 width={280}
                 height={173}
                 priority

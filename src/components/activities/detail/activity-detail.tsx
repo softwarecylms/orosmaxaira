@@ -1,10 +1,11 @@
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import { ChevronRight, Clock, Users, CalendarRange } from 'lucide-react'
 import type { Activity } from '@/lib/medusa/activities'
 import { RevealUp } from '@/components/home/reveal-up'
 import { SectionHead } from '@/components/shared/section-head'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
+import { getActivitiesUi } from '@/components/activities/activities-content'
 import { Stars } from './stars'
 import { ActivitySections } from './activity-sections'
 import { ActivityPolicies } from './activity-policies'
@@ -12,30 +13,33 @@ import { ActivityBookingCard } from './activity-booking-card'
 import { CertificationsNote } from '@/components/certificates/certifications-note'
 import { ActivityRelated } from './activity-related'
 
-const MONTHS = [
-  'Ιανουάριο', 'Φεβρουάριο', 'Μάρτιο', 'Απρίλιο', 'Μάιο', 'Ιούνιο',
-  'Ιούλιο', 'Αύγουστο', 'Σεπτέμβριο', 'Οκτώβριο', 'Νοέμβριο', 'Δεκέμβριο',
-]
-
 /**
  * Medusa-backed activity detail page — a product/experience-detail layout
  * (breadcrumb → header + rating → hero → tabs + sticky booking card →
- * policies → gallery → related). All content comes from the Medusa admin.
+ * policies → gallery → related). Dynamic content comes from the Medusa admin;
+ * the static chrome is localized via `locale`.
  */
-export function ActivityDetail({ activity }: { activity: Activity }) {
+export function ActivityDetail({
+  activity,
+  locale = 'el',
+}: {
+  activity: Activity
+  locale?: string
+}) {
+  const ui = getActivitiesUi(locale)
   const galleryImages = (activity.gallery ?? [])
     .filter((g) => g?.url)
     .map((g) => ({ src: g.url, alt: g.alt ?? activity.title }))
 
   const season =
     activity.season_start_month && activity.season_end_month
-      ? `${MONTHS[activity.season_start_month - 1]}–${MONTHS[activity.season_end_month - 1]}`
+      ? `${ui.monthsAcc[activity.season_start_month - 1]}–${ui.monthsAcc[activity.season_end_month - 1]}`
       : null
 
   const pills = [
     activity.duration_label && { icon: Clock, label: activity.duration_label },
     activity.age_label && { icon: Users, label: activity.age_label },
-    season && { icon: CalendarRange, label: `Διαθέσιμη ${season}` },
+    season && { icon: CalendarRange, label: `${ui.availablePrefix} ${season}` },
   ].filter(Boolean) as { icon: typeof Clock; label: string }[]
 
   return (
@@ -48,11 +52,11 @@ export function ActivityDetail({ activity }: { activity: Activity }) {
             className="flex flex-wrap items-center gap-1.5 text-[15px] text-muted md:text-[17px]"
           >
             <Link href="/" className="transition-colors hover:text-accent">
-              Αρχική
+              {ui.breadcrumbHome}
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
             <Link href="/drastiriotites" className="transition-colors hover:text-accent">
-              Δραστηριότητες
+              {ui.breadcrumbActivities}
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
             <span className="text-foreground">{activity.title}</span>
@@ -70,7 +74,7 @@ export function ActivityDetail({ activity }: { activity: Activity }) {
             <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
               {activity.rating ? (
                 <span className="flex items-center gap-2">
-                  <Stars value={activity.rating} />
+                  <Stars value={activity.rating} locale={locale} />
                   <span className="text-[15px] font-semibold text-foreground">
                     {activity.rating.toFixed(1)}
                   </span>
@@ -118,16 +122,16 @@ export function ActivityDetail({ activity }: { activity: Activity }) {
         {/* Content + sticky booking card */}
         <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px] lg:items-start lg:gap-12">
           <div className="flex min-w-0 flex-col gap-10">
-            <ActivitySections activity={activity} />
+            <ActivitySections activity={activity} locale={locale} />
             {activity.policies?.length ? (
-              <ActivityPolicies policies={activity.policies} />
+              <ActivityPolicies policies={activity.policies} locale={locale} />
             ) : null}
           </div>
 
           {/* Offset clears the sticky header (~142px) so the card's top price
               row isn't tucked underneath it. */}
           <div className="flex flex-col gap-4 lg:sticky lg:top-[150px] lg:self-start">
-            <ActivityBookingCard activity={activity} />
+            <ActivityBookingCard activity={activity} locale={locale} />
             <CertificationsNote />
           </div>
         </div>
@@ -137,14 +141,18 @@ export function ActivityDetail({ activity }: { activity: Activity }) {
       {galleryImages.length ? (
         <section className="bg-offwhite py-12 md:py-[70px]">
           <div className="container-wide flex flex-col gap-8">
-            <SectionHead eyebrow="Στιγμές" heading={`Στιγμές από «${activity.title}»`} />
+            <SectionHead eyebrow={ui.moments} heading={ui.momentsFrom(activity.title)} />
             <GalleryCarousel images={galleryImages} />
           </div>
         </section>
       ) : null}
 
       {/* Related activities */}
-      <ActivityRelated slugs={activity.related_slugs ?? []} currentSlug={activity.slug} />
+      <ActivityRelated
+        slugs={activity.related_slugs ?? []}
+        currentSlug={activity.slug}
+        locale={locale}
+      />
     </>
   )
 }

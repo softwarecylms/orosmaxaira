@@ -1,6 +1,10 @@
 /**
  * Individual activity pages, adapted from orosmaxaira.com/drastiriotites/*.
  * Rendered by <ActivityExperience> at /drastiriotites/<slug>.
+ *
+ * Bilingual: Greek (el) is the source of truth; the English bundle overrides
+ * only the display text (slugs / images / video / season months are reused).
+ * Read the active locale via next-intl and call `getExperiences(locale)`.
  */
 import type { ActivityExperienceData } from './activity-experience'
 
@@ -149,4 +153,154 @@ export const EXPERIENCES: Record<string, ActivityExperienceData> = {
       seasonLabel: 'Διαθέσιμη μόνο Μάρτιο–Οκτώβριο',
     },
   },
+}
+
+const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
+  melissotherapeia: {
+    ...EXPERIENCES.melissotherapeia,
+    metaTitle: 'Bee Therapy (Apitherapy) in Cyprus — Oros Machaira',
+    metaDescription:
+      'Bee therapy at Oros Machaira: a therapeutic practice of alternative medicine using the products of the hive and the inhalation of its air. Appointments April–October.',
+    hero: {
+      ...EXPERIENCES.melissotherapeia.hero,
+      title: 'Bee Therapy',
+      description:
+        'A therapeutic practice of alternative medicine, using the precious products of the hive.',
+      imageAlt: 'Bee therapy — inhaling the air of the hive',
+    },
+    intro: {
+      ...EXPERIENCES.melissotherapeia.intro,
+      eyebrow: 'Alternative Medicine',
+      heading: 'The Power of the Hive',
+      body: [
+        'Bee therapy was first discovered and applied by the ancient Egyptians. It is an extensive therapeutic practice that belongs to alternative medicine and uses the products of the hive (honey, royal jelly, pollen, bee venom, propolis) in a variety of therapeutic applications.',
+        'In a natural way, bee therapy helps us overcome many health problems and is excellent for children, athletes and the elderly alike.',
+      ],
+      bold: ['alternative medicine', 'products of the hive', 'health problems'],
+      label: 'Available April–October',
+      note: 'The bee products and the inhalation of hive air are not medicines, nor do they replace prescribed medication. They work alongside and complement conventional treatment — never as a substitute for it.',
+      book: { label: 'Book now', href: '#cta' },
+    },
+    features: {
+      eyebrow: 'How It Works',
+      heading: 'The Bee Therapy Experience',
+      items: [
+        {
+          title: 'Inhaling hive air',
+          text: 'Through a special breathing mask you inhale the warm air of the hive, with its beneficial substances.',
+        },
+        {
+          title: 'Products of the hive',
+          text: 'Honey, propolis, pollen, royal jelly and bee venom are used for their beneficial properties.',
+        },
+        {
+          title: 'Season & duration',
+          text: 'Applied April–October: for noticeable results, three weeks, every second day for 20 minutes.',
+        },
+      ],
+    },
+    benefits: {
+      eyebrow: 'Benefits',
+      heading: 'What Bee Therapy Helps With',
+      intro:
+        'The ancient Egyptians, among others, used the inhalation of air from inside the hive to treat various respiratory problems. Inhaling the warm air of the hive through a special breathing mask, substances with strong therapeutic action are introduced into the body, which are extremely beneficial to the human psychosomatic state. The air inside the hive, impregnated with essential aromas, helps people deal with the following issues:',
+      items: [
+        'Bronchitis',
+        'Asthma',
+        'Chronic diseases of the lungs',
+        'Susceptibility to infections',
+        'Weak immune system',
+        'Respiratory infections',
+        'Chronic headaches, migraines',
+        'Stress',
+        'Depression',
+      ],
+    },
+    gallery: {
+      ...EXPERIENCES.melissotherapeia.gallery!,
+      eyebrow: 'Moments',
+      heading: 'Moments from Bee Therapy',
+      images: EXPERIENCES.melissotherapeia.gallery!.images.map((g) => ({
+        ...g,
+        alt: 'Bee therapy at the Oros Machaira apiary',
+      })),
+    },
+    booking: {
+      ...EXPERIENCES.melissotherapeia.booking,
+      activityName: 'Bee Therapy',
+      eyebrow: 'Booking',
+      heading: 'Book your appointment',
+      body: 'Bee therapy is applied from April to October. Fill in the form or call 25622305 to book an appointment. You will receive confirmation within 24 hours.',
+      bold: ['form', '25622305'],
+      seasonLabel: 'Available only April–October',
+    },
+  },
+
+  'peripeteies-stis-kypseles': {
+    ...EXPERIENCES['peripeteies-stis-kypseles'],
+    metaTitle: 'Adventures in the Beehives — Oros Machaira',
+    metaDescription:
+      'Adventures in the beehives: dress as beekeepers and open the hive with the help of our staff. A hands-on experience for young and old, available March–October.',
+    hero: {
+      ...EXPERIENCES['peripeteies-stis-kypseles'].hero,
+      title: 'Adventures in the Beehives',
+      description:
+        'Dress as beekeepers and open the hive — a hands-on experience for young and old.',
+      imageAlt: 'Visitors in beekeeper suits opening the hive',
+    },
+    intro: {
+      ...EXPERIENCES['peripeteies-stis-kypseles'].intro,
+      eyebrow: 'Hands-on Experience',
+      heading: 'Inside the Hive',
+      body: [
+        'A hands-on experience, suitable for children and adults, where the visitor dresses in a beekeeper suit and visits our hives. With the help of our experienced staff, you open the hive and observe the bee community up close.',
+        'The experience takes place only on specific hours and days — mostly on Saturdays. That is why registering your interest through the form is essential.',
+      ],
+      bold: ['beekeeper suit', 'bee community', 'registering your interest'],
+      label: 'Available only March–October',
+      note: 'The experience takes place only from March to October, as in winter the bees get cold and become aggressive when we open their hive.',
+      book: { label: 'Book now', href: '#cta' },
+    },
+    features: {
+      eyebrow: 'The Experience',
+      heading: 'What You Will Live',
+      items: [
+        {
+          title: 'Dress as beekeepers',
+          text: 'Put on the beekeeper suit and feel safe right next to the hives.',
+        },
+        {
+          title: 'Open the hive',
+          text: 'With the help of our staff, open the hive and see the bee community up close.',
+        },
+        {
+          title: 'For young & old',
+          text: 'A safe, guided experience, suitable for children and adults alike.',
+        },
+      ],
+    },
+    gallery: {
+      ...EXPERIENCES['peripeteies-stis-kypseles'].gallery!,
+      eyebrow: 'Moments',
+      heading: 'Moments from the Adventures',
+      images: EXPERIENCES['peripeteies-stis-kypseles'].gallery!.images.map((g) => ({
+        ...g,
+        alt: 'Adventures in the beehives at the Oros Machaira apiary',
+      })),
+    },
+    booking: {
+      ...EXPERIENCES['peripeteies-stis-kypseles'].booking,
+      activityName: 'Adventures in the beehives',
+      eyebrow: 'Booking',
+      heading: 'Register your interest',
+      body: 'The experience takes place on specific days, mostly Saturdays, from March to October. Fill in the form or call 25622305. You will receive confirmation within 24 hours.',
+      bold: ['form', '25622305'],
+      seasonLabel: 'Available only March–October',
+    },
+  },
+}
+
+/** Locale-aware activity pages. el = the Greek source of truth, en = English. */
+export function getExperiences(locale: string): Record<string, ActivityExperienceData> {
+  return locale === 'en' ? EXPERIENCES_EN : EXPERIENCES
 }

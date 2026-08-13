@@ -1,21 +1,46 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
+import { getLocale } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
 import { ArrowRight } from 'lucide-react'
-import { ACTIVITIES_PAGE } from '@/components/activities/activities-content'
+import { getActivitiesContent, getActivitiesUi } from '@/components/activities/activities-content'
 import { PageHero } from '@/components/shared/page-hero'
 import { SectionHead } from '@/components/shared/section-head'
 import { FactBand } from '@/components/activities/fact-band'
 import { RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
+import { hreflangAlternates } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Δραστηριότητες — Όρος Μαχαιρά Academy',
-  description:
-    'Βιωματικές δραστηριότητες στο μελισσοκομείο του Όρους Μαχαιρά: ξεναγήσεις, εργαστήρια, επίσκεψη στις κυψέλες, μελισσοθεραπεία και εκπαιδευτικά προγράμματα για σχολεία & οργανισμούς.',
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
+  const meta =
+    locale === 'en'
+      ? {
+          title: 'Activities — Oros Machaira Academy',
+          description:
+            'Hands-on activities at the Oros Machaira apiary: tours, workshops, a visit to the beehives, bee therapy and educational programmes for schools & organisations.',
+        }
+      : {
+          title: 'Δραστηριότητες — Όρος Μαχαιρά Academy',
+          description:
+            'Βιωματικές δραστηριότητες στο μελισσοκομείο του Όρους Μαχαιρά: ξεναγήσεις, εργαστήρια, επίσκεψη στις κυψέλες, μελισσοθεραπεία και εκπαιδευτικά προγράμματα για σχολεία & οργανισμούς.',
+        }
+  return { ...meta, alternates: hreflangAlternates(locale, '/drastiriotites') }
 }
 
-export default function ActivitiesPage() {
-  const a = ACTIVITIES_PAGE
+export default async function ActivitiesPage() {
+  const locale = await getLocale()
+  const a = getActivitiesContent(locale)
+  const ui = getActivitiesUi(locale)
+  const heroButtons =
+    locale === 'en'
+      ? [
+          { label: 'Experiences', href: '#experiences' },
+          { label: 'Programmes', href: '#programs' },
+        ]
+      : [
+          { label: 'Εμπειρίες', href: '#experiences' },
+          { label: 'Προγράμματα', href: '#programs' },
+        ]
 
   return (
     <>
@@ -29,10 +54,7 @@ export default function ActivitiesPage() {
         description={a.hero.description}
         overlayClassName="bg-black/45"
         className="py-12 md:py-16"
-        buttons={[
-          { label: 'Εμπειρίες', href: '#experiences' },
-          { label: 'Προγράμματα', href: '#programs' },
-        ]}
+        buttons={heroButtons}
       />
 
       {/* 2 · Experiences */}
@@ -70,7 +92,7 @@ export default function ActivitiesPage() {
                     </h3>
                     <p className="text-[14px] leading-[1.55] text-muted">{item.text}</p>
                     <span className="mt-auto inline-flex items-center gap-1.5 pt-2 text-[14px] font-semibold text-accent">
-                      Περισσότερα
+                      {ui.more}
                       <ArrowRight
                         className="size-4 transition-transform duration-300 ease-soft group-hover:translate-x-1"
                         aria-hidden="true"
