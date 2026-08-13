@@ -13,6 +13,25 @@ export function absoluteUrl(path = '/'): string {
   return `${base}${path.startsWith('/') ? path : `/${path}`}`
 }
 
+/**
+ * hreflang alternates for a page at a locale-agnostic `path` (e.g.
+ * '/poioi-eimaste'). Matches orosmaxaira.com's scheme with trailing slashes:
+ *   el → /path/ , en → /en/path/ , x-default → /path/ (Greek).
+ * Returns relative URLs; `metadataBase` (set in the layout) resolves them to
+ * absolute for the emitted <link rel="alternate"> tags.
+ */
+export function hreflangAlternates(
+  locale: string,
+  path = '/',
+): NonNullable<Metadata['alternates']> {
+  const el = path === '/' ? '/' : `/${path.replace(/^\/+|\/+$/g, '')}/`
+  const en = el === '/' ? '/en/' : `/en${el}`
+  return {
+    canonical: locale === 'en' ? en : el,
+    languages: { el, en, 'x-default': el },
+  }
+}
+
 type MediaLike = { url?: string | null; alt?: string | null } | string | null | undefined
 
 function mediaUrl(m: MediaLike): string | undefined {

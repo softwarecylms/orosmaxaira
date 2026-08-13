@@ -1,7 +1,9 @@
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import Image from 'next/image'
+import { getTranslations } from 'next-intl/server'
 import { Phone } from 'lucide-react'
-import { FOOTER, CONTACT } from '@/components/home/home-content'
+import { getHomeContent } from '@/components/home/home-content'
+import type { Locale } from '@/i18n/routing'
 import { RevealUp } from '@/components/home/reveal-up'
 import {
   FacebookSolid,
@@ -15,6 +17,7 @@ type SiteFooterProps = {
   footer?: unknown
   settings?: unknown
   variant?: 'default' | 'dark'
+  locale: Locale
 }
 
 const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -25,18 +28,20 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
   LinkedIn: LinkedinSolid,
 }
 
-/** OROS MACHAIRA footer (Figma 156:1342). */
-export function SiteFooter(_props: SiteFooterProps) {
+/** OROS MACHAIRA footer (Figma 156:1342). Locale-aware via getHomeContent(locale). */
+export async function SiteFooter({ locale }: SiteFooterProps) {
+  const t = await getTranslations('footer')
+  const { FOOTER, CONTACT } = getHomeContent(locale)
   return (
     <footer data-testid="site-footer" className="bg-white pt-12 md:pt-[50px]">
       <div className="container-wide">
         <RevealUp className="flex flex-col gap-12 lg:flex-row lg:gap-6 xl:gap-8 2xl:gap-10">
           {/* Logo block */}
           <div className="flex w-full min-w-0 flex-col items-center gap-7 text-center lg:flex-1 lg:items-start lg:text-left">
-            <Link href="/" aria-label="Όρος Μαχαιρά — Αρχική">
+            <Link href="/" aria-label={t('homeAria')}>
               <Image
                 src="/images/home/logo.svg"
-                alt="Όρος Μαχαιρά"
+                alt={t('logoAlt')}
                 width={165}
                 height={59}
                 className="h-[59px] w-auto"
@@ -46,12 +51,12 @@ export function SiteFooter(_props: SiteFooterProps) {
             <div className="flex items-center gap-3">
               <Link
                 href="/certificates#iso-14001"
-                aria-label="Πιστοποίηση ISO 14001 — δείτε το πιστοποιητικό"
+                aria-label={t('isoView', { code: '14001' })}
                 className="transition-opacity hover:opacity-80"
               >
                 <Image
                   src="/images/home/iso-badge.webp"
-                  alt="Πιστοποίηση ISO 14001"
+                  alt={t('isoAlt', { code: '14001' })}
                   width={67}
                   height={67}
                   className="size-[67px] object-contain"
@@ -59,12 +64,12 @@ export function SiteFooter(_props: SiteFooterProps) {
               </Link>
               <Link
                 href="/certificates#iso-22000"
-                aria-label="Πιστοποίηση ISO 22000 — δείτε το πιστοποιητικό"
+                aria-label={t('isoView', { code: '22000' })}
                 className="transition-opacity hover:opacity-80"
               >
                 <Image
                   src="/images/home/22000.jpg"
-                  alt="Πιστοποίηση ISO 22000"
+                  alt={t('isoAlt', { code: '22000' })}
                   width={67}
                   height={67}
                   className="size-[67px] object-contain"
@@ -100,7 +105,7 @@ export function SiteFooter(_props: SiteFooterProps) {
                         </li>
                       ))
                     : (col.lines ?? []).map((line) => {
-                        const href = line.startsWith('Τηλ')
+                        const href = /^(Τηλ|Tel)/.test(line)
                           ? `tel:${line.replace(/[^+\d]/g, '')}`
                           : line.includes('@')
                             ? `mailto:${line.trim()}`
@@ -140,7 +145,7 @@ export function SiteFooter(_props: SiteFooterProps) {
                   const Icon = SOCIAL_ICONS[s.name]
                   return (
                     <li key={s.name}>
-                      <Link
+                      <a
                         href={s.href}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -148,7 +153,7 @@ export function SiteFooter(_props: SiteFooterProps) {
                         className="flex size-8 items-center justify-center text-foreground transition-colors hover:text-accent 2xl:size-9"
                       >
                         {Icon ? <Icon className="size-[24px] 2xl:size-[28px]" /> : null}
-                      </Link>
+                      </a>
                     </li>
                   )
                 })}
@@ -161,14 +166,14 @@ export function SiteFooter(_props: SiteFooterProps) {
         <div className="mt-12 flex flex-col items-center gap-3 border-t border-border py-5 text-center text-[13px] text-muted md:flex-row md:items-center md:justify-between md:text-left md:text-[15px]">
           <p>
             {FOOTER.legal}{' '}
-            <Link
+            <a
               href={FOOTER.legalBrandHref}
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent hover:underline"
             >
               {FOOTER.legalBrand}
-            </Link>
+            </a>
           </p>
           <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 md:justify-start">
             {FOOTER.policies.map((item, i) => (

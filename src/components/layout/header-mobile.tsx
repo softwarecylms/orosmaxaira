@@ -1,10 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { Menu, X, Phone, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { HeaderSearch } from './header-search'
+import { LanguageSwitcher } from './language-switcher'
 
 type NavLink = { label: string; href: string }
 type NavItem = {
@@ -25,13 +27,15 @@ export function HeaderMobile({
 }) {
   const [open, setOpen] = useState(false)
   const [expanded, setExpanded] = useState<string | null>(null)
+  const t = useTranslations('header')
+  const tLegal = useTranslations('legal')
 
   return (
     <>
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label="Άνοιγμα μενού"
+        aria-label={t('openMenu')}
         className="text-foreground"
       >
         <Menu className="size-7" />
@@ -41,20 +45,21 @@ export function HeaderMobile({
         <div className="fixed inset-0 z-50 lg:hidden">
           <button
             type="button"
-            aria-label="Κλείσιμο μενού"
+            aria-label={t('closeMenu')}
             className="absolute inset-0 bg-black/40"
             onClick={() => setOpen(false)}
           />
           <div className="absolute right-0 top-0 flex h-full w-[320px] max-w-[88vw] flex-col gap-6 overflow-y-auto bg-white p-6 shadow-xl">
-            <div className="flex items-center justify-end">
-              <button type="button" onClick={() => setOpen(false)} aria-label="Κλείσιμο">
+            <div className="flex items-center justify-between">
+              <LanguageSwitcher />
+              <button type="button" onClick={() => setOpen(false)} aria-label={t('close')}>
                 <X className="size-6 text-foreground" />
               </button>
             </div>
 
             <HeaderSearch />
 
-            <nav className="flex flex-col" aria-label="Κινητή πλοήγηση">
+            <nav className="flex flex-col" aria-label={t('mobileNav')}>
               {nav.map((item) => {
                 const hasMenu = Boolean(item.children || item.groups)
                 if (!hasMenu) {
@@ -143,14 +148,14 @@ export function HeaderMobile({
                 onClick={() => setOpen(false)}
                 className="py-2 text-[15px] text-muted transition-colors hover:text-accent"
               >
-                Όροι &amp; Προϋποθέσεις
+                {tLegal('terms')}
               </Link>
               <Link
                 href="/privacy-amp-cookie-policy"
                 onClick={() => setOpen(false)}
                 className="py-2 text-[15px] text-muted transition-colors hover:text-accent"
               >
-                Πολιτική Απορρήτου
+                {tLegal('privacy')}
               </Link>
             </div>
 

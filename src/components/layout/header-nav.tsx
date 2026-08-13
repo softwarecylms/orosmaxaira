@@ -1,7 +1,8 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ArrowRight } from '@/components/home/icons'
@@ -15,7 +16,9 @@ type NavItem = {
   groups?: { title: string; links: NavLink[] }[]
 }
 
-const MEGA_LABEL = 'Προϊόντα'
+/** The nav item that opens the products mega menu — identified by its stable
+ *  href (locale-independent), not its label. */
+const MEGA_HREF = '/proionta'
 
 /**
  * Desktop nav row. "Προϊόντα" opens the product mega menu; any other item with
@@ -33,6 +36,8 @@ export function HeaderNav({
 }) {
   const [openItem, setOpenItem] = useState<string | null>(null)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const t = useTranslations('nav')
+  const megaLabel = nav.find((i) => i.href === MEGA_HREF)?.label ?? ''
 
   const openMenu = (label: string) => {
     if (timer.current) clearTimeout(timer.current)
@@ -54,7 +59,7 @@ export function HeaderNav({
         if (e.key === 'Escape') close()
       }}
     >
-      <nav className="flex items-center justify-between py-3.5" aria-label="Κύρια πλοήγηση">
+      <nav className="flex items-center justify-between py-3.5" aria-label={t('mainNav')}>
         <ul className="flex items-center gap-[39px]">
           {nav.map((item) => {
             const hasDropdown = Boolean(item.children || item.groups)
@@ -128,7 +133,7 @@ export function HeaderNav({
                 ) : null}
 
                 {/* Simple dropdown for non-mega items with children */}
-                {item.children && item.label !== MEGA_LABEL ? (
+                {item.children && item.href !== MEGA_HREF ? (
                   <div
                     onMouseEnter={() => openMenu(item.label)}
                     onMouseLeave={scheduleClose}
@@ -172,18 +177,18 @@ export function HeaderNav({
 
       {/* Mega menu panel — Προϊόντα only */}
       <div
-        onMouseEnter={() => openMenu(MEGA_LABEL)}
+        onMouseEnter={() => openMenu(megaLabel)}
         onMouseLeave={scheduleClose}
         className={cn(
           'absolute left-0 top-full z-50 pt-3 transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none',
-          openItem === MEGA_LABEL
+          openItem === megaLabel
             ? 'visible translate-y-0 opacity-100'
             : 'pointer-events-none invisible -translate-y-1 opacity-0',
         )}
       >
         <div
           role="menu"
-          aria-label="Προϊόντα"
+          aria-label={megaLabel}
           className="flex w-[1321px] max-w-[calc(100vw-2.5rem)] gap-[33px] rounded-[4px] bg-white p-[45px] shadow-[0_0_12px_rgba(35,31,32,0.1)]"
         >
           {mega.map((col) => (
@@ -211,7 +216,7 @@ export function HeaderNav({
               <Link
                 href={col.href}
                 onClick={close}
-                aria-label={`Δείτε όλα — ${col.title}`}
+                aria-label={t('viewAll', { category: col.title })}
                 className="text-accent transition-colors hover:text-gold-strong"
               >
                 <ArrowRight className="size-[15px]" />

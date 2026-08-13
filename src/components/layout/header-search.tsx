@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { useLocale, useTranslations } from 'next-intl'
+import { Link, usePathname, useRouter } from '@/i18n/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Search } from 'lucide-react'
-import { SEARCH_PLACEHOLDERS } from '@/components/home/home-content'
+import { getHomeContent } from '@/components/home/home-content'
 import { SHOP_PRODUCTS, handleOf } from '@/components/shop/shop-content'
 import { EASE } from '@/lib/motion'
 import { cn } from '@/lib/utils'
@@ -40,6 +40,9 @@ function score(title: string, category: string, nq: string): number {
  */
 export function HeaderSearch({ className }: { className?: string }) {
   const router = useRouter()
+  const locale = useLocale()
+  const t = useTranslations('search')
+  const { SEARCH_PLACEHOLDERS } = getHomeContent(locale)
   const [hint, setHint] = useState(0)
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
@@ -138,7 +141,7 @@ export function HeaderSearch({ className }: { className?: string }) {
         <input
           type="search"
           autoComplete="off"
-          aria-label="Αναζήτηση προϊόντων"
+          aria-label={t('label')}
           role="combobox"
           aria-expanded={expanded && results.length > 0}
           aria-controls="header-search-listbox"
@@ -175,7 +178,7 @@ export function HeaderSearch({ className }: { className?: string }) {
         ) : null}
         <button
           type="submit"
-          aria-label="Αναζήτηση"
+          aria-label={t('submit')}
           className="flex size-[46px] shrink-0 items-center justify-center bg-cream text-foreground transition-colors hover:text-accent"
         >
           <Search className="size-5" />
@@ -221,7 +224,7 @@ export function HeaderSearch({ className }: { className?: string }) {
                               p.inStock ? 'text-accent' : 'text-muted',
                             )}
                           >
-                            {p.inStock ? p.price : 'Εξαντλήθηκε'}
+                            {p.inStock ? p.price : t('outOfStock')}
                           </span>
                         </Link>
                       </li>
@@ -232,12 +235,12 @@ export function HeaderSearch({ className }: { className?: string }) {
                   href="/proionta"
                   className="block border-t border-border px-4 py-3 text-center text-[14px] font-medium text-accent transition-colors hover:bg-cream"
                 >
-                  Όλα τα προϊόντα
+                  {t('allProducts')}
                 </Link>
               </>
             ) : (
               <p className="px-4 py-6 text-center text-[15px] text-muted">
-                Δεν βρέθηκαν προϊόντα για «{q}».
+                {t('noResults', { query: q })}
               </p>
             )}
           </motion.div>

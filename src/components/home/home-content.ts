@@ -428,3 +428,258 @@ export const FOOTER = {
     { label: 'Πολιτική Απορρήτου & Cookies', href: '/privacy-amp-cookie-policy' },
   ],
 }
+
+// --- Bilingual bundle -----------------------------------------------------
+// The Greek constants above are the source of truth and remain byte-identical.
+// HOME_EN overrides only the user-facing text (hrefs/images/prices/positions and
+// CONTACT/social are locale-invariant and reused). `getHomeContent(locale)`
+// returns the right bundle; EN labels are the live site's own English copy where
+// it exists (nav/footer/products) and faithful translations for the bespoke
+// home-page sections (which the live EN site lays out differently).
+
+const HOME_EL = {
+  NAV, ADOPT_LINK, READ_MORE, MEGA_MENU, ANNOUNCEMENT, CONTACT, HERO, TRUST,
+  TICKER, DEAL, CATEGORIES, ADOPT, HERITAGE, FLATLAY, BLOG, SEARCH_PLACEHOLDER,
+  SEARCH_PLACEHOLDERS, FOOTER,
+}
+export type HomeContent = typeof HOME_EL
+
+const HOME_EN: HomeContent = {
+  READ_MORE: 'Learn More',
+  ANNOUNCEMENT: 'FREE shipping in Cyprus for orders over €70',
+  CONTACT,
+  SEARCH_PLACEHOLDER: '🍯 Honey',
+  SEARCH_PLACEHOLDERS: ['🍯 Honey', '🥜 Honey with Peanuts', '🥃 Mead'],
+  ADOPT_LINK: { label: 'Adopt a Hive', href: ADOPT_LINK.href },
+  NAV: [
+    { label: 'Home', href: '/' },
+    {
+      label: 'Products',
+      href: '/proionta',
+      children: [
+        { label: 'Oros Machaira Honey', href: '/' },
+        { label: 'Bee Products', href: '/' },
+        { label: 'Natural Cosmetics', href: '/' },
+        { label: 'Gift Sets', href: '/' },
+      ],
+    },
+    { label: 'About Us', href: '/poioi-eimaste' },
+    {
+      label: 'Activities',
+      href: '/drastiriotites',
+      groups: [
+        {
+          title: 'Experiences',
+          links: [
+            { label: 'Getting to Know the Bee', href: '/drastiriotites/xenagiseis' },
+            { label: 'Adventures in the Beehives', href: '/drastiriotites/peripeteies-stis-kypseles' },
+            { label: 'Workshops', href: '/drastiriotites/ergastiria' },
+            { label: 'Bee Therapy', href: '/drastiriotites/melissotherapeia' },
+          ],
+        },
+        {
+          title: 'Programs',
+          links: [
+            { label: 'School Educational Visits', href: '/drastiriotites/scholeia' },
+            { label: 'Adopt a Hive', href: '/yiotheto-mia-kypseli' },
+          ],
+        },
+      ],
+    },
+    { label: 'Blog', href: '/blog' },
+    { label: 'Contact', href: '/epikoinonia' },
+  ],
+  MEGA_MENU: [
+    {
+      title: 'Honey',
+      href: '/proionta/meli',
+      links: [
+        { label: 'Flower Honey', href: '/product/meli-antheon-oros-machaira' },
+        { label: 'Raw (Unheated) Flower Honey', href: '/product/avrasto-meli-antheon-oros-machaira' },
+        { label: 'Thyme Honey', href: '/product/thymarisio-meli-oros-machaira' },
+      ],
+    },
+    {
+      title: 'Bee Products',
+      href: '/proionta/proionta-melissas',
+      links: [
+        { label: 'Mead', href: '/product/ydromelo' },
+        { label: 'Royal Jelly', href: '/product/vasilikos-poltos-oros-machaira' },
+        { label: 'Honey with Peanuts', href: '/product/meli-me-fistikia' },
+      ],
+    },
+    {
+      title: 'Natural Cosmetics',
+      href: '/proionta/kallyntika',
+      links: [
+        { label: 'Body Cream', href: '/product/krema-somatos' },
+        { label: 'Natural Face Balm', href: '/product/fysiki-kiraloifi-gia-prosopo' },
+        { label: 'Lip Balm', href: '/product/valsamo-gia-ta-cheili' },
+      ],
+    },
+    {
+      title: 'Gift Sets',
+      href: '/proionta/paketa-doron',
+      links: [
+        { label: 'Nourish Care Gift Set', href: '/product/nourish-care-gift-set' },
+        { label: 'Everyday Care Duo Gift Set', href: '/product/everyday-care-duo-gift-set' },
+        { label: 'Balance Care Gift Set', href: '/product/balance-care-gift-set' },
+      ],
+    },
+  ],
+  HERO: {
+    left: {
+      eyebrow: 'AUTHENTIC TRADITION',
+      heading: 'Treasures of the Hive',
+      body: 'Discover our award-winning honey, our fine mead and our royal jelly, among others.',
+      cta: { label: 'Learn More', href: HERO.left.cta.href },
+      image: HERO.left.image,
+      imageAlt: 'Award-winning Oros Machaira honey on a wooden stand',
+    },
+    right: {
+      eyebrow: 'HANDS-ON EXPERIENCE',
+      heading: 'Workshops & Events',
+      body: 'Come up to the mountain and live the magic of the apiary through unique, interactive workshops for the whole family.',
+      cta: { label: 'Learn More', href: HERO.right.cta.href },
+      image: HERO.right.image,
+      imageAlt: 'A bee on a honeycomb',
+    },
+  },
+  TRUST: [
+    { icon: 'purity', title: '100% Purity Guarantee', body: 'Straight from our apiary in Melini, with no additives.' },
+    { icon: 'delivery', title: 'Fast Delivery', body: 'Fast and secure shipping of your order.' },
+    { icon: 'eco', title: 'Eco Conscious', body: 'We use recyclable and sustainable packaging materials.' },
+    { icon: 'payment', title: 'Secure Online Payments', body: 'Shop with confidence using a credit/debit card.' },
+  ],
+  TICKER: ['100% PURITY GUARANTEE', 'FAST DELIVERY', 'SECURE ONLINE PAYMENTS', 'ECO CONSCIOUS', 'FAST SERVICE'],
+  DEAL: {
+    heading: 'The Diamonds of Machaira',
+    cta: { label: 'Learn More', href: DEAL.cta.href },
+    featured: { ...DEAL.featured, title: 'The Elixir of the Gods', imageAlt: 'Melite Mead — Oros Machaira' },
+    products: [
+      { ...DEAL.products[0], category: 'Honey', title: 'Flower Honey «Oros Machaira»' },
+      { ...DEAL.products[1], category: 'Honey', title: 'Raw (Unheated) Flower Honey «Oros Machaira»' },
+      { ...DEAL.products[2], category: 'Honey', title: 'Royal Jelly «Oros Machaira»' },
+      { ...DEAL.products[3], category: 'Honey', title: 'Mead' },
+      { ...DEAL.products[4], category: 'Honey', title: 'Thyme Honey «Oros Machaira»' },
+    ],
+  },
+  CATEGORIES: {
+    heading: 'Our Products',
+    cta: { label: 'Learn More', href: CATEGORIES.cta.href },
+    items: [
+      { ...CATEGORIES.items[0], title: 'Oros Machaira Honey' },
+      { ...CATEGORIES.items[1], title: 'Bee Products' },
+      { ...CATEGORIES.items[2], title: 'Natural Cosmetics' },
+      { ...CATEGORIES.items[3], title: 'Gift Sets' },
+    ],
+  },
+  ADOPT: {
+    ...ADOPT,
+    eyebrow: 'HANDS-ON EXPERIENCE',
+    heading: 'Adopt a Hive',
+    body: 'Join the “Adopt a Hive” programme with your team and… “Bee-come a Hero” for the bees and the environment.',
+    cta: { label: 'Learn More', href: ADOPT.cta.href },
+    imageAlt: 'A bee on a honeycomb',
+  },
+  HERITAGE: {
+    heading: 'From Generation to Generation',
+    cta: { label: 'Learn More', href: HERITAGE.cta.href },
+    image: HERITAGE.image,
+    imageAlt: 'The Oros Machaira family',
+    paragraphs: [
+      [
+        { text: 'The story of ' },
+        { text: '«Oros Machaira» ', bold: true },
+        { text: 'honey goes back to 1983, when Michalis Filippou began beekeeping together with his son-in-law, Costas Chimonas, starting with five hives they received from Costas Chimonas’s father. For around 30 years they worked hard together, with ' },
+        { text: 'a love for nature', bold: true },
+        { text: ', for the bee and its products.' },
+      ],
+      [
+        { text: 'Once their children had grown up, they decided it would be best for the whole family for each to follow his own path. The sons of Michalis Filippou have today taken the reins of the company, which produces the full range of bee products, packages them and brings them to market under the «Oros Machaira» brand.' },
+      ],
+    ],
+  },
+  FLATLAY: {
+    image: FLATLAY.image,
+    imageAlt: 'Oros Machaira products on a marble surface',
+    prices: [
+      { ...FLATLAY.prices[0], product: { ...FLATLAY.prices[0].product, category: 'Honey', title: 'Flower Honey «Oros Machaira»' } },
+      { ...FLATLAY.prices[1], product: { ...FLATLAY.prices[1].product, category: 'Honey', title: 'Thyme Honey «Oros Machaira»' } },
+      { ...FLATLAY.prices[2], product: { ...FLATLAY.prices[2].product, category: 'Bee Products', title: 'Mead «Oros Machaira»' } },
+      { ...FLATLAY.prices[3], product: { ...FLATLAY.prices[3].product, category: 'Bee Products', title: 'Royal Jelly «Oros Machaira»' } },
+      { ...FLATLAY.prices[4], product: { ...FLATLAY.prices[4].product, category: 'Natural Cosmetics', title: 'Milk & Honey Hand Cream' } },
+    ],
+  },
+  BLOG: {
+    heading: 'The World of Bees & Nature',
+    cta: { label: 'Learn More', href: BLOG.cta.href },
+    badge: 'Articles',
+    featured: {
+      ...BLOG.featured,
+      imageAlt: 'Pure Cypriot Oros Machaira honey',
+      title: 'Where to Buy Pure Cypriot Honey in Cyprus',
+      excerpt:
+        'Locally produced, pure natural honey isn’t just a matter of trend or luxury — it’s a matter of health and sustainability…',
+    },
+    items: [
+      { ...BLOG.items[0], title: 'M.F. Oros Machaira Ltd Strengthens its Sustainability with Specialised Support and EU Co-financing' },
+      { ...BLOG.items[1], title: 'Reviving the Cypriot native bee: an innovative collaboration to preserve and identify the breed' },
+    ],
+  },
+  FOOTER: {
+    tagline: '100% raw honey from the flowers and herbs of Machaira.',
+    columns: [
+      {
+        title: 'Useful Links',
+        links: [
+          { label: 'Home', href: '/' },
+          { label: 'About Us', href: '/poioi-eimaste' },
+          { label: 'Awards', href: '/awards' },
+          { label: 'Products', href: '/proionta' },
+          { label: 'Activities', href: '/drastiriotites' },
+          { label: 'Adopt a Hive', href: '/yiotheto-mia-kypseli' },
+          { label: 'Getting to Know the Bee', href: '/drastiriotites/xenagiseis' },
+          { label: 'Blog', href: '/blog' },
+          { label: 'Contact', href: '/epikoinonia' },
+        ],
+      },
+      {
+        title: 'Products',
+        links: [
+          { label: 'Honey', href: '/proionta/meli' },
+          { label: 'Bee Products', href: '/proionta/proionta-melissas' },
+          { label: 'Natural Cosmetics', href: '/proionta/kallyntika' },
+          { label: 'Gift Sets', href: '/proionta/paketa-doron' },
+        ],
+      },
+      {
+        title: 'Contact',
+        lines: [
+          'M.F. (OROS MAXAIRA) LTD.',
+          'Tel.: +357 25622305',
+          'Melini, Larnaca 7716',
+          'P.O.BOX: 7718',
+          'Mon–Fri 08:00 – 16:00',
+          'info@orosmaxaira.com',
+        ],
+      },
+    ],
+    social: FOOTER.social,
+    legal: '© 2026 Oros Machaira | All rights reserved | Powered and Designed by',
+    legalBrand: FOOTER.legalBrand,
+    legalBrandHref: FOOTER.legalBrandHref,
+    policies: [
+      { label: 'Orders & Returns', href: '/paraggelies-kai-epistrofes' },
+      { label: 'Shipping Policy', href: '/politiki-apostolis-proionton' },
+      { label: 'Privacy & Cookie Policy', href: '/privacy-amp-cookie-policy' },
+    ],
+  },
+}
+
+/** Locale-aware home/chrome content. el = the Greek source of truth, en = the
+ *  English bundle above. Read the active locale via next-intl's
+ *  `getLocale()` (server) / `useLocale()` (client) at the call site. */
+export function getHomeContent(locale: string): HomeContent {
+  return locale === 'en' ? HOME_EN : HOME_EL
+}

@@ -1,27 +1,34 @@
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import Image from 'next/image'
-import { Phone, ChevronDown, User, Heart, Truck } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
+import { Phone, User, Heart, Truck } from 'lucide-react'
 import { CartBadge } from '@/components/commerce/cart-badge'
-import { NAV, ADOPT_LINK, CONTACT, MEGA_MENU } from '@/components/home/home-content'
+import { getHomeContent } from '@/components/home/home-content'
+import type { Locale } from '@/i18n/routing'
 import { HeaderSearch } from './header-search'
 import { HeaderMobile } from './header-mobile'
 import { HeaderNav } from './header-nav'
 import { HeaderScrollShadow } from './header-scroll-shadow'
 import { HeaderReveal } from './header-reveal'
+import { LanguageSwitcher } from './language-switcher'
 
 type SiteHeaderProps = {
   header?: unknown
   settings?: unknown
   variant?: 'default' | 'dark'
+  locale: Locale
 }
 
 /**
  * OROS MACHAIRA header (Figma 156:1218): announcement bar + utility row
  * (search, phone, language, account, wishlist, cart) + nav row. Search /
- * language / wishlist are visual stubs; the cart pill (<CartBadge>) reads the
- * client-side honey cart.
+ * wishlist are visual stubs; the cart pill (<CartBadge>) reads the client-side
+ * honey cart. Content is locale-aware via getHomeContent(locale).
  */
-export async function SiteHeader(_props: SiteHeaderProps) {
+export async function SiteHeader({ locale }: SiteHeaderProps) {
+  const t = await getTranslations('header')
+  const { NAV, ADOPT_LINK, CONTACT, MEGA_MENU } = getHomeContent(locale)
+
   return (
     <>
       {/* Announcement bar — scrolls away with the page; it is intentionally
@@ -29,9 +36,9 @@ export async function SiteHeader(_props: SiteHeaderProps) {
       <HeaderReveal className="flex min-h-[46px] items-center justify-center gap-2 bg-accent px-4 py-2 text-white md:h-[46px] md:min-h-0 md:py-0">
         <Truck className="size-4 shrink-0" aria-hidden="true" />
         <p className="text-center text-[13px] leading-[21px] md:text-[14px]">
-          <span className="font-display text-[15px] font-bold">ΔΩΡΕΑΝ </span>
-          <span className="md:hidden">αποστολή στην Κύπρο άνω των €70</span>
-          <span className="hidden md:inline">αποστολή στην Κύπρο για παραγγελίες άνω των €70</span>
+          <span className="font-display text-[15px] font-bold">{t('freeShippingBold')} </span>
+          <span className="md:hidden">{t('freeShippingRestShort')}</span>
+          <span className="hidden md:inline">{t('freeShippingRest')}</span>
         </p>
       </HeaderReveal>
 
@@ -44,7 +51,7 @@ export async function SiteHeader(_props: SiteHeaderProps) {
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded-full focus:bg-foreground focus:px-4 focus:py-2 focus:text-white"
         >
-          Μετάβαση στο περιεχόμενο
+          {t('skipToContent')}
         </a>
 
         <div className="container-wide">
@@ -53,10 +60,10 @@ export async function SiteHeader(_props: SiteHeaderProps) {
           delay={0.08}
           className="flex items-center justify-between gap-6 border-b border-border py-[15px]"
         >
-          <Link href="/" aria-label="Όρος Μαχαιρά — Αρχική" className="shrink-0">
+          <Link href="/" aria-label={t('logoHome')} className="shrink-0">
             <Image
               src="/images/home/logo.svg"
-              alt="Όρος Μαχαιρά"
+              alt={t('logoAlt')}
               width={165}
               height={59}
               priority
@@ -76,23 +83,17 @@ export async function SiteHeader(_props: SiteHeaderProps) {
               {CONTACT.phone}
             </a>
 
-            <button
-              type="button"
-              className="flex items-center gap-1 text-[17px] text-foreground"
-              aria-label="Επιλογή γλώσσας"
-            >
-              ΕΛ <ChevronDown className="size-3" aria-hidden="true" />
-            </button>
+            <LanguageSwitcher />
 
             <span className="h-9 w-px bg-border" aria-hidden="true" />
 
-            <Link href="/account" aria-label="Λογαριασμός" className="text-foreground hover:text-accent">
+            <Link href="/account" aria-label={t('account')} className="text-foreground hover:text-accent">
               <User className="size-6" aria-hidden="true" />
             </Link>
 
             <button
               type="button"
-              aria-label="Λίστα επιθυμιών"
+              aria-label={t('wishlist')}
               className="relative text-foreground hover:text-accent"
             >
               <Heart className="size-6" aria-hidden="true" />
@@ -109,7 +110,7 @@ export async function SiteHeader(_props: SiteHeaderProps) {
           {/* Mobile utilities */}
           <div className="flex items-center gap-4 lg:hidden">
             <CartBadge variant="mobile" />
-            <Link href="/account" aria-label="Λογαριασμός" className="text-foreground">
+            <Link href="/account" aria-label={t('account')} className="text-foreground">
               <User className="size-6" aria-hidden="true" />
             </Link>
             <HeaderMobile

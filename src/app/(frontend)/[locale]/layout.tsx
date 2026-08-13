@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { Gabarito, Inter } from 'next/font/google'
+import { notFound } from 'next/navigation'
+import { NextIntlClientProvider, hasLocale } from 'next-intl'
+import { setRequestLocale, getTranslations } from 'next-intl/server'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { OrganizationSchema } from '@/components/seo/organization-schema'
@@ -8,8 +11,13 @@ import { CartProvider } from '@/components/commerce/cart-store'
 import { CartDrawer } from '@/components/commerce/cart-drawer'
 import { getSiteSettings, getHeader, getFooter } from '@/lib/cms'
 import { siteUrl } from '@/lib/seo'
+import { routing, type Locale } from '@/i18n/routing'
 
 import '@/styles/globals.css'
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
+}
 
 // The shared SiteHeader reads the request pathname via `headers()` (a dynamic
 // API) to highlight the active nav link. That makes the whole (frontend) tree
@@ -44,29 +52,43 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl()),
-  title: {
-    default: 'Όρος Μαχαιρά — Αυθεντικό Κυπριακό Μέλι',
-    template: '%s | Όρος Μαχαιρά',
-  },
-  description:
-    '100% ανεπεξέργαστο μέλι από τα άνθη και τα βότανα του Μαχαιρά. Βραβευμένο μέλι, υδρόμελο, βασιλικός πολτός και φυσικά καλλυντικά.',
-  openGraph: {
-    type: 'website',
-    siteName: 'Όρος Μαχαιρά',
-    locale: 'el_GR',
-  },
-  twitter: { card: 'summary_large_image' },
-  // Pre-launch: keep the site out of search results. Flip to true at launch.
-  robots: { index: false, follow: false },
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'layout' })
+  return {
+    metadataBase: new URL(siteUrl()),
+    title: {
+      default: t('defaultTitle'),
+      template: t('titleTemplate'),
+    },
+    description: t('description'),
+    openGraph: {
+      type: 'website',
+      siteName: t('siteName'),
+      locale: locale === 'en' ? 'en_US' : 'el_GR',
+      alternateLocale: locale === 'en' ? 'el_GR' : 'en_US',
+    },
+    twitter: { card: 'summary_large_image' },
+    // Pre-launch: keep the site out of search results. Flip to true at launch.
+    robots: { index: false, follow: false },
+  }
 }
 
 export default async function FrontendLayout({
   children,
+  params,
 }: {
   children: React.ReactNode
+  params: Promise<{ locale: string }>
 }) {
+  const { locale } = await params
+  if (!hasLocale(routing.locales, locale)) notFound()
+  setRequestLocale(locale)
+
   const [settings, header, footer] = await Promise.all([
     getSiteSettings(),
     getHeader(),
@@ -74,17 +96,29 @@ export default async function FrontendLayout({
   ])
 
   return (
-    <html lang="el" className={`${sans.variable} ${display.variable}`}>
+    <html lang={locale} className={`${sans.variable} ${display.variable}`}>
       <body className="bg-background text-foreground antialiased" suppressHydrationWarning>
-        <MotionReady>
-          <CartProvider>
-            <SiteHeader header={header} settings={settings} variant="default" />
-            <main id="main">{children}</main>
-            <SiteFooter footer={footer} settings={settings} variant="default" />
-            <CartDrawer />
-            <OrganizationSchema settings={settings} />
-          </CartProvider>
-        </MotionReady>
+        <NextIntlClientProvider>
+          <MotionReady>
+            <CartProvider>
+              <SiteHeader
+                header={header}
+                settings={settings}
+                variant="default"
+                locale={locale as Locale}
+              />
+              <main id="main">{children}</main>
+              <SiteFooter
+                footer={footer}
+                settings={settings}
+                variant="default"
+                locale={locale as Locale}
+              />
+              <CartDrawer />
+              <OrganizationSchema settings={settings} />
+            </CartProvider>
+          </MotionReady>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

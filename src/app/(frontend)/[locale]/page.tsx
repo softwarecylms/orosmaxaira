@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-import { getPageBySlug } from '@/lib/cms'
-import { pageMetadata } from '@/lib/seo'
+import { hreflangAlternates } from '@/lib/seo'
 import { HeroPair } from '@/components/home/hero-pair'
 import { TrustBadges } from '@/components/home/trust-badges'
 import { DealOfMonth } from '@/components/home/deal-of-month'
@@ -11,10 +10,14 @@ import { Heritage } from '@/components/home/heritage'
 import { FlatlayBand } from '@/components/home/flatlay-band'
 import { BlogTeaser } from '@/components/home/blog-teaser'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const page = await getPageBySlug('home')
-  if (page) return pageMetadata(page)
-  return {}
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  // Title/description inherit from the locale-aware root layout; add hreflang.
+  return { alternates: hreflangAlternates(locale, '/') }
 }
 
 /**

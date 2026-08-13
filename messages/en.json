@@ -1,0 +1,50 @@
+{
+  "layout": {
+    "defaultTitle": "Oros Machaira — Authentic Cypriot Honey",
+    "titleTemplate": "%s | Oros Machaira",
+    "siteName": "Oros Machaira",
+    "description": "100% raw honey from the flowers and herbs of Machaira. Award-winning honey, mead, royal jelly and natural cosmetics."
+  },
+  "header": {
+    "skipToContent": "Skip to content",
+    "logoHome": "Oros Machaira — Home",
+    "logoAlt": "Oros Machaira",
+    "account": "Account",
+    "wishlist": "Wishlist",
+    "menu": "Menu",
+    "close": "Close",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "mobileNav": "Mobile navigation",
+    "freeShippingBold": "FREE",
+    "freeShippingRest": "shipping in Cyprus for orders over €70",
+    "freeShippingRestShort": "shipping in Cyprus over €70"
+  },
+  "nav": {
+    "mainNav": "Main navigation",
+    "viewAll": "View all — {category}"
+  },
+  "legal": {
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy"
+  },
+  "languageSwitcher": {
+    "label": "Choose language",
+    "el": "EL",
+    "en": "EN"
+  },
+  "footer": {
+    "homeAria": "Oros Machaira — Home",
+    "logoAlt": "Oros Machaira",
+    "certifications": "Certifications",
+    "isoView": "ISO {code} certification — view the certificate",
+    "isoAlt": "ISO {code} certification"
+  },
+  "search": {
+    "label": "Search products",
+    "submit": "Search",
+    "outOfStock": "Out of stock",
+    "allProducts": "All products",
+    "noResults": "No products found for “{query}”."
+  }
+}
