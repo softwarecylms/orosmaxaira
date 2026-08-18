@@ -1,8 +1,10 @@
-import Link from 'next/link'
+import { getLocale } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
 import { ChevronRight } from 'lucide-react'
 import { listShopProducts } from '@/lib/medusa/shop'
 import { ShopBrowser } from './shop-browser'
-import { SHOP_PAGE, type ShopCategory } from './shop-content'
+import { categoryLabel, type ShopCategory } from './shop-content'
+import { getShopUi } from './shop-ui'
 
 /**
  * Products page body — shared by /proionta (all) and /proionta/<slug> (a single
@@ -10,11 +12,17 @@ import { SHOP_PAGE, type ShopCategory } from './shop-content'
  * category, when present, pre-selects that filter in <ShopBrowser>.
  */
 export async function ProductsPage({ category }: { category?: ShopCategory }) {
+  const locale = await getLocale()
+  const ui = getShopUi(locale)
   const catalogue = await listShopProducts().catch(() => null)
 
   const crumbs: { label: string; href?: string }[] = category
-    ? [{ label: 'Αρχική', href: '/' }, { label: 'Προϊόντα', href: '/proionta' }, { label: category }]
-    : SHOP_PAGE.breadcrumb
+    ? [
+        { label: ui.breadcrumb.home, href: '/' },
+        { label: ui.breadcrumb.products, href: '/proionta' },
+        { label: categoryLabel(category, locale) },
+      ]
+    : [{ label: ui.breadcrumb.home, href: '/' }, { label: ui.breadcrumb.products }]
 
   return (
     <>

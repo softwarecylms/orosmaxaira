@@ -1,8 +1,12 @@
+'use client'
+
 import Image from 'next/image'
-import Link from 'next/link'
+import { useLocale } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { ShoppingCart } from 'lucide-react'
 import type { ShopProduct } from './shop-content'
-import { SHOP_PAGE, handleOf, productHref, proiontaHref } from './shop-content'
+import { categoryLabel, handleOf, productHref, proiontaHref } from './shop-content'
+import { getShopUi } from './shop-ui'
 import { displayPrice } from '@/lib/utils'
 
 /**
@@ -18,6 +22,8 @@ export function ShopProductCard({
   /** Use the short "Προσθήκη" label instead of "Προσθήκη στο καλάθι" (tight grids). */
   shortCta?: boolean
 }) {
+  const locale = useLocale()
+  const ui = getShopUi(locale)
   const href = productHref(handleOf(product))
 
   return (
@@ -38,7 +44,7 @@ export function ShopProductCard({
         />
         {!product.inStock && (
           <span className="absolute left-2.5 top-2.5 rounded-[3px] bg-foreground/85 px-2.5 py-1 text-[12px] font-medium leading-none text-white">
-            Εξαντλήθηκε
+            {ui.outOfStock}
           </span>
         )}
       </Link>
@@ -47,7 +53,7 @@ export function ShopProductCard({
         href={proiontaHref(product.category)}
         className="w-fit text-[14px] leading-[21px] text-[#555] transition-colors hover:text-accent"
       >
-        {product.category}
+        {categoryLabel(product.category, locale)}
       </Link>
 
       <Link href={href} className="block">
@@ -65,11 +71,11 @@ export function ShopProductCard({
         <ShoppingCart className="size-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />
         {shortCta ? (
           <>
-            <span className="md:hidden">Προσθήκη</span>
-            <span className="hidden md:inline">{SHOP_PAGE.addToCart}</span>
+            <span className="md:hidden">{ui.addToCartShort}</span>
+            <span className="hidden md:inline">{ui.addToCart}</span>
           </>
         ) : (
-          SHOP_PAGE.addToCart
+          ui.addToCart
         )}
       </Link>
     </article>

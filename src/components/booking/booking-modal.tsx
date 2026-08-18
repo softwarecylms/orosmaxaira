@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLocale } from 'next-intl'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Minus, Plus, X, Check, Loader2, CalendarDays, Mail } from 'lucide-react'
@@ -13,11 +14,7 @@ import {
 } from '@/lib/medusa/booking-actions'
 import { EASE, DURATION } from '@/lib/motion'
 import { BookingCalendar } from './booking-calendar'
-
-const MONTHS_GEN = [
-  'Ιανουαρίου', 'Φεβρουαρίου', 'Μαρτίου', 'Απριλίου', 'Μαΐου', 'Ιουνίου',
-  'Ιουλίου', 'Αυγούστου', 'Σεπτεμβρίου', 'Οκτωβρίου', 'Νοεμβρίου', 'Δεκεμβρίου',
-]
+import { getBookingUi } from './booking-ui'
 
 const isoOf = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -30,14 +27,8 @@ function isWeekendDate(ds?: string | null): boolean {
   return wd === 0 || wd === 6
 }
 
-function greekDate(ds?: string): string {
-  if (!ds) return ''
-  const [y, m, d] = ds.split('-').map(Number)
-  return `${d} ${MONTHS_GEN[m - 1]} ${y}`
-}
-
-function money(amount: number, currency = 'eur'): string {
-  return new Intl.NumberFormat('el-GR', {
+function money(amount: number, currency = 'eur', priceLocale = 'el-GR'): string {
+  return new Intl.NumberFormat(priceLocale, {
     style: 'currency',
     currency: currency.toUpperCase(),
     maximumFractionDigits: Number.isInteger(amount) ? 0 : 2,
@@ -62,6 +53,7 @@ export function BookingModal({
   onClose: () => void
 }) {
   const reduce = useReducedMotion()
+  const ui = getBookingUi(useLocale())
   const currency = activity.currency ?? 'eur'
   const tiers = activity.price_tiers ?? []
 
@@ -207,9 +199,7 @@ export function BookingModal({
     if (res.ok && res.booking.status === "confirmed") {
       setResult(res.booking)
     } else {
-      setSubmitError(
-        res.ok ? "Η κράτηση δεν ολοκληρώθηκε. Δοκιμάστε ξανά." : res.error,
-      )
+      setSubmitError(res.ok ? ui.bookingFailed : res.error)
       // Availability may have changed (e.g. sold out) — refresh it and clear the
       // time/people selection so the UI can't show a slot that's now gone.
       const today = new Date()
@@ -237,7 +227,7 @@ export function BookingModal({
         >
           <motion.button
             type="button"
-            aria-label="Κλείσιμο"
+            aria-label={ui.close}
             onClick={onClose}
             className="absolute inset-0 bg-foreground/50"
             variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
@@ -247,7 +237,7 @@ export function BookingModal({
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label={`Κράτηση — ${activity.title}`}
+            aria-label={`${ui.bookingTitle} — ${activity.title}`}
             data-testid="booking-modal"
             className="relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-[22px] bg-white shadow-[0_0_60px_-15px_rgba(35,31,32,0.5)] sm:max-w-[540px] sm:rounded-[22px]"
             variants={{
@@ -260,12 +250,12 @@ export function BookingModal({
             <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
               <h2 className="flex items-center gap-2 text-[17px] font-semibold text-foreground">
                 <CalendarDays className="size-5 text-accent" aria-hidden="true" />
-                {result ? 'Επιβεβαίωση κράτησης' : 'Κράτηση'}
+                {result ? ui.confirmTitle : ui.bookingTitle}
               </h2>
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Κλείσιμο"
+                aria-label={ui.close}
                 className="flex size-9 items-center justify-center rounded-full text-foreground transition-colors hover:bg-offwhite hover:text-accent"
               >
                 <X className="size-5" />
@@ -279,23 +269,21 @@ export function BookingModal({
               ) : loading ? (
                 <div className="flex items-center justify-center gap-2 py-16 text-muted">
                   <Loader2 className="size-5 animate-spin" aria-hidden="true" />
-                  Φόρτωση διαθεσιμότητας…
+                  {ui.loadingAvailability}
                 </div>
               ) : availableDates.size === 0 ? (
                 <div className="flex flex-col items-center gap-3 py-12 text-center">
-                  <p className="text-[15px] text-muted">
-                    Δεν υπάρχει διαθέσιμη ημερομηνία αυτή τη στιγμή.
-                  </p>
+                  <p className="text-[15px] text-muted">{ui.noDatesAvailable}</p>
                   <a
                     href="tel:+35799130092"
                     className="text-[15px] font-semibold text-accent hover:underline"
                   >
-                    Καλέστε στο +357 99 130092
+                    {ui.callAt('+357 99 130092')}
                   </a>
                 </div>
               ) : (
                 <div className="flex flex-col gap-6">
-                  <Step n={1} title="Επιλέξτε ημερομηνία">
+                  <Step n={1} title={ui.stepDate}>
                     <BookingCalendar
                       availableDates={availableDates}
                       selected={selectedDate}
@@ -305,7 +293,7 @@ export function BookingModal({
 
                   {selectedDate ? (
                     <div ref={timeRef} className="scroll-mt-4">
-                    <Step n={2} title="Επιλέξτε ώρα">
+                    <Step n={2} title={ui.stepTime}>
                       <div className="flex flex-wrap gap-2">
                         {daySlots.map((s) => (
                           <button
@@ -323,7 +311,7 @@ export function BookingModal({
                             <span
                               className={`ml-2 text-[12px] ${selectedSlotId === s.id ? 'text-white/80' : 'text-muted'}`}
                             >
-                              {s.remaining} θέσεις
+                              {s.remaining} {ui.seatsLabel}
                             </span>
                           </button>
                         ))}
@@ -334,14 +322,14 @@ export function BookingModal({
 
                   {selectedSlotId ? (
                     <div ref={peopleRef} className="scroll-mt-4">
-                    <Step n={3} title="Άτομα">
+                    <Step n={3} title={ui.stepPeople}>
                       <div className="flex flex-col gap-3">
                         {tiers.map((t) => (
                           <div key={t.key} className="flex items-center justify-between gap-3">
                             <div className="flex flex-col">
                               <span className="text-[15px] text-foreground">{t.label}</span>
                               <span className="text-[13px] text-muted">
-                                {priceOf(t) === 0 ? (t.note ?? 'Δωρεάν') : money(priceOf(t), currency)}
+                                {priceOf(t) === 0 ? (t.note ?? ui.free) : money(priceOf(t), currency, ui.priceLocale)}
                               </span>
                             </div>
                             <Stepper
@@ -349,11 +337,13 @@ export function BookingModal({
                               onDec={() => setCount(t.key, (counts[t.key] ?? 0) - 1)}
                               onInc={() => setCount(t.key, (counts[t.key] ?? 0) + 1)}
                               canInc={seats < remaining}
+                              decLabel={ui.decrease}
+                              incLabel={ui.increase}
                             />
                           </div>
                         ))}
                         <p className="text-[12.5px] text-muted">
-                          Διαθέσιμες θέσεις: {Math.max(0, remaining - seats)} από {remaining}
+                          {ui.seatsAvailable(Math.max(0, remaining - seats), remaining)}
                         </p>
                       </div>
                     </Step>
@@ -362,30 +352,30 @@ export function BookingModal({
 
                   {seats >= 1 ? (
                     <div ref={contactRef} className="scroll-mt-4">
-                    <Step n={4} title="Στοιχεία επικοινωνίας">
+                    <Step n={4} title={ui.stepContact}>
                       <div className="flex flex-col gap-3">
                         <input
                           type="text"
                           value={name}
                           onChange={(e) => setName(e.target.value)}
-                          placeholder="Ονοματεπώνυμο"
-                          aria-label="Ονοματεπώνυμο"
+                          placeholder={ui.fullName}
+                          aria-label={ui.fullName}
                           className={fieldCls}
                         />
                         <input
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder="Email"
-                          aria-label="Email"
+                          placeholder={ui.email}
+                          aria-label={ui.email}
                           className={fieldCls}
                         />
                         <input
                           type="tel"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          placeholder="Τηλέφωνο (προαιρετικό)"
-                          aria-label="Τηλέφωνο"
+                          placeholder={ui.phoneOptional}
+                          aria-label={ui.phone}
                           className={fieldCls}
                         />
                       </div>
@@ -406,12 +396,12 @@ export function BookingModal({
             {!result && !loading && availableDates.size > 0 ? (
               <div className="flex items-center justify-between gap-4 border-t border-border px-5 py-4">
                 <div className="flex flex-col">
-                  <span className="text-[12px] text-muted">Σύνολο</span>
+                  <span className="text-[12px] text-muted">{ui.totalLabel}</span>
                   <span className="text-[20px] font-bold text-foreground">
-                    {money(total, currency)}
+                    {money(total, currency, ui.priceLocale)}
                     {seats > 0 ? (
                       <span className="ml-1.5 text-[13px] font-normal text-muted">
-                        ({seats} {seats === 1 ? 'άτομο' : 'άτομα'})
+                        ({seats} {seats === 1 ? ui.person : ui.people})
                       </span>
                     ) : null}
                   </span>
@@ -425,12 +415,12 @@ export function BookingModal({
                   {submitting ? (
                     <>
                       <Loader2 className="size-5 animate-spin" aria-hidden="true" />
-                      Επεξεργασία…
+                      {ui.processing}
                     </>
                   ) : total > 0 ? (
-                    'Πληρωμή & Κράτηση'
+                    ui.payAndBook
                   ) : (
-                    'Ολοκλήρωση κράτησης'
+                    ui.completeBooking
                   )}
                 </button>
               </div>
@@ -466,11 +456,15 @@ function Stepper({
   onDec,
   onInc,
   canInc,
+  decLabel,
+  incLabel,
 }: {
   value: number
   onDec: () => void
   onInc: () => void
   canInc: boolean
+  decLabel: string
+  incLabel: string
 }) {
   return (
     <div className="flex items-center rounded-[8px] border border-border">
@@ -478,7 +472,7 @@ function Stepper({
         type="button"
         onClick={onDec}
         disabled={value <= 0}
-        aria-label="Μείωση"
+        aria-label={decLabel}
         className="flex size-9 items-center justify-center text-foreground transition-colors hover:text-accent disabled:opacity-30"
       >
         <Minus className="size-4" />
@@ -488,7 +482,7 @@ function Stepper({
         type="button"
         onClick={onInc}
         disabled={!canInc}
-        aria-label="Αύξηση"
+        aria-label={incLabel}
         className="flex size-9 items-center justify-center text-foreground transition-colors hover:text-accent disabled:opacity-30"
       >
         <Plus className="size-4" />
@@ -506,10 +500,11 @@ function Confirmation({
   currency: string
   onClose: () => void
 }) {
+  const ui = getBookingUi(useLocale())
   const people = [
-    booking.adults ? `${booking.adults} ενήλικες` : '',
-    booking.children ? `${booking.children} παιδιά` : '',
-    booking.infants ? `${booking.infants} βρέφη` : '',
+    booking.adults ? ui.adults(booking.adults) : '',
+    booking.children ? ui.children(booking.children) : '',
+    booking.infants ? ui.infants(booking.infants) : '',
   ]
     .filter(Boolean)
     .join(', ')
@@ -519,25 +514,23 @@ function Confirmation({
       <span className="flex size-14 items-center justify-center rounded-full bg-success-soft text-success">
         <Check className="size-7" strokeWidth={2.5} aria-hidden="true" />
       </span>
-      <h3 className="font-display text-[24px] font-bold text-foreground">
-        Η κράτησή σας επιβεβαιώθηκε! 🐝
-      </h3>
+      <h3 className="font-display text-[24px] font-bold text-foreground">{ui.bookingConfirmed}</h3>
       <p className="text-[14px] text-muted">
-        Κωδικός κράτησης:{' '}
+        {ui.bookingRef}{' '}
         <span className="font-semibold text-foreground">{booking.reference}</span>
       </p>
 
       <dl className="mt-1 w-full divide-y divide-border rounded-[14px] bg-offwhite px-4 text-left text-[14px]">
-        <Row label="Δραστηριότητα" value={booking.activity_title ?? ''} />
-        <Row label="Ημερομηνία" value={greekDate(booking.date)} />
-        <Row label="Ώρα" value={booking.start_time ?? ''} />
-        {people ? <Row label="Άτομα" value={people} /> : null}
-        <Row label="Σύνολο" value={money(booking.total_amount, currency)} />
+        <Row label={ui.fActivity} value={booking.activity_title ?? ''} />
+        <Row label={ui.fDate} value={ui.formatDate(booking.date ?? '')} />
+        <Row label={ui.fTime} value={booking.start_time ?? ''} />
+        {people ? <Row label={ui.fPeople} value={people} /> : null}
+        <Row label={ui.fTotal} value={money(booking.total_amount, currency, ui.priceLocale)} />
       </dl>
 
       <p className="flex items-center gap-2 text-[13px] text-muted">
         <Mail className="size-4 shrink-0 text-accent" aria-hidden="true" />
-        Στείλαμε email επιβεβαίωσης στο {booking.email}.
+        {ui.emailSentTo(booking.email)}
       </p>
 
       <button
@@ -545,7 +538,7 @@ function Confirmation({
         onClick={onClose}
         className="mt-1 rounded-[4px] bg-accent px-6 py-[13px] text-[15px] font-semibold text-white transition-colors hover:bg-foreground"
       >
-        Κλείσιμο
+        {ui.close}
       </button>
     </div>
   )

@@ -1,18 +1,12 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useLocale } from 'next-intl'
+import { Link, usePathname } from '@/i18n/navigation'
 import { LayoutDashboard, Package, MapPin, User, LogOut } from 'lucide-react'
 import { logoutCustomer } from '@/lib/medusa/customer-actions'
+import { getAccountUi } from './account-ui'
 import { cn } from '@/lib/utils'
 import type { Customer } from '@/lib/medusa/customer'
-
-const NAV = [
-  { href: '/account', label: 'Επισκόπηση', icon: LayoutDashboard },
-  { href: '/account/orders', label: 'Παραγγελίες', icon: Package },
-  { href: '/account/addresses', label: 'Διευθύνσεις', icon: MapPin },
-  { href: '/account/profile', label: 'Στοιχεία', icon: User },
-]
 
 /** Account area chrome: title, a nav (sidebar on desktop, scrollable pills on
  *  mobile) + logout, with the page content beside it. */
@@ -24,16 +18,23 @@ export function AccountShell({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+  const t = getAccountUi(useLocale())
+  const nav = [
+    { href: '/account', label: t.navOverview, icon: LayoutDashboard },
+    { href: '/account/orders', label: t.navOrders, icon: Package },
+    { href: '/account/addresses', label: t.navAddresses, icon: MapPin },
+    { href: '/account/profile', label: t.navProfile, icon: User },
+  ]
   const name = [customer.first_name, customer.last_name].filter(Boolean).join(' ') || customer.email
 
   return (
     <section className="container-page py-8 md:py-12">
       <div className="mb-6 flex flex-col gap-1 md:mb-8">
         <h1 className="font-display text-[28px] font-bold leading-[1.1] text-foreground md:text-[38px]">
-          Ο λογαριασμός μου
+          {t.myAccount}
         </h1>
         <p className="text-[15px] text-muted">
-          Καλωσορίσατε, <span className="text-foreground">{name}</span>
+          {t.welcome} <span className="text-foreground">{name}</span>
         </p>
       </div>
 
@@ -42,7 +43,7 @@ export function AccountShell({
             the row scrolls instead of widening the page), sidebar on lg+. */}
         <nav className="min-w-0 lg:sticky lg:top-24 lg:self-start">
           <ul className="flex gap-1.5 overflow-x-auto pb-1 lg:flex-col lg:gap-1 lg:overflow-visible">
-            {NAV.map((item) => {
+            {nav.map((item) => {
               const active =
                 item.href === '/account'
                   ? pathname === '/account'
@@ -71,7 +72,7 @@ export function AccountShell({
                   className="flex w-full items-center gap-2.5 whitespace-nowrap rounded-[6px] px-3.5 py-2.5 text-[15px] font-medium text-muted transition-colors hover:bg-offwhite hover:text-foreground"
                 >
                   <LogOut className="size-[18px] shrink-0" aria-hidden="true" />
-                  Αποσύνδεση
+                  {t.logout}
                 </button>
               </form>
             </li>

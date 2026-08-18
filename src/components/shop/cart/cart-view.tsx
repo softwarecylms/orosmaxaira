@@ -1,15 +1,20 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
+import { useLocale } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { Minus, Plus, X, ArrowRight, Check, Truck } from 'lucide-react'
 import { useCart, formatCents } from '@/components/commerce/cart-store'
+import { localizedProductTitle, localizedContainer } from '@/components/shop/product-i18n'
+import { getCartViewUi } from './cart-ui'
 
 const FREE_SHIPPING_THRESHOLD = 7000 // €70,00 in cents
 
 /** Client cart page: line items + order summary. Reads the local honey cart. */
 export function CartView() {
   const { items, subtotal, ready, setQty, removeItem } = useCart()
+  const locale = useLocale()
+  const t = getCartViewUi(locale)
 
   if (!ready) {
     return <div className="container-wide py-20" aria-hidden="true" />
@@ -18,12 +23,12 @@ export function CartView() {
   if (items.length === 0) {
     return (
       <div className="container-wide flex flex-col items-start gap-5 py-16 md:py-24">
-        <p className="text-[17px] text-muted">Το καλάθι σας είναι άδειο.</p>
+        <p className="text-[17px] text-muted">{t.empty}</p>
         <Link
           href="/proionta"
           className="inline-flex items-center gap-3 rounded-[4px] bg-accent px-5 py-3 text-[17px] text-white transition-colors hover:bg-foreground"
         >
-          Συνεχίστε τις αγορές
+          {t.continueShopping}
           <ArrowRight className="size-4" aria-hidden="true" />
         </Link>
       </div>
@@ -52,11 +57,13 @@ export function CartView() {
                   href={`/product/${item.handle}`}
                   className="text-[17px] font-medium leading-[22px] text-foreground transition-colors hover:text-accent"
                 >
-                  {item.title}
+                  {localizedProductTitle(item.handle, item.title, locale)}
                 </Link>
                 {item.size ? (
                   <p className="text-[14px] text-muted">
-                    {item.container ? `${item.container} · ` : ''}
+                    {localizedContainer(item.container, locale)
+                      ? `${localizedContainer(item.container, locale)} · `
+                      : ''}
                     {item.size}
                   </p>
                 ) : null}
@@ -67,7 +74,7 @@ export function CartView() {
                     <button
                       type="button"
                       onClick={() => setQty(item.key, item.quantity - 1)}
-                      aria-label="Μείωση ποσότητας"
+                      aria-label={t.decreaseQty}
                       className="flex size-7 items-center justify-center text-foreground transition-colors hover:text-accent"
                     >
                       <Minus className="size-3.5" strokeWidth={2} />
@@ -79,13 +86,13 @@ export function CartView() {
                       onChange={(e) =>
                         setQty(item.key, Math.max(1, Math.floor(Number(e.target.value) || 1)))
                       }
-                      aria-label="Ποσότητα"
+                      aria-label={t.quantity}
                       className="w-9 bg-transparent text-center text-[15px] font-semibold text-foreground outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     />
                     <button
                       type="button"
                       onClick={() => setQty(item.key, item.quantity + 1)}
-                      aria-label="Αύξηση ποσότητας"
+                      aria-label={t.increaseQty}
                       className="flex size-7 items-center justify-center text-foreground transition-colors hover:text-accent"
                     >
                       <Plus className="size-3.5" strokeWidth={2} />
@@ -98,7 +105,7 @@ export function CartView() {
                     className="flex items-center gap-1.5 text-[14px] text-muted transition-colors hover:text-accent"
                   >
                     <X className="size-4" aria-hidden="true" />
-                    Αφαίρεση
+                    {t.remove}
                   </button>
                 </div>
               </div>
@@ -112,16 +119,16 @@ export function CartView() {
 
         {/* Summary */}
         <aside className="flex h-fit flex-col gap-5 rounded-[4px] border border-border bg-white p-6">
-          <h2 className="text-[20px] font-semibold text-foreground">Σύνοψη παραγγελίας</h2>
+          <h2 className="text-[20px] font-semibold text-foreground">{t.orderSummary}</h2>
 
           <div className="flex flex-col gap-3 text-[15px]">
             <div className="flex justify-between text-foreground">
-              <span className="text-muted">Υποσύνολο</span>
+              <span className="text-muted">{t.subtotal}</span>
               <span>{formatCents(subtotal)}</span>
             </div>
             <div className="flex justify-between text-foreground">
-              <span className="text-muted">Μεταφορικά</span>
-              <span className="text-muted">Υπολογίζονται στο ταμείο</span>
+              <span className="text-muted">{t.shipping}</span>
+              <span className="text-muted">{t.calculatedAtCheckout}</span>
             </div>
             {/* Free-shipping progress */}
             <div className="flex flex-col gap-2 pt-1">
@@ -129,14 +136,15 @@ export function CartView() {
                 <p className="flex items-center gap-2 text-[13px] leading-[18px] text-foreground">
                   <Truck className="size-[18px] shrink-0 text-accent" strokeWidth={2} aria-hidden="true" />
                   <span>
-                    Προσθέστε <span className="font-semibold">{formatCents(remaining)}</span> ακόμη για
-                    δωρεάν μεταφορικά στην Κύπρο.
+                    {t.freeShippingRemaining.pre}
+                    <span className="font-semibold">{formatCents(remaining)}</span>
+                    {t.freeShippingRemaining.post}
                   </span>
                 </p>
               ) : (
                 <p className="flex items-center gap-2 text-[13px] font-medium leading-[18px] text-success">
                   <Check className="size-[18px] shrink-0" strokeWidth={2.5} aria-hidden="true" />
-                  Κερδίσατε δωρεάν μεταφορικά!
+                  {t.freeShippingEarned}
                 </p>
               )}
               <div
@@ -144,7 +152,7 @@ export function CartView() {
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-valuenow={progressPct}
-                aria-label="Πρόοδος για δωρεάν μεταφορικά"
+                aria-label={t.freeShippingProgress}
                 className="h-2 w-full overflow-hidden rounded-full bg-cream"
               >
                 <div
@@ -158,7 +166,7 @@ export function CartView() {
           </div>
 
           <div className="flex justify-between border-t border-border pt-4 text-[18px] font-semibold text-foreground">
-            <span>Σύνολο</span>
+            <span>{t.total}</span>
             <span>{formatCents(subtotal)}</span>
           </div>
 
@@ -166,14 +174,14 @@ export function CartView() {
             href="/checkout"
             className="flex w-full items-center justify-center gap-3 rounded-[4px] bg-accent p-[15px] text-[17px] text-white transition-colors hover:bg-foreground"
           >
-            Ταμείο
+            {t.checkout}
             <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
           <Link
             href="/proionta"
             className="text-center text-[14px] text-muted transition-colors hover:text-foreground"
           >
-            Συνεχίστε τις αγορές
+            {t.continueShopping}
           </Link>
         </aside>
       </div>

@@ -1,9 +1,12 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { useLocale } from 'next-intl'
 import { Check, Info, Loader2 } from 'lucide-react'
 import { BookingCalendar } from '@/components/booking/booking-calendar'
+import { getBookingUi } from '@/components/booking/booking-ui'
 import { MAX_STUDENTS, SCHOOL_WORKSHOP_OPTIONS, pricePerChild } from '@/lib/data/school-visit'
+import { getScholeiaUi } from './scholeia-ui'
 
 type FormWorkshopOption = { key: string; short: string }
 type FormPricing = { range: string; price: number | null }[]
@@ -21,15 +24,6 @@ const isWeekday = (ds: string): boolean => {
   const [y, m, d] = ds.split('-').map(Number)
   const wd = new Date(y, (m ?? 1) - 1, d ?? 1).getDay()
   return wd >= 1 && wd <= 5
-}
-
-const MONTHS_GEN = [
-  'Ιανουαρίου', 'Φεβρουαρίου', 'Μαρτίου', 'Απριλίου', 'Μαΐου', 'Ιουνίου',
-  'Ιουλίου', 'Αυγούστου', 'Σεπτεμβρίου', 'Οκτωβρίου', 'Νοεμβρίου', 'Δεκεμβρίου',
-]
-const formatGreekDate = (ds: string): string => {
-  const [y, m, d] = ds.split('-').map(Number)
-  return `${d} ${MONTHS_GEN[(m ?? 1) - 1]} ${y}`
 }
 
 /**
@@ -51,6 +45,9 @@ export function SchoolVisitForm({
   maxStudents?: number
   pricing?: FormPricing
 }) {
+  const locale = useLocale()
+  const ui = getScholeiaUi(locale)
+  const bui = getBookingUi(locale)
   const [school, setSchool] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -103,15 +100,15 @@ export function SchoolVisitForm({
   const estimate = count > 0 ? count * perChild(count) : 0
 
   const validate = (): string | null => {
-    if (school.trim().length < 2) return 'Συμπληρώστε το όνομα του σχολείου.'
-    if (name.trim().length < 2) return 'Συμπληρώστε το όνομα του/της υπευθύνου.'
-    if (!emailOk(email)) return 'Συμπληρώστε ένα έγκυρο email.'
-    if (phone.trim().length < 5) return 'Συμπληρώστε έγκυρο τηλέφωνο επικοινωνίας.'
-    if (!count || count < 1) return 'Συμπληρώστε τον αριθμό των μαθητών.'
-    if (count > maxStudents) return `Ο μέγιστος αριθμός συμμετεχόντων είναι ${maxStudents} μαθητές.`
-    if (!workshop) return 'Επιλέξτε ένα από τα δύο εργαστήρια (Δραστηριότητα 2).'
-    if (!date) return 'Επιλέξτε προτιμώμενη ημερομηνία.'
-    if (!isWeekday(date)) return 'Οι επισκέψεις γίνονται μόνο εργάσιμες ημέρες (Δευτέρα–Παρασκευή).'
+    if (school.trim().length < 2) return ui.vSchool
+    if (name.trim().length < 2) return ui.vName
+    if (!emailOk(email)) return ui.vEmail
+    if (phone.trim().length < 5) return ui.vPhone
+    if (!count || count < 1) return ui.vCount
+    if (count > maxStudents) return ui.vMax(maxStudents)
+    if (!workshop) return ui.vWorkshop
+    if (!date) return ui.vDate
+    if (!isWeekday(date)) return ui.vWeekday
     return null
   }
 
@@ -144,12 +141,12 @@ export function SchoolVisitForm({
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(data?.error ?? 'Κάτι πήγε στραβά. Δοκιμάστε ξανά.')
+        throw new Error(data?.error ?? ui.genericError)
       }
       setSent(true)
       onSuccess?.()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Κάτι πήγε στραβά. Δοκιμάστε ξανά.')
+      setError(err instanceof Error ? err.message : ui.genericError)
     } finally {
       setSubmitting(false)
     }
@@ -161,13 +158,8 @@ export function SchoolVisitForm({
         <span className="flex size-14 items-center justify-center rounded-full bg-success-soft text-success">
           <Check className="size-7" strokeWidth={2.5} aria-hidden="true" />
         </span>
-        <h3 className="font-display text-[22px] font-bold text-foreground">
-          Λάβαμε το αίτημά σας! 🐝
-        </h3>
-        <p className="max-w-[360px] text-[14.5px] leading-[1.6] text-muted">
-          Θα επικοινωνήσουμε σύντομα μαζί σας για την επιβεβαίωση της ημερομηνίας και των
-          λεπτομερειών της επίσκεψης.
-        </p>
+        <h3 className="font-display text-[22px] font-bold text-foreground">{ui.successTitle}</h3>
+        <p className="max-w-[360px] text-[14.5px] leading-[1.6] text-muted">{ui.successBody}</p>
       </div>
     )
   }
@@ -179,8 +171,8 @@ export function SchoolVisitForm({
         value={school}
         onChange={(e) => setSchool(e.target.value)}
         required
-        placeholder="Σχολείο"
-        aria-label="Σχολείο"
+        placeholder={ui.school}
+        aria-label={ui.school}
         className={inputCls}
       />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -189,8 +181,8 @@ export function SchoolVisitForm({
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          placeholder="Υπεύθυνος/η επικοινωνίας"
-          aria-label="Υπεύθυνος/η επικοινωνίας"
+          placeholder={ui.contactPerson}
+          aria-label={ui.contactPerson}
           className={inputCls}
         />
         <input
@@ -198,8 +190,8 @@ export function SchoolVisitForm({
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           required
-          placeholder="Τηλέφωνο"
-          aria-label="Τηλέφωνο"
+          placeholder={bui.phone}
+          aria-label={bui.phone}
           className={inputCls}
         />
       </div>
@@ -208,14 +200,14 @@ export function SchoolVisitForm({
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
-        placeholder="Email"
-        aria-label="Email"
+        placeholder={bui.email}
+        aria-label={bui.email}
         className={inputCls}
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className={labelCls}>
-          Αριθμός παιδιών
+          {ui.numberOfChildren}
           <input
             type="number"
             inputMode="numeric"
@@ -225,18 +217,18 @@ export function SchoolVisitForm({
             onChange={(e) => setStudents(e.target.value)}
             required
             placeholder={`1–${maxStudents}`}
-            aria-label="Αριθμός παιδιών"
+            aria-label={ui.numberOfChildren}
             className={inputCls}
           />
         </label>
         <label className={labelCls}>
-          Τάξη / Τάξεις (προαιρετικό)
+          {ui.gradeLabel}
           <input
             type="text"
             value={grade}
             onChange={(e) => setGrade(e.target.value)}
-            placeholder="π.χ. Γ′ & Δ′ Δημοτικού"
-            aria-label="Τάξη ή τάξεις"
+            placeholder={ui.gradePlaceholder}
+            aria-label={ui.gradeAria}
             className={inputCls}
           />
         </label>
@@ -244,7 +236,7 @@ export function SchoolVisitForm({
 
       <div className="flex flex-col gap-2">
         <span className="text-[13px] font-medium text-foreground">
-          Προτιμώμενη ημερομηνία <span className="text-muted">(μόνο Δευτέρα–Παρασκευή)</span>
+          {ui.preferredDate} <span className="text-muted">{ui.weekdaysOnly}</span>
         </span>
         <div className="rounded-[8px] border border-border bg-white p-3">
           <BookingCalendar
@@ -255,8 +247,8 @@ export function SchoolVisitForm({
         </div>
         {date ? (
           <span className="text-[12.5px] text-muted">
-            Επιλεγμένη ημερομηνία:{' '}
-            <span className="font-semibold text-foreground">{formatGreekDate(date)}</span>
+            {ui.selectedDate}{' '}
+            <span className="font-semibold text-foreground">{bui.formatDate(date)}</span>
           </span>
         ) : null}
       </div>
@@ -264,8 +256,8 @@ export function SchoolVisitForm({
       {/* Δραστηριότητα 2 workshop choice (required) */}
       <fieldset className="flex flex-col gap-2" aria-required="true">
         <legend className="mb-1 text-[13px] font-semibold text-foreground">
-          Εργαστήριο (Δραστηριότητα 2) <span aria-hidden="true">*</span>
-          <span className="sr-only">(υποχρεωτικό)</span>
+          {ui.workshopLegend} <span aria-hidden="true">*</span>
+          <span className="sr-only">{ui.required}</span>
         </legend>
         <div className="flex flex-col gap-2">
           {workshopOptions.map((opt) => {
@@ -298,21 +290,20 @@ export function SchoolVisitForm({
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         rows={3}
-        placeholder="Σημειώσεις — ενημερώστε μας για τυχόν αλλεργίες (ξηροί καρποί, μέλι, μέλισσες) ή ιατρικές καταστάσεις."
-        aria-label="Σημειώσεις και αλλεργίες"
+        placeholder={ui.notesPlaceholder}
+        aria-label={ui.notesAria}
         className={`${inputCls} resize-y`}
       />
 
-      {/* Live total — €8/παιδί έως 25 παιδιά, €7/παιδί για 26+ (οι συνοδοί δωρεάν) */}
+      {/* Live total — €8/child up to 25 children, €7/child for 26+ (escorts free) */}
       {count > 0 && count <= maxStudents ? (
         <div className="flex flex-col gap-1 rounded-[8px] bg-accent/10 px-4 py-3">
           <div className="flex items-center justify-between gap-3">
-            <span className="text-[14px] font-semibold text-foreground">Εκτιμώμενο σύνολο</span>
+            <span className="text-[14px] font-semibold text-foreground">{ui.estimatedTotal}</span>
             <span className="text-[22px] font-bold leading-none text-accent">€{estimate}</span>
           </div>
           <span className="text-[12px] leading-[1.4] text-muted">
-            {count} {count === 1 ? 'παιδί' : 'παιδιά'} × €{perChild(count)} ανά παιδί · οι συνοδοί
-            δωρεάν
+            {ui.estimateBreakdown(count, perChild(count))}
           </span>
         </div>
       ) : null}
@@ -330,8 +321,7 @@ export function SchoolVisitForm({
 
       <p className="flex items-start gap-2 text-[13px] leading-[1.5] text-muted">
         <Info className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden="true" />
-        Το παρόν αποτελεί αίτημα κράτησης — θα επικοινωνήσουμε για την επιβεβαίωση της
-        διαθεσιμότητας.
+        {ui.requestNote}
       </p>
 
       {error ? (
@@ -348,10 +338,10 @@ export function SchoolVisitForm({
         {submitting ? (
           <>
             <Loader2 className="size-5 animate-spin" aria-hidden="true" />
-            Αποστολή…
+            {ui.sending}
           </>
         ) : (
-          'Αποστολή αιτήματος'
+          bui.sendRequest
         )}
       </button>
     </form>

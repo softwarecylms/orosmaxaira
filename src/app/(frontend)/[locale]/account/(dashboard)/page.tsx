@@ -1,19 +1,20 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import { getLocale } from 'next-intl/server'
 import { ArrowRight, MapPin, Package, User } from 'lucide-react'
+import { Link } from '@/i18n/navigation'
 import { getCustomer, getCustomerOrders } from '@/lib/medusa/customer'
 import { formatPrice } from '@/lib/medusa/prices'
+import { getAccountUi, accountIntlLocale } from '@/components/account/account-ui'
+import { hreflangAlternates } from '@/lib/seo'
 
-export const metadata: Metadata = { title: 'Ο λογαριασμός μου' }
-export const dynamic = 'force-dynamic'
-
-const ORDER_STATUS: Record<string, string> = {
-  pending: 'Σε εκκρεμότητα',
-  completed: 'Ολοκληρωμένη',
-  archived: 'Αρχειοθετημένη',
-  canceled: 'Ακυρωμένη',
-  requires_action: 'Απαιτεί ενέργεια',
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
+  return {
+    title: getAccountUi(locale).myAccount,
+    alternates: hreflangAlternates(locale, '/account'),
+  }
 }
+export const dynamic = 'force-dynamic'
 
 function Card({
   title,
@@ -49,6 +50,9 @@ function Card({
 }
 
 export default async function AccountOverviewPage() {
+  const locale = await getLocale()
+  const t = getAccountUi(locale)
+  const intlLocale = accountIntlLocale(locale)
   const [customer, orders] = await Promise.all([getCustomer(), getCustomerOrders()])
   const latest = orders[0]
   const addressCount = customer?.addresses?.length ?? 0
@@ -57,7 +61,7 @@ export default async function AccountOverviewPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="grid gap-4 sm:grid-cols-2 md:gap-5">
-        <Card title="Τα στοιχεία μου" icon={User} href="/account/profile" cta="Επεξεργασία στοιχείων">
+        <Card title={t.overviewMyDetails} icon={User} href="/account/profile" cta={t.overviewEditDetails}>
           <p className="text-foreground">
             {[customer?.first_name, customer?.last_name].filter(Boolean).join(' ') || '—'}
           </p>
@@ -65,28 +69,28 @@ export default async function AccountOverviewPage() {
           {customer?.phone ? <p>{customer.phone}</p> : null}
         </Card>
 
-        <Card title="Παραγγελίες" icon={Package} href="/account/orders" cta="Όλες οι παραγγελίες">
+        <Card title={t.overviewOrders} icon={Package} href="/account/orders" cta={t.overviewAllOrders}>
           {latest ? (
             <>
               <p className="text-foreground">
-                Παραγγελία #{latest.display_id} ·{' '}
-                {ORDER_STATUS[latest.status] ?? latest.status}
+                {t.orderNumber(latest.display_id)} ·{' '}
+                {t.orderStatus[latest.status] ?? latest.status}
               </p>
               <p>
-                {new Date(latest.created_at).toLocaleDateString('el-GR')} ·{' '}
-                {formatPrice(latest.total ?? 0, latest.currency_code ?? 'eur', 'el-GR')}
+                {new Date(latest.created_at).toLocaleDateString(intlLocale)} ·{' '}
+                {formatPrice(latest.total ?? 0, latest.currency_code ?? 'eur', intlLocale)}
               </p>
             </>
           ) : (
-            <p>Δεν έχετε ακόμη παραγγελίες.</p>
+            <p>{t.overviewNoOrders}</p>
           )}
         </Card>
 
         <Card
-          title="Διευθύνσεις"
+          title={t.overviewAddresses}
           icon={MapPin}
           href="/account/addresses"
-          cta={addressCount ? 'Διαχείριση διευθύνσεων' : 'Προσθήκη διεύθυνσης'}
+          cta={addressCount ? t.overviewManageAddresses : t.overviewAddAddress}
         >
           {primary ? (
             <>
@@ -98,15 +102,15 @@ export default async function AccountOverviewPage() {
                 {primary.city ? `, ${primary.city}` : ''}
                 {primary.postal_code ? ` ${primary.postal_code}` : ''}
               </p>
-              {addressCount > 1 ? <p>+ {addressCount - 1} ακόμη</p> : null}
+              {addressCount > 1 ? <p>{t.moreCount(addressCount - 1)}</p> : null}
             </>
           ) : (
-            <p>Δεν έχετε αποθηκευμένες διευθύνσεις.</p>
+            <p>{t.overviewNoAddresses}</p>
           )}
         </Card>
 
-        <Card title="Συνέχεια αγορών" icon={Package} href="/proionta" cta="Στο κατάστημα">
-          <p>Ανακαλύψτε το αγνό μας μέλι, τα προϊόντα της κυψέλης και τα φυσικά καλλυντικά.</p>
+        <Card title={t.overviewContinueShopping} icon={Package} href="/proionta" cta={t.toShop}>
+          <p>{t.overviewContinueBlurb}</p>
         </Card>
       </div>
     </div>

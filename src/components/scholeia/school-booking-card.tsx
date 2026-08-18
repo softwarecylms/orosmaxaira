@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useLocale } from 'next-intl'
 import Image from 'next/image'
 import { CalendarCheck, Gift, Phone } from 'lucide-react'
-import { MAX_STUDENTS, SCHOOL_PRICING, SCHOOL_WORKSHOP_OPTIONS } from '@/lib/data/school-visit'
+import { MAX_STUDENTS, SCHOOL_PRICING, SCHOOL_WORKSHOP_OPTIONS, getSchoolVisit } from '@/lib/data/school-visit'
+import { getScholeiaUi } from './scholeia-ui'
 import { SchoolBookingModal } from './school-booking-modal'
 
 type Pricing = { range: string; price: number | null; note?: string }[]
@@ -25,25 +27,37 @@ export function SchoolBookingCard({
   maxStudents?: number
 } = {}) {
   const [open, setOpen] = useState(false)
+  const locale = useLocale()
+  const ui = getScholeiaUi(locale)
+  // Localize the standard tier labels by position (prices come from props so
+  // Medusa-edited amounts are preserved); the tiers are in a fixed order.
+  const svPricing = getSchoolVisit(locale).pricing
+  const localizedPricing = pricing.map((t, i) => ({ ...t, range: svPricing[i]?.range ?? t.range }))
+  // Localize workshop-option `short` labels by key (keys are locale-invariant).
+  const svOptions = getSchoolVisit(locale).workshopOptions
+  const localizedOptions = workshopOptions.map((o) => ({
+    ...o,
+    short: svOptions.find((s) => s.key === o.key)?.short ?? o.short,
+  }))
 
   return (
     <>
       <div className="flex flex-col gap-5 rounded-[20px] border border-border-strong/15 bg-white p-6 shadow-card md:p-7">
         <div className="flex flex-col gap-3">
           <span className="text-[13px] font-semibold uppercase tracking-[0.08em] text-gold-strong">
-            Κόστος ανά παιδί
+            {ui.costPerChild}
           </span>
           <ul className="flex flex-col gap-3">
-            {pricing.map((t) => (
+            {localizedPricing.map((t) => (
               <li key={t.range} className="flex items-baseline justify-between gap-3">
                 <span className="text-[15px] leading-snug text-muted">{t.range}</span>
                 <span className="shrink-0 text-[18px] font-bold text-accent">
                   {t.price === null ? (
-                    'Δωρεάν'
+                    ui.free
                   ) : (
                     <>
                       €{t.price}
-                      <span className="text-[12px] font-medium text-muted"> / παιδί</span>
+                      <span className="text-[12px] font-medium text-muted">{ui.perChildSuffix}</span>
                     </>
                   )}
                 </span>
@@ -58,12 +72,12 @@ export function SchoolBookingCard({
           className="flex w-full items-center justify-center gap-2 rounded-[4px] bg-accent p-[15px] text-[16px] font-semibold uppercase tracking-[0.02em] text-white transition-colors hover:bg-foreground"
         >
           <CalendarCheck className="size-5" aria-hidden="true" />
-          Κλείστε επίσκεψη
+          {ui.bookVisit}
         </button>
 
         <p className="flex items-start gap-2 rounded-[14px] bg-accent-soft p-4 text-[13px] leading-[1.55] text-foreground/80 ring-1 ring-accent/15">
           <Gift className="mt-0.5 size-4 shrink-0 text-gold-strong" aria-hidden="true" />
-          Η τιμή περιλαμβάνει όλα τα υλικά των εργαστηρίων και τα δώρα του quiz.
+          {ui.priceIncludes}
         </p>
 
         <div className="flex items-center gap-3 rounded-[14px] bg-cream p-4">
@@ -71,7 +85,7 @@ export function SchoolBookingCard({
             <Phone className="size-5" aria-hidden="true" />
           </span>
           <div className="flex flex-col">
-            <span className="text-[13px] text-muted">Έχετε απορίες για την επίσκεψη;</span>
+            <span className="text-[13px] text-muted">{ui.questionsVisit}</span>
             <a
               href="tel:+35725622305"
               className="text-[15px] font-semibold text-foreground transition-colors hover:text-accent"
@@ -84,7 +98,7 @@ export function SchoolBookingCard({
         {/* Bee Academy — the programme's brand, woven into the booking panel. */}
         <div className="flex flex-col items-center gap-2 border-t border-border pt-4 text-center">
           <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
-            Μια εμπειρία του
+            {ui.experienceBy}
           </span>
           <Image
             src="/images/activities/bee-academy-logo.png"
@@ -99,7 +113,7 @@ export function SchoolBookingCard({
       <SchoolBookingModal
         open={open}
         onClose={() => setOpen(false)}
-        workshopOptions={workshopOptions}
+        workshopOptions={localizedOptions}
         maxStudents={maxStudents}
         pricing={pricing}
       />

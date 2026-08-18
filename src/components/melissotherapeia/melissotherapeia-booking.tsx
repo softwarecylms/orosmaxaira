@@ -1,12 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useLocale } from 'next-intl'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { CalendarCheck, CalendarRange, Clock, Euro, Phone, ShieldCheck, X } from 'lucide-react'
 import { EASE, DURATION } from '@/lib/motion'
 import { BookingForm } from '@/components/booking/booking-form'
+import { getBookingUi } from '@/components/booking/booking-ui'
+import { getMelissoUi } from './melissotherapeia-ui'
 
 /**
  * Sticky sidebar booking card for Μελισσοθεραπεία — same anatomy as the activity
@@ -31,11 +34,14 @@ export function MelissotherapeiaBooking({
 } = {}) {
   const [open, setOpen] = useState(false)
   const reduce = useReducedMotion()
+  const locale = useLocale()
+  const ui = getMelissoUi(locale)
+  const closeLabel = getBookingUi(locale).close
 
   const FACTS = [
-    { icon: Clock, label: 'Διάρκεια', value: durationLabel },
-    ...(costLabel ? [{ icon: Euro, label: 'Κόστος', value: costLabel }] : []),
-    { icon: CalendarRange, label: 'Περίοδος', value: periodLabel },
+    { icon: Clock, label: ui.duration, value: durationLabel },
+    ...(costLabel ? [{ icon: Euro, label: ui.cost, value: costLabel }] : []),
+    { icon: CalendarRange, label: ui.period, value: periodLabel },
   ]
 
   // Portal to <body> so the overlay escapes ancestor stacking contexts.
@@ -61,7 +67,7 @@ export function MelissotherapeiaBooking({
       <div className="flex flex-col gap-5 rounded-[20px] border border-border-strong/15 bg-white p-6 shadow-card md:p-7">
         <div className="flex flex-col gap-3">
           <span className="text-[13px] font-semibold uppercase tracking-[0.08em] text-gold-strong">
-            Το ραντεβού με μια ματιά
+            {ui.appointmentGlance}
           </span>
           <ul className="flex flex-col gap-3">
             {FACTS.map((f) => (
@@ -86,12 +92,12 @@ export function MelissotherapeiaBooking({
           className="flex w-full items-center justify-center gap-2 rounded-[4px] bg-accent p-[15px] text-[16px] font-semibold uppercase tracking-[0.02em] text-white transition-colors hover:bg-foreground"
         >
           <CalendarCheck className="size-5" aria-hidden="true" />
-          Κλείστε ραντεβού
+          {ui.bookAppointment}
         </button>
 
         <p className="flex items-start gap-2 text-[13px] leading-[1.5] text-muted">
           <ShieldCheck className="mt-0.5 size-4 shrink-0 text-success" aria-hidden="true" />
-          Το αίτημα δεν δεσμεύει — θα επικοινωνήσουμε για την επιβεβαίωση του ραντεβού.
+          {ui.nonBinding}
         </p>
 
         <div className="flex items-center gap-3 rounded-[14px] bg-cream p-4">
@@ -99,7 +105,7 @@ export function MelissotherapeiaBooking({
             <Phone className="size-5" aria-hidden="true" />
           </span>
           <div className="flex flex-col">
-            <span className="text-[13px] text-muted">Έχετε απορίες για το ραντεβού;</span>
+            <span className="text-[13px] text-muted">{ui.questionsAppointment}</span>
             <a
               href="tel:+35725622305"
               className="text-[15px] font-semibold text-foreground transition-colors hover:text-accent"
@@ -112,7 +118,7 @@ export function MelissotherapeiaBooking({
         {/* Bee Academy — the experience's brand, woven into the booking panel. */}
         <div className="flex flex-col items-center gap-2 border-t border-border pt-4 text-center">
           <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
-            Μια εμπειρία του
+            {ui.experienceBy}
           </span>
           <Image
             src="/images/activities/bee-academy-logo.png"
@@ -137,7 +143,7 @@ export function MelissotherapeiaBooking({
           >
             <motion.button
               type="button"
-              aria-label="Κλείσιμο"
+              aria-label={closeLabel}
               onClick={() => setOpen(false)}
               className="absolute inset-0 bg-foreground/50"
               variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
@@ -146,7 +152,7 @@ export function MelissotherapeiaBooking({
             <motion.div
               role="dialog"
               aria-modal="true"
-              aria-label="Κράτηση ραντεβού — Μελισσοθεραπεία"
+              aria-label={ui.modalAria}
               className="relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-[22px] bg-white shadow-[0_0_60px_-15px_rgba(35,31,32,0.5)] sm:max-w-[480px] sm:rounded-[22px]"
               variants={{
                 hidden: { opacity: 0, y: reduce ? 0 : 24, scale: reduce ? 1 : 0.98 },
@@ -157,12 +163,12 @@ export function MelissotherapeiaBooking({
               <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
                 <h2 className="flex items-center gap-2 text-[17px] font-semibold text-foreground">
                   <CalendarCheck className="size-5 text-accent" aria-hidden="true" />
-                  Κλείστε το ραντεβού σας
+                  {ui.modalTitle}
                 </h2>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  aria-label="Κλείσιμο"
+                  aria-label={closeLabel}
                   className="flex size-9 items-center justify-center rounded-full text-foreground transition-colors hover:bg-offwhite hover:text-accent"
                 >
                   <X className="size-5" />
@@ -170,7 +176,7 @@ export function MelissotherapeiaBooking({
               </div>
               <div className="flex-1 overflow-y-auto px-5 py-5">
                 <BookingForm
-                  activityName="Μελισσοθεραπεία"
+                  activityName={ui.activityName}
                   variant="light"
                   seasonStartMonth={seasonStartMonth}
                   seasonEndMonth={seasonEndMonth}

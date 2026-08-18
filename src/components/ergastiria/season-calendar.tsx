@@ -1,10 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { useLocale } from 'next-intl'
 import { ArrowRight, CalendarClock, CalendarRange } from 'lucide-react'
+import { Link } from '@/i18n/navigation'
 import { monthNameAccusative, monthRangeLabel } from '@/lib/data/workshops'
 import { cn } from '@/lib/utils'
+import { getErgastiriaUi } from './ergastiria-ui'
 
 /** Minimal shape the calendar needs — supplied by the hub (Medusa or static). */
 export type CalWorkshop = { slug: string; title: string; seasonLabel: string; months: number[] }
@@ -16,6 +18,8 @@ export type CalWorkshop = { slug: string; title: string; seasonLabel: string; mo
  * "Now" is resolved after mount to avoid a hydration mismatch.
  */
 export function SeasonCalendar({ workshops }: { workshops: CalWorkshop[] }) {
+  const locale = useLocale()
+  const ui = getErgastiriaUi(locale)
   const [currentMonth, setCurrentMonth] = useState<number | null>(null)
   useEffect(() => setCurrentMonth(new Date().getMonth() + 1), [])
 
@@ -28,21 +32,23 @@ export function SeasonCalendar({ workshops }: { workshops: CalWorkshop[] }) {
     <div className="flex flex-col gap-7">
       {currentMonth ? (
         <p className="text-[15px] leading-[1.7] text-muted">
-          Βρισκόμαστε στον{' '}
-          <strong className="font-semibold text-foreground">{monthNameAccusative(currentMonth)}</strong>
+          {ui.weAreInPre}
+          <strong className="font-semibold text-foreground">
+            {monthNameAccusative(currentMonth, locale)}
+          </strong>
           {current ? (
             <>
-              {' '}— τρέχει το εργαστήρι{' '}
+              {ui.runningPre}
               <Link
                 href={`/drastiriotites/ergastiria/${current.slug}`}
                 className="font-semibold text-accent underline-offset-4 hover:underline"
               >
                 {current.title}
               </Link>
-              .
+              {ui.runningPost}
             </>
           ) : (
-            <> — τα εργαστήρια αυτή την περίοδο γίνονται κατόπιν ραντεβού.</>
+            <>{ui.noWorkshopSuffix}</>
           )}
         </p>
       ) : null}
@@ -54,7 +60,7 @@ export function SeasonCalendar({ workshops }: { workshops: CalWorkshop[] }) {
             <li key={w.slug} className="flex">
               <Link
                 href={`/drastiriotites/ergastiria/${w.slug}`}
-                aria-label={`${w.seasonLabel} (${monthRangeLabel(w.months)}) — ${w.title}`}
+                aria-label={ui.cardAria(w.seasonLabel, monthRangeLabel(w.months, locale), w.title)}
                 className={cn(
                   'group flex h-full w-full flex-col gap-3 rounded-[18px] border p-5 transition-colors',
                   isCurrent
@@ -88,7 +94,7 @@ export function SeasonCalendar({ workshops }: { workshops: CalWorkshop[] }) {
                     className={cn('size-3.5 shrink-0', isCurrent ? 'text-cream' : 'text-accent')}
                     aria-hidden="true"
                   />
-                  {monthRangeLabel(w.months)}
+                  {monthRangeLabel(w.months, locale)}
                 </span>
 
                 <h3
@@ -106,7 +112,7 @@ export function SeasonCalendar({ workshops }: { workshops: CalWorkshop[] }) {
                     isCurrent ? 'text-white' : 'text-accent',
                   )}
                 >
-                  Δείτε το εργαστήρι
+                  {ui.viewWorkshop}
                   <ArrowRight
                     className="size-3.5 transition-transform group-hover:translate-x-0.5"
                     aria-hidden="true"
@@ -122,7 +128,7 @@ export function SeasonCalendar({ workshops }: { workshops: CalWorkshop[] }) {
         <div className="flex flex-col gap-3.5 rounded-[18px] border border-dashed border-border bg-white/60 p-5">
           <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-muted">
             <CalendarClock className="size-3.5 text-accent" aria-hidden="true" />
-            Κατόπιν ραντεβού, όλο τον χρόνο
+            {ui.byAppointmentAllYear}
           </span>
           <ul className="flex flex-wrap gap-2.5">
             {onRequest.map((w) => (

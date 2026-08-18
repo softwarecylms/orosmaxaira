@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import { Download } from 'lucide-react'
 import { getLocale } from 'next-intl/server'
 import { getCertificatesContent, type Certificate } from '@/components/certificates/certificates-content'
 import { PageHero } from '@/components/shared/page-hero'
@@ -67,7 +68,12 @@ export default async function CertificatesPage() {
           className={cn('scroll-mt-28 py-14 md:py-20', i % 2 === 1 && 'bg-offwhite')}
         >
           <RevealUp className="container-wide">
-            <CertificateSection cert={cert} reversed={i % 2 === 1} />
+            <CertificateSection
+              cert={cert}
+              reversed={i % 2 === 1}
+              pdf={en ? cert.pdfEn ?? cert.pdfGr : cert.pdfGr}
+              downloadLabel={en ? 'Download certificate' : 'Λήψη πιστοποιητικού'}
+            />
           </RevealUp>
         </section>
       ))}
@@ -77,7 +83,17 @@ export default async function CertificatesPage() {
 
 /** One certificate as an alternating 50/50 section: copy on one side, live PDF
  *  preview on the other (sides swap via `reversed`). Stacks on mobile. */
-function CertificateSection({ cert, reversed = false }: { cert: Certificate; reversed?: boolean }) {
+function CertificateSection({
+  cert,
+  reversed = false,
+  pdf,
+  downloadLabel,
+}: {
+  cert: Certificate
+  reversed?: boolean
+  pdf: string
+  downloadLabel: string
+}) {
   return (
     <article className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
       {/* Copy — centered on mobile, left-aligned on desktop */}
@@ -121,18 +137,34 @@ function CertificateSection({ cert, reversed = false }: { cert: Certificate; rev
         </div>
       </div>
 
-      {/* Certificate preview (rendered first page — download the full PDF below) */}
+      {/* Certificate preview (rendered first page) — the whole card + the button
+          below link to the official PDF (English file on /en). */}
       <div className={cn('w-full', reversed && 'lg:order-1')}>
-        <div className="mx-auto w-full max-w-[440px]">
-          <div className="relative aspect-[1/1.414] w-full overflow-hidden rounded-[12px] bg-white shadow-[0_0_26px_rgba(0,0,0,0.15)]">
+        <div className="mx-auto flex w-full max-w-[440px] flex-col items-center gap-5">
+          <a
+            href={pdf}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${downloadLabel} — ${cert.code}`}
+            className="group relative aspect-[1/1.414] w-full overflow-hidden rounded-[12px] bg-white shadow-[0_0_26px_rgba(0,0,0,0.15)]"
+          >
             <Image
               src={cert.image}
               alt={cert.imageAlt}
               fill
               sizes="(min-width:1024px) 440px, 90vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
             />
-          </div>
+          </a>
+          <a
+            href={pdf}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2.5 rounded-[4px] border border-accent px-5 py-2.5 text-[15px] font-medium text-accent transition-colors hover:bg-accent hover:text-white"
+          >
+            <Download className="size-4" aria-hidden="true" />
+            {downloadLabel}
+          </a>
         </div>
       </div>
     </article>

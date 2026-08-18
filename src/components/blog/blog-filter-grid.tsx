@@ -1,13 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
+import { useLocale } from 'next-intl'
 import { CalendarDays } from 'lucide-react'
+import { Link } from '@/i18n/navigation'
 import { RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
 import { cn } from '@/lib/utils'
 import type { BlogPost } from './blog-data'
 import type { BlogCategory } from './blog-categories'
+import { getBlogUi, formatBlogDate } from './blog-ui'
 
 /** Blog index grid with category filter chips on top. Filtering is client-side;
  *  the grid re-keys on the active category so the stagger replays each switch. */
@@ -20,9 +22,11 @@ export function BlogFilterGrid({
   categories: BlogCategory[]
   postCategories: Record<string, string[]>
 }) {
+  const locale = useLocale()
+  const ui = getBlogUi(locale)
   const [active, setActive] = useState<string>('all')
 
-  const chips = [{ slug: 'all', name: 'Όλα', count: posts.length }, ...categories]
+  const chips = [{ slug: 'all', name: ui.allChip, count: posts.length }, ...categories]
   const filtered =
     active === 'all' ? posts : posts.filter((p) => postCategories[p.slug]?.includes(active))
 
@@ -93,7 +97,7 @@ export function BlogFilterGrid({
               <div className="flex flex-1 flex-col gap-2 p-5">
                 <span className="flex items-center gap-2 text-[12px] uppercase tracking-wide text-muted">
                   <CalendarDays className="size-3.5 text-accent" aria-hidden="true" />
-                  {p.dateText}
+                  {formatBlogDate(p.date, locale, p.dateText)}
                 </span>
                 <h2 className="line-clamp-2 text-[18px] font-semibold leading-snug text-foreground transition-colors group-hover:text-accent">
                   {p.title}
@@ -102,13 +106,17 @@ export function BlogFilterGrid({
                   <p className="line-clamp-2 text-[14px] leading-[1.5] text-muted">{p.excerpt}</p>
                 ) : null}
                 <span className="mt-auto pt-2 text-[14px] font-medium text-accent">
-                  Διαβάστε περισσότερα →
+                  {ui.readMore} →
                 </span>
               </div>
             </Link>
           </RevealStaggerItem>
         ))}
       </RevealStagger>
+
+      {filtered.length === 0 ? (
+        <p className="py-12 text-center text-[15px] text-muted">{ui.empty}</p>
+      ) : null}
     </div>
   )
 }

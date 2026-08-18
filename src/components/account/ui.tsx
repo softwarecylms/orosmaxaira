@@ -1,6 +1,8 @@
 'use client'
 
 import { useFormStatus } from 'react-dom'
+import { useLocale } from 'next-intl'
+import { getAccountUi } from './account-ui'
 import { cn } from '@/lib/utils'
 
 /** Labelled text input matching the site's form style. */
@@ -53,6 +55,7 @@ export function SubmitButton({
   variant?: 'accent' | 'outline'
 }) {
   const { pending } = useFormStatus()
+  const t = getAccountUi(useLocale())
   return (
     <button
       type="submit"
@@ -65,7 +68,7 @@ export function SubmitButton({
         className,
       )}
     >
-      {pending ? 'Παρακαλώ περιμένετε…' : children}
+      {pending ? t.pleaseWait : children}
     </button>
   )
 }

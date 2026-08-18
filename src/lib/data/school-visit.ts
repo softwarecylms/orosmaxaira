@@ -69,3 +69,49 @@ export function estimateCost(students: number): number {
   if (!Number.isFinite(students) || students < 1) return 0
   return students * pricePerChild(students)
 }
+
+// --- Bilingual bundle -----------------------------------------------------
+// The Greek constants above are the source of truth (also used server-side by
+// the enquiry API + zod enum, which stay Greek). EN mirrors only the human-
+// facing text: option labels/short/description and the price-tier `range`/`note`.
+// Keys, prices (numbers) and `MAX_STUDENTS` are locale-invariant and reused.
+
+const SCHOOL_WORKSHOP_OPTIONS_EN: SchoolWorkshopOption[] = [
+  {
+    key: 'keria',
+    label: 'Candle-making workshop & creating a poster for the protection of bees',
+    short: 'Candle-making & poster',
+    description:
+      'The children make their own candle from a sheet of honeycomb and decorate it with ribbons and beads, adding their personal touch.',
+  },
+  {
+    key: 'fytefsi',
+    label: 'Workshop planting bee-friendly seeds in ceramic pots & painting',
+    short: 'Seed planting & painting',
+    description:
+      'The children plant bee-friendly seeds in little ceramic pots — a way of protecting the bees — and then paint them with brushes.',
+  },
+]
+
+const SCHOOL_PRICING_EN: SchoolPriceTier[] = [
+  { range: 'Up to 25 children', price: 8, note: 'per child, incl. VAT' },
+  { range: 'From 26 to 54 children', price: 7, note: 'per child, incl. VAT' },
+  { range: 'Teachers & escorts', price: null, note: 'everyone accompanying the class' },
+]
+
+export type SchoolVisitContent = {
+  workshopOptions: SchoolWorkshopOption[]
+  pricing: SchoolPriceTier[]
+  maxStudents: number
+}
+
+/** Locale-aware school-visit content. el = the Greek source of truth, en = the
+ *  English bundle. Read the active locale via next-intl's `useLocale()`. */
+export function getSchoolVisit(locale: string): SchoolVisitContent {
+  const en = locale === 'en'
+  return {
+    workshopOptions: en ? SCHOOL_WORKSHOP_OPTIONS_EN : (SCHOOL_WORKSHOP_OPTIONS as unknown as SchoolWorkshopOption[]),
+    pricing: en ? SCHOOL_PRICING_EN : SCHOOL_PRICING,
+    maxStudents: MAX_STUDENTS,
+  }
+}

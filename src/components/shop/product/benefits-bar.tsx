@@ -1,17 +1,15 @@
+import { getLocale } from 'next-intl/server'
 import { ShieldCheck, Truck, CreditCard, Leaf, Headset } from 'lucide-react'
 import { RevealGroup, RevealItem } from '@/components/home/reveal-up'
+import { getProductUi } from './product-ui'
 
-const ITEMS = [
-  { icon: ShieldCheck, label: '100% ΕΓΓΥΗΣΗ ΑΓΝΟΤΗΤΑΣ' },
-  { icon: Truck, label: 'ΑΜΕΣΗ ΠΑΡΑΔΟΣΗ' },
-  { icon: CreditCard, label: 'ΑΣΦΑΛΕΙΣ ONLINE ΠΛΗΡΩΜΕΣ' },
-  { icon: Leaf, label: 'ΟΙΚΟΛΟΓΙΚΗ ΣΥΣΚΕΥΑΣΙΑ' },
-  { icon: Headset, label: 'ΑΜΕΣΗ ΕΞΥΠΗΡΕΤΗΣΗ' },
-]
+const ICONS = [ShieldCheck, Truck, CreditCard, Leaf, Headset]
 
 /** Gold trust strip under the product info (Figma 237:1213). Full row on tablet+,
  *  a continuously-scrolling marquee on mobile. */
-export function BenefitsBar() {
+export async function BenefitsBar() {
+  const ui = getProductUi(await getLocale())
+  const ITEMS = ICONS.map((icon, i) => ({ icon, label: ui.benefits[i] }))
   return (
     <section className="bg-accent text-white">
       {/* Tablet / desktop: full row */}

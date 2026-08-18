@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { useLocale } from 'next-intl'
 import type { ShopSection, ShopNutritionRow } from '../shop-content'
+import { getProductUi } from './product-ui'
 import { cn } from '@/lib/utils'
 
 type Nutrition = { unit: string; rows: ShopNutritionRow[] }
@@ -72,6 +74,7 @@ export function ProductTabs({
   sections: ShopSection[]
   nutrition?: Nutrition
 }) {
+  const ui = getProductUi(useLocale())
   const tabs = [
     sections.length ? ('desc' as const) : null,
     nutrition ? ('nutrition' as const) : null,
@@ -88,12 +91,12 @@ export function ProductTabs({
       <div className="flex gap-8 border-b border-border">
         {tabs.includes('desc') ? (
           <TabButton active={active === 'desc'} onClick={() => setActive('desc')}>
-            Περιγραφή
+            {ui.tabs.description}
           </TabButton>
         ) : null}
         {tabs.includes('nutrition') ? (
           <TabButton active={active === 'nutrition'} onClick={() => setActive('nutrition')}>
-            Διατροφική Αξία
+            {ui.tabs.nutrition}
           </TabButton>
         ) : null}
       </div>
@@ -117,7 +120,7 @@ export function ProductTabs({
           <div className="flex bg-offwhite">
             <div className="flex-1 px-3 py-2.5">
               <p className="text-[17px] font-bold leading-[24px] text-foreground">
-                Διατροφική πληροφορία
+                {ui.tabs.nutritionInfo}
               </p>
             </div>
             <div className="flex-1 border-l border-border px-3 py-2.5">

@@ -6,6 +6,7 @@
  */
 
 import { GENERATED_PRODUCT_DETAILS } from './product-details.generated'
+import { GENERATED_PRODUCT_DETAILS_EN } from './product-details.generated.en'
 
 export type ShopCategory = 'Μέλι' | 'Προϊόντα Μέλισσας' | 'Καλλυντικά' | 'Πακέτα Δώρων'
 
@@ -277,7 +278,14 @@ export function getProductByHandle(handle: string): ShopProduct | undefined {
   return SHOP_PRODUCTS.find((p) => handleOf(p) === handle)
 }
 
-export function getProductDetail(handle: string): ShopProductDetail {
+/** English editorial (sections, nutrition labels, per-size containers), keyed by
+ *  handle. Falls back per-handle to the Greek editorial if a handle is missing. */
+export const PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
+  ...GENERATED_PRODUCT_DETAILS_EN,
+}
+
+export function getProductDetail(handle: string, locale?: string): ShopProductDetail {
+  if (locale === 'en') return PRODUCT_DETAILS_EN[handle] ?? PRODUCT_DETAILS[handle] ?? {}
   return PRODUCT_DETAILS[handle] ?? {}
 }
 

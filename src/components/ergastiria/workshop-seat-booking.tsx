@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLocale } from 'next-intl'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
@@ -26,23 +27,14 @@ import {
 } from '@/lib/medusa/booking-actions'
 import { EASE, DURATION } from '@/lib/motion'
 import { BookingCalendar } from '../booking/booking-calendar'
-
-const MONTHS_GEN = [
-  'Ιανουαρίου', 'Φεβρουαρίου', 'Μαρτίου', 'Απριλίου', 'Μαΐου', 'Ιουνίου',
-  'Ιουλίου', 'Αυγούστου', 'Σεπτεμβρίου', 'Οκτωβρίου', 'Νοεμβρίου', 'Δεκεμβρίου',
-]
+import { getBookingUi } from '../booking/booking-ui'
+import { getErgastiriaUi } from './ergastiria-ui'
 
 const isoOf = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
-function greekDate(ds?: string): string {
-  if (!ds) return ''
-  const [y, m, d] = ds.split('-').map(Number)
-  return `${d} ${MONTHS_GEN[m - 1]} ${y}`
-}
-
-function money(amount: number, currency = 'eur'): string {
-  return new Intl.NumberFormat('el-GR', {
+function money(amount: number, currency = 'eur', priceLocale = 'el-GR'): string {
+  return new Intl.NumberFormat(priceLocale, {
     style: 'currency',
     currency: currency.toUpperCase(),
     maximumFractionDigits: Number.isInteger(amount) ? 0 : 2,
@@ -74,13 +66,16 @@ export function WorkshopSeatBooking({
   currency?: string
 }) {
   const [open, setOpen] = useState(false)
+  const locale = useLocale()
+  const bui = getBookingUi(locale)
+  const eui = getErgastiriaUi(locale)
 
   return (
     <>
       <div className="flex flex-col gap-5 rounded-[20px] border border-border-strong/15 bg-white p-6 shadow-card md:p-7">
         <div className="flex flex-col gap-3">
           <span className="text-[13px] font-semibold uppercase tracking-[0.08em] text-gold-strong">
-            Επιλογές & κόστος
+            {eui.optionsCost}
           </span>
           <ul className="flex flex-col gap-3">
             {combos.map((c) => (
@@ -93,7 +88,7 @@ export function WorkshopSeatBooking({
                     <span key={t.key}>
                       {t.label.replace(/\s*\(.*\)/, '')}:{' '}
                       <span className="font-semibold text-accent">
-                        {t.price === 0 ? (t.note ?? 'Δωρεάν') : money(t.price, currency)}
+                        {t.price === 0 ? (t.note ?? bui.free) : money(t.price, currency, bui.priceLocale)}
                       </span>
                     </span>
                   ))}
@@ -109,12 +104,12 @@ export function WorkshopSeatBooking({
           className="flex w-full items-center justify-center gap-2 rounded-[4px] bg-accent p-[15px] text-[16px] font-semibold uppercase tracking-[0.02em] text-white transition-colors hover:bg-foreground"
         >
           <CalendarCheck className="size-5" aria-hidden="true" />
-          Κλείστε online
+          {eui.bookOnline}
         </button>
 
         <p className="flex items-center gap-2 text-[12.5px] text-muted">
           <ShieldCheck className="size-4 shrink-0 text-gold-strong" aria-hidden="true" />
-          Άμεση επιβεβαίωση & email απόδειξης. Ακύρωση έως 72 ώρες πριν.
+          {eui.instantConfirm}
         </p>
 
         <div className="flex items-center gap-3 rounded-[14px] bg-cream p-4">
@@ -122,7 +117,7 @@ export function WorkshopSeatBooking({
             <Phone className="size-5" aria-hidden="true" />
           </span>
           <div className="flex flex-col">
-            <span className="text-[13px] text-muted">Έχετε απορίες;</span>
+            <span className="text-[13px] text-muted">{eui.questions}</span>
             <a
               href="tel:+35725622305"
               className="text-[15px] font-semibold text-foreground transition-colors hover:text-accent"
@@ -134,7 +129,7 @@ export function WorkshopSeatBooking({
 
         <div className="flex flex-col items-center gap-2 border-t border-border pt-4 text-center">
           <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
-            Μια εμπειρία του
+            {eui.experienceBy}
           </span>
           <Image
             src="/images/activities/bee-academy-logo.png"
@@ -174,6 +169,9 @@ function WorkshopBookingModal({
   onClose: () => void
 }) {
   const reduce = useReducedMotion()
+  const locale = useLocale()
+  const bui = getBookingUi(locale)
+  const eui = getErgastiriaUi(locale)
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
 
@@ -348,7 +346,7 @@ function WorkshopBookingModal({
     if (res.ok && res.booking.status === 'confirmed') {
       setResult(res.booking)
     } else {
-      setSubmitError(res.ok ? 'Η κράτηση δεν ολοκληρώθηκε. Δοκιμάστε ξανά.' : res.error)
+      setSubmitError(res.ok ? bui.bookingFailed : res.error)
       reloadAvailability()
       setSelectedSlotId(null)
       setCounts({})
@@ -367,7 +365,7 @@ function WorkshopBookingModal({
         >
           <motion.button
             type="button"
-            aria-label="Κλείσιμο"
+            aria-label={bui.close}
             onClick={onClose}
             className="absolute inset-0 bg-foreground/50"
             variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
@@ -377,7 +375,7 @@ function WorkshopBookingModal({
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label={`Κράτηση — ${workshopTitle}`}
+            aria-label={eui.reservationAria(workshopTitle)}
             data-testid="workshop-booking-modal"
             className="relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-[22px] bg-white shadow-[0_0_60px_-15px_rgba(35,31,32,0.5)] sm:max-w-[540px] sm:rounded-[22px]"
             variants={{
@@ -389,12 +387,12 @@ function WorkshopBookingModal({
             <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
               <h2 className="flex items-center gap-2 text-[17px] font-semibold text-foreground">
                 <CalendarDays className="size-5 text-accent" aria-hidden="true" />
-                {result ? 'Επιβεβαίωση κράτησης' : 'Κράτηση εργαστηρίου'}
+                {result ? eui.confirmTitle : eui.workshopBookingTitle}
               </h2>
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Κλείσιμο"
+                aria-label={bui.close}
                 className="flex size-9 items-center justify-center rounded-full text-foreground transition-colors hover:bg-offwhite hover:text-accent"
               >
                 <X className="size-5" />
@@ -407,20 +405,18 @@ function WorkshopBookingModal({
               ) : loading ? (
                 <div className="flex items-center justify-center gap-2 py-16 text-muted">
                   <Loader2 className="size-5 animate-spin" aria-hidden="true" />
-                  Φόρτωση διαθεσιμότητας…
+                  {bui.loadingAvailability}
                 </div>
               ) : slots.filter((s) => s.remaining > 0).length === 0 ? (
                 <div className="flex flex-col items-center gap-3 py-12 text-center">
-                  <p className="text-[15px] text-muted">
-                    Δεν υπάρχει διαθέσιμη ημερομηνία αυτή τη στιγμή.
-                  </p>
+                  <p className="text-[15px] text-muted">{bui.noDatesAvailable}</p>
                   <a href="tel:+35725622305" className="text-[15px] font-semibold text-accent hover:underline">
-                    Καλέστε στο +357 25622305
+                    {bui.callAt('+357 25622305')}
                   </a>
                 </div>
               ) : (
                 <div className="flex flex-col gap-6">
-                  <Step n={1} title="Επιλέξτε πρόγραμμα">
+                  <Step n={1} title={eui.stepProgram}>
                     <div className="flex flex-col gap-2">
                       {combos.map((c) => {
                         const active = comboKey === c.key
@@ -446,7 +442,7 @@ function WorkshopBookingModal({
                                 <Clock className="size-3.5" aria-hidden="true" />
                                 {c.start_time}
                                 {c.end_time ? `–${c.end_time}` : ''}
-                                {disabled ? ' · χωρίς διαθέσιμες ημερομηνίες' : ''}
+                                {disabled ? ` · ${eui.noAvailableDatesShort}` : ''}
                               </span>
                             ) : null}
                           </button>
@@ -457,7 +453,7 @@ function WorkshopBookingModal({
 
                   {comboKey ? (
                     <div ref={dateRef} className="scroll-mt-4">
-                      <Step n={2} title="Επιλέξτε ημερομηνία">
+                      <Step n={2} title={bui.stepDate}>
                         <BookingCalendar
                           availableDates={availableDates}
                           selected={selectedDate}
@@ -469,7 +465,7 @@ function WorkshopBookingModal({
 
                   {selectedDate ? (
                     <div ref={timeRef} className="scroll-mt-4">
-                      <Step n={3} title="Επιλέξτε ώρα">
+                      <Step n={3} title={bui.stepTime}>
                         <div className="flex flex-wrap gap-2">
                           {daySlots.map((s) => (
                             <button
@@ -487,7 +483,7 @@ function WorkshopBookingModal({
                               <span
                                 className={`ml-2 text-[12px] ${selectedSlotId === s.id ? 'text-white/80' : 'text-muted'}`}
                               >
-                                {s.remaining} θέσεις
+                                {s.remaining} {bui.seatsLabel}
                               </span>
                             </button>
                           ))}
@@ -498,14 +494,14 @@ function WorkshopBookingModal({
 
                   {selectedSlotId ? (
                     <div ref={peopleRef} className="scroll-mt-4">
-                      <Step n={4} title="Άτομα">
+                      <Step n={4} title={bui.stepPeople}>
                         <div className="flex flex-col gap-3">
                           {ageTiers.map((t) => (
                             <div key={t.key} className="flex items-center justify-between gap-3">
                               <div className="flex flex-col">
                                 <span className="text-[15px] text-foreground">{t.label}</span>
                                 <span className="text-[13px] text-muted">
-                                  {t.price === 0 ? (t.note ?? 'Δωρεάν') : money(t.price, currency)}
+                                  {t.price === 0 ? (t.note ?? bui.free) : money(t.price, currency, bui.priceLocale)}
                                 </span>
                               </div>
                               <Stepper
@@ -513,11 +509,13 @@ function WorkshopBookingModal({
                                 onDec={() => setCount(t.key, (counts[t.key] ?? 0) - 1)}
                                 onInc={() => setCount(t.key, (counts[t.key] ?? 0) + 1)}
                                 canInc={seats < remaining}
+                                decLabel={bui.decrease}
+                                incLabel={bui.increase}
                               />
                             </div>
                           ))}
                           <p className="text-[12.5px] text-muted">
-                            Διαθέσιμες θέσεις: {Math.max(0, remaining - seats)} από {remaining}
+                            {bui.seatsAvailable(Math.max(0, remaining - seats), remaining)}
                           </p>
                         </div>
                       </Step>
@@ -526,11 +524,11 @@ function WorkshopBookingModal({
 
                   {seats >= 1 ? (
                     <div ref={contactRef} className="scroll-mt-4">
-                      <Step n={5} title="Στοιχεία επικοινωνίας">
+                      <Step n={5} title={bui.stepContact}>
                         <div className="flex flex-col gap-3">
-                          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ονοματεπώνυμο" aria-label="Ονοματεπώνυμο" className={fieldCls} />
-                          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" aria-label="Email" className={fieldCls} />
-                          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Τηλέφωνο (προαιρετικό)" aria-label="Τηλέφωνο" className={fieldCls} />
+                          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={bui.fullName} aria-label={bui.fullName} className={fieldCls} />
+                          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={bui.email} aria-label={bui.email} className={fieldCls} />
+                          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={bui.phoneOptional} aria-label={bui.phone} className={fieldCls} />
                         </div>
                       </Step>
                     </div>
@@ -546,12 +544,12 @@ function WorkshopBookingModal({
             {!result && !loading && slots.filter((s) => s.remaining > 0).length > 0 ? (
               <div className="flex items-center justify-between gap-4 border-t border-border px-5 py-4">
                 <div className="flex flex-col">
-                  <span className="text-[12px] text-muted">Σύνολο</span>
+                  <span className="text-[12px] text-muted">{bui.totalLabel}</span>
                   <span className="text-[20px] font-bold text-accent">
-                    {money(total, currency)}
+                    {money(total, currency, bui.priceLocale)}
                     {seats > 0 ? (
                       <span className="ml-1.5 text-[13px] font-normal text-muted">
-                        ({seats} {seats === 1 ? 'άτομο' : 'άτομα'})
+                        ({seats} {seats === 1 ? bui.person : bui.people})
                       </span>
                     ) : null}
                   </span>
@@ -565,12 +563,12 @@ function WorkshopBookingModal({
                   {submitting ? (
                     <>
                       <Loader2 className="size-5 animate-spin" aria-hidden="true" />
-                      Επεξεργασία…
+                      {bui.processing}
                     </>
                   ) : total > 0 ? (
-                    'Πληρωμή & Κράτηση'
+                    bui.payAndBook
                   ) : (
-                    'Ολοκλήρωση κράτησης'
+                    bui.completeBooking
                   )}
                 </button>
               </div>
@@ -603,19 +601,23 @@ function Stepper({
   onDec,
   onInc,
   canInc,
+  decLabel,
+  incLabel,
 }: {
   value: number
   onDec: () => void
   onInc: () => void
   canInc: boolean
+  decLabel: string
+  incLabel: string
 }) {
   return (
     <div className="flex items-center rounded-[8px] border border-border">
-      <button type="button" onClick={onDec} disabled={value <= 0} aria-label="Μείωση" className="flex size-9 items-center justify-center text-foreground transition-colors hover:text-accent disabled:opacity-30">
+      <button type="button" onClick={onDec} disabled={value <= 0} aria-label={decLabel} className="flex size-9 items-center justify-center text-foreground transition-colors hover:text-accent disabled:opacity-30">
         <Minus className="size-4" />
       </button>
       <span className="w-9 text-center text-[15px] font-semibold text-foreground">{value}</span>
-      <button type="button" onClick={onInc} disabled={!canInc} aria-label="Αύξηση" className="flex size-9 items-center justify-center text-foreground transition-colors hover:text-accent disabled:opacity-30">
+      <button type="button" onClick={onInc} disabled={!canInc} aria-label={incLabel} className="flex size-9 items-center justify-center text-foreground transition-colors hover:text-accent disabled:opacity-30">
         <Plus className="size-4" />
       </button>
     </div>
@@ -631,10 +633,13 @@ function Confirmation({
   currency: string
   onClose: () => void
 }) {
+  const locale = useLocale()
+  const bui = getBookingUi(locale)
+  const eui = getErgastiriaUi(locale)
   const people = [
-    booking.adults ? `${booking.adults} ενήλικες` : '',
-    booking.children ? `${booking.children} παιδιά` : '',
-    booking.infants ? `${booking.infants} βρέφη` : '',
+    booking.adults ? bui.adults(booking.adults) : '',
+    booking.children ? bui.children(booking.children) : '',
+    booking.infants ? bui.infants(booking.infants) : '',
   ]
     .filter(Boolean)
     .join(', ')
@@ -644,25 +649,23 @@ function Confirmation({
       <span className="flex size-14 items-center justify-center rounded-full bg-success-soft text-success">
         <Check className="size-7" strokeWidth={2.5} aria-hidden="true" />
       </span>
-      <h3 className="font-display text-[24px] font-bold text-foreground">
-        Η κράτησή σας επιβεβαιώθηκε! 🐝
-      </h3>
+      <h3 className="font-display text-[24px] font-bold text-foreground">{bui.bookingConfirmed}</h3>
       <p className="text-[14px] text-muted">
-        Κωδικός κράτησης: <span className="font-semibold text-foreground">{booking.reference}</span>
+        {bui.bookingRef} <span className="font-semibold text-foreground">{booking.reference}</span>
       </p>
 
       <dl className="mt-1 w-full divide-y divide-border rounded-[14px] bg-offwhite px-4 text-left text-[14px]">
-        <Row label="Εργαστήρι" value={booking.workshop_title ?? ''} />
-        {booking.combo_label ? <Row label="Πρόγραμμα" value={booking.combo_label} /> : null}
-        <Row label="Ημερομηνία" value={greekDate(booking.date)} />
-        <Row label="Ώρα" value={booking.start_time ?? ''} />
-        {people ? <Row label="Άτομα" value={people} /> : null}
-        <Row label="Σύνολο" value={money(booking.total_amount, currency)} />
+        <Row label={eui.confWorkshop} value={booking.workshop_title ?? ''} />
+        {booking.combo_label ? <Row label={eui.confProgram} value={booking.combo_label} /> : null}
+        <Row label={bui.fDate} value={bui.formatDate(booking.date ?? '')} />
+        <Row label={bui.fTime} value={booking.start_time ?? ''} />
+        {people ? <Row label={bui.fPeople} value={people} /> : null}
+        <Row label={bui.fTotal} value={money(booking.total_amount, currency, bui.priceLocale)} />
       </dl>
 
       <p className="flex items-center gap-2 text-[13px] text-muted">
         <Mail className="size-4 shrink-0 text-accent" aria-hidden="true" />
-        Στείλαμε email επιβεβαίωσης στο {booking.email}.
+        {bui.emailSentTo(booking.email)}
       </p>
 
       <button
@@ -670,7 +673,7 @@ function Confirmation({
         onClick={onClose}
         className="mt-1 rounded-[4px] bg-accent px-6 py-[13px] text-[15px] font-semibold text-white transition-colors hover:bg-foreground"
       >
-        Κλείσιμο
+        {bui.close}
       </button>
     </div>
   )

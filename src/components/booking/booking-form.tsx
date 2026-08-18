@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useLocale } from 'next-intl'
 import { Calendar, Info } from 'lucide-react'
+import { getBookingUi } from './booking-ui'
 
 // Two skins: 'accent' = glass fields on the gold band (the CTA sections);
 // 'light' = dark-on-white fields (inside a white modal / card).
@@ -60,6 +62,7 @@ export function BookingForm({
   variant?: 'accent' | 'light'
 }) {
   const s = STYLES[variant]
+  const ui = getBookingUi(useLocale())
   const [sent, setSent] = useState(false)
   const [minDate, setMinDate] = useState('')
   const [maxDate, setMaxDate] = useState('')
@@ -89,12 +92,7 @@ export function BookingForm({
   }
 
   if (sent) {
-    return (
-      <p className={s.sent}>
-        Λάβαμε το αίτημά σας για την «{activityName}»! Πρόκειται για αίτημα κράτησης — θα
-        επικοινωνήσουμε σύντομα μαζί σας για την επιβεβαίωση. 🐝
-      </p>
-    )
+    return <p className={s.sent}>{ui.sentMessage(activityName)}</p>
   }
 
   return (
@@ -111,45 +109,45 @@ export function BookingForm({
         type="text"
         name="name"
         required
-        placeholder="Ονοματεπώνυμο"
-        aria-label="Ονοματεπώνυμο"
+        placeholder={ui.fullName}
+        aria-label={ui.fullName}
         className={s.input}
       />
       <input
         type="email"
         name="email"
         required
-        placeholder="Email"
-        aria-label="Email"
+        placeholder={ui.email}
+        aria-label={ui.email}
         className={s.input}
       />
       <input
         type="tel"
         name="phone"
         required
-        placeholder="Τηλέφωνο"
-        aria-label="Τηλέφωνο"
+        placeholder={ui.phone}
+        aria-label={ui.phone}
         className={s.input}
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className={s.label}>
-          Προτιμώμενη ημέρα
+          {ui.preferredDay}
           <input
             type="date"
             name="date"
             required
             min={minDate}
             max={maxDate || undefined}
-            aria-label="Προτιμώμενη ημέρα"
+            aria-label={ui.preferredDay}
             className={`${s.input}${s.dateExtra}`}
           />
         </label>
         <label className={s.label}>
-          Ώρα έναρξης
-          <select name="time" required defaultValue="" aria-label="Ώρα έναρξης" className={s.input}>
+          {ui.startTime}
+          <select name="time" required defaultValue="" aria-label={ui.startTime} className={s.input}>
             <option value="" disabled>
-              Επιλέξτε ώρα
+              {ui.chooseTime}
             </option>
             {slots.map((t) => (
               <option key={t} value={t} className="text-foreground">
@@ -169,12 +167,11 @@ export function BookingForm({
 
       <p className={s.note}>
         <Info className={`mt-0.5 size-4 shrink-0 ${s.noteIcon}`} aria-hidden="true" />
-        Το παρόν αποτελεί αίτημα κράτησης. Θα επικοινωνήσουμε μαζί σας για την επιβεβαίωση της
-        διαθεσιμότητας.
+        {ui.requestNote}
       </p>
 
       <button type="submit" className={s.button}>
-        Αποστολή αιτήματος
+        {ui.sendRequest}
       </button>
     </form>
   )

@@ -121,7 +121,7 @@ const ACTIVITIES_PAGE_EL: ActivitiesContent = {
         image: '/images/adopt/hero.webp',
         title: 'Πρόγραμμα Adopt a Hive',
         text: 'Το καινοτόμο και βραβευμένο πρόγραμμα ΕΚΕ που μετατρέπει την περιβαλλοντική προσφορά σε μια ουσιαστική συλλογική εμπειρία team building.',
-        href: '/adopt-a-hive',
+        href: '/yiotheto-mia-kypseli',
         cta: 'Μάθετε περισσότερα',
       },
     ],

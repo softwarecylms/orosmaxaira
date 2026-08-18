@@ -1,17 +1,21 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
+import { getLocale } from 'next-intl/server'
 import { CalendarDays, Phone, Mail } from 'lucide-react'
-import { BLOG_POSTS } from '@/components/blog/blog-data'
-import { BLOG_CATEGORIES, POST_CATEGORIES } from '@/components/blog/blog-categories'
+import { Link } from '@/i18n/navigation'
+import { getBlogPosts } from '@/components/blog/blog-data'
+import { getBlogCategories, POST_CATEGORIES } from '@/components/blog/blog-categories'
+import { getBlogUi, formatBlogDate } from '@/components/blog/blog-ui'
 import { Reveal } from '@/components/motion/reveal'
 import { ArticleFeaturedImage } from '@/components/blog/article-featured-image'
 import { FacebookSolid, XSolid, LinkedinSolid } from '@/components/layout/social-icons'
-import { absoluteUrl } from '@/lib/seo'
+import { absoluteUrl, hreflangAlternates } from '@/lib/seo'
 
 export function generateStaticParams() {
-  return BLOG_POSTS.map((p) => ({ slug: p.slug }))
+  // Slugs are locale-invariant (the URL is shared across el/en), so the Greek
+  // source list covers every locale.
+  return getBlogPosts('el').map((p) => ({ slug: p.slug }))
 }
 
 export async function generateMetadata({
@@ -20,12 +24,14 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const post = BLOG_POSTS.find((p) => p.slug === slug)
-  if (!post) return { title: 'Άρθρο' }
+  const locale = await getLocale()
+  const post = getBlogPosts(locale).find((p) => p.slug === slug)
+  const alternates = hreflangAlternates(locale, `/blog/${slug}`)
+  if (!post) return { title: getBlogUi(locale).articleFallback, alternates }
   return {
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: `/blog/${post.slug}` },
+    alternates,
     openGraph: { title: post.title, description: post.excerpt, images: post.image ? [post.image] : undefined },
   }
 }
@@ -42,12 +48,15 @@ const BODY =
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const post = BLOG_POSTS.find((p) => p.slug === slug)
+  const locale = await getLocale()
+  const ui = getBlogUi(locale)
+  const posts = getBlogPosts(locale)
+  const post = posts.find((p) => p.slug === slug)
   if (!post) notFound()
 
-  const related = BLOG_POSTS.filter((p) => p.slug !== slug).slice(0, 3)
+  const related = posts.filter((p) => p.slug !== slug).slice(0, 3)
   const categorySlug = POST_CATEGORIES[post.slug]?.[0]
-  const categoryName = BLOG_CATEGORIES.find((c) => c.slug === categorySlug)?.name
+  const categoryName = getBlogCategories(locale).find((c) => c.slug === categorySlug)?.name
   const url = absoluteUrl(`/blog/${post.slug}`)
   const shares = [
     { icon: FacebookSolid, label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}` },
@@ -73,11 +82,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-border pb-5 text-[14px] text-muted">
             <span className="flex items-center gap-2">
               <CalendarDays className="size-4 text-accent" aria-hidden="true" />
-              {post.dateText}
+              {formatBlogDate(post.date, locale, post.dateText)}
             </span>
             <span className="ml-auto flex items-center gap-2">
               {/* Label hidden on mobile — icons only. */}
-              <span className="hidden text-[13px] uppercase tracking-wide sm:inline">Κοινοποίηση</span>
+              <span className="hidden text-[13px] uppercase tracking-wide sm:inline">{ui.share}</span>
               {shares.map((s) => {
                 const Icon = s.icon
                 return (
@@ -86,7 +95,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Κοινοποίηση στο ${s.label}`}
+                    aria-label={ui.shareOn(s.label)}
                     className="flex size-8 items-center justify-center rounded-full bg-offwhite text-black ring-1 ring-border transition hover:bg-accent hover:text-white"
                   >
                     <Icon className="size-[18px]" />
@@ -103,7 +112,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         {/* ── Sidebar (≈30%) ── */}
         <aside className="flex flex-col gap-8 lg:sticky lg:top-[calc(100vh-880px)] lg:self-start">
           <div className="rounded-[16px] bg-offwhite p-6 ring-1 ring-border/60">
-            <h2 className="mb-4 font-display text-[18px] font-bold text-foreground">Σχετικά Άρθρα</h2>
+            <h2 className="mb-4 font-display text-[18px] font-bold text-foreground">{ui.relatedTitle}</h2>
             <ul className="flex flex-col divide-y divide-border">
               {related.map((r) => (
                 <li key={r.slug} className="py-3 first:pt-0 last:pb-0">
@@ -117,7 +126,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                       <span className="line-clamp-2 text-[14px] font-medium leading-snug text-foreground transition-colors group-hover:text-accent">
                         {r.title}
                       </span>
-                      <span className="text-[12px] text-muted">{r.dateText}</span>
+                      <span className="text-[12px] text-muted">{formatBlogDate(r.date, locale, r.dateText)}</span>
                     </span>
                   </Link>
                 </li>
@@ -127,9 +136,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
           <div className="overflow-hidden rounded-[16px] bg-accent text-white">
             <div className="p-6">
-              <h2 className="font-display text-[18px] font-bold">Επικοινωνήστε μαζί μας</h2>
+              <h2 className="font-display text-[18px] font-bold">{ui.contactTitle}</h2>
               <p className="mt-2 text-[14px] font-normal leading-[1.6] text-white/75">
-                Έχετε απορίες για τα προϊόντα ή τις δραστηριότητές μας; Η ομάδα μας είναι εδώ για εσάς.
+                {ui.contactBody}
               </p>
               <div className="mt-4 flex flex-col gap-3 text-[14px] font-semibold text-white">
                 <a href="tel:+35725622305" className="flex items-center gap-3 transition-colors hover:text-white">
@@ -145,7 +154,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 href="/epikoinonia"
                 className="mt-5 inline-flex items-center justify-center rounded-[4px] bg-white px-5 py-2.5 text-[14px] font-medium text-foreground transition-colors hover:bg-foreground hover:text-white"
               >
-                Επικοινωνία
+                {ui.contactCta}
               </Link>
             </div>
             <div className="relative h-[200px] w-full">
@@ -153,7 +162,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/blog/contact.png"
-                alt="Μέλισσα πάνω σε κίτρινο λουλούδι"
+                alt={ui.contactImageAlt}
                 className="absolute inset-0 size-full object-contain object-left-bottom"
               />
             </div>

@@ -1,16 +1,18 @@
 'use client'
 
 import { useMemo, useState, useTransition } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useLocale } from 'next-intl'
+import { Link, useRouter } from '@/i18n/navigation'
 import { Check, Loader2 } from 'lucide-react'
 import type { HttpTypes } from '@medusajs/types'
 import { Button } from '@/components/ui/button'
 import { addToCart } from '@/lib/medusa/actions'
+import { getCartChrome } from './cart-ui'
 import { cn } from '@/lib/utils'
 
 export function AddToCart({ product }: { product: HttpTypes.StoreProduct }) {
   const router = useRouter()
+  const t = getCartChrome(useLocale())
   const options = product.options ?? []
   const variants = product.variants ?? []
 
@@ -45,7 +47,7 @@ export function AddToCart({ product }: { product: HttpTypes.StoreProduct }) {
         setAdded(true)
         router.refresh()
       } catch (e) {
-        setError(e instanceof Error ? e.message : 'Could not add to cart.')
+        setError(e instanceof Error ? e.message : t.addError)
       }
     })
   }
@@ -88,22 +90,22 @@ export function AddToCart({ product }: { product: HttpTypes.StoreProduct }) {
         >
           {pending ? (
             <>
-              <Loader2 className="size-4 animate-spin" /> Adding…
+              <Loader2 className="size-4 animate-spin" /> {t.adding}
             </>
           ) : added ? (
             <>
-              <Check className="size-4" /> Added to cart
+              <Check className="size-4" /> {t.added}
             </>
           ) : !allChosen ? (
-            'Select options'
+            t.selectOptions
           ) : (
-            'Add to cart'
+            t.addToCart
           )}
         </Button>
 
         {added ? (
           <Link href="/cart" className="text-sm font-medium underline">
-            View cart →
+            {t.viewCartArrow}
           </Link>
         ) : null}
         {error ? <p className="text-sm text-red-600">{error}</p> : null}

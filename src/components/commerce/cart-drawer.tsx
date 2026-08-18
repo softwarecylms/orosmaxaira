@@ -2,10 +2,13 @@
 
 import { useEffect, useRef } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import { useLocale } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Minus, Plus, X, ArrowRight, ShoppingBag, Check, Truck } from 'lucide-react'
 import { useCart, formatCents } from './cart-store'
+import { localizedProductTitle, localizedContainer } from '@/components/shop/product-i18n'
+import { getCartChrome } from './cart-ui'
 import { EASE, DURATION } from '@/lib/motion'
 
 const FREE_SHIPPING_THRESHOLD = 7000 // €70,00 in cents
@@ -19,6 +22,8 @@ export function CartDrawer() {
   const { items, subtotal, count, ready, setQty, removeItem, drawerOpen, closeDrawer, cancelAutoClose } =
     useCart()
   const reduce = useReducedMotion()
+  const locale = useLocale()
+  const t = getCartChrome(locale)
   const panelRef = useRef<HTMLElement>(null)
 
   // Close on Escape + lock body scroll while open.
@@ -70,7 +75,7 @@ export function CartDrawer() {
           {/* Backdrop */}
           <motion.button
             type="button"
-            aria-label="Κλείσιμο καλαθιού"
+            aria-label={t.closeCart}
             onClick={closeDrawer}
             className="absolute inset-0 bg-foreground/40"
             variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
@@ -82,7 +87,7 @@ export function CartDrawer() {
             ref={panelRef}
             role="dialog"
             aria-modal="true"
-            aria-label="Καλάθι αγορών"
+            aria-label={t.shoppingCart}
             data-testid="cart-drawer"
             className="absolute right-0 top-0 flex h-full w-[88vw] max-w-[360px] flex-col bg-white shadow-[0_0_60px_-15px_rgba(35,31,32,0.4)]"
             variants={{
@@ -94,13 +99,13 @@ export function CartDrawer() {
             {/* Header */}
             <div className="flex items-center justify-between border-b border-border px-5 py-4">
               <h2 className="flex items-center gap-2 text-[18px] font-semibold text-foreground">
-                Το καλάθι σας
+                {t.yourCart}
                 <span className="text-[15px] font-normal text-muted">({count})</span>
               </h2>
               <button
                 type="button"
                 onClick={closeDrawer}
-                aria-label="Κλείσιμο"
+                aria-label={t.close}
                 className="flex size-9 items-center justify-center rounded-full text-foreground transition-colors hover:bg-offwhite hover:text-accent"
               >
                 <X className="size-5" />
@@ -112,13 +117,13 @@ export function CartDrawer() {
             ) : items.length === 0 ? (
               <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
                 <ShoppingBag className="size-10 text-muted/40" strokeWidth={1.4} aria-hidden="true" />
-                <p className="text-[16px] text-muted">Το καλάθι σας είναι άδειο.</p>
+                <p className="text-[16px] text-muted">{t.empty}</p>
                 <button
                   type="button"
                   onClick={closeDrawer}
                   className="inline-flex items-center gap-2 rounded-[4px] bg-accent px-5 py-3 text-[15px] text-white transition-colors hover:bg-foreground"
                 >
-                  Συνεχίστε τις αγορές
+                  {t.continueShopping}
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </button>
               </div>
@@ -142,11 +147,13 @@ export function CartDrawer() {
                           onClick={closeDrawer}
                           className="line-clamp-2 text-[14px] font-medium leading-[19px] text-foreground transition-colors hover:text-accent"
                         >
-                          {item.title}
+                          {localizedProductTitle(item.handle, item.title, locale)}
                         </Link>
                         {item.size ? (
                           <p className="text-[12px] text-muted">
-                            {item.container ? `${item.container} · ` : ''}
+                            {localizedContainer(item.container, locale)
+                              ? `${localizedContainer(item.container, locale)} · `
+                              : ''}
                             {item.size}
                           </p>
                         ) : null}
@@ -156,7 +163,7 @@ export function CartDrawer() {
                             <button
                               type="button"
                               onClick={() => setQty(item.key, item.quantity - 1)}
-                              aria-label="Μείωση ποσότητας"
+                              aria-label={t.decreaseQty}
                               className="flex size-7 items-center justify-center text-foreground transition-colors hover:text-accent"
                             >
                               <Minus className="size-3" strokeWidth={2} />
@@ -168,13 +175,13 @@ export function CartDrawer() {
                               onChange={(e) =>
                                 setQty(item.key, Math.max(1, Math.floor(Number(e.target.value) || 1)))
                               }
-                              aria-label="Ποσότητα"
+                              aria-label={t.quantity}
                               className="w-7 bg-transparent text-center text-[14px] font-semibold text-foreground outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                             />
                             <button
                               type="button"
                               onClick={() => setQty(item.key, item.quantity + 1)}
-                              aria-label="Αύξηση ποσότητας"
+                              aria-label={t.increaseQty}
                               className="flex size-7 items-center justify-center text-foreground transition-colors hover:text-accent"
                             >
                               <Plus className="size-3" strokeWidth={2} />
@@ -189,7 +196,7 @@ export function CartDrawer() {
                       <button
                         type="button"
                         onClick={() => removeItem(item.key)}
-                        aria-label={`Αφαίρεση ${item.title}`}
+                        aria-label={t.remove(localizedProductTitle(item.handle, item.title, locale))}
                         className="-mr-1 flex size-7 shrink-0 items-center justify-center self-start text-muted transition-colors hover:text-accent"
                       >
                         <X className="size-4" aria-hidden="true" />
@@ -206,14 +213,15 @@ export function CartDrawer() {
                       <p className="flex items-center gap-1.5 text-[12px] leading-[16px] text-foreground">
                         <Truck className="size-4 shrink-0 text-accent" strokeWidth={2} aria-hidden="true" />
                         <span>
-                          Προσθέστε <span className="font-semibold">{formatCents(remaining)}</span> ακόμη
-                          για δωρεάν μεταφορικά στην Κύπρο.
+                          {t.freeShippingRemaining.pre}
+                          <span className="font-semibold">{formatCents(remaining)}</span>
+                          {t.freeShippingRemaining.post}
                         </span>
                       </p>
                     ) : (
                       <p className="flex items-center gap-1.5 text-[12px] font-medium leading-[16px] text-success">
                         <Check className="size-4 shrink-0" strokeWidth={2.5} aria-hidden="true" />
-                        Κερδίσατε δωρεάν μεταφορικά!
+                        {t.freeShippingEarned}
                       </p>
                     )}
                     <div
@@ -221,7 +229,7 @@ export function CartDrawer() {
                       aria-valuemin={0}
                       aria-valuemax={100}
                       aria-valuenow={progressPct}
-                      aria-label="Πρόοδος για δωρεάν μεταφορικά"
+                      aria-label={t.freeShippingProgress}
                       className="h-2 w-full overflow-hidden rounded-full bg-cream"
                     >
                       <div
@@ -233,16 +241,16 @@ export function CartDrawer() {
                     </div>
                   </div>
                   <div className="flex items-center justify-between text-[16px] font-semibold text-foreground">
-                    <span>Υποσύνολο</span>
+                    <span>{t.subtotal}</span>
                     <span>{formatCents(subtotal)}</span>
                   </div>
-                  <p className="text-[12px] text-muted">Τα μεταφορικά υπολογίζονται στο ταμείο.</p>
+                  <p className="text-[12px] text-muted">{t.shippingAtCheckout}</p>
                   <Link
                     href="/checkout"
                     onClick={closeDrawer}
                     className="flex w-full items-center justify-center gap-2 rounded-[4px] bg-accent p-[14px] text-[16px] text-white transition-colors hover:bg-foreground"
                   >
-                    Ταμείο
+                    {t.checkout}
                     <ArrowRight className="size-4" aria-hidden="true" />
                   </Link>
                   <Link
@@ -250,7 +258,7 @@ export function CartDrawer() {
                     onClick={closeDrawer}
                     className="text-center text-[14px] text-muted underline-offset-2 transition-colors hover:text-accent hover:underline"
                   >
-                    Προβολή καλαθιού
+                    {t.viewCart}
                   </Link>
                 </div>
               </>

@@ -1,22 +1,26 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import Image from 'next/image'
+import { getLocale } from 'next-intl/server'
 import { Package } from 'lucide-react'
+import { Link } from '@/i18n/navigation'
 import { getCustomerOrders } from '@/lib/medusa/customer'
 import { formatPrice } from '@/lib/medusa/prices'
+import { getAccountUi, accountIntlLocale, ORDER_STATUS_CLASS } from '@/components/account/account-ui'
+import { hreflangAlternates } from '@/lib/seo'
 
-export const metadata: Metadata = { title: 'Οι παραγγελίες μου' }
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
+  return {
+    title: getAccountUi(locale).ordersTitle,
+    alternates: hreflangAlternates(locale, '/account/orders'),
+  }
+}
 export const dynamic = 'force-dynamic'
 
-const ORDER_STATUS: Record<string, { label: string; className: string }> = {
-  pending: { label: 'Σε εκκρεμότητα', className: 'bg-accent/10 text-gold-strong' },
-  completed: { label: 'Ολοκληρωμένη', className: 'bg-green-50 text-green-700' },
-  archived: { label: 'Αρχειοθετημένη', className: 'bg-offwhite text-muted' },
-  canceled: { label: 'Ακυρωμένη', className: 'bg-red-50 text-red-700' },
-  requires_action: { label: 'Απαιτεί ενέργεια', className: 'bg-red-50 text-red-700' },
-}
-
 export default async function AccountOrdersPage() {
+  const locale = await getLocale()
+  const t = getAccountUi(locale)
+  const intlLocale = accountIntlLocale(locale)
   const orders = await getCustomerOrders()
 
   if (!orders.length) {
@@ -26,16 +30,16 @@ export default async function AccountOrdersPage() {
           <Package className="size-6" aria-hidden="true" />
         </span>
         <div className="flex flex-col gap-1">
-          <h2 className="text-[18px] font-semibold text-foreground">Καμία παραγγελία ακόμη</h2>
+          <h2 className="text-[18px] font-semibold text-foreground">{t.noOrdersTitle}</h2>
           <p className="text-[15px] text-muted">
-            Μόλις κάνετε την πρώτη σας παραγγελία, θα εμφανιστεί εδώ.
+            {t.noOrdersHint}
           </p>
         </div>
         <Link
           href="/proionta"
           className="mt-1 inline-flex items-center justify-center rounded-[4px] bg-accent px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-foreground"
         >
-          Στο κατάστημα
+          {t.toShop}
         </Link>
       </div>
     )
@@ -44,10 +48,8 @@ export default async function AccountOrdersPage() {
   return (
     <div className="flex flex-col gap-4">
       {orders.map((order) => {
-        const status = ORDER_STATUS[order.status] ?? {
-          label: order.status,
-          className: 'bg-offwhite text-muted',
-        }
+        const statusLabel = t.orderStatus[order.status] ?? order.status
+        const statusClass = ORDER_STATUS_CLASS[order.status] ?? 'bg-offwhite text-muted'
         return (
           <article
             key={order.id}
@@ -57,10 +59,10 @@ export default async function AccountOrdersPage() {
             <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
               <div className="min-w-0">
                 <h2 className="text-[16px] font-semibold text-foreground">
-                  Παραγγελία #{order.display_id}
+                  {t.orderNumber(order.display_id)}
                 </h2>
                 <p className="text-[14px] text-muted">
-                  {new Date(order.created_at).toLocaleDateString('el-GR', {
+                  {new Date(order.created_at).toLocaleDateString(intlLocale, {
                     day: 'numeric',
                     month: 'long',
                     year: 'numeric',
@@ -69,12 +71,12 @@ export default async function AccountOrdersPage() {
               </div>
               <div className="flex shrink-0 items-center gap-3">
                 <span
-                  className={`rounded-full px-2.5 py-1 text-[12px] font-medium ${status.className}`}
+                  className={`rounded-full px-2.5 py-1 text-[12px] font-medium ${statusClass}`}
                 >
-                  {status.label}
+                  {statusLabel}
                 </span>
                 <span className="whitespace-nowrap text-[16px] font-semibold text-foreground">
-                  {formatPrice(order.total ?? 0, order.currency_code ?? 'eur', 'el-GR')}
+                  {formatPrice(order.total ?? 0, order.currency_code ?? 'eur', intlLocale)}
                 </span>
               </div>
             </div>

@@ -1,10 +1,13 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import Link from 'next/link'
+import { useLocale } from 'next-intl'
 import { Check, Info, Loader2 } from 'lucide-react'
+import { Link } from '@/i18n/navigation'
 import { workshopForMonth } from '@/lib/data/workshops'
-import { WORKSHOP_EXPERIENCES, type WorkshopExperienceKey } from '@/lib/data/workshop-enquiry'
+import { getWorkshopEnquiry, type WorkshopExperienceKey } from '@/lib/data/workshop-enquiry'
+import { getBookingUi } from '@/components/booking/booking-ui'
+import { getErgastiriaUi } from './ergastiria-ui'
 
 // Glass fields on the gold band — same treatment as the other on-brand forms.
 const inputCls =
@@ -27,6 +30,10 @@ export function WorkshopEnquiryForm({
   endHour?: number
   stepMinutes?: number
 }) {
+  const locale = useLocale()
+  const bui = getBookingUi(locale)
+  const eui = getErgastiriaUi(locale)
+  const experiences = getWorkshopEnquiry(locale).experiences
   const [experience, setExperience] = useState<WorkshopExperienceKey | ''>('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -60,18 +67,18 @@ export function WorkshopEnquiryForm({
   const periodWorkshop = useMemo(() => {
     if (!date) return null
     const month = Number(date.split('-')[1])
-    return month ? workshopForMonth(month) : null
-  }, [date])
+    return month ? workshopForMonth(month, locale) : null
+  }, [date, locale])
 
   // Validate on submit (rather than disabling the button) so keyboard / screen
   // reader users get a concrete reason instead of a dead, disabled control.
   const validate = (): string | null => {
-    if (!experience) return 'Επιλέξτε τον συνδυασμό εμπειρίας.'
-    if (name.trim().length < 2) return 'Συμπληρώστε το ονοματεπώνυμό σας.'
-    if (!emailOk(email)) return 'Συμπληρώστε ένα έγκυρο email.'
-    if (phone.trim().length < 5) return 'Συμπληρώστε έγκυρο τηλέφωνο επικοινωνίας.'
-    if (!date) return 'Επιλέξτε προτιμώμενη ημέρα.'
-    if (!time) return 'Επιλέξτε ώρα έναρξης.'
+    if (!experience) return eui.vExperience
+    if (name.trim().length < 2) return eui.vName
+    if (!emailOk(email)) return eui.vEmail
+    if (phone.trim().length < 5) return eui.vPhone
+    if (!date) return eui.vDay
+    if (!time) return eui.vTime
     return null
   }
 
@@ -102,11 +109,11 @@ export function WorkshopEnquiryForm({
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(data?.error ?? 'Κάτι πήγε στραβά. Δοκιμάστε ξανά.')
+        throw new Error(data?.error ?? eui.genericError)
       }
       setSent(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Κάτι πήγε στραβά. Δοκιμάστε ξανά.')
+      setError(err instanceof Error ? err.message : eui.genericError)
     } finally {
       setSubmitting(false)
     }
@@ -118,10 +125,7 @@ export function WorkshopEnquiryForm({
         <span className="flex size-12 items-center justify-center rounded-full bg-white/25">
           <Check className="size-6" strokeWidth={2.5} aria-hidden="true" />
         </span>
-        <p className="text-[16px] leading-[24px]">
-          Λάβαμε το αίτημά σας! Πρόκειται για αίτημα κράτησης — θα επικοινωνήσουμε σύντομα μαζί σας
-          για την επιβεβαίωση της διαθεσιμότητας. 🐝
-        </p>
+        <p className="text-[16px] leading-[24px]">{eui.enquirySent}</p>
       </div>
     )
   }
@@ -131,11 +135,11 @@ export function WorkshopEnquiryForm({
       {/* Experience selector (required — the combination rule) */}
       <fieldset className="flex flex-col gap-2" aria-required="true">
         <legend className="mb-1.5 text-[13px] font-semibold text-white">
-          Επιλέξτε συνδυασμό <span aria-hidden="true">*</span>
-          <span className="sr-only">(υποχρεωτικό)</span>
+          {eui.chooseCombo} <span aria-hidden="true">*</span>
+          <span className="sr-only">{eui.required}</span>
         </legend>
         <div className="flex flex-col gap-2">
-          {WORKSHOP_EXPERIENCES.map((opt) => {
+          {experiences.map((opt) => {
             const active = experience === opt.key
             return (
               <label
@@ -166,8 +170,8 @@ export function WorkshopEnquiryForm({
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
-        placeholder="Ονοματεπώνυμο"
-        aria-label="Ονοματεπώνυμο"
+        placeholder={bui.fullName}
+        aria-label={bui.fullName}
         className={inputCls}
       />
       <input
@@ -175,8 +179,8 @@ export function WorkshopEnquiryForm({
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
-        placeholder="Email"
-        aria-label="Email"
+        placeholder={bui.email}
+        aria-label={bui.email}
         className={inputCls}
       />
       <input
@@ -184,35 +188,35 @@ export function WorkshopEnquiryForm({
         value={phone}
         onChange={(e) => setPhone(e.target.value)}
         required
-        placeholder="Τηλέφωνο"
-        aria-label="Τηλέφωνο"
+        placeholder={bui.phone}
+        aria-label={bui.phone}
         className={inputCls}
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="flex flex-col gap-1.5 text-[13px] font-medium text-white/90">
-          Προτιμώμενη ημέρα
+          {bui.preferredDay}
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
             min={minDate}
-            aria-label="Προτιμώμενη ημέρα"
+            aria-label={bui.preferredDay}
             className={`${inputCls} [color-scheme:dark]`}
           />
         </label>
         <label className="flex flex-col gap-1.5 text-[13px] font-medium text-white/90">
-          Ώρα έναρξης
+          {bui.startTime}
           <select
             value={time}
             onChange={(e) => setTime(e.target.value)}
             required
-            aria-label="Ώρα έναρξης"
+            aria-label={bui.startTime}
             className={inputCls}
           >
             <option value="" disabled>
-              Επιλέξτε ώρα
+              {bui.chooseTime}
             </option>
             {slots.map((t) => (
               <option key={t} value={t} className="text-foreground">
@@ -229,7 +233,7 @@ export function WorkshopEnquiryForm({
           <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           {periodWorkshop ? (
             <span>
-              Το εργαστήρι αυτής της περιόδου:{' '}
+              {eui.periodWorkshopPre}
               <Link
                 href={`/drastiriotites/ergastiria/${periodWorkshop.slug}`}
                 className="font-semibold underline underline-offset-2"
@@ -238,10 +242,7 @@ export function WorkshopEnquiryForm({
               </Link>
             </span>
           ) : (
-            <span>
-              Για την ημερομηνία που επιλέξατε δεν υπάρχει προγραμματισμένο εργαστήρι — στείλτε το
-              αίτημά σας και θα βρούμε μαζί την καλύτερη επιλογή.
-            </span>
+            <span>{eui.noScheduledWorkshop}</span>
           )}
         </div>
       ) : null}
@@ -259,8 +260,7 @@ export function WorkshopEnquiryForm({
 
       <p className="flex items-start gap-2 text-[13px] font-semibold leading-[1.5] text-white">
         <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-        Το παρόν αποτελεί αίτημα κράτησης. Θα επικοινωνήσουμε μαζί σας για την επιβεβαίωση της
-        διαθεσιμότητας.
+        {bui.requestNote}
       </p>
 
       {error ? (
@@ -277,10 +277,10 @@ export function WorkshopEnquiryForm({
         {submitting ? (
           <>
             <Loader2 className="size-5 animate-spin" aria-hidden="true" />
-            Αποστολή…
+            {eui.sending}
           </>
         ) : (
-          'Αποστολή αιτήματος'
+          bui.sendRequest
         )}
       </button>
     </form>

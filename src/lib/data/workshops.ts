@@ -115,6 +115,71 @@ export const WORKSHOPS: Workshop[] = [
   },
 ]
 
+// --- Bilingual bundle -----------------------------------------------------
+// The Greek WORKSHOPS above are the source of truth (also used server-side + as
+// the mirror of `seed-workshops.ts`). EN overrides only the human-facing text
+// (title / excerpt / description / seasonLabel); slug, months, image, gallery,
+// published and bookingClosed are locale-invariant and reused verbatim.
+type WorkshopI18n = Pick<Workshop, 'title' | 'excerpt' | 'description' | 'seasonLabel'>
+
+const WORKSHOPS_EN_TEXT: Record<string, WorkshopI18n> = {
+  melissolampades: {
+    title: 'Beeswax Easter Candles',
+    excerpt:
+      'Just before Easter, make your own beeswax Easter candle from honeycomb sheets and take it home for free.',
+    seasonLabel: 'Easter',
+    description:
+      'Just before **Easter**, we welcome you and our little friends at our apiary for a creative and fun workshop dedicated to the bee and its wax!\n\nYoung and old alike will have the chance to learn about the bee and natural wax, while creating their very own Easter beeswax candle.\n\nUsing sheets of beeswax honeycomb, you will wrap the wick and build your own candle. Then, with a variety of Easter decorations, you will decorate it just as you like, creating a truly unique Easter candle.\n\nAt the end of the workshop, every participant takes home **for free** the Easter candle they created, ready for Easter!',
+  },
+  'fytefsi-sporon': {
+    title: 'Planting Seeds in Pots & Decorating',
+    excerpt:
+      'Plant your seeds in little pots, paint them and learn how we help the bees — take your pot home for free.',
+    seasonLabel: 'Summer',
+    description:
+      'We welcome you, your family and our little friends at our apiary for a **summer** workshop dedicated to the joy of planting, creativity and the protection of bees!\n\nYoung and old alike will have the chance to plant their own seeds in little pots and paint the outside, adding colour and giving their imagination free rein.\n\nThrough this creative activity, we will learn how planting plants and flowers can help the bees by offering them precious sources of food. At the same time, we will get to know better the importance of **pollination** and the decisive role of bees in nature and the environment.\n\nAt the end of the workshop, every participant takes home **for free** the little pot they planted and decorated, to care for it and watch it grow!',
+  },
+  'ergastiria-mageirikis': {
+    title: 'Cooking Workshop for Honey Truffles',
+    excerpt:
+      'Make homemade truffles with Oros Machaira honey and spreads, cook with products of the hive and taste what you create.',
+    seasonLabel: 'Autumn',
+    description:
+      'We welcome you at our apiary for a tasty and creative workshop, dedicated to **honey** and the products of the hive and their use in cooking!\n\nYoung and old alike will have the chance to make homemade **honey truffles** and **Oros Machaira spreads**, discovering new ways of using honey and the products of the hive through simple and delicious recipes.\n\nDuring the workshop, you will prepare your own creations, learning at the same time how honey and bee products can be creatively woven into our everyday diet and used in different sweet and savoury recipes.\n\nAnd of course, at the end of the workshop we will have the chance to taste together everything we made, rounding off an experience full of flavours, aromas and… honey!',
+  },
+  keraloifes: {
+    title: 'Making Natural Beeswax Salves',
+    excerpt:
+      'Make your own natural beeswax salve step by step and take it home for free.',
+    seasonLabel: 'Winter',
+    description:
+      'We welcome you at our apiary for a creative workshop dedicated to **beeswax** and making natural beeswax salves!\n\nYoung and old alike will have the chance to get to know beeswax better and discover how it can be used, combined with other natural ingredients, to make a salve.\n\nDuring the workshop, we will follow the preparation process together step by step and each participant will create their own **natural beeswax salve**, learning at the same time more about the ingredients we use and their role in the final product.\n\nAt the end of the workshop, every participant takes home **for free** the salve they created, as a special keepsake from their experience in the world of the bee!',
+  },
+  'peritiligma-fagitou': {
+    title: 'Beeswax Food Wraps',
+    excerpt:
+      'Make your own reusable beeswax food wrap — an eco-friendly choice for every day.',
+    seasonLabel: 'By appointment',
+    description:
+      'We welcome you, your family and our little friends at our apiary for a creative and **eco-friendly** workshop dedicated to beeswax and sustainable everyday living!\n\nYoung and old alike will have the chance to get to know natural beeswax better and learn how we can reduce the use of plastic film in the everyday storage and transport of our food.\n\nDuring the workshop, you will create your own **reusable food wrap** from beeswax, which can be used for the children’s school sandwiches, fruit and all sorts of food.\n\nThrough a pleasant and creative experience, we will discover together how a product of the bee can become a more eco-friendly choice in our daily lives, helping to reduce the use of plastic.\n\nAt the end of the workshop, every participant takes home **for free** the beeswax wrap they created, ready to use!',
+  },
+  'kerines-dimiourgies': {
+    title: 'Handmade Plaster Figures',
+    excerpt:
+      'Paint handmade plaster figures inspired by the bee and take your creation home for free.',
+    seasonLabel: 'By appointment',
+    description:
+      'We welcome you, your family and your friends at our apiary for a creative and fun workshop full of colour, imagination and… bees!\n\nYoung and old alike will have the chance to get to know the wonderful world of the bee better, painting handmade **plaster figures** in the shapes of bees, honeycombs and other designs inspired by life in the hive.\n\nWith colours and plenty of imagination, each participant will paint their own unique figure, in a pleasant and relaxing workshop that leaves room for creativity and fun.\n\nAt the end of the workshop, every participant takes home **for free** the plaster creation they painted, as a lovely keepsake from their experience in the world of the bees!',
+  },
+}
+
+const WORKSHOPS_EN: Workshop[] = WORKSHOPS.map((w) => ({ ...w, ...(WORKSHOPS_EN_TEXT[w.slug] ?? {}) }))
+
+/** All workshops (published + unpublished) for a locale. el = source of truth. */
+export function getWorkshops(locale: string): Workshop[] {
+  return locale === 'en' ? WORKSHOPS_EN : WORKSHOPS
+}
+
 const MONTHS_GR = [
   'Ιανουάριος', 'Φεβρουάριος', 'Μάρτιος', 'Απρίλιος', 'Μάιος', 'Ιούνιος',
   'Ιούλιος', 'Αύγουστος', 'Σεπτέμβριος', 'Οκτώβριος', 'Νοέμβριος', 'Δεκέμβριος',
@@ -123,44 +188,55 @@ const MONTHS_GR_SHORT = [
   'Ιαν', 'Φεβ', 'Μάρ', 'Απρ', 'Μάι', 'Ιούν',
   'Ιούλ', 'Αύγ', 'Σεπ', 'Οκτ', 'Νοέ', 'Δεκ',
 ]
+const MONTHS_EN = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+]
+const MONTHS_EN_SHORT = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+]
 
-/** Nominative Greek month name for a 1–12 index. */
-export function monthName(m: number, short = false): string {
-  const arr = short ? MONTHS_GR_SHORT : MONTHS_GR
+/** Nominative month name for a 1–12 index (Greek by default; English when locale='en'). */
+export function monthName(m: number, short = false, locale = 'el'): string {
+  const en = locale === 'en'
+  const arr = en ? (short ? MONTHS_EN_SHORT : MONTHS_EN) : short ? MONTHS_GR_SHORT : MONTHS_GR
   return arr[((m - 1) % 12 + 12) % 12] ?? ''
 }
 
 /** Accusative Greek month name, e.g. after "στον …" ("στον Ιούλιο"). Every
  *  Greek month is masculine ending in -ος, so the accusative just drops the
- *  final ς (Ιούλιος → Ιούλιο, Αύγουστος → Αύγουστο). */
-export function monthNameAccusative(m: number): string {
+ *  final ς (Ιούλιος → Ιούλιο, Αύγουστος → Αύγουστο). English has no cases, so
+ *  it returns the plain English month name. */
+export function monthNameAccusative(m: number, locale = 'el'): string {
+  if (locale === 'en') return monthName(m, false, 'en')
   return monthName(m).replace(/ς$/, '')
 }
 
 /** "Μάρτιος – Απρίλιος" for a season's months (array is in season order, so a
  *  winter [12,1,2] reads "Δεκέμβριος – Φεβρουάριος"). Empty ⇒ ''. */
-export function monthRangeLabel(months: number[]): string {
+export function monthRangeLabel(months: number[], locale = 'el'): string {
   if (!months.length) return ''
-  if (months.length === 1) return monthName(months[0])
-  return `${monthName(months[0])} – ${monthName(months[months.length - 1])}`
+  if (months.length === 1) return monthName(months[0], false, locale)
+  return `${monthName(months[0], false, locale)} – ${monthName(months[months.length - 1], false, locale)}`
 }
 
 /** Badge text for a workshop: season + month range, or just the season when
- *  months are still TBD. */
-export function seasonBadge(w: Workshop): string {
-  const range = monthRangeLabel(w.months)
+ *  months are still TBD. `w.seasonLabel` is already localized by the caller. */
+export function seasonBadge(w: Workshop, locale = 'el'): string {
+  const range = monthRangeLabel(w.months, locale)
   return range ? `${w.seasonLabel} · ${range}` : w.seasonLabel
 }
 
 /** The published workshop scheduled for a given month (1–12), or null. */
-export function workshopForMonth(month: number): Workshop | null {
-  return WORKSHOPS.find((w) => w.published && w.months.includes(month)) ?? null
+export function workshopForMonth(month: number, locale = 'el'): Workshop | null {
+  return getWorkshops(locale).find((w) => w.published && w.months.includes(month)) ?? null
 }
 
-export function publishedWorkshops(): Workshop[] {
-  return WORKSHOPS.filter((w) => w.published)
+export function publishedWorkshops(locale = 'el'): Workshop[] {
+  return getWorkshops(locale).filter((w) => w.published)
 }
 
-export function getWorkshop(slug: string): Workshop | undefined {
-  return WORKSHOPS.find((w) => w.slug === slug && w.published)
+export function getWorkshop(slug: string, locale = 'el'): Workshop | undefined {
+  return getWorkshops(locale).find((w) => w.slug === slug && w.published)
 }

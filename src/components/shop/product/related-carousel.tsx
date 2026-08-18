@@ -1,10 +1,12 @@
 'use client'
 
 import { useCallback, useEffect, useRef } from 'react'
+import { useLocale } from 'next-intl'
 import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { EASE, DURATION, fadeUp, staggerContainer } from '@/lib/motion'
 import { ShopProductCard } from '@/components/shop/shop-product-card'
+import { getProductUi } from '@/components/shop/product/product-ui'
 import type { ShopProduct } from '@/components/shop/shop-content'
 
 const GAP = 16 // gap-4
@@ -16,6 +18,7 @@ const GAP = 16 // gap-4
  * On md+ it falls back to the 4-column grid, where arrows/auto-scroll are inert.
  */
 export function RelatedCarousel({ products }: { products: ShopProduct[] }) {
+  const ui = getProductUi(useLocale())
   const ref = useRef<HTMLDivElement>(null)
   const paused = useRef(false)
 
@@ -75,7 +78,7 @@ export function RelatedCarousel({ products }: { products: ShopProduct[] }) {
       <button
         type="button"
         onClick={() => move(-1)}
-        aria-label="Προηγούμενο προϊόν"
+        aria-label={ui.carousel.prev}
         className="absolute -left-1 top-[26%] flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground shadow-[0_4px_14px_-4px_rgba(35,31,32,0.4)] transition-colors hover:text-accent active:scale-95 md:hidden"
       >
         <ChevronLeft className="size-5" />
@@ -83,7 +86,7 @@ export function RelatedCarousel({ products }: { products: ShopProduct[] }) {
       <button
         type="button"
         onClick={() => move(1)}
-        aria-label="Επόμενο προϊόν"
+        aria-label={ui.carousel.next}
         className="absolute -right-1 top-[26%] flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground shadow-[0_4px_14px_-4px_rgba(35,31,32,0.4)] transition-colors hover:text-accent active:scale-95 md:hidden"
       >
         <ChevronRight className="size-5" />

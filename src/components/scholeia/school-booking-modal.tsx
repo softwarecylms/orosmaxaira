@@ -1,10 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useLocale } from 'next-intl'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { GraduationCap, X } from 'lucide-react'
 import { EASE, DURATION } from '@/lib/motion'
+import { getBookingUi } from '@/components/booking/booking-ui'
+import { getScholeiaUi } from './scholeia-ui'
 import { SchoolVisitForm } from './school-visit-form'
 
 /**
@@ -27,6 +30,9 @@ export function SchoolBookingModal({
   pricing?: { range: string; price: number | null }[]
 }) {
   const reduce = useReducedMotion()
+  const locale = useLocale()
+  const ui = getScholeiaUi(locale)
+  const closeLabel = getBookingUi(locale).close
 
   // Portal to <body> so the overlay escapes ancestor stacking contexts.
   const [mounted, setMounted] = useState(false)
@@ -58,7 +64,7 @@ export function SchoolBookingModal({
         >
           <motion.button
             type="button"
-            aria-label="Κλείσιμο"
+            aria-label={closeLabel}
             onClick={onClose}
             className="absolute inset-0 bg-foreground/50"
             variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
@@ -68,7 +74,7 @@ export function SchoolBookingModal({
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label="Κράτηση σχολικής επίσκεψης"
+            aria-label={ui.modalAria}
             className="relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-[22px] bg-white shadow-[0_0_60px_-15px_rgba(35,31,32,0.5)] sm:max-w-[540px] sm:rounded-[22px]"
             variants={{
               hidden: { opacity: 0, y: reduce ? 0 : 24, scale: reduce ? 1 : 0.98 },
@@ -80,12 +86,12 @@ export function SchoolBookingModal({
             <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
               <h2 className="flex items-center gap-2 text-[17px] font-semibold text-foreground">
                 <GraduationCap className="size-5 text-accent" aria-hidden="true" />
-                Κράτηση σχολικής επίσκεψης
+                {ui.modalTitle}
               </h2>
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Κλείσιμο"
+                aria-label={closeLabel}
                 className="flex size-9 items-center justify-center rounded-full text-foreground transition-colors hover:bg-offwhite hover:text-accent"
               >
                 <X className="size-5" />

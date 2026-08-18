@@ -111,6 +111,7 @@ const CERTIFICATES_EN: CertificatesContent = {
         'Continual improvement of environmental performance',
       ],
       pdfGr: CERTIFICATES_EL.certificates[0].pdfGr,
+      pdfEn: '/images/certificates/ISO_14001_EN.pdf',
     },
     {
       code: 'ISO 22000',

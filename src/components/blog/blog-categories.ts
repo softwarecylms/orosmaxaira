@@ -28,7 +28,24 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
   }
 ]
 
-/** post slug -> the category slugs it belongs to */
+/** English category names, keyed by the locale-invariant `slug`. */
+const CATEGORY_NAMES_EN: Record<string, string> = {
+  'arthra': 'Articles',
+  'syntages-me-meli': 'Recipes with Honey',
+  'fysi-kai-peripeteia': 'Nature & Adventure',
+  'melissa-kai-perivallon': 'Bees & the Environment',
+}
+
+/**
+ * Locale-aware category taxonomy. `slug` and `count` are locale-invariant; only
+ * `name` is translated. el = the Greek source of truth above, en = English.
+ */
+export function getBlogCategories(locale: string): BlogCategory[] {
+  if (locale !== 'en') return BLOG_CATEGORIES
+  return BLOG_CATEGORIES.map((c) => ({ ...c, name: CATEGORY_NAMES_EN[c.slug] ?? c.name }))
+}
+
+/** post slug -> the category slugs it belongs to (locale-invariant) */
 export const POST_CATEGORIES: Record<string, string[]> = {
   "poy-na-agoraseis-agno-kypriako-meli-stin-kypro": [
     "arthra"

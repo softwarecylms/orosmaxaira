@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useLocale } from 'next-intl'
+import { Link, useRouter } from '@/i18n/navigation'
 import { Check, Minus, Plus, Tag, Truck } from 'lucide-react'
 import { useCart, formatCents, type CartItem } from '@/components/commerce/cart-store'
 import { placeMedusaOrder } from '@/lib/medusa/place-order'
 import { REFRIGERATED_HANDLES, isRefrigerated } from '@/components/shop/shop-content'
+import { localizedProductTitle, localizedContainer } from '@/components/shop/product-i18n'
+import { getCheckoutUi } from './checkout-ui'
 import { cn } from '@/lib/utils'
 
 const FREE_SHIPPING_THRESHOLD = 7000 // €70,00 — free HOME delivery above this (Cyprus)
@@ -23,11 +25,6 @@ type Country = 'Κύπρος' | 'Ελλάδα'
 // refrigerated-area restriction.
 const CY_CITIES = ['Λευκωσία', 'Λεμεσός', 'Λάρνακα', 'Πάφος', 'Αμμόχωστος'] as const
 const REFRIGERATED_BLOCKED_DISTRICTS: string[] = ['Πάφος', 'Αμμόχωστος']
-// Nominative article per refrigerated product, for the delivery-notice grammar.
-const REFRIGERATED_ARTICLE: Record<string, string> = {
-  'vasilikos-poltos-oros-machaira': 'Ο',
-  'gyri-oros-machaira': 'Η',
-}
 
 /** Demo discount codes (client-side only — swap for a real promotions engine later). */
 const COUPONS: Record<string, { kind: 'pct' | 'fixed'; value: number }> = {
@@ -191,6 +188,8 @@ const EMPTY: Contact = {
  *  field set (in Greek). No real payment — places a local order snapshot. */
 export function CheckoutForm() {
   const router = useRouter()
+  const locale = useLocale()
+  const t = getCheckoutUi(locale)
   const { items, subtotal, ready, clear, setQty } = useCart()
   const [c, setC] = useState<Contact>(EMPTY)
   const [submitting, setSubmitting] = useState(false)
@@ -204,12 +203,12 @@ export function CheckoutForm() {
   if (items.length === 0) {
     return (
       <div className="container-wide flex flex-col items-start gap-5 py-16 md:py-24">
-        <p className="text-[17px] text-muted">Το καλάθι σας είναι άδειο.</p>
+        <p className="text-[17px] text-muted">{t.empty}</p>
         <Link
           href="/proionta"
           className="inline-flex items-center rounded-[4px] bg-accent px-5 py-3 text-[17px] text-white transition-colors hover:bg-foreground"
         >
-          Συνεχίστε τις αγορές
+          {t.continueShopping}
         </Link>
       </div>
     )
@@ -221,16 +220,12 @@ export function CheckoutForm() {
   const hasRefrigerated = refrigeratedItems.length > 0
   // Unique refrigerated products in the cart → the delivery notice sentence.
   const refrigeratedUnique = [...new Map(refrigeratedItems.map((i) => [i.handle, i])).values()]
-  const refrigeratedSubject = refrigeratedUnique
-    .map((it, idx) => {
-      const article = REFRIGERATED_ARTICLE[it.handle] ?? 'Το'
-      return `${idx === 0 ? article : article.toLowerCase()} ${it.title}`
-    })
-    .join(' και ')
-  const refrigeratedNotice =
-    refrigeratedUnique.length === 1
-      ? `${refrigeratedSubject} είναι προϊόν ψυγείου και παραδίδεται μόνο κατ’ οίκον (εξαιρούνται Πάφος, Αμμόχωστος & Ελλάδα).`
-      : `${refrigeratedSubject} είναι προϊόντα ψυγείου και παραδίδονται μόνο κατ’ οίκον (εξαιρούνται Πάφος, Αμμόχωστος & Ελλάδα).`
+  const refrigeratedNotice = t.refrigeratedNotice(
+    refrigeratedUnique.map((i) => ({
+      ...i,
+      title: localizedProductTitle(i.handle, i.title, locale),
+    })),
+  )
   const inGreece = c.country === 'Ελλάδα'
   // Refrigerated orders force home delivery; everything else uses ACS pickup.
   const delivery: Delivery = hasRefrigerated ? 'home' : 'acs'
@@ -278,7 +273,7 @@ export function CheckoutForm() {
       setCouponError('')
     } else {
       setCoupon(null)
-      setCouponError('Μη έγκυρος κωδικός κουπονιού.')
+      setCouponError(t.couponError)
     }
   }
   function removeCoupon() {
@@ -302,19 +297,13 @@ export function CheckoutForm() {
 
     // Every line must carry a Medusa variant id to become a real order line.
     if (items.some((i) => !i.variantId)) {
-      setOrderError(
-        'Κάποια προϊόντα στο καλάθι σας χρειάζονται ανανέωση — αφαιρέστε τα και προσθέστε τα ξανά.',
-      )
+      setOrderError(t.variantError)
       return
     }
 
     // Refrigerated products can't reach Paphos/Famagusta or Greece.
     if (refrigeratedBlocked) {
-      setOrderError(
-        `Τα προϊόντα ψυγείου δεν αποστέλλονται ${
-          inGreece ? 'στην Ελλάδα' : `στην περιοχή ${deliveryCity}`
-        }. Αφαιρέστε τα προϊόντα ψυγείου από το καλάθι σας για να συνεχίσετε.`,
-      )
+      setOrderError(t.refrigeratedBlockedError({ inGreece, city: deliveryCity }))
       return
     }
 
@@ -383,19 +372,19 @@ export function CheckoutForm() {
     <form onSubmit={placeOrder} className="container-wide grid gap-10 py-12 md:py-16 lg:grid-cols-[1fr_400px]">
       {/* Billing details */}
       <fieldset className="flex min-w-0 flex-col gap-4">
-        <legend className="mb-2 text-[20px] font-semibold text-foreground">Στοιχεία χρέωσης</legend>
+        <legend className="mb-2 text-[20px] font-semibold text-foreground">{t.billingLegend}</legend>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Όνομα" value={c.firstName} onChange={set('firstName')} required autoComplete="given-name" />
-          <Field label="Επώνυμο" value={c.lastName} onChange={set('lastName')} required autoComplete="family-name" />
+          <Field label={t.firstName} value={c.firstName} onChange={set('firstName')} required autoComplete="given-name" />
+          <Field label={t.lastName} value={c.lastName} onChange={set('lastName')} required autoComplete="family-name" />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Τηλέφωνο" type="tel" value={c.phone} onChange={set('phone')} required autoComplete="tel" />
-          <Field label="Διεύθυνση Email" type="email" value={c.email} onChange={set('email')} required autoComplete="email" />
+          <Field label={t.phone} type="tel" value={c.phone} onChange={set('phone')} required autoComplete="tel" />
+          <Field label={t.email} type="email" value={c.email} onChange={set('email')} required autoComplete="email" />
         </div>
 
         <label className="flex flex-col gap-1.5">
           <span className="text-[14px] text-muted">
-            Χώρα / Περιοχή<Req />
+            {t.countryRegion}<Req />
           </span>
           <select
             value={c.country}
@@ -403,34 +392,34 @@ export function CheckoutForm() {
             required
             className="w-full min-w-0 rounded-[4px] border border-border bg-white px-4 py-3 text-[16px] text-foreground outline-none focus:border-accent"
           >
-            <option value="Κύπρος">Κύπρος</option>
-            <option value="Ελλάδα">Ελλάδα</option>
+            <option value="Κύπρος">{t.countryLabel('Κύπρος')}</option>
+            <option value="Ελλάδα">{t.countryLabel('Ελλάδα')}</option>
           </select>
         </label>
 
         <Field
-          label="Διεύθυνση"
+          label={t.address}
           value={c.address}
           onChange={set('address')}
           required
           autoComplete="address-line1"
-          placeholder="Αριθμός και όνομα οδού"
+          placeholder={t.streetPlaceholder}
         />
         <Field
           label=""
-          aria-label="Διαμέρισμα, όροφος, κ.λπ. (προαιρετικό)"
+          aria-label={t.address2Placeholder}
           value={c.address2}
           onChange={set('address2')}
           autoComplete="address-line2"
-          placeholder="Διαμέρισμα, όροφος, κ.λπ. (προαιρετικό)"
+          placeholder={t.address2Placeholder}
         />
         <div className="grid gap-4 sm:grid-cols-2">
           {inGreece ? (
-            <Field label="Πόλη" value={c.city} onChange={set('city')} required autoComplete="address-level2" />
+            <Field label={t.city} value={c.city} onChange={set('city')} required autoComplete="address-level2" />
           ) : (
             <label className="flex flex-col gap-1.5">
               <span className="text-[14px] text-muted">
-                Πόλη<Req />
+                {t.city}<Req />
               </span>
               <select
                 value={c.city}
@@ -438,47 +427,47 @@ export function CheckoutForm() {
                 required
                 className="w-full min-w-0 rounded-[4px] border border-border bg-white px-4 py-3 text-[16px] text-foreground outline-none focus:border-accent"
               >
-                <option value="">Επιλέξτε πόλη…</option>
+                <option value="">{t.selectCity}</option>
                 {CY_CITIES.map((city) => (
                   <option key={city} value={city}>
-                    {city}
+                    {t.cityLabel(city)}
                   </option>
                 ))}
               </select>
             </label>
           )}
-          <Field label="Ταχ. Κώδικας" value={c.postal} onChange={set('postal')} required autoComplete="postal-code" />
+          <Field label={t.postal} value={c.postal} onChange={set('postal')} required autoComplete="postal-code" />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Επωνυμία εταιρείας (προαιρετικό)" value={c.company} onChange={set('company')} autoComplete="organization" />
-          <Field label="Α.Φ.Μ. (προαιρετικό)" value={c.vat} onChange={set('vat')} />
+          <Field label={t.company} value={c.company} onChange={set('company')} autoComplete="organization" />
+          <Field label={t.vat} value={c.vat} onChange={set('vat')} />
         </div>
 
         <Checkbox checked={c.shipDifferent} onChange={toggle('shipDifferent')}>
-          Αποστολή σε διαφορετική διεύθυνση
+          {t.shipDifferent}
         </Checkbox>
 
         {c.shipDifferent ? (
           <div className="mt-1 flex flex-col gap-4 border-l-2 border-accent/40 pl-4">
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Όνομα" value={c.shipFirstName} onChange={set('shipFirstName')} required />
-              <Field label="Επώνυμο" value={c.shipLastName} onChange={set('shipLastName')} required />
+              <Field label={t.firstName} value={c.shipFirstName} onChange={set('shipFirstName')} required />
+              <Field label={t.lastName} value={c.shipLastName} onChange={set('shipLastName')} required />
             </div>
-            <Field label="Διεύθυνση" value={c.shipAddress} onChange={set('shipAddress')} required placeholder="Αριθμός και όνομα οδού" />
+            <Field label={t.address} value={c.shipAddress} onChange={set('shipAddress')} required placeholder={t.streetPlaceholder} />
             <Field
               label=""
-              aria-label="Διαμέρισμα, όροφος, κ.λπ. (προαιρετικό)"
+              aria-label={t.address2Placeholder}
               value={c.shipAddress2}
               onChange={set('shipAddress2')}
-              placeholder="Διαμέρισμα, όροφος, κ.λπ. (προαιρετικό)"
+              placeholder={t.address2Placeholder}
             />
             <div className="grid gap-4 sm:grid-cols-2">
               {inGreece ? (
-                <Field label="Πόλη" value={c.shipCity} onChange={set('shipCity')} required />
+                <Field label={t.city} value={c.shipCity} onChange={set('shipCity')} required />
               ) : (
                 <label className="flex flex-col gap-1.5">
                   <span className="text-[14px] text-muted">
-                    Πόλη<Req />
+                    {t.city}<Req />
                   </span>
                   <select
                     value={c.shipCity}
@@ -486,27 +475,27 @@ export function CheckoutForm() {
                     required
                     className="w-full min-w-0 rounded-[4px] border border-border bg-white px-4 py-3 text-[16px] text-foreground outline-none focus:border-accent"
                   >
-                    <option value="">Επιλέξτε πόλη…</option>
+                    <option value="">{t.selectCity}</option>
                     {CY_CITIES.map((city) => (
                       <option key={city} value={city}>
-                        {city}
+                        {t.cityLabel(city)}
                       </option>
                     ))}
                   </select>
                 </label>
               )}
-              <Field label="Ταχ. Κώδικας" value={c.shipPostal} onChange={set('shipPostal')} required />
+              <Field label={t.postal} value={c.shipPostal} onChange={set('shipPostal')} required />
             </div>
           </div>
         ) : null}
 
         <label className="mt-1 flex flex-col gap-1.5">
-          <span className="text-[14px] text-muted">Σημειώσεις παραγγελίας (προαιρετικό)</span>
+          <span className="text-[14px] text-muted">{t.notes}</span>
           <textarea
             value={c.notes}
             onChange={set('notes')}
             rows={3}
-            placeholder="Σημειώσεις για την παραγγελία σας, π.χ. ειδικές οδηγίες για την παράδοση."
+            placeholder={t.notesPlaceholder}
             className="w-full min-w-0 resize-y rounded-[4px] border border-border bg-white px-4 py-3 text-[16px] text-foreground outline-none transition-colors focus:border-accent"
           />
         </label>
@@ -514,7 +503,7 @@ export function CheckoutForm() {
 
       {/* Order summary — items, delivery, payment, totals, submit */}
       <aside className="flex h-fit min-w-0 flex-col gap-5 rounded-[4px] border border-border bg-white p-6">
-        <h2 className="text-[20px] font-semibold text-foreground">Η παραγγελία σας</h2>
+        <h2 className="text-[20px] font-semibold text-foreground">{t.orderSummary}</h2>
 
         <div className="flex flex-col divide-y divide-border">
           {items.map((item) => (
@@ -541,14 +530,14 @@ export function CheckoutForm() {
                       ❄️
                     </span>
                   ) : null}
-                  {item.title}
+                  {localizedProductTitle(item.handle, item.title, locale)}
                 </Link>
                 {item.size ? <span className="text-[13px] text-muted">{item.size}</span> : null}
                 <div className="mt-1 flex w-[88px] items-center justify-between rounded-[5px] border border-border px-2">
                   <button
                     type="button"
                     onClick={() => setQty(item.key, item.quantity - 1)}
-                    aria-label="Μείωση ποσότητας"
+                    aria-label={t.decreaseQty}
                     className="flex size-6 items-center justify-center text-foreground transition-colors hover:text-accent"
                   >
                     <Minus className="size-3.5" strokeWidth={2} />
@@ -560,13 +549,13 @@ export function CheckoutForm() {
                     onChange={(e) =>
                       setQty(item.key, Math.max(1, Math.floor(Number(e.target.value) || 1)))
                     }
-                    aria-label="Ποσότητα"
+                    aria-label={t.quantity}
                     className="w-8 bg-transparent text-center text-[14px] font-semibold text-foreground outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
                   <button
                     type="button"
                     onClick={() => setQty(item.key, item.quantity + 1)}
-                    aria-label="Αύξηση ποσότητας"
+                    aria-label={t.increaseQty}
                     className="flex size-6 items-center justify-center text-foreground transition-colors hover:text-accent"
                   >
                     <Plus className="size-3.5" strokeWidth={2} />
@@ -582,7 +571,7 @@ export function CheckoutForm() {
 
         {/* Delivery method */}
         <fieldset className="flex flex-col gap-2.5 border-t border-border pt-4">
-          <legend className="mb-1 text-[15px] font-semibold text-foreground">Τρόπος παράδοσης</legend>
+          <legend className="mb-1 text-[15px] font-semibold text-foreground">{t.deliveryLegend}</legend>
 
           {hasRefrigerated ? (
             <p className="rounded-[4px] bg-accent-soft px-3 py-2.5 text-[13px] font-semibold leading-[18px] text-foreground">
@@ -598,7 +587,7 @@ export function CheckoutForm() {
               disabled={refrigeratedBlocked}
               readOnly
               onChange={() => {}}
-              label="Αποστολή με courier"
+              label={t.courierDelivery}
               price={formatCents(GREECE_SHIPPING)}
             />
           ) : hasRefrigerated ? (
@@ -608,8 +597,8 @@ export function CheckoutForm() {
               disabled={refrigeratedBlocked}
               readOnly
               onChange={() => {}}
-              label="Παράδοση κατ’ οίκον"
-              price={cyprusFree ? 'Δωρεάν' : formatCents(HOME_SHIPPING)}
+              label={t.homeDelivery}
+              price={cyprusFree ? t.free : formatCents(HOME_SHIPPING)}
             />
           ) : (
             <RadioRow
@@ -617,8 +606,8 @@ export function CheckoutForm() {
               checked
               readOnly
               onChange={() => {}}
-              label="Παραλαβή από κατάστημα ACS"
-              price={cyprusFree ? 'Δωρεάν' : formatCents(ACS_SHIPPING)}
+              label={t.acsPickup}
+              price={cyprusFree ? t.free : formatCents(ACS_SHIPPING)}
             />
           )}
 
@@ -626,7 +615,7 @@ export function CheckoutForm() {
           {!inGreece && delivery === 'acs' ? (
             <label className="mt-0.5 flex flex-col gap-1.5">
               <span className="text-[13px] text-muted">
-                Επιλέξτε σημείο παραλαβής ACS<Req />
+                {t.selectAcsPoint}<Req />
               </span>
               <select
                 value={c.acsPoint}
@@ -634,7 +623,7 @@ export function CheckoutForm() {
                 required
                 className="w-full min-w-0 rounded-[4px] border border-border bg-white px-3 py-2.5 text-[14px] text-foreground outline-none focus:border-accent"
               >
-                <option value="">Επιλέξτε σημείο παραλαβής…</option>
+                <option value="">{t.selectAcsPointPlaceholder}</option>
                 {ACS_STORES['Κύπρος'].map((group) => (
                   <optgroup key={group.town} label={group.town}>
                     {group.points.map((pt) => (
@@ -650,21 +639,19 @@ export function CheckoutForm() {
 
           {refrigeratedBlocked ? (
             <p className="text-[13px] leading-[18px] text-red-600">
-              Δεν είναι δυνατή η παράδοση προϊόντων ψυγείου{' '}
-              {inGreece ? 'στην Ελλάδα' : `στην περιοχή ${deliveryCity}`}. Αφαιρέστε τα προϊόντα
-              ψυγείου από το καλάθι σας για να συνεχίσετε.
+              {t.refrigeratedBlockedNotice({ inGreece, city: deliveryCity })}
             </p>
           ) : null}
         </fieldset>
 
         {/* Payment method */}
         <fieldset className="flex flex-col gap-2.5 border-t border-border pt-4">
-          <legend className="mb-1 text-[15px] font-semibold text-foreground">Τρόπος πληρωμής</legend>
+          <legend className="mb-1 text-[15px] font-semibold text-foreground">{t.paymentLegend}</legend>
           <RadioRow
             name="payment"
             checked={c.payment === 'card'}
             onChange={() => setC((p) => ({ ...p, payment: 'card' }))}
-            label="Πιστωτική / Χρεωστική κάρτα"
+            label={t.cardPayment}
           />
         </fieldset>
 
@@ -674,19 +661,19 @@ export function CheckoutForm() {
             <div className="flex items-center justify-between rounded-[4px] bg-accent-soft px-3 py-2.5">
               <span className="flex items-center gap-2 text-[14px] text-foreground">
                 <Tag className="size-4 text-accent" aria-hidden="true" />
-                Κουπόνι «{coupon}» ενεργό
+                {t.couponActive(coupon)}
               </span>
               <button
                 type="button"
                 onClick={removeCoupon}
                 className="text-[13px] text-muted underline-offset-2 transition-colors hover:text-foreground hover:underline"
               >
-                Αφαίρεση
+                {t.remove}
               </button>
             </div>
           ) : (
             <>
-              <span className="text-[14px] text-muted">Κωδικός κουπονιού</span>
+              <span className="text-[14px] text-muted">{t.couponCode}</span>
               <div className="flex gap-2">
                 <input
                   value={couponInput}
@@ -697,7 +684,7 @@ export function CheckoutForm() {
                       applyCoupon()
                     }
                   }}
-                  aria-label="Κωδικός κουπονιού"
+                  aria-label={t.couponCode}
                   className="min-w-0 flex-1 rounded-[4px] border border-border bg-white px-3 py-2.5 text-[15px] text-foreground outline-none transition-colors focus:border-accent"
                 />
                 <button
@@ -705,7 +692,7 @@ export function CheckoutForm() {
                   onClick={applyCoupon}
                   className="shrink-0 rounded-[4px] border border-foreground px-4 py-2.5 text-[14px] font-medium text-foreground transition-colors hover:bg-foreground hover:text-white"
                 >
-                  Εφαρμογή
+                  {t.apply}
                 </button>
               </div>
               {couponError ? <p className="text-[13px] text-red-600">{couponError}</p> : null}
@@ -715,22 +702,23 @@ export function CheckoutForm() {
 
         {/* Totals */}
         <div className="flex flex-col gap-2 border-t border-border pt-4 text-[15px]">
-          <Row label="Υποσύνολο" value={formatCents(subtotal)} />
-          {discount > 0 ? <Row label="Έκπτωση" value={`−${formatCents(discount)}`} accent /> : null}
-          <Row label="Μεταφορικά" value={shipping === 0 ? 'Δωρεάν' : formatCents(shipping)} />
+          <Row label={t.subtotal} value={formatCents(subtotal)} />
+          {discount > 0 ? <Row label={t.discount} value={`−${formatCents(discount)}`} accent /> : null}
+          <Row label={t.shipping} value={shipping === 0 ? t.free : formatCents(shipping)} />
           {/* Free-shipping progress — Cyprus only (any method, over €70) */}
           {inGreece ? null : cyprusFree ? (
             <p className="flex items-center gap-2 pt-1 text-[13px] font-medium leading-[18px] text-success">
               <Check className="size-[18px] shrink-0" strokeWidth={2.5} aria-hidden="true" />
-              Κερδίσατε δωρεάν μεταφορικά!
+              {t.freeShippingEarned}
             </p>
           ) : (
             <div className="flex flex-col gap-2 pt-1">
               <p className="flex items-center gap-2 text-[13px] leading-[18px] text-foreground">
                 <Truck className="size-[18px] shrink-0 text-accent" strokeWidth={2} aria-hidden="true" />
                 <span>
-                  Προσθέστε <span className="font-semibold">{formatCents(remaining)}</span> ακόμη για δωρεάν
-                  μεταφορικά στην Κύπρο.
+                  {t.freeShippingRemaining.pre}
+                  <span className="font-semibold">{formatCents(remaining)}</span>
+                  {t.freeShippingRemaining.post}
                 </span>
               </p>
               <div
@@ -738,7 +726,7 @@ export function CheckoutForm() {
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-valuenow={shippingProgress}
-                aria-label="Πρόοδος για δωρεάν μεταφορικά"
+                aria-label={t.freeShippingProgress}
                 className="h-2 w-full overflow-hidden rounded-full bg-cream"
               >
                 <div
@@ -750,36 +738,34 @@ export function CheckoutForm() {
           )}
         </div>
         <div className="flex justify-between border-t border-border pt-4 text-[18px] font-semibold text-foreground">
-          <span>Σύνολο</span>
+          <span>{t.total}</span>
           <span>{formatCents(total)}</span>
         </div>
 
         <div className="flex flex-col gap-3">
           <p className="text-[13px] leading-[19px] text-muted">
-            Τα προσωπικά σας δεδομένα θα χρησιμοποιηθούν για την επεξεργασία της παραγγελίας σας, την
-            υποστήριξη της εμπειρίας σας σε αυτόν τον ιστότοπο και για άλλους σκοπούς που περιγράφονται
-            στην{' '}
+            {t.privacyPre}
             <Link
               href="/privacy-amp-cookie-policy"
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent underline underline-offset-2"
             >
-              πολιτική απορρήτου
-            </Link>{' '}
-            μας.
+              {t.privacyLink}
+            </Link>
+            {t.privacyPost}
           </p>
           <Checkbox required name="terms">
-            Έχω διαβάσει και αποδέχομαι τους{' '}
+            {t.termsPre}
             <Link
               href="/terms"
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent underline underline-offset-2"
             >
-              όρους και προϋποθέσεις
-            </Link>{' '}
-            του ιστότοπου
+              {t.termsLink}
+            </Link>
+            {t.termsPost}
             <Req />
           </Checkbox>
         </div>
@@ -795,10 +781,10 @@ export function CheckoutForm() {
           disabled={submitting || refrigeratedBlocked}
           className="flex w-full items-center justify-center rounded-[4px] bg-accent p-[15px] text-[17px] text-white transition-colors hover:bg-foreground disabled:cursor-not-allowed disabled:opacity-75"
         >
-          {submitting ? 'Επεξεργασία…' : 'Ολοκλήρωση παραγγελίας'}
+          {submitting ? t.submitting : t.submit}
         </button>
         <p className="text-center text-[13px] leading-[18px] text-muted">
-          Δοκιμαστική παραγγελία — δεν πραγματοποιείται χρέωση.
+          {t.testOrderNote}
         </p>
       </aside>
     </form>

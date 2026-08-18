@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState, useState } from 'react'
+import { useLocale } from 'next-intl'
 import { MapPin, Pencil, Plus, Trash2, X } from 'lucide-react'
 import {
   addAddress,
@@ -9,30 +10,31 @@ import {
   type FormState,
 } from '@/lib/medusa/customer-actions'
 import { Field, SubmitButton, FormError } from './ui'
+import { getAccountUi } from './account-ui'
 import type { CustomerAddress } from '@/lib/medusa/customer'
 
-const COUNTRIES = [
-  { code: 'cy', label: 'Κύπρος' },
-  { code: 'gr', label: 'Ελλάδα' },
-]
-
 function AddressFields({ address }: { address?: CustomerAddress }) {
+  const t = getAccountUi(useLocale())
+  const countries = [
+    { code: 'cy', label: t.countryCyprus },
+    { code: 'gr', label: t.countryGreece },
+  ]
   return (
     <>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Όνομα" name="first_name" required defaultValue={address?.first_name ?? ''} />
-        <Field label="Επώνυμο" name="last_name" defaultValue={address?.last_name ?? ''} />
+        <Field label={t.firstName} name="first_name" required defaultValue={address?.first_name ?? ''} />
+        <Field label={t.lastName} name="last_name" defaultValue={address?.last_name ?? ''} />
       </div>
-      <Field label="Διεύθυνση" name="address_1" required defaultValue={address?.address_1 ?? ''} />
+      <Field label={t.address1} name="address_1" required defaultValue={address?.address_1 ?? ''} />
       <Field
-        label="Διεύθυνση (2η γραμμή)"
+        label={t.address2}
         name="address_2"
         defaultValue={address?.address_2 ?? ''}
       />
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Πόλη" name="city" required defaultValue={address?.city ?? ''} />
+        <Field label={t.city} name="city" required defaultValue={address?.city ?? ''} />
         <Field
-          label="Ταχ. κώδικας"
+          label={t.postal}
           name="postal_code"
           required
           defaultValue={address?.postal_code ?? ''}
@@ -40,26 +42,27 @@ function AddressFields({ address }: { address?: CustomerAddress }) {
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="flex flex-col gap-1.5">
-          <span className="text-[14px] font-medium text-foreground">Χώρα</span>
+          <span className="text-[14px] font-medium text-foreground">{t.country}</span>
           <select
             name="country_code"
             defaultValue={address?.country_code ?? 'cy'}
             className="w-full rounded-[4px] border border-border bg-white px-4 py-3 text-[15px] text-foreground outline-none transition-colors focus:border-accent"
           >
-            {COUNTRIES.map((c) => (
+            {countries.map((c) => (
               <option key={c.code} value={c.code}>
                 {c.label}
               </option>
             ))}
           </select>
         </label>
-        <Field label="Τηλέφωνο" name="phone" type="tel" defaultValue={address?.phone ?? ''} />
+        <Field label={t.phone} name="phone" type="tel" defaultValue={address?.phone ?? ''} />
       </div>
     </>
   )
 }
 
 function AddForm({ onDone }: { onDone: () => void }) {
+  const t = getAccountUi(useLocale())
   const [state, action] = useActionState<FormState, FormData>(async (prev, fd) => {
     const res = await addAddress(prev, fd)
     if (res.ok) onDone()
@@ -70,13 +73,13 @@ function AddForm({ onDone }: { onDone: () => void }) {
       <FormError message={state.error} />
       <AddressFields />
       <div className="mt-1 flex flex-wrap gap-3">
-        <SubmitButton>Αποθήκευση</SubmitButton>
+        <SubmitButton>{t.save}</SubmitButton>
         <button
           type="button"
           onClick={onDone}
           className="inline-flex items-center justify-center rounded-[4px] border border-border px-6 py-3 text-[15px] font-semibold text-foreground transition-colors hover:bg-offwhite"
         >
-          Ακύρωση
+          {t.cancel}
         </button>
       </div>
     </form>
@@ -84,6 +87,7 @@ function AddForm({ onDone }: { onDone: () => void }) {
 }
 
 function EditForm({ address, onDone }: { address: CustomerAddress; onDone: () => void }) {
+  const t = getAccountUi(useLocale())
   const [state, action] = useActionState<FormState, FormData>(async (prev, fd) => {
     const res = await updateAddress(prev, fd)
     if (res.ok) onDone()
@@ -95,13 +99,13 @@ function EditForm({ address, onDone }: { address: CustomerAddress; onDone: () =>
       <FormError message={state.error} />
       <AddressFields address={address} />
       <div className="mt-1 flex flex-wrap gap-3">
-        <SubmitButton>Ενημέρωση</SubmitButton>
+        <SubmitButton>{t.update}</SubmitButton>
         <button
           type="button"
           onClick={onDone}
           className="inline-flex items-center justify-center rounded-[4px] border border-border px-6 py-3 text-[15px] font-semibold text-foreground transition-colors hover:bg-offwhite"
         >
-          Ακύρωση
+          {t.cancel}
         </button>
       </div>
     </form>
@@ -110,6 +114,7 @@ function EditForm({ address, onDone }: { address: CustomerAddress; onDone: () =>
 
 /** Saved addresses: list of cards with edit/delete, plus an add form. */
 export function AddressManager({ addresses }: { addresses: CustomerAddress[] }) {
+  const t = getAccountUi(useLocale())
   const [adding, setAdding] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
 
@@ -121,9 +126,9 @@ export function AddressManager({ addresses }: { addresses: CustomerAddress[] }) 
             <MapPin className="size-6" aria-hidden="true" />
           </span>
           <div className="flex flex-col gap-1">
-            <h2 className="text-[18px] font-semibold text-foreground">Καμία διεύθυνση</h2>
+            <h2 className="text-[18px] font-semibold text-foreground">{t.noAddresses}</h2>
             <p className="text-[15px] text-muted">
-              Αποθηκεύστε μια διεύθυνση για ταχύτερη ολοκλήρωση παραγγελίας.
+              {t.noAddressesHint}
             </p>
           </div>
           <button
@@ -132,7 +137,7 @@ export function AddressManager({ addresses }: { addresses: CustomerAddress[] }) 
             className="mt-1 inline-flex items-center gap-2 rounded-[4px] bg-accent px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-foreground"
           >
             <Plus className="size-4" aria-hidden="true" />
-            Προσθήκη διεύθυνσης
+            {t.addAddress}
           </button>
         </div>
       ) : null}
@@ -141,11 +146,11 @@ export function AddressManager({ addresses }: { addresses: CustomerAddress[] }) 
         editingId === address.id ? (
           <div key={address.id} className="rounded-[8px] border border-border bg-white p-5 md:p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-[16px] font-semibold text-foreground">Επεξεργασία διεύθυνσης</h3>
+              <h3 className="text-[16px] font-semibold text-foreground">{t.editAddress}</h3>
               <button
                 type="button"
                 onClick={() => setEditingId(null)}
-                aria-label="Κλείσιμο"
+                aria-label={t.close}
                 className="text-muted hover:text-foreground"
               >
                 <X className="size-5" />
@@ -185,7 +190,7 @@ export function AddressManager({ addresses }: { addresses: CustomerAddress[] }) 
                 className="inline-flex items-center gap-1.5 rounded-[4px] border border-border px-3 py-2 text-[14px] font-medium text-foreground transition-colors hover:bg-offwhite"
               >
                 <Pencil className="size-3.5" aria-hidden="true" />
-                Επεξεργασία
+                {t.edit}
               </button>
               <form action={deleteAddress}>
                 <input type="hidden" name="address_id" value={address.id} />
@@ -194,7 +199,7 @@ export function AddressManager({ addresses }: { addresses: CustomerAddress[] }) 
                   className="inline-flex items-center gap-1.5 rounded-[4px] border border-border px-3 py-2 text-[14px] font-medium text-muted transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-700"
                 >
                   <Trash2 className="size-3.5" aria-hidden="true" />
-                  Διαγραφή
+                  {t.delete}
                 </button>
               </form>
             </div>
@@ -205,11 +210,11 @@ export function AddressManager({ addresses }: { addresses: CustomerAddress[] }) 
       {adding ? (
         <div className="rounded-[8px] border border-border bg-white p-5 md:p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-[16px] font-semibold text-foreground">Νέα διεύθυνση</h3>
+            <h3 className="text-[16px] font-semibold text-foreground">{t.newAddress}</h3>
             <button
               type="button"
               onClick={() => setAdding(false)}
-              aria-label="Κλείσιμο"
+              aria-label={t.close}
               className="text-muted hover:text-foreground"
             >
               <X className="size-5" />
@@ -224,7 +229,7 @@ export function AddressManager({ addresses }: { addresses: CustomerAddress[] }) 
           className="inline-flex w-full items-center justify-center gap-2 rounded-[8px] border border-dashed border-border px-6 py-4 text-[15px] font-semibold text-foreground transition-colors hover:border-accent hover:text-accent sm:w-auto sm:self-start"
         >
           <Plus className="size-4" aria-hidden="true" />
-          Προσθήκη διεύθυνσης
+          {t.addAddress}
         </button>
       ) : null}
     </div>

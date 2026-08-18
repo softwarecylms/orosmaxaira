@@ -72,7 +72,7 @@ const NATURE_EL: NatureContent = {
       image: '/images/nature/ecosystem.webp',
       imageAlt: 'Μέλισσες πάνω στα πλαίσια της κυψέλης',
       reversed: true,
-      link: { label: 'Υιοθετήστε μια κυψέλη', href: '/adopt-a-hive' },
+      link: { label: 'Υιοθετήστε μια κυψέλη', href: '/yiotheto-mia-kypseli' },
     },
   ],
 

@@ -2,13 +2,16 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import { useLocale } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { CheckCircle2 } from 'lucide-react'
 import { formatCents } from '@/components/commerce/cart-store'
+import { getCheckoutUi } from './checkout-ui'
 import type { OrderSnapshot } from './checkout-form'
 
 /** Order confirmation — reads the snapshot stashed at checkout from localStorage. */
 export function OrderConfirmation({ id }: { id: string }) {
+  const t = getCheckoutUi(useLocale())
   const [order, setOrder] = useState<OrderSnapshot | null>(null)
   const [ready, setReady] = useState(false)
 
@@ -32,10 +35,10 @@ export function OrderConfirmation({ id }: { id: string }) {
 
       <div className="flex flex-col gap-2">
         <h1 className="font-display text-[32px] font-bold text-foreground md:text-[41px]">
-          Ευχαριστούμε για την παραγγελία σας!
+          {t.thankYou}
         </h1>
         <p className="text-[17px] text-muted">
-          Αριθμός παραγγελίας: <span className="font-medium text-foreground">{id}</span>
+          {t.orderNumber} <span className="font-medium text-foreground">{id}</span>
         </p>
       </div>
 
@@ -61,25 +64,25 @@ export function OrderConfirmation({ id }: { id: string }) {
           </div>
           <div className="flex flex-col gap-2 border-t border-border pt-4 text-[15px]">
             <div className="flex justify-between text-foreground">
-              <span className="text-muted">Υποσύνολο</span>
+              <span className="text-muted">{t.subtotal}</span>
               <span>{formatCents(order.subtotal)}</span>
             </div>
             <div className="flex justify-between text-foreground">
-              <span className="text-muted">Μεταφορικά</span>
-              <span>{order.shipping === 0 ? 'Δωρεάν' : formatCents(order.shipping)}</span>
+              <span className="text-muted">{t.shipping}</span>
+              <span>{order.shipping === 0 ? t.free : formatCents(order.shipping)}</span>
             </div>
             <div className="flex justify-between border-t border-border pt-2 text-[17px] font-semibold text-foreground">
-              <span>Σύνολο</span>
+              <span>{t.total}</span>
               <span>{formatCents(order.total)}</span>
             </div>
           </div>
           <p className="text-[14px] leading-[20px] text-muted">
-            Θα στείλουμε επιβεβαίωση στο {order.contact.email}.
+            {t.confirmationEmail(order.contact.email)}
           </p>
         </div>
       ) : (
         <p className="max-w-[480px] text-[15px] text-muted">
-          Η παραγγελία σας καταχωρήθηκε. Θα λάβετε σύντομα επιβεβαίωση μέσω email.
+          {t.orderPlacedFallback}
         </p>
       )}
 
@@ -87,7 +90,7 @@ export function OrderConfirmation({ id }: { id: string }) {
         href="/proionta"
         className="inline-flex items-center rounded-[4px] bg-accent px-5 py-3 text-[17px] text-white transition-colors hover:bg-foreground"
       >
-        Συνεχίστε τις αγορές
+        {t.continueShopping}
       </Link>
     </div>
   )

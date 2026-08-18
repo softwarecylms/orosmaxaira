@@ -2,12 +2,13 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useLocale } from 'next-intl'
+import { Link, useRouter } from '@/i18n/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Minus, Plus, ShoppingCart, Check } from 'lucide-react'
 import type { ShopProduct, ShopProductDetail, ShopVariationSize } from '../shop-content'
 import { isRefrigerated } from '../shop-content'
+import { getProductUi } from './product-ui'
 import { useCart, parsePrice } from '@/components/commerce/cart-store'
 import { displayPrice, cn } from '@/lib/utils'
 import { RevealGroup, RevealItem } from '@/components/home/reveal-up'
@@ -47,6 +48,7 @@ export function ProductPurchase({
   onSelectSize: (label: string | null) => void
 }) {
   const router = useRouter()
+  const ui = getProductUi(useLocale())
   const { addItem, flashDrawer } = useCart()
   const reduce = useReducedMotion()
 
@@ -67,7 +69,7 @@ export function ProductPurchase({
   const priceText = selected
     ? selected.price
     : hasVariations
-      ? `Από ${cheapest!.price}`
+      ? `${ui.fromPrice} ${cheapest!.price}`
       : displayPrice(product.price)
 
   function buildItem() {
@@ -138,8 +140,8 @@ export function ProductPurchase({
           <p className="flex items-start gap-2 text-[13px] leading-[19px] text-muted">
             <span aria-hidden="true">❄️</span>
             <span>
-              <strong className="font-semibold text-foreground">Προϊόν ψυγείου</strong> — παράδοση
-              μόνο κατ’ οίκον (εξαιρούνται Πάφος, Αμμόχωστος & Ελλάδα).
+              <strong className="font-semibold text-foreground">{ui.refrigerated.label}</strong>{' '}
+              {ui.refrigerated.note}
             </span>
           </p>
         </RevealItem>
@@ -191,7 +193,7 @@ export function ProductPurchase({
           <button
             type="button"
             onClick={() => setQty((q) => Math.max(1, q - 1))}
-            aria-label="Μείωση ποσότητας"
+            aria-label={ui.qty.decrease}
             className="flex size-7 items-center justify-center text-foreground transition-colors hover:text-accent"
           >
             <Minus className="size-3.5" strokeWidth={2} />
@@ -201,13 +203,13 @@ export function ProductPurchase({
             min={1}
             value={qty}
             onChange={(e) => setQty(Math.max(1, Math.floor(Number(e.target.value) || 1)))}
-            aria-label="Ποσότητα"
+            aria-label={ui.qty.label}
             className="w-9 bg-transparent text-center text-[15px] font-semibold text-foreground outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           />
           <button
             type="button"
             onClick={() => setQty((q) => q + 1)}
-            aria-label="Αύξηση ποσότητας"
+            aria-label={ui.qty.increase}
             className="flex size-7 items-center justify-center text-foreground transition-colors hover:text-accent"
           >
             <Plus className="size-3.5" strokeWidth={2} />
@@ -231,12 +233,12 @@ export function ProductPurchase({
             <ShoppingCart className="size-[18px]" strokeWidth={1.8} aria-hidden="true" />
           )}
           {added ? (
-            'Προστέθηκε'
+            ui.added
           ) : (
             <>
               {/* Mobile: short label; md+: full "…στο καλάθι". */}
-              <span className="md:hidden">Προσθήκη</span>
-              <span className="hidden md:inline">Προσθήκη στο καλάθι</span>
+              <span className="md:hidden">{ui.addToCartShort}</span>
+              <span className="hidden md:inline">{ui.addToCart}</span>
             </>
           )}
         </button>
@@ -253,12 +255,10 @@ export function ProductPurchase({
             enabled ? 'hover:bg-foreground' : 'cursor-not-allowed opacity-75',
           )}
         >
-          Aγοράστε τώρα
+          {ui.buyNow}
         </button>
         {!enabled && hasVariations ? (
-          <p className="mt-2 text-[14px] leading-[21px] text-muted">
-            Επιλέξτε μέγεθος για να συνεχίσετε.
-          </p>
+          <p className="mt-2 text-[14px] leading-[21px] text-muted">{ui.selectSize}</p>
         ) : null}
       </RevealItem>
 
@@ -266,7 +266,7 @@ export function ProductPurchase({
       {addons.length ? (
         <RevealItem className="flex flex-col gap-[15px]">
           <h2 className="text-[18px] font-semibold leading-[21.6px] text-foreground">
-            🔥 Συνδυάστε το με
+            {ui.crossSellHeading}
           </h2>
           <div className="rounded-[4px] border border-border px-5">
             {addons.map((a, i) => (
@@ -303,12 +303,12 @@ export function ProductPurchase({
                     })
                     flashDrawer()
                   }}
-                  aria-label={`Προσθήκη ${a.title} στο καλάθι`}
+                  aria-label={ui.addonAria(a.title)}
                   className="flex items-center gap-2 rounded-[4px] bg-accent px-[15px] py-2.5 text-[15px] leading-[20px] text-white transition-colors hover:bg-foreground"
                 >
                   <Plus className="size-4" strokeWidth={2} aria-hidden="true" />
                   {/* Mobile: icon only; md+: show the label. */}
-                  <span className="hidden md:inline">Προσθήκη</span>
+                  <span className="hidden md:inline">{ui.addToCartShort}</span>
                 </button>
               </div>
             ))}
@@ -329,7 +329,7 @@ export function ProductPurchase({
             <img src="/images/icons/delivery-truck.svg" alt="" className="h-[15px] w-[26px]" />
           </motion.span>
           <span className="whitespace-nowrap text-[13px] leading-[19px] text-muted">
-            Παραδίδουμε σε Κύπρο &amp; Ελλάδα
+            {ui.delivery.reach}
           </span>
         </div>
         <div className="flex items-center gap-[15px]">
@@ -338,16 +338,16 @@ export function ProductPurchase({
             <img src="/images/icons/free-shipping.svg" alt="" className="h-[24px] w-[26px]" />
           </motion.span>
           <span className="whitespace-nowrap text-[13px] leading-[19px] text-muted">
-            Δωρεάν μεταφορικά στην Κύπρο άνω των 70€
+            {ui.delivery.free}
           </span>
         </div>
       </RevealItem>
 
       {/* Help box */}
       <RevealItem className="flex flex-col gap-2 rounded-[4px] bg-cream p-6 sm:flex-row sm:items-center sm:justify-between sm:p-[35px]">
-        <p className="text-[22px] font-medium leading-[26.4px] text-foreground">Χρειάζεστε βοήθεια;</p>
+        <p className="text-[22px] font-medium leading-[26.4px] text-foreground">{ui.help.title}</p>
         <p className="text-[17px] leading-[24px]">
-          <span className="text-muted">Καλέστε μας στο </span>
+          <span className="text-muted">{ui.help.call}</span>
           <a href={`tel:${phone.replace(/\s/g, '')}`} className="text-accent hover:underline">
             {phone}
           </a>
@@ -356,13 +356,13 @@ export function ProductPurchase({
 
       {/* Share */}
       <RevealItem className="flex items-center justify-between gap-4">
-        <span className="text-[18px] font-semibold text-foreground">Κοινοποίηση σε:</span>
+        <span className="text-[18px] font-semibold text-foreground">{ui.share.title}</span>
         <div className="flex items-center gap-1.5">
           {[FacebookSolid, InstagramSolid, LinkedinSolid].map((Icon, i) => (
             <a
               key={i}
               href="#"
-              aria-label="Κοινοποίηση"
+              aria-label={ui.share.aria}
               className="flex size-8 items-center justify-center text-foreground transition-colors hover:text-accent"
             >
               <Icon className="size-7" />

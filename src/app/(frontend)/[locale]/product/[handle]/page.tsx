@@ -1,13 +1,17 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import { getLocale } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
 import { notFound } from 'next/navigation'
 import { ChevronRight } from 'lucide-react'
 import {
+  categoryLabel,
   getProductByHandle,
   getProductDetail,
   getRelatedProducts,
   handleOf,
 } from '@/components/shop/shop-content'
+import { getProductUi } from '@/components/shop/product/product-ui'
+import { getShopUi } from '@/components/shop/shop-ui'
 import { getShopProduct, getAddonVariants } from '@/lib/medusa/shop'
 import { ProductView } from '@/components/shop/product/product-view'
 import type { AddonProduct } from '@/components/shop/product/product-purchase'
@@ -15,26 +19,39 @@ import { ProductTabs } from '@/components/shop/product/product-tabs'
 import { BenefitsBar } from '@/components/shop/product/benefits-bar'
 import { RelatedCarousel } from '@/components/shop/product/related-carousel'
 import { RevealUp } from '@/components/home/reveal-up'
+import { canonicalHandle, productHreflang } from '@/components/shop/product-slugs'
 
 type Params = { params: Promise<{ handle: string }> }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { handle } = await params
-  const product = getProductByHandle(handle)
-  if (!product) return { title: 'Προϊόν' }
-  const detail = getProductDetail(handle)
-  return { title: product.title, description: detail.description ?? product.title }
+  const locale = await getLocale()
+  const greek = canonicalHandle(handle)
+  const alternates = productHreflang(handle, locale)
+  const product = getProductByHandle(greek)
+  if (!product) return { title: getProductUi(locale).metaTitleFallback, alternates }
+  const detail = getProductDetail(greek, locale)
+  return {
+    title: product.title,
+    description: detail.description ?? product.title,
+    alternates,
+  }
 }
 
 export default async function ProductPage({ params }: Params) {
   const { handle } = await params
+  const locale = await getLocale()
+  const ui = getProductUi(locale)
+  // The URL slug may be the English one under /en; resolve to the Greek handle
+  // for the static fallbacks + cart identity.
+  const greek = canonicalHandle(handle)
 
   // Prefer Medusa (catalogue + price + stock + variant ids); fall back to the
   // static snapshot if Medusa is unreachable so the page still renders.
   const live = await getShopProduct(handle).catch(() => null)
-  const product = live?.product ?? getProductByHandle(handle)
+  const product = live?.product ?? getProductByHandle(greek)
   if (!product) notFound()
-  const detail = live?.detail ?? getProductDetail(handle)
+  const detail = live?.detail ?? getProductDetail(greek, locale)
 
   const related = getRelatedProducts(product)
 
@@ -63,10 +80,10 @@ export default async function ProductPage({ params }: Params) {
             className="flex flex-wrap items-center gap-1.5 text-[15px] text-muted md:text-[17px]"
           >
             <Link href="/proionta" className="transition-colors hover:text-accent">
-              Προϊόντα
+              {ui.breadcrumbProducts}
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
-            <span>{product.category}</span>
+            <span>{categoryLabel(product.category, locale)}</span>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
             <span className="text-foreground">{product.title}</span>
           </nav>
@@ -75,7 +92,7 @@ export default async function ProductPage({ params }: Params) {
 
       {/* Gallery + purchase */}
       <section className="container-wide pb-12 pt-4 md:pb-[60px]">
-        <ProductView handle={handle} product={product} detail={detail} addons={addons} />
+        <ProductView handle={greek} product={product} detail={detail} addons={addons} />
       </section>
 
       <BenefitsBar />
@@ -95,7 +112,7 @@ export default async function ProductPage({ params }: Params) {
           <div className="container-page">
             <RevealUp>
               <h2 className="text-center font-display text-[26px] font-semibold leading-[1.1] text-foreground md:text-[36px]">
-                Προϊόντα που ίσως σας ενδιαφέρουν
+                {ui.relatedHeading}
               </h2>
             </RevealUp>
             {/* Mobile: swipe carousel w/ arrows + auto-advance (like the home deal row); md+: 4-col grid */}

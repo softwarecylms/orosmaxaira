@@ -1,16 +1,18 @@
 'use client'
 
-import Link from 'next/link'
+import { useLocale } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { Check } from 'lucide-react'
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { useMotionReady } from '@/components/motion/motion-ready'
+import { getShopUi } from './shop-ui'
 import { EASE } from '@/lib/motion'
 
 const STEPS = [
-  { n: 1, label: 'ΚΑΛΑΘΙ', href: '/cart' },
-  { n: 2, label: 'ΤΑΜΕΙΟ', href: '/checkout' },
-  { n: 3, label: 'ΠΑΡΑΓΓΕΛΙΑ', href: null },
+  { n: 1, href: '/cart' as string | null },
+  { n: 2, href: '/checkout' as string | null },
+  { n: 3, href: null },
 ] as const
 
 /** Container staggers each step left → right, drawing the path in sequence. */
@@ -41,6 +43,7 @@ const noteV: Variants = {
 }
 
 type Step = (typeof STEPS)[number] & {
+  label: string
   done: boolean
   on: boolean
   lineClass: string
@@ -50,11 +53,12 @@ type Step = (typeof STEPS)[number] & {
 }
 
 /** Precompute per-step state + classes once, so the static and animated trees stay in sync. */
-function buildSteps(active: 1 | 2 | 3): Step[] {
-  return STEPS.map((step) => {
+function buildSteps(active: 1 | 2 | 3, labels: readonly string[]): Step[] {
+  return STEPS.map((step, i) => {
     const on = step.n <= active // active or already completed
     return {
       ...step,
+      label: labels[i],
       done: step.n < active,
       on,
       lineClass: cn(
@@ -93,7 +97,8 @@ const NOTE = 'text-center text-[13px] leading-[18px] text-muted sm:text-[15px] s
 export function CheckoutSteps({ active, note }: { active: 1 | 2 | 3; note?: string }) {
   const ready = useMotionReady()
   const reduceMotion = useReducedMotion()
-  const steps = buildSteps(active)
+  const ui = getShopUi(useLocale())
+  const steps = buildSteps(active, ui.steps)
 
   // Static fallback: pre-hydration, or when the user prefers reduced motion.
   if (!ready || reduceMotion) {

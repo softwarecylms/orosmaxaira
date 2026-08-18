@@ -1,12 +1,15 @@
 'use client'
 
+import { useLocale } from 'next-intl'
 import { ShoppingBag } from 'lucide-react'
 import { useCart, formatCents } from './cart-store'
+import { getCartChrome } from './cart-ui'
 
 /** Header cart pill, reading the client cart. `desktop` shows icon + count +
  *  total; `mobile` shows just the icon + count. Opens the slide-out cart drawer. */
 export function CartBadge({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile' }) {
   const { count, subtotal, openDrawer } = useCart()
+  const t = getCartChrome(useLocale())
 
   if (variant === 'mobile') {
     return (
@@ -14,7 +17,7 @@ export function CartBadge({ variant = 'desktop' }: { variant?: 'desktop' | 'mobi
         type="button"
         onClick={openDrawer}
         data-testid="header-cart"
-        aria-label="Καλάθι"
+        aria-label={t.cartLabel}
         className="relative text-foreground"
       >
         <ShoppingBag className="size-6" aria-hidden="true" />

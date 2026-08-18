@@ -1,30 +1,39 @@
 import type { Metadata } from 'next'
-import { BLOG_POSTS } from '@/components/blog/blog-data'
-import { BLOG_CATEGORIES, POST_CATEGORIES } from '@/components/blog/blog-categories'
+import { getLocale } from 'next-intl/server'
+import { getBlogPosts } from '@/components/blog/blog-data'
+import { getBlogCategories, POST_CATEGORIES } from '@/components/blog/blog-categories'
+import { getBlogUi } from '@/components/blog/blog-ui'
 import { PageHero } from '@/components/shared/page-hero'
 import { BlogFilterGrid } from '@/components/blog/blog-filter-grid'
+import { hreflangAlternates } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Blog',
-  description:
-    'Νέα, άρθρα και συνταγές από το Όρος Μαχαιρά — για το μέλι, τις μέλισσες, την υγεία και τη μελισσοκομία.',
-  alternates: { canonical: '/blog' },
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
+  const ui = getBlogUi(locale)
+  return {
+    title: ui.metaTitle,
+    description: ui.metaDescription,
+    alternates: hreflangAlternates(locale, '/blog'),
+  }
 }
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const locale = await getLocale()
+  const ui = getBlogUi(locale)
+
   return (
     <>
       <PageHero
         image="/images/blog/hero.webp"
-        imageAlt="Μελισσοκόμος κρατά πλαίσιο με μέλισσες σε χωράφι"
-        title="Blog"
+        imageAlt={ui.heroImageAlt}
+        title={ui.heroTitle}
         overlayClassName="bg-black/30"
       />
 
       <section className="container-wide py-12 md:py-[70px]">
         <BlogFilterGrid
-          posts={BLOG_POSTS}
-          categories={BLOG_CATEGORIES}
+          posts={getBlogPosts(locale)}
+          categories={getBlogCategories(locale)}
           postCategories={POST_CATEGORIES}
         />
       </section>

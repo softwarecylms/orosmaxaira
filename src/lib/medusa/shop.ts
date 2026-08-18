@@ -1,4 +1,5 @@
 import type { HttpTypes } from '@medusajs/types'
+import { getLocale } from 'next-intl/server'
 import { sdk } from './client'
 import { getDefaultRegion } from './region'
 import {
@@ -9,6 +10,17 @@ import {
   type ShopProductDetail,
   type ShopVariationSize,
 } from '@/components/shop/shop-content'
+import { productSlug, canonicalHandle } from '@/components/shop/product-slugs'
+
+/** Pick the English value from Medusa `metadata` when the locale is `en`,
+ *  falling back to the Greek default. */
+function pick(locale: string, meta: unknown, key: string, fallback: string): string {
+  if (locale === 'en') {
+    const v = (meta as Record<string, unknown> | null | undefined)?.[key]
+    if (typeof v === 'string' && v.trim()) return v
+  }
+  return fallback
+}
 
 /**
  * Medusa → storefront adapter for the shop grid. Maps Store API products into
@@ -24,8 +36,10 @@ const FIELDS = [
   'title',
   'handle',
   'thumbnail',
+  'metadata', // title_en / description_en (EN translations)
   '*images',
   '*categories',
+  'categories.metadata', // name_en
   '*variants.calculated_price',
   '+variants.inventory_quantity',
   '+variants.manage_inventory', // required for inventory_quantity to populate
@@ -35,7 +49,7 @@ const FIELDS = [
 /** 3.5 → "€3,50" (Greek comma decimal). */
 const euro = (n: number) => `€${n.toFixed(2).replace('.', ',')}`
 
-function mapProduct(p: HttpTypes.StoreProduct): ShopProduct | null {
+function mapProduct(p: HttpTypes.StoreProduct, locale: string): ShopProduct | null {
   const variants = p.variants ?? []
   const amounts = variants
     .map(
@@ -64,17 +78,22 @@ function mapProduct(p: HttpTypes.StoreProduct): ShopProduct | null {
     return (vv.inventory_quantity ?? 0) > 0
   })
 
+  // `category` stays the Greek canonical name (slug + filter matching); the
+  // English display label is applied at render via `categoryLabel(category, locale)`.
+  const title = pick(locale, p.metadata, 'title_en', p.title)
+
   return {
     handle: p.handle!,
     category,
-    title: p.title,
+    title,
     price: min === max ? euro(min) : `${euro(min)} – ${euro(max)}`,
     sortPrice: Math.round(min * 100),
     priceRange: [Math.round(min * 100), Math.round(max * 100)],
     inStock,
     image: p.thumbnail ?? p.images?.[0]?.url ?? '',
-    imageAlt: p.title,
-    href: `/product/${p.handle}`,
+    imageAlt: title,
+    // EN uses the live site's English product slug; EL uses the Greek handle.
+    href: `/product/${productSlug(p.handle!, locale)}`,
   }
 }
 
@@ -88,6 +107,7 @@ export type ShopCatalogue = {
 export async function listShopProducts(): Promise<ShopCatalogue | null> {
   const region = await getDefaultRegion()
   if (!region) return null
+  const locale = await getLocale()
 
   const { products } = await sdk.client.fetch<{ products: HttpTypes.StoreProduct[] }>(
     '/store/products',
@@ -99,7 +119,9 @@ export async function listShopProducts(): Promise<ShopCatalogue | null> {
     },
   )
 
-  const mapped = products.map(mapProduct).filter((p): p is ShopProduct => p != null)
+  const mapped = products
+    .map((p) => mapProduct(p, locale))
+    .filter((p): p is ShopProduct => p != null)
   if (!mapped.length) return null
 
   const priceMin = Math.floor(Math.min(...mapped.map((p) => p.priceRange![0])) / 100)
@@ -112,11 +134,14 @@ const DETAIL_FIELDS = [
   'title',
   'handle',
   'description',
+  'metadata', // title_en / description_en
   'thumbnail',
   '*images',
   '*categories',
+  'categories.metadata',
   '*variants',
   '*variants.options',
+  '*variants.metadata', // variant title_en (container translations)
   '*variants.calculated_price',
   '+variants.inventory_quantity',
   '+variants.manage_inventory',
@@ -141,22 +166,27 @@ export async function getShopProduct(
   const region = await getDefaultRegion()
   if (!region) return null
 
+  // The URL slug may be the English one (/en/product/oros-machaira-blossom-honey)
+  // or the Greek handle — resolve to the canonical Greek handle Medusa stores.
+  const greek = canonicalHandle(handle)
+
   const { products } = await sdk.client.fetch<{ products: HttpTypes.StoreProduct[] }>(
     '/store/products',
     {
       method: 'GET',
-      query: { handle, region_id: region.id, fields: DETAIL_FIELDS, limit: 1 },
+      query: { handle: greek, region_id: region.id, fields: DETAIL_FIELDS, limit: 1 },
       cache: 'force-cache',
-      next: { tags: ['products', `product-${handle}`] },
+      next: { tags: ['products', `product-${greek}`] },
     },
   )
   const m = products?.[0]
   if (!m) return null
 
-  const base = mapProduct(m)
+  const locale = await getLocale()
+  const base = mapProduct(m, locale)
   if (!base) return null
 
-  const staticDetail = getProductDetail(handle)
+  const staticDetail = getProductDetail(greek, locale)
   const variants = (m.variants ?? []) as unknown as MedusaVariant[]
   const multi = variants.length > 1
 
@@ -189,9 +219,12 @@ export async function getShopProduct(
     ...base,
     variantId: multi ? undefined : variants[0]?.id,
   }
+  // EN description: prefer the Medusa `description_en`, then the (locale-selected)
+  // editorial, then the Greek Medusa description.
+  const enDesc = locale === 'en' ? pick(locale, m.metadata, 'description_en', '') : ''
   const detail: ShopProductDetail = {
     ...staticDetail,
-    description: staticDetail.description || m.description || '',
+    description: enDesc || staticDetail.description || m.description || '',
     variations: sizes ? { sizes } : undefined,
   }
   return { product, detail }

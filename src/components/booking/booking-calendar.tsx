@@ -1,13 +1,9 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { useLocale } from 'next-intl'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-
-const WEEKDAYS = ['Δε', 'Τρ', 'Τε', 'Πε', 'Πα', 'Σα', 'Κυ'] // Monday-first
-const MONTHS = [
-  'Ιανουάριος', 'Φεβρουάριος', 'Μάρτιος', 'Απρίλιος', 'Μάιος', 'Ιούνιος',
-  'Ιούλιος', 'Αύγουστος', 'Σεπτέμβριος', 'Οκτώβριος', 'Νοέμβριος', 'Δεκέμβριος',
-]
+import { getBookingUi } from './booking-ui'
 
 const iso = (y: number, m: number, d: number) =>
   `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
@@ -26,6 +22,9 @@ export function BookingCalendar({
   selected: string | null
   onSelect: (date: string) => void
 }) {
+  const ui = getBookingUi(useLocale())
+  const WEEKDAYS = ui.weekdays
+  const MONTHS = ui.monthsNom
   const sorted = useMemo(() => [...availableDates].sort(), [availableDates])
   const firstAvail = sorted[0]
   const lastAvail = sorted[sorted.length - 1]
@@ -69,7 +68,7 @@ export function BookingCalendar({
           type="button"
           onClick={() => canPrev && step(-1)}
           disabled={!canPrev}
-          aria-label="Προηγούμενος μήνας"
+          aria-label={ui.prevMonth}
           className="flex size-8 items-center justify-center rounded-full text-foreground transition-colors hover:bg-offwhite disabled:opacity-30 disabled:hover:bg-transparent"
         >
           <ChevronLeft className="size-4" />
@@ -81,7 +80,7 @@ export function BookingCalendar({
           type="button"
           onClick={() => canNext && step(1)}
           disabled={!canNext}
-          aria-label="Επόμενος μήνας"
+          aria-label={ui.nextMonth}
           className="flex size-8 items-center justify-center rounded-full text-foreground transition-colors hover:bg-offwhite disabled:opacity-30 disabled:hover:bg-transparent"
         >
           <ChevronRight className="size-4" />
@@ -105,7 +104,7 @@ export function BookingCalendar({
               type="button"
               disabled={!available}
               onClick={() => onSelect(ds)}
-              aria-label={`${day} ${MONTHS[month]} ${year}`}
+              aria-label={ui.dayAria(day, MONTHS[month], year)}
               aria-pressed={isSelected}
               className={`mx-auto flex size-8 items-center justify-center rounded-full text-[13px] transition-colors ${
                 isSelected

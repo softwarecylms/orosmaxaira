@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-import Link from 'next/link'
+import { getLocale } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
 import { ChevronRight, CalendarRange, Clock, Users } from 'lucide-react'
 import {
   getWorkshop as getMedusaWorkshop,
@@ -9,6 +10,7 @@ import {
 } from '@/lib/medusa/workshops'
 import type { PriceTier } from '@/lib/medusa/activities'
 import { getWorkshop as getStaticWorkshop } from '@/lib/data/workshops'
+import { getActivitiesUi } from '@/components/activities/activities-content'
 import { RevealUp } from '@/components/home/reveal-up'
 import { SectionHead } from '@/components/shared/section-head'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
@@ -24,20 +26,48 @@ import { CertificationsNote } from '@/components/certificates/certifications-not
 export const dynamic = 'force-dynamic'
 
 const SITE = 'https://orosmaxaira.vercel.app'
-const MONTHS_NOM = [
-  'Ιανουάριος', 'Φεβρουάριος', 'Μάρτιος', 'Απρίλιος', 'Μάιος', 'Ιούνιος',
-  'Ιούλιος', 'Αύγουστος', 'Σεπτέμβριος', 'Οκτώβριος', 'Νοέμβριος', 'Δεκέμβριος',
-]
+
+/** Page-level chrome copy not part of the shared UI or the workshops data. */
+function pageCopy(locale: string) {
+  return locale === 'en'
+    ? {
+        eyebrow: 'Hands-on Workshop',
+        workshopWord: 'Workshop',
+        metaSuffix: 'Hands-on Workshops | Oros Machaira',
+        fallbackDuration: '45 min',
+        fallbackAge: 'For all ages',
+      }
+    : {
+        eyebrow: 'Βιωματικό Εργαστήρι',
+        workshopWord: 'Εργαστήρι',
+        metaSuffix: 'Βιωματικά Εργαστήρια | Όρος Μαχαιρά',
+        fallbackDuration: '45 λεπτά',
+        fallbackAge: 'Για όλες τις ηλικίες',
+      }
+}
+
 // Fallback combos (match the seed's DEMO prices) when Medusa has no tiers.
-const DEFAULT_COMBOS: PriceTier[] = [
-  { key: 'gnorizw', label: 'Γνωρίζω τη Μέλισσα', price: 12, note: 'ανά άτομο · ενδεικτική τιμή' },
-  {
-    key: 'gnorizw-peripeteies',
-    label: 'Γνωρίζω τη Μέλισσα + Περιπέτειες στις Κυψέλες',
-    price: 20,
-    note: 'ανά άτομο · ενδεικτική τιμή',
-  },
-]
+function getDefaultCombos(locale: string): PriceTier[] {
+  return locale === 'en'
+    ? [
+        { key: 'gnorizw', label: 'Getting to Know the Bee', price: 12, note: 'per person · indicative price' },
+        {
+          key: 'gnorizw-peripeteies',
+          label: 'Getting to Know the Bee + Adventures in the Beehives',
+          price: 20,
+          note: 'per person · indicative price',
+        },
+      ]
+    : [
+        { key: 'gnorizw', label: 'Γνωρίζω τη Μέλισσα', price: 12, note: 'ανά άτομο · ενδεικτική τιμή' },
+        {
+          key: 'gnorizw-peripeteies',
+          label: 'Γνωρίζω τη Μέλισσα + Περιπέτειες στις Κυψέλες',
+          price: 20,
+          note: 'ανά άτομο · ενδεικτική τιμή',
+        },
+      ]
+}
 
 type WView = {
   slug: string
@@ -57,16 +87,23 @@ type WView = {
   metaDescription?: string
 }
 
-function badge(seasonLabel: string | null | undefined, months: number[] | null | undefined): string {
+function badge(
+  seasonLabel: string | null | undefined,
+  months: number[] | null | undefined,
+  monthsNom: string[],
+): string {
   if (months && months.length) {
-    const a = MONTHS_NOM[months[0] - 1]
-    const b = MONTHS_NOM[months[months.length - 1] - 1]
+    const a = monthsNom[months[0] - 1]
+    const b = monthsNom[months[months.length - 1] - 1]
     return `${seasonLabel ?? ''} · ${a}${a !== b ? ` – ${b}` : ''}`.trim().replace(/^· /, '')
   }
   return seasonLabel ?? ''
 }
 
-async function loadWorkshop(slug: string): Promise<WView | null> {
+async function loadWorkshop(slug: string, locale: string): Promise<WView | null> {
+  const ui = getActivitiesUi(locale)
+  const t = pageCopy(locale)
+  const monthsNom = ui.monthsNom
   const m = await getMedusaWorkshop(slug)
   if (m) {
     return {
@@ -74,36 +111,36 @@ async function loadWorkshop(slug: string): Promise<WView | null> {
       title: m.title,
       excerpt: m.excerpt ?? undefined,
       description: m.description ?? '',
-      seasonBadge: badge(m.season_label, m.months),
+      seasonBadge: badge(m.season_label, m.months, monthsNom),
       seasonLabel: m.season_label,
       bookingClosed: !!m.booking_closed,
       durationLabel: m.duration_label ?? undefined,
       ageLabel: m.age_label ?? undefined,
       image: m.image ?? '',
       gallery: (m.gallery ?? []).filter((g) => g?.url).map((g) => ({ src: g.url, alt: g.alt ?? m.title })),
-      tiers: m.price_tiers?.length ? m.price_tiers : DEFAULT_COMBOS,
+      tiers: m.price_tiers?.length ? m.price_tiers : getDefaultCombos(locale),
       currency: m.currency ?? 'eur',
-      metaTitle: m.meta_title ?? `${m.title} — Βιωματικά Εργαστήρια | Όρος Μαχαιρά`,
+      metaTitle: m.meta_title ?? `${m.title} — ${t.metaSuffix}`,
       metaDescription: m.meta_description ?? m.excerpt ?? undefined,
     }
   }
-  const s = getStaticWorkshop(slug)
+  const s = getStaticWorkshop(slug, locale)
   if (!s) return null
   return {
     slug: s.slug,
     title: s.title,
     excerpt: s.excerpt,
     description: s.description,
-    seasonBadge: badge(s.seasonLabel, s.months),
+    seasonBadge: badge(s.seasonLabel, s.months, monthsNom),
     seasonLabel: s.seasonLabel,
     bookingClosed: !!s.bookingClosed,
-    durationLabel: '45 λεπτά',
-    ageLabel: 'Για όλες τις ηλικίες',
+    durationLabel: t.fallbackDuration,
+    ageLabel: t.fallbackAge,
     image: s.image,
     gallery: (s.gallery ?? []).filter((g) => g?.src),
-    tiers: DEFAULT_COMBOS,
+    tiers: getDefaultCombos(locale),
     currency: 'eur',
-    metaTitle: `${s.title} — Βιωματικά Εργαστήρια | Όρος Μαχαιρά`,
+    metaTitle: `${s.title} — ${t.metaSuffix}`,
     metaDescription: s.excerpt,
   }
 }
@@ -114,8 +151,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const w = await loadWorkshop(slug)
-  if (!w) return { title: 'Εργαστήρι' }
+  const locale = await getLocale()
+  const w = await loadWorkshop(slug, locale)
+  if (!w) return { title: pageCopy(locale).workshopWord }
   const url = `${SITE}/drastiriotites/ergastiria/${w.slug}`
   return {
     title: w.metaTitle,
@@ -137,7 +175,10 @@ export default async function WorkshopDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const [w, bookable] = await Promise.all([loadWorkshop(slug), workshopIsBookable(slug)])
+  const locale = await getLocale()
+  const ui = getActivitiesUi(locale)
+  const t = pageCopy(locale)
+  const [w, bookable] = await Promise.all([loadWorkshop(slug, locale), workshopIsBookable(slug)])
   if (!w) notFound()
 
   const pills = [
@@ -150,9 +191,9 @@ export default async function WorkshopDetailPage({
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Αρχική', item: SITE },
-      { '@type': 'ListItem', position: 2, name: 'Δραστηριότητες', item: `${SITE}/drastiriotites` },
-      { '@type': 'ListItem', position: 3, name: 'Εργαστήρια', item: `${SITE}/drastiriotites/ergastiria` },
+      { '@type': 'ListItem', position: 1, name: ui.breadcrumbHome, item: SITE },
+      { '@type': 'ListItem', position: 2, name: ui.breadcrumbActivities, item: `${SITE}/drastiriotites` },
+      { '@type': 'ListItem', position: 3, name: ui.breadcrumbWorkshops, item: `${SITE}/drastiriotites/ergastiria` },
       { '@type': 'ListItem', position: 4, name: w.title },
     ],
   }
@@ -174,15 +215,15 @@ export default async function WorkshopDetailPage({
             className="flex flex-wrap items-center gap-1.5 text-[15px] text-muted md:text-[17px]"
           >
             <Link href="/" className="transition-colors hover:text-accent">
-              Αρχική
+              {ui.breadcrumbHome}
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
             <Link href="/drastiriotites" className="transition-colors hover:text-accent">
-              Δραστηριότητες
+              {ui.breadcrumbActivities}
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
             <Link href="/drastiriotites/ergastiria" className="transition-colors hover:text-accent">
-              Εργαστήρια
+              {ui.breadcrumbWorkshops}
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
             <span className="text-foreground">{w.title}</span>
@@ -195,7 +236,7 @@ export default async function WorkshopDetailPage({
         <RevealUp>
           <div className="flex flex-col gap-4">
             <span className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">
-              Βιωματικό Εργαστήρι
+              {t.eyebrow}
             </span>
             <h1 className="font-display text-[32px] font-bold leading-[1.06] text-foreground md:text-[46px]">
               {w.title}
@@ -237,7 +278,7 @@ export default async function WorkshopDetailPage({
           <div className="flex min-w-0 flex-col gap-8">
             <section className="flex flex-col gap-5">
               <h2 className="font-display text-[22px] font-bold leading-[1.2] text-foreground md:text-[26px]">
-                Περιγραφή
+                {ui.sectionDescription}
               </h2>
               {paragraphs.map((p, i) => (
                 <p
@@ -275,7 +316,7 @@ export default async function WorkshopDetailPage({
       {w.gallery.length ? (
         <section className="bg-offwhite py-12 md:py-[70px]">
           <div className="container-wide flex flex-col gap-8">
-            <SectionHead eyebrow="Στιγμές" heading={`Στιγμές από «${w.title}»`} />
+            <SectionHead eyebrow={ui.moments} heading={ui.momentsFrom(w.title)} />
             <GalleryCarousel images={w.gallery} />
           </div>
         </section>

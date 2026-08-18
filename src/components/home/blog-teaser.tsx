@@ -2,15 +2,16 @@ import Image from 'next/image'
 import { getLocale } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { getHomeContent } from './home-content'
-import { BLOG_POSTS } from '@/components/blog/blog-data'
+import { getBlogPosts } from '@/components/blog/blog-data'
 import { CtaLink } from './cta-link'
 import { RevealUp, RevealGroup, RevealItem } from './reveal-up'
 
 /** Section 10 — "Ο Κόσμος της Μέλισσας & της Φύσης" blog teaser (Figma 118:631).
  *  Shows the 3 most recent posts (a featured one + two), each linked to its page. */
 export async function BlogTeaser() {
-  const { BLOG } = getHomeContent(await getLocale())
-  const recent = [...BLOG_POSTS].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)
+  const locale = await getLocale()
+  const { BLOG } = getHomeContent(locale)
+  const recent = [...getBlogPosts(locale)].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)
   const [featured, ...items] = recent
   return (
     <section data-testid="blog-teaser" className="bg-offwhite py-12 md:py-[70px]">

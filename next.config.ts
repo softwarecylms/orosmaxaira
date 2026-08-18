@@ -1,8 +1,19 @@
 import { withPayload } from '@payloadcms/next/withPayload'
 import createNextIntlPlugin from 'next-intl/plugin'
 import type { NextConfig } from 'next'
+import { PRODUCT_HANDLE_EN } from './src/components/shop/product-slugs'
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
+
+// Under /en, the live site serves products at English slugs. Redirect the Greek
+// handle to the English slug so every EN product URL matches orosmaxaira.com.
+// trailingSlash: true means the normalized path has a trailing slash, so match
+// that form (the plain form 308s to add the slash first, then this fires).
+const enProductRedirects = Object.entries(PRODUCT_HANDLE_EN).map(([el, en]) => ({
+  source: `/en/product/${el}/`,
+  destination: `/en/product/${en}/`,
+  permanent: true,
+}))
 
 const nextConfig: NextConfig = {
   output: 'standalone',
@@ -20,6 +31,8 @@ const nextConfig: NextConfig = {
       { source: '/contact', destination: '/epikoinonia', permanent: true },
       { source: '/adopt-a-hive', destination: '/yiotheto-mia-kypseli', permanent: true },
       { source: '/privacy', destination: '/privacy-amp-cookie-policy', permanent: true },
+      // Under /en, Greek product handles redirect to the live site's English slug.
+      ...enProductRedirects,
     ]
   },
   // Lint runs in the editor/CI, not as a deploy gate.

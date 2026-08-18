@@ -1,7 +1,9 @@
 'use client'
 
 import Image from 'next/image'
+import { useLocale } from 'next-intl'
 import { cn } from '@/lib/utils'
+import { getProductUi } from './product-ui'
 
 /** Product detail gallery (Figma 239:1021 + Gallery row): large main image with
  *  a thumbnail strip. Controlled — `active` is the shown image; selecting a
@@ -17,6 +19,7 @@ export function ProductGallery({
   onSelect: (src: string) => void
   alt: string
 }) {
+  const ui = getProductUi(useLocale())
   const gallery = images.length ? images : []
   const main = gallery.includes(active) ? active : gallery[0]
 
@@ -43,7 +46,7 @@ export function ProductGallery({
               key={src + i}
               type="button"
               onClick={() => onSelect(src)}
-              aria-label={`${alt} — εικόνα ${i + 1}`}
+              aria-label={ui.galleryImage(alt, i + 1)}
               aria-current={src === main}
               className={cn(
                 'relative aspect-square w-[88px] shrink-0 overflow-hidden rounded-[4px] bg-offwhite transition-opacity md:w-[104px]',

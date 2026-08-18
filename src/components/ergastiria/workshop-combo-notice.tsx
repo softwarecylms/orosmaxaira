@@ -1,15 +1,18 @@
-import Link from 'next/link'
+import { getLocale } from 'next-intl/server'
 import { Info } from 'lucide-react'
+import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
+import { getErgastiriaUi } from './ergastiria-ui'
 
 const linkCls = 'font-semibold text-accent underline-offset-2 hover:underline'
 
 /**
  * The combination rule (R1): a workshop is never booked on its own — always
  * paired with an experience. Prominent callout reused on the hub and on every
- * workshop detail page. Server component (links only).
+ * workshop detail page. Async server component (locale + links only).
  */
-export function WorkshopComboNotice({ className }: { className?: string }) {
+export async function WorkshopComboNotice({ className }: { className?: string }) {
+  const ui = getErgastiriaUi(await getLocale())
   return (
     <aside
       className={cn(
@@ -22,22 +25,22 @@ export function WorkshopComboNotice({ className }: { className?: string }) {
       </span>
       <div className="flex flex-col gap-1.5">
         <h3 className="font-display text-[16px] font-bold text-foreground md:text-[18px]">
-          Πώς κρατούνται τα εργαστήρια
+          {ui.comboTitle}
         </h3>
         <p className="text-[14.5px] leading-[1.65] text-foreground/80 md:text-[15px]">
-          Τα βιωματικά εργαστήρια δεν κρατούνται αυτόνομα. Συνδυάζονται πάντα είτε με την εμπειρία{' '}
+          {ui.comboBodyPre}
           <Link href="/drastiriotites/xenagiseis" className={linkCls}>
-            «Γνωρίζω τη μέλισσα»
+            {ui.gnorizwLabel}
           </Link>
-          , είτε με τον συνδυασμό{' '}
+          {ui.comboBodyMid}
           <Link href="/drastiriotites/xenagiseis" className={linkCls}>
-            «Γνωρίζω τη μέλισσα»
+            {ui.gnorizwLabel}
           </Link>{' '}
           &amp;{' '}
           <Link href="/drastiriotites/peripeteies-stis-kypseles" className={linkCls}>
-            «Περιπέτειες στις Κυψέλες»
+            {ui.peripeteiesLabel}
           </Link>
-          .
+          {ui.comboBodyPost}
         </p>
       </div>
     </aside>
