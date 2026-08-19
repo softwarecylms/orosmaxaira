@@ -137,7 +137,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <div className="overflow-hidden rounded-[16px] bg-accent text-white">
             <div className="p-6">
               <h2 className="font-display text-[18px] font-bold">{ui.contactTitle}</h2>
-              <p className="mt-2 text-[14px] font-normal leading-[1.6] text-white/75">
+              <p className="mt-2 text-[14px] font-medium leading-[1.6] text-white">
                 {ui.contactBody}
               </p>
               <div className="mt-4 flex flex-col gap-3 text-[14px] font-semibold text-white">
