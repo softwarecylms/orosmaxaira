@@ -1,4 +1,5 @@
 import { sdk } from './client'
+import { ACTIVITY_EN } from './activities-en'
 
 /**
  * Storefront data layer for the Medusa `bookings` module (activities +
@@ -80,15 +81,28 @@ export type AvailabilitySlot = {
   combo_key?: string | null
 }
 
-/** Fetch a published activity by slug, or null if it isn't in Medusa. */
-export async function getActivity(slug: string): Promise<Activity | null> {
-  return sdk.client
+/**
+ * Fetch a published activity by slug, or null if it isn't in Medusa.
+ *
+ * Medusa stores only the Greek record (no per-locale field), so when
+ * `locale === 'en'` we merge an English overlay (`activities-en.ts`) onto the
+ * fetched activity — translating text only and keeping id/slug/prices/images/
+ * months/currency/video untouched.
+ */
+export async function getActivity(slug: string, locale?: string): Promise<Activity | null> {
+  const activity = await sdk.client
     .fetch<{ activity: Activity }>(`/store/activities/${slug}`, {
       method: 'GET',
       cache: 'no-store',
     })
     .then((r) => r.activity)
     .catch(() => null)
+
+  if (!activity) return null
+  if (locale === 'en' && ACTIVITY_EN[slug]) {
+    return { ...activity, ...ACTIVITY_EN[slug] }
+  }
+  return activity
 }
 
 /** Open slots (with remaining capacity) for a date range. */

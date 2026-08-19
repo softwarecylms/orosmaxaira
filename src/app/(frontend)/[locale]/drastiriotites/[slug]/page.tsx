@@ -21,7 +21,7 @@ export async function generateMetadata({
   const locale = await getLocale()
   const alternates = hreflangAlternates(locale, `/drastiriotites/${slug}`)
 
-  const activity = await getActivity(slug)
+  const activity = await getActivity(slug, locale)
   if (activity) {
     return {
       title: activity.meta_title ?? activity.title,
@@ -44,7 +44,7 @@ export default async function ActivityExperiencePage({
   const locale = await getLocale()
 
   // Prefer the Medusa-managed activity (new design + real booking).
-  const activity = await getActivity(slug)
+  const activity = await getActivity(slug, locale)
   if (activity) return <ActivityDetail activity={activity} locale={locale} />
 
   // Fallback: the still-static activity pages.

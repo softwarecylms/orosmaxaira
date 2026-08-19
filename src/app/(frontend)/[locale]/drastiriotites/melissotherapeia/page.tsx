@@ -61,7 +61,7 @@ type MelissoView = {
 async function loadView(locale: string): Promise<MelissoView> {
   const ui = getActivitiesUi(locale)
   const t = pageCopy(locale)
-  const a = await getActivity('melissotherapeia')
+  const a = await getActivity('melissotherapeia', locale)
   if (a) {
     const s = a.season_start_month ?? undefined
     const e = a.season_end_month ?? undefined
