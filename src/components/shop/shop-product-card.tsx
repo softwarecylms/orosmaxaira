@@ -62,7 +62,7 @@ export function ShopProductCard({
         </h3>
       </Link>
 
-      <p className="text-[16px] leading-[24px] text-accent">{displayPrice(product.price)}</p>
+      <p className="text-[16px] leading-[24px] text-accent">{displayPrice(product.price, locale)}</p>
 
       <Link
         href={href}

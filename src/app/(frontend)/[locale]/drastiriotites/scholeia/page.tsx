@@ -23,7 +23,10 @@ import {
   MAX_STUDENTS,
   SCHOOL_PRICING,
   SCHOOL_WORKSHOP_OPTIONS,
+  getSchoolVisit,
 } from '@/lib/data/school-visit'
+
+const EN_SCHOOL = getSchoolVisit('en')
 import { getSchoolProgram } from '@/lib/medusa/school-program'
 import { getActivitiesUi } from '@/components/activities/activities-content'
 import { hreflangAlternates } from '@/lib/seo'
@@ -169,7 +172,7 @@ const FALLBACK_EN: PView = {
     { text: 'A honey tasting and important information about honey.' },
   ],
   workshopIntro: 'You choose one of the two hands-on workshops:',
-  workshopOptions: SCHOOL_WORKSHOP_OPTIONS as unknown as PView['workshopOptions'],
+  workshopOptions: EN_SCHOOL.workshopOptions as unknown as PView['workshopOptions'],
   workshopNote: 'In both workshops, the children take their creation home with them.',
   playTitle: 'Free Play in the Playground',
   playText:
@@ -177,7 +180,7 @@ const FALLBACK_EN: PView = {
   durationText:
     'The programme lasts approximately 2 hours and 30 minutes, between 09:30–12:00 (including the time the children will need to eat the breakfast they bring with them). It is flexible depending on your arrival time, with all groups rotating every 45 minutes.',
   maxStudents: MAX_STUDENTS,
-  pricing: SCHOOL_PRICING,
+  pricing: EN_SCHOOL.pricing,
   notes: [
     {
       title: 'Snacks & Drinks',

@@ -24,7 +24,7 @@ export const PRODUCT_TITLE_EN: Record<string, string> = {
   "krema-cherion-milk-amp-honey": "Milk & Honey Hands Cream (50ml, Organic)",
   "krema-cherion-red-grape": "Natural hands cream (Red Grape)",
   "krema-somatos": "Body Cream",
-  "meigma-melioy-gyris-kai-vasilikoy-poltoy": "Μixture of honey, royal jelly and bee pollen",
+  "meigma-melioy-gyris-kai-vasilikoy-poltoy": "Mixture of honey, royal jelly and bee pollen",
   "meli-antheon-oros-machaira": "Blossom Honey «Oros Machaira»",
   "meli-me-charoypi-kai-foyntoykia": "Honey with Carob and Hazelnuts",
   "meli-me-fistikia": "Honey with Peanuts",

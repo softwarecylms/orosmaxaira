@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { useLocale } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import type { HoneyProduct } from './home-content'
 import { proiontaHref } from '@/components/shop/shop-content'
@@ -6,6 +7,7 @@ import { displayPrice } from '@/lib/utils'
 
 /** Bespoke product card used in the Deal-of-the-Month row (Figma "Product w price"). */
 export function ProductCardHoney({ product }: { product: HoneyProduct }) {
+  const locale = useLocale()
   return (
     <div className="group flex flex-col items-center gap-2.5 text-center">
       <Link
@@ -31,7 +33,7 @@ export function ProductCardHoney({ product }: { product: HoneyProduct }) {
           {product.title}
         </h3>
       </Link>
-      <p className="text-[14px] leading-[21px] text-accent">{displayPrice(product.price)}</p>
+      <p className="text-[14px] leading-[21px] text-accent">{displayPrice(product.price, locale)}</p>
     </div>
   )
 }

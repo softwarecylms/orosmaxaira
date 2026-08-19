@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import Image from 'next/image'
+import { useLocale } from 'next-intl'
 import { ShoppingCart } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { cn, displayPrice } from '@/lib/utils'
@@ -16,6 +17,7 @@ import type { FlatlayPrice } from './home-content'
  */
 export function FlatlayHotspot({ item, index }: { item: FlatlayPrice; index: number }) {
   const openUp = item.placement === 'top'
+  const locale = useLocale()
 
   return (
     <motion.div
@@ -37,7 +39,7 @@ export function FlatlayHotspot({ item, index }: { item: FlatlayPrice; index: num
       <span
         tabIndex={0}
         role="button"
-        aria-label={`${item.product.title} — ${displayPrice(item.product.price)}`}
+        aria-label={`${item.product.title} — ${displayPrice(item.product.price, locale)}`}
         className="flex cursor-pointer items-center justify-center rounded-full bg-white px-3.5 py-1.5 text-[14px] leading-[20px] text-foreground shadow-[0_6px_20px_-8px_rgba(0,0,0,0.35)] outline-none transition-transform focus-visible:ring-2 focus-visible:ring-accent group-hover:scale-105 lg:px-5 lg:py-2.5 lg:text-[17px] lg:leading-[24px]"
       >
         {item.value}
@@ -69,13 +71,15 @@ export function FlatlayHotspot({ item, index }: { item: FlatlayPrice; index: num
           <p className="text-[17px] font-medium leading-[24px] text-foreground">
             {item.product.title}
           </p>
-          <p className="text-[16px] leading-[24px] text-accent">{displayPrice(item.product.price)}</p>
+          <p className="text-[16px] leading-[24px] text-accent">
+            {displayPrice(item.product.price, locale)}
+          </p>
           <button
             type="button"
             className="flex items-center justify-center gap-3 rounded-[4px] bg-accent p-[15px] text-[17px] leading-[24px] text-white transition-colors hover:bg-foreground"
           >
             <ShoppingCart className="size-[15px] shrink-0" aria-hidden="true" />
-            Προσθήκη
+            {locale === 'en' ? 'Add' : 'Προσθήκη'}
           </button>
         </div>
       </div>

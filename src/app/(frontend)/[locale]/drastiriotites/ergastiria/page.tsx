@@ -77,7 +77,9 @@ export default async function ErgastiriaPage() {
   const locale = await getLocale()
   const ui = getActivitiesUi(locale)
   const t = pageCopy(locale)
-  const medusa = await getWorkshops()
+  // Medusa workshops are Greek-only (not translated); under /en use the
+  // locale-aware static data so titles/excerpts are English.
+  const medusa = locale === 'en' ? null : await getWorkshops()
   const workshops: Row[] = medusa
     ? medusa.map((w) => ({
         slug: w.slug,
@@ -87,7 +89,7 @@ export default async function ErgastiriaPage() {
         seasonLabel: w.season_label ?? '',
         months: w.months ?? [],
       }))
-    : publishedWorkshops().map((w) => ({
+    : publishedWorkshops(locale).map((w) => ({
         slug: w.slug,
         title: w.title,
         excerpt: w.excerpt,

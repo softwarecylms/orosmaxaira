@@ -20,6 +20,7 @@ import { BenefitsBar } from '@/components/shop/product/benefits-bar'
 import { RelatedCarousel } from '@/components/shop/product/related-carousel'
 import { RevealUp } from '@/components/home/reveal-up'
 import { canonicalHandle, productHreflang } from '@/components/shop/product-slugs'
+import { localizedProductTitle } from '@/components/shop/product-i18n'
 
 type Params = { params: Promise<{ handle: string }> }
 
@@ -31,9 +32,10 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const product = getProductByHandle(greek)
   if (!product) return { title: getProductUi(locale).metaTitleFallback, alternates }
   const detail = getProductDetail(greek, locale)
+  const title = localizedProductTitle(greek, product.title ?? '', locale)
   return {
-    title: product.title,
-    description: detail.description ?? product.title,
+    title,
+    description: detail.description ?? title,
     alternates,
   }
 }
@@ -53,7 +55,12 @@ export default async function ProductPage({ params }: Params) {
   if (!product) notFound()
   const detail = live?.detail ?? getProductDetail(greek, locale)
 
-  const related = getRelatedProducts(product)
+  // Related + cross-sell products come from the static snapshot (Greek titles);
+  // localize their display titles by handle so /en shows English names.
+  const related = getRelatedProducts(product).map((r) => ({
+    ...r,
+    title: localizedProductTitle(handleOf(r), r.title ?? '', locale),
+  }))
 
   const addonHandles = detail.addons ?? []
   const addonVariants = await getAddonVariants(addonHandles).catch(
@@ -64,7 +71,7 @@ export default async function ProductPage({ params }: Params) {
     .filter((p): p is NonNullable<typeof p> => Boolean(p))
     .map((p) => ({
       handle: handleOf(p),
-      title: p.title,
+      title: localizedProductTitle(handleOf(p), p.title ?? '', locale),
       image: p.image,
       price: p.price,
       variantId: addonVariants[handleOf(p)]?.variantId,

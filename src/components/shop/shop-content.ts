@@ -282,6 +282,48 @@ export function getProductByHandle(handle: string): ShopProduct | undefined {
  *  handle. Falls back per-handle to the Greek editorial if a handle is missing. */
 export const PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
   ...GENERATED_PRODUCT_DETAILS_EN,
+  // Thyme honey has a hand-written (Greek) editorial in PRODUCT_DETAILS that the
+  // generated EN file doesn't cover — provide the English version here.
+  'thymarisio-meli-oros-machaira': {
+    ...PRODUCT_DETAILS['thymarisio-meli-oros-machaira'],
+    description:
+      'Thyme honey «Oros Machaira» has a strong aroma and a full flavour. It is considered the finest and most prized honey of Cyprus.',
+    variations: {
+      sizes: [
+        { label: '100g', container: 'Glass', price: '€3,50', sortPrice: 350, image: THYM_IMG['100g'] },
+        { label: '330g', container: 'Plastic', price: '€5,70', sortPrice: 570, image: THYM_IMG['330g'] },
+        { label: '480g', container: 'Squeeze Bottle', price: '€8,00', sortPrice: 800, image: THYM_IMG['480g'] },
+        { label: '500g', container: 'Glass', price: '€8,50', sortPrice: 850, image: THYM_IMG['500g'] },
+        { label: '790g', container: 'Glass', price: '€12,00', sortPrice: 1200, image: THYM_IMG['790g'] },
+        { label: '3kg', container: 'Plastic', price: '€31,00', sortPrice: 3100, image: THYM_IMG['3kg'] },
+      ],
+    },
+    sections: [
+      {
+        body: 'Thyme honey is a type of honey made from the nectar of wildflowers. It is a dark honey with a unique, intense flavour and aroma. It is often used in Mediterranean cooking and pairs well with cheese, meats and vegetables.',
+      },
+      {
+        heading: 'Properties and health benefits',
+        body: 'Thyme honey is a source of antioxidants, including phenolic acids and flavonoids, which are believed to help protect against oxidative stress. It also has antibacterial and antifungal properties and may help reduce inflammation and improve digestion. In addition, it is thought to help strengthen the immune system and reduce fatigue.',
+      },
+      {
+        heading: 'When is thyme honey produced',
+        body: 'Thyme honey is usually produced during the summer months and early autumn, when thyme is in bloom — typically from June and July through to September.',
+      },
+      {
+        heading: 'What does thyme honey taste like',
+        body: 'Thyme honey has a sweet and slightly earthy flavour. It is not as intensely sweet as other honey varieties, but it is still sweet enough to be used in desserts and drinks.',
+      },
+      {
+        heading: 'What colour is thyme honey',
+        body: 'Thyme honey usually has a dark amber colour.',
+      },
+      {
+        heading: 'Where to buy it',
+        body: 'We recommend ordering online through our website, as availability in supermarkets is limited.',
+      },
+    ],
+  },
 }
 
 export function getProductDetail(handle: string, locale?: string): ShopProductDetail {

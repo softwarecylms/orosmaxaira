@@ -8,11 +8,12 @@ export function cn(...inputs: ClassValue[]) {
 /**
  * Display label for a product price. A price may be a single value ('€7,00')
  * or a range ('€3,00 – €27,50' — products sold in several sizes). For ranges
- * we show only the starting price, prefixed with «Από».
+ * we show only the starting price, prefixed with «Από» / «From» per locale.
  */
-export function displayPrice(price: string): string {
+export function displayPrice(price: string, locale: string = 'el'): string {
   const parts = price.split(/\s*[–—-]\s*/)
-  return parts.length > 1 ? `Από ${parts[0].trim()}` : price
+  if (parts.length <= 1) return price
+  return `${locale === 'en' ? 'From' : 'Από'} ${parts[0].trim()}`
 }
 
 export function mediaSrc(media: unknown): string | undefined {

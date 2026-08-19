@@ -48,7 +48,8 @@ export function ProductPurchase({
   onSelectSize: (label: string | null) => void
 }) {
   const router = useRouter()
-  const ui = getProductUi(useLocale())
+  const locale = useLocale()
+  const ui = getProductUi(locale)
   const { addItem, flashDrawer } = useCart()
   const reduce = useReducedMotion()
 
@@ -70,7 +71,7 @@ export function ProductPurchase({
     ? selected.price
     : hasVariations
       ? `${ui.fromPrice} ${cheapest!.price}`
-      : displayPrice(product.price)
+      : displayPrice(product.price, locale)
 
   function buildItem() {
     if (hasVariations && selected) {
@@ -89,7 +90,7 @@ export function ProductPurchase({
       handle,
       title: product.title,
       image: product.image,
-      priceLabel: displayPrice(product.price),
+      priceLabel: displayPrice(product.price, locale),
       unitPrice: product.sortPrice,
       variantId: product.variantId,
     }
@@ -286,7 +287,7 @@ export function ProductPurchase({
                       {a.title}
                     </span>
                     <span className="text-[14px] leading-[21px] text-accent">
-                      {displayPrice(a.price)}
+                      {displayPrice(a.price, locale)}
                     </span>
                   </span>
                 </Link>
@@ -297,7 +298,7 @@ export function ProductPurchase({
                       handle: a.handle,
                       title: a.title,
                       image: a.image,
-                      priceLabel: displayPrice(a.price),
+                      priceLabel: displayPrice(a.price, locale),
                       unitPrice: parsePrice(a.price),
                       variantId: a.variantId,
                     })
