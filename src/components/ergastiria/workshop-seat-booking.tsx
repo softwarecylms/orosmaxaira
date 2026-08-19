@@ -84,7 +84,7 @@ export function WorkshopSeatBooking({
                   {c.label}
                 </span>
                 <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[12.5px] text-muted">
-                  {comboAgeTiers(c).map((t) => (
+                  {comboAgeTiers(c, locale).map((t) => (
                     <span key={t.key}>
                       {t.label.replace(/\s*\(.*\)/, '')}:{' '}
                       <span className="font-semibold text-accent">
@@ -243,7 +243,10 @@ function WorkshopBookingModal({
   }, [open, onClose])
 
   const combo = combos.find((c) => c.key === comboKey) ?? null
-  const ageTiers: AgeTier[] = useMemo(() => (combo ? comboAgeTiers(combo) : []), [combo])
+  const ageTiers: AgeTier[] = useMemo(
+    () => (combo ? comboAgeTiers(combo, locale) : []),
+    [combo, locale],
+  )
 
   // Which combos actually have upcoming availability.
   const comboHasSlots = useMemo(() => {

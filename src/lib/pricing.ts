@@ -40,22 +40,32 @@ export function hasWeekendPricing(tiers: PriceTier[]): boolean {
 // booking UI already uses for activities.
 
 const DEFAULT_AGE_LABELS = {
-  adult: 'Ενήλικες (12+ ετών)',
-  child: 'Παιδιά (4–11 ετών)',
-  infant: 'Βρέφη & Νήπια (0–3 ετών)',
+  el: {
+    adult: 'Ενήλικες (12+ ετών)',
+    child: 'Παιδιά (4–11 ετών)',
+    infant: 'Βρέφη & Νήπια (0–3 ετών)',
+  },
+  en: {
+    adult: 'Adults (12+)',
+    child: 'Children (4–11)',
+    infant: 'Infants & Toddlers (0–3)',
+  },
 }
 
 export type AgeKey = 'adult' | 'child' | 'infant'
 export type AgeTier = { key: AgeKey; label: string; price: number; note?: string }
 
-/** Per-age tiers for a workshop combo (adults / children / infants). */
-export function comboAgeTiers(combo: PriceTier): AgeTier[] {
+/** Per-age tiers for a workshop combo (adults / children / infants). The locale
+ *  only affects the fallback labels used when the combo carries no `age_labels`
+ *  (e.g. the demo combos, or when Medusa is unreachable). */
+export function comboAgeTiers(combo: PriceTier, locale = 'el'): AgeTier[] {
   const prices = combo.prices ?? {}
   const labels = combo.age_labels ?? {}
+  const fallback = locale === 'en' ? DEFAULT_AGE_LABELS.en : DEFAULT_AGE_LABELS.el
   const keys: AgeKey[] = ['adult', 'child', 'infant']
   return keys.map((key) => ({
     key,
-    label: labels[key] ?? DEFAULT_AGE_LABELS[key],
+    label: labels[key] ?? fallback[key],
     price: Number(prices[key]) || 0,
     // A €0 (infant) tier shows the locale-aware "Free"/"Δωρεάν" label from the
     // booking UI (`bui.free`) at the render site — don't hardcode it here.
