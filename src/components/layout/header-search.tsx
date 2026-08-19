@@ -7,7 +7,8 @@ import { Link, usePathname, useRouter } from '@/i18n/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Search } from 'lucide-react'
 import { getHomeContent } from '@/components/home/home-content'
-import { SHOP_PRODUCTS, handleOf } from '@/components/shop/shop-content'
+import { SHOP_PRODUCTS, handleOf, categoryLabel } from '@/components/shop/shop-content'
+import { PRODUCT_TITLE_EN, localizedProductTitle } from '@/components/shop/product-i18n'
 import { EASE } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
@@ -63,7 +64,16 @@ export function HeaderSearch({ className }: { className?: string }) {
   const results = useMemo(() => {
     if (q === '') return []
     const nq = norm(q)
-    return SHOP_PRODUCTS.map((p) => ({ p, s: score(p.title, p.category, nq) }))
+    // Match against BOTH the Greek and English title/category so results appear
+    // regardless of the language the visitor types in.
+    return SHOP_PRODUCTS.map((p) => {
+      const enTitle = PRODUCT_TITLE_EN[handleOf(p)] ?? p.title
+      const s = Math.min(
+        score(p.title, p.category, nq),
+        score(enTitle, categoryLabel(p.category, 'en'), nq),
+      )
+      return { p, s }
+    })
       .filter((x) => x.s < 9)
       .sort((a, b) => a.s - b.s) // stable sort keeps catalogue order within a tier
       .slice(0, MAX_RESULTS)
@@ -214,9 +224,11 @@ export function HeaderSearch({ className }: { className?: string }) {
                           </span>
                           <span className="flex min-w-0 flex-1 flex-col">
                             <span className="truncate text-[14px] font-medium leading-[18px] text-foreground">
-                              {p.title}
+                              {localizedProductTitle(handle, p.title, locale)}
                             </span>
-                            <span className="text-[12px] text-muted">{p.category}</span>
+                            <span className="text-[12px] text-muted">
+                              {categoryLabel(p.category, locale)}
+                            </span>
                           </span>
                           <span
                             className={cn(
