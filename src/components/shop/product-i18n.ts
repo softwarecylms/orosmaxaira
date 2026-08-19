@@ -4,6 +4,7 @@
  * captured at add-time; this maps the Greek handle -> English title so /en
  * always shows the English product name, matching the live site).
  */
+import { canonicalHandle } from './product-slugs'
 
 /** Greek Medusa handle -> English product title. */
 export const PRODUCT_TITLE_EN: Record<string, string> = {
@@ -52,9 +53,12 @@ const CONTAINER_EN: Record<string, string> = {
   "Συσκευασία": "Package",
 }
 
-/** English product title for a Greek handle, when locale is en. */
+/** English product title for a handle, when locale is en. Resolves both the
+ *  Greek Medusa handle and the English URL slug (canonicalHandle) so cart items
+ *  stored under either slug still show the English name. */
 export function localizedProductTitle(handle: string, fallback: string, locale: string): string {
-  return locale === 'en' ? PRODUCT_TITLE_EN[handle] ?? fallback : fallback
+  if (locale !== 'en') return fallback
+  return PRODUCT_TITLE_EN[handle] ?? PRODUCT_TITLE_EN[canonicalHandle(handle)] ?? fallback
 }
 
 /** Translate a container word (Πλαστικό -> Plastic) when locale is en. */
