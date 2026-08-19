@@ -62,7 +62,9 @@ export default async function seedOrosProducts({ container }: ExecArgs) {
   })
   const region = regions.find((r) => r.currency_code === "eur") ?? regions[0]
   if (region) {
-    const existing = (region.countries ?? []).map((c: { iso_2: string }) => c.iso_2)
+    const existing = (region.countries ?? [])
+      .map((c) => c?.iso_2)
+      .filter((x): x is string => !!x)
     const wanted = ["cy", "gr"].filter((c) => !existing.includes(c))
     if (wanted.length) {
       await regionService.updateRegions(region.id, {
@@ -149,7 +151,9 @@ export default async function seedOrosProducts({ container }: ExecArgs) {
         title: v.title,
         sku: v.sku,
         manage_inventory: true,
-        options: multi ? { "Μέγεθος": v.size! } : { "Συσκευασία": "Τεμάχιο" },
+        options: (multi
+          ? { "Μέγεθος": v.size! }
+          : { "Συσκευασία": "Τεμάχιο" }) as Record<string, string>,
         prices: [{ amount: v.amount, currency_code: "eur" }],
       })),
     }

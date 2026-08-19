@@ -41,7 +41,9 @@ export default async function seedOrosStripe({ container }: ExecArgs) {
   if (!region) {
     throw new Error("No region found — run the initial seed first.")
   }
-  const current = (region.payment_providers ?? []).map((p: { id: string }) => p.id)
+  const current = (region.payment_providers ?? [])
+    .map((p) => p?.id)
+    .filter((x): x is string => !!x)
 
   // 3. Idempotent attach (payment_providers on update replaces the set → send the union)
   if (current.includes(stripe.id)) {
