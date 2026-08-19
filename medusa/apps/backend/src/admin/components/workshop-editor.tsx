@@ -16,6 +16,20 @@ import {
 import { Trash, ArrowDownTray } from "@medusajs/icons"
 import { sdk } from "../lib/sdk"
 import { Repeater } from "./repeater"
+import { LangToggle } from "./lang-toggle"
+
+// Scalar fields that carry an English translation. Structural fields (slug, image,
+// rank, months, status, currency, booking_closed) are shared and stay Greek-only.
+const TRANSLATABLE_SCALARS = new Set([
+  "title",
+  "season_label",
+  "duration_label",
+  "age_label",
+  "excerpt",
+  "description",
+  "meta_title",
+  "meta_description",
+])
 
 const api = {
   get: <T,>(u: string) => sdk.client.fetch<T>(u, { method: "GET" }),
@@ -164,6 +178,31 @@ export function WorkshopEditor({
   })
   const set = (k: string, v: any) => setForm((f) => ({ ...f, [k]: v }))
 
+  // Language being edited in the content tab (see LangToggle).
+  const [lang, setLang] = useState<"el" | "en">("el")
+  const en = lang === "en"
+  const tval = (k: string) => (en ? form.translations?.en?.[k] ?? "" : form[k] ?? "")
+  const tset = (k: string, v: any) =>
+    en
+      ? setForm((f) => ({
+          ...f,
+          translations: { ...(f.translations ?? {}), en: { ...(f.translations?.en ?? {}), [k]: v } },
+        }))
+      : set(k, v)
+  // JSON overlay value (features/gallery): fall back to the Greek array in EN.
+  const jval = (k: string) => (en ? form.translations?.en?.[k] ?? form[k] : form[k])
+  // English combo label/description overrides, keyed by combo key. Prices stay on
+  // the base record; only the visible strings are translated here.
+  const comboLabels: Record<string, { label?: string; long_label?: string; note?: string }> =
+    form.translations?.en?.combo_labels ?? {}
+  const setComboLabel = (key: string, field: string, v: string) =>
+    setForm((f) => {
+      const en = f.translations?.en ?? {}
+      const map = { ...(en.combo_labels ?? {}) }
+      map[key] = { ...(map[key] ?? {}), [field]: v }
+      return { ...f, translations: { ...(f.translations ?? {}), en: { ...en, combo_labels: map } } }
+    })
+
   const reload = async () => {
     const [{ workshop }, { slots }, { bookings }] = await Promise.all([
       api.get<{ workshop: any }>(`/admin/workshops/${workshopId}`),
@@ -208,6 +247,30 @@ export function WorkshopEditor({
       }
       payload.status = form.status ?? "draft"
       payload.currency = form.currency ?? "eur"
+      // English overlay: drop empty scalars/maps so blanks fall back to Greek.
+      if (form.translations?.en) {
+        const enOut: Record<string, any> = {}
+        for (const [k, v] of Object.entries(form.translations.en)) {
+          if (v === "" || v == null) continue
+          if (k === "combo_labels") {
+            const map: Record<string, any> = {}
+            for (const [ck, cv] of Object.entries(v as Record<string, any>)) {
+              const clean: Record<string, any> = {}
+              for (const [f, fv] of Object.entries(cv ?? {})) {
+                if (fv === "" || fv == null) continue
+                clean[f] = fv
+              }
+              if (Object.keys(clean).length) map[ck] = clean
+            }
+            if (Object.keys(map).length) enOut.combo_labels = map
+            continue
+          }
+          enOut[k] = v
+        }
+        payload.translations = Object.keys(enOut).length ? { ...form.translations, en: enOut } : null
+      } else {
+        payload.translations = form.translations ?? null
+      }
       await api.post(`/admin/workshops/${workshopId}`, payload)
       toast.success("Αποθηκεύτηκε")
       onSaved()
@@ -312,30 +375,42 @@ export function WorkshopEditor({
               {/* CONTENT */}
               <Tabs.Content value="content" className="overflow-y-auto p-6">
                 <div className="mx-auto flex max-w-3xl flex-col gap-6">
+                  <LangToggle lang={lang} onChange={setLang} />
+
                   <div className="grid grid-cols-2 gap-4">
-                    {SCALARS.map((s) => (
-                      <div key={s.key} className={`flex flex-col gap-1 ${s.full ? "col-span-2" : ""}`}>
-                        <Label size="small" weight="plus">
-                          {s.label}
-                        </Label>
-                        {s.type === "textarea" ? (
-                          <Textarea value={form[s.key] ?? ""} onChange={(e) => set(s.key, e.target.value)} />
-                        ) : (
-                          <Input
-                            type={s.type === "number" ? "number" : "text"}
-                            value={form[s.key] ?? ""}
-                            onChange={(e) => set(s.key, e.target.value)}
-                          />
-                        )}
-                      </div>
-                    ))}
+                    {SCALARS.map((s) => {
+                      const translatable = TRANSLATABLE_SCALARS.has(s.key)
+                      const locked = en && !translatable
+                      const value = translatable ? tval(s.key) : form[s.key] ?? ""
+                      const onChange = (v: string) => (translatable ? tset(s.key, v) : set(s.key, v))
+                      return (
+                        <div key={s.key} className={`flex flex-col gap-1 ${s.full ? "col-span-2" : ""}`}>
+                          <Label size="small" weight="plus">
+                            {s.label}
+                            {locked ? <span className="text-ui-fg-muted"> · κοινό</span> : null}
+                          </Label>
+                          {s.type === "textarea" ? (
+                            <Textarea value={value} disabled={locked} onChange={(e) => onChange(e.target.value)} />
+                          ) : (
+                            <Input
+                              type={s.type === "number" ? "number" : "text"}
+                              value={value}
+                              disabled={locked}
+                              onChange={(e) => onChange(e.target.value)}
+                            />
+                          )}
+                        </div>
+                      )
+                    })}
                     <div className="flex flex-col gap-1">
                       <Label size="small" weight="plus">
                         Μήνες (1–12, με κόμμα · κενό = κατόπιν ραντεβού)
+                        {en ? <span className="text-ui-fg-muted"> · κοινό</span> : null}
                       </Label>
                       <Input
                         value={form._monthsText ?? ""}
                         placeholder="π.χ. 7, 8"
+                        disabled={en}
                         onChange={(e) => set("_monthsText", e.target.value)}
                       />
                     </div>
@@ -344,8 +419,9 @@ export function WorkshopEditor({
                         Κατάσταση
                       </Label>
                       <select
-                        className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm"
+                        className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm disabled:opacity-50"
                         value={form.status ?? "draft"}
+                        disabled={en}
                         onChange={(e) => set("status", e.target.value)}
                       >
                         <option value="draft">Πρόχειρο</option>
@@ -357,8 +433,9 @@ export function WorkshopEditor({
                         Κρατήσεις
                       </Label>
                       <select
-                        className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm"
+                        className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm disabled:opacity-50"
                         value={form.booking_closed ? "closed" : "open"}
+                        disabled={en}
                         onChange={(e) => set("booking_closed", e.target.value === "closed")}
                       >
                         <option value="open">Ανοιχτές</option>
@@ -367,44 +444,85 @@ export function WorkshopEditor({
                     </div>
                   </div>
 
-                  <Repeater<ComboRow>
-                    label="Προγράμματα & τιμές (συνδυασμοί εμπειρίας)"
-                    value={form._comboRows}
-                    onChange={(v) => set("_comboRows", v)}
-                    fields={[
-                      { key: "key", label: "Κλειδί (half / full)" },
-                      { key: "label", label: "Ετικέτα (π.χ. Μισό πρόγραμμα)" },
-                      { key: "long_label", label: "Πλήρης περιγραφή συνδυασμού", width: "col-span-2" },
-                      { key: "start_time", label: "Ώρα από (π.χ. 11:00)" },
-                      { key: "end_time", label: "Ώρα έως" },
-                      { key: "adult", label: "€ Ενήλικες (12+)", type: "number" },
-                      { key: "child", label: "€ Παιδιά (4–11)", type: "number" },
-                      { key: "infant", label: "€ Βρέφη (0–3)", type: "number" },
-                      { key: "price", label: "€ Ενιαία τιμή (μόνο για αίτημα)", type: "number" },
-                      { key: "note", label: "Σημείωση", width: "col-span-2" },
-                    ]}
-                    blank={{
-                      key: "",
-                      label: "",
-                      long_label: "",
-                      start_time: "",
-                      end_time: "",
-                      adult: 0,
-                      child: 0,
-                      infant: 0,
-                      price: "",
-                      note: "",
-                    }}
-                  />
-                  <Text size="xsmall" className="text-ui-fg-subtle">
-                    Συμπληρώστε τιμές ανά ηλικία για online κράτηση (half/full). Η
-                    «Ενιαία τιμή» χρησιμοποιείται μόνο για εργαστήρια με φόρμα αιτήματος.
-                  </Text>
+                  {en ? (
+                    /* EN: translate combo labels only — prices stay on the Greek base. */
+                    <div className="flex flex-col gap-3 rounded-lg border border-ui-border-base p-4">
+                      <Label size="small" weight="plus">
+                        Προγράμματα — αγγλικές ετικέτες
+                      </Label>
+                      {(form._comboRows ?? []).filter((r: ComboRow) => r.key).length === 0 ? (
+                        <Text size="xsmall" className="text-ui-fg-subtle">
+                          Δεν υπάρχουν προγράμματα ακόμη (προσθέστε τα στα Ελληνικά).
+                        </Text>
+                      ) : (
+                        (form._comboRows ?? [])
+                          .filter((r: ComboRow) => r.key)
+                          .map((r: ComboRow) => (
+                            <div key={r.key} className="flex flex-col gap-2 rounded-md bg-ui-bg-subtle p-3">
+                              <Text size="xsmall" className="text-ui-fg-subtle">
+                                {r.key} · {r.label || "—"}
+                              </Text>
+                              <Input
+                                placeholder="Label (EN)"
+                                value={comboLabels[r.key]?.label ?? ""}
+                                onChange={(e) => setComboLabel(r.key, "label", e.target.value)}
+                              />
+                              <Input
+                                placeholder="Long label (EN)"
+                                value={comboLabels[r.key]?.long_label ?? ""}
+                                onChange={(e) => setComboLabel(r.key, "long_label", e.target.value)}
+                              />
+                              <Input
+                                placeholder="Note (EN)"
+                                value={comboLabels[r.key]?.note ?? ""}
+                                onChange={(e) => setComboLabel(r.key, "note", e.target.value)}
+                              />
+                            </div>
+                          ))
+                      )}
+                    </div>
+                  ) : (
+                    <>
+                      <Repeater<ComboRow>
+                        label="Προγράμματα & τιμές (συνδυασμοί εμπειρίας)"
+                        value={form._comboRows}
+                        onChange={(v) => set("_comboRows", v)}
+                        fields={[
+                          { key: "key", label: "Κλειδί (half / full)" },
+                          { key: "label", label: "Ετικέτα (π.χ. Μισό πρόγραμμα)" },
+                          { key: "long_label", label: "Πλήρης περιγραφή συνδυασμού", width: "col-span-2" },
+                          { key: "start_time", label: "Ώρα από (π.χ. 11:00)" },
+                          { key: "end_time", label: "Ώρα έως" },
+                          { key: "adult", label: "€ Ενήλικες (12+)", type: "number" },
+                          { key: "child", label: "€ Παιδιά (4–11)", type: "number" },
+                          { key: "infant", label: "€ Βρέφη (0–3)", type: "number" },
+                          { key: "price", label: "€ Ενιαία τιμή (μόνο για αίτημα)", type: "number" },
+                          { key: "note", label: "Σημείωση", width: "col-span-2" },
+                        ]}
+                        blank={{
+                          key: "",
+                          label: "",
+                          long_label: "",
+                          start_time: "",
+                          end_time: "",
+                          adult: 0,
+                          child: 0,
+                          infant: 0,
+                          price: "",
+                          note: "",
+                        }}
+                      />
+                      <Text size="xsmall" className="text-ui-fg-subtle">
+                        Συμπληρώστε τιμές ανά ηλικία για online κράτηση (half/full). Η
+                        «Ενιαία τιμή» χρησιμοποιείται μόνο για εργαστήρια με φόρμα αιτήματος.
+                      </Text>
+                    </>
+                  )}
 
                   <Repeater
                     label="Χαρακτηριστικά (features)"
-                    value={form.features}
-                    onChange={(v) => set("features", v)}
+                    value={jval("features")}
+                    onChange={(v) => tset("features", v)}
                     fields={[
                       { key: "title", label: "Τίτλος", width: "col-span-2" },
                       { key: "text", label: "Κείμενο", type: "textarea", width: "col-span-2" },
@@ -413,8 +531,8 @@ export function WorkshopEditor({
                   />
                   <Repeater
                     label="Εικόνες gallery"
-                    value={form.gallery}
-                    onChange={(v) => set("gallery", v)}
+                    value={jval("gallery")}
+                    onChange={(v) => tset("gallery", v)}
                     fields={[
                       { key: "url", label: "URL", width: "col-span-2" },
                       { key: "alt", label: "Alt", width: "col-span-2" },

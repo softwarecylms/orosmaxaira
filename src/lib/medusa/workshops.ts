@@ -28,24 +28,44 @@ export type Workshop = {
   booking_closed?: boolean | null
   meta_title?: string | null
   meta_description?: string | null
+  /** Per-locale overlay edited in the Medusa admin. Text fields overlay directly;
+   *  `combo_labels` (keyed by price-tier key) overlays the tier label/long_label
+   *  while leaving prices on the base record. */
+  translations?: {
+    en?: Partial<Omit<Workshop, 'translations'>> & {
+      combo_labels?: Record<string, { label?: string; long_label?: string; note?: string }>
+    }
+  } | null
+}
+
+/** Apply the `translations.en` overlay when locale === 'en' (text fields + the
+ *  per-tier combo_labels). Prices/keys/images stay on the Greek base. */
+function localizeWorkshop(w: Workshop, locale?: string): Workshop {
+  if (locale !== 'en' || !w.translations?.en) return w
+  const { combo_labels, ...text } = w.translations.en
+  const merged: Workshop = { ...w, ...text }
+  if (combo_labels && Array.isArray(w.price_tiers)) {
+    merged.price_tiers = w.price_tiers.map((t) => ({ ...t, ...(combo_labels[t.key] ?? {}) }))
+  }
+  return merged
 }
 
 /** All published workshops (ordered), or null if Medusa is unavailable. */
-export async function getWorkshops(): Promise<Workshop[] | null> {
+export async function getWorkshops(locale?: string): Promise<Workshop[] | null> {
   return sdk.client
     .fetch<{ workshops: Workshop[] }>('/store/workshops', { method: 'GET', cache: 'no-store' })
-    .then((r) => r.workshops)
+    .then((r) => r.workshops.map((w) => localizeWorkshop(w, locale)))
     .catch(() => null)
 }
 
 /** A published workshop by slug, or null. */
-export async function getWorkshop(slug: string): Promise<Workshop | null> {
+export async function getWorkshop(slug: string, locale?: string): Promise<Workshop | null> {
   return sdk.client
     .fetch<{ workshop: Workshop }>(`/store/workshops/${slug}`, {
       method: 'GET',
       cache: 'no-store',
     })
-    .then((r) => r.workshop)
+    .then((r) => localizeWorkshop(r.workshop, locale))
     .catch(() => null)
 }
 

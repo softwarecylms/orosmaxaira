@@ -16,6 +16,7 @@ import {
 import { Trash, ArrowDownTray } from "@medusajs/icons"
 import { sdk } from "../lib/sdk"
 import { Repeater } from "./repeater"
+import { LangToggle } from "./lang-toggle"
 
 const api = {
   get: <T,>(u: string) => sdk.client.fetch<T>(u, { method: "GET" }),
@@ -60,6 +61,25 @@ const NUMERIC = new Set([
   "season_start_month",
   "season_end_month",
 ])
+
+// Scalar fields that carry an English translation. Everything else (slug, image
+// URLs, video, prices, dates, numbers, currency, status, booking_type) is shared
+// across locales and stays editable only in the Greek (base) view.
+const TRANSLATABLE_SCALARS = new Set([
+  "title",
+  "subtitle",
+  "hero_image_alt",
+  "description",
+  "details",
+  "note",
+  "duration_label",
+  "age_label",
+  "meta_title",
+  "meta_description",
+])
+// Repeater / structured-content keys get an English overlay too (price_tiers,
+// features, policies, gallery, reviews, benefits) — bound via `jval`/`tset`, which
+// seed the English array from the Greek one so only the visible strings change.
 
 type Slot = {
   id: string
@@ -112,6 +132,24 @@ export function ActivityEditor({
   })
 
   const set = (k: string, v: any) => setForm((f) => ({ ...f, [k]: v }))
+
+  // Language being edited in the content tab. "el" edits the base record;
+  // "en" edits the `translations.en` overlay (only translatable fields).
+  const [lang, setLang] = useState<"el" | "en">("el")
+  const en = lang === "en"
+
+  // Value/setter routed to the base record or the English overlay.
+  const tval = (k: string) => (en ? form.translations?.en?.[k] ?? "" : form[k] ?? "")
+  const tset = (k: string, v: any) =>
+    en
+      ? setForm((f) => ({
+          ...f,
+          translations: { ...(f.translations ?? {}), en: { ...(f.translations?.en ?? {}), [k]: v } },
+        }))
+      : set(k, v)
+  // Repeater/JSON value: in EN, fall back to the Greek array until it's overridden
+  // so the editor starts from the existing structure (prices, keys, images).
+  const jval = (k: string) => (en ? form.translations?.en?.[k] ?? form[k] : form[k])
 
   const reload = async () => {
     const [{ activity }, { slots }, { bookings }] = await Promise.all([
@@ -168,6 +206,17 @@ export function ActivityEditor({
       payload.status = form.status ?? "draft" // rendered as a separate select
       payload.booking_type = form.booking_type ?? "seats"
       if (form.benefits !== undefined) payload.benefits = form.benefits
+      // English overlay: drop empty scalars so a blank EN field falls back to Greek.
+      if (form.translations?.en) {
+        const enOut: Record<string, any> = {}
+        for (const [k, v] of Object.entries(form.translations.en)) {
+          if (v === "" || v == null) continue
+          enOut[k] = v
+        }
+        payload.translations = Object.keys(enOut).length ? { ...form.translations, en: enOut } : null
+      } else {
+        payload.translations = form.translations ?? null
+      }
       await api.post(`/admin/activities/${activityId}`, payload)
       toast.success("Αποθηκεύτηκε")
       onSaved()
@@ -267,36 +316,51 @@ export function ActivityEditor({
               {/* CONTENT */}
               <Tabs.Content value="content" className="overflow-y-auto p-6">
                 <div className="mx-auto flex max-w-3xl flex-col gap-6">
+                  <LangToggle lang={lang} onChange={setLang} />
+
                   <div className="grid grid-cols-2 gap-4">
-                    {CONTENT_SCALARS.map((s) => (
-                      <div
-                        key={s.key}
-                        className={`flex flex-col gap-1 ${s.full ? "col-span-2" : ""}`}
-                      >
-                        <Label size="small" weight="plus">
-                          {s.label}
-                        </Label>
-                        {s.type === "textarea" ? (
-                          <Textarea
-                            value={form[s.key] ?? ""}
-                            onChange={(e) => set(s.key, e.target.value)}
-                          />
-                        ) : s.key === "status" ? null : (
-                          <Input
-                            type={s.type === "number" ? "number" : "text"}
-                            value={form[s.key] ?? ""}
-                            onChange={(e) => set(s.key, e.target.value)}
-                          />
-                        )}
-                      </div>
-                    ))}
+                    {CONTENT_SCALARS.map((s) => {
+                      if (s.key === "status") return null
+                      const translatable = TRANSLATABLE_SCALARS.has(s.key)
+                      // Shared (non-translatable) fields are read-only in EN mode.
+                      const locked = en && !translatable
+                      const value = translatable ? tval(s.key) : form[s.key] ?? ""
+                      const onChange = (v: string) =>
+                        translatable ? tset(s.key, v) : set(s.key, v)
+                      return (
+                        <div
+                          key={s.key}
+                          className={`flex flex-col gap-1 ${s.full ? "col-span-2" : ""}`}
+                        >
+                          <Label size="small" weight="plus">
+                            {s.label}
+                            {locked ? <span className="text-ui-fg-muted"> · κοινό</span> : null}
+                          </Label>
+                          {s.type === "textarea" ? (
+                            <Textarea
+                              value={value}
+                              disabled={locked}
+                              onChange={(e) => onChange(e.target.value)}
+                            />
+                          ) : (
+                            <Input
+                              type={s.type === "number" ? "number" : "text"}
+                              value={value}
+                              disabled={locked}
+                              onChange={(e) => onChange(e.target.value)}
+                            />
+                          )}
+                        </div>
+                      )
+                    })}
                     <div className="flex flex-col gap-1">
                       <Label size="small" weight="plus">
                         Κατάσταση
                       </Label>
                       <select
-                        className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm"
+                        className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm disabled:opacity-50"
                         value={form.status ?? "draft"}
+                        disabled={en}
                         onChange={(e) => set("status", e.target.value)}
                       >
                         <option value="draft">Πρόχειρη</option>
@@ -308,8 +372,9 @@ export function ActivityEditor({
                         Τύπος κράτησης
                       </Label>
                       <select
-                        className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm"
+                        className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm disabled:opacity-50"
                         value={form.booking_type ?? "seats"}
+                        disabled={en}
                         onChange={(e) => set("booking_type", e.target.value)}
                       >
                         <option value="seats">Θέσεις (slots + πληρωμή)</option>
@@ -320,8 +385,8 @@ export function ActivityEditor({
 
                   <Repeater
                     label="Τιμές (price tiers)"
-                    value={form.price_tiers}
-                    onChange={(v) => set("price_tiers", v)}
+                    value={jval("price_tiers")}
+                    onChange={(v) => tset("price_tiers", v)}
                     fields={[
                       { key: "key", label: "Κλειδί (adult/child/infant)" },
                       { key: "price", label: "Τιμή καθημ. (€)", type: "number" },
@@ -333,8 +398,8 @@ export function ActivityEditor({
                   />
                   <Repeater
                     label="Χαρακτηριστικά (features)"
-                    value={form.features}
-                    onChange={(v) => set("features", v)}
+                    value={jval("features")}
+                    onChange={(v) => tset("features", v)}
                     fields={[
                       { key: "title", label: "Τίτλος", width: "col-span-2" },
                       { key: "text", label: "Κείμενο", type: "textarea", width: "col-span-2" },
@@ -343,8 +408,8 @@ export function ActivityEditor({
                   />
                   <Repeater
                     label="Πολιτικές (accordion)"
-                    value={form.policies}
-                    onChange={(v) => set("policies", v)}
+                    value={jval("policies")}
+                    onChange={(v) => tset("policies", v)}
                     fields={[
                       { key: "title", label: "Τίτλος", width: "col-span-2" },
                       { key: "body", label: "Κείμενο", type: "textarea", width: "col-span-2" },
@@ -353,8 +418,8 @@ export function ActivityEditor({
                   />
                   <Repeater
                     label="Εικόνες gallery"
-                    value={form.gallery}
-                    onChange={(v) => set("gallery", v)}
+                    value={jval("gallery")}
+                    onChange={(v) => tset("gallery", v)}
                     fields={[
                       { key: "url", label: "URL", width: "col-span-2" },
                       { key: "alt", label: "Alt", width: "col-span-2" },
@@ -363,8 +428,8 @@ export function ActivityEditor({
                   />
                   <Repeater
                     label="Κριτικές"
-                    value={form.reviews}
-                    onChange={(v) => set("reviews", v)}
+                    value={jval("reviews")}
+                    onChange={(v) => tset("reviews", v)}
                     fields={[
                       { key: "name", label: "Όνομα" },
                       { key: "rating", label: "Βαθμ. (1–5)", type: "number" },
@@ -382,19 +447,19 @@ export function ActivityEditor({
                     <div className="flex flex-col gap-1">
                       <Text size="xsmall">Εισαγωγή</Text>
                       <Textarea
-                        value={form.benefits?.intro ?? ""}
+                        value={jval("benefits")?.intro ?? ""}
                         onChange={(e) =>
-                          set("benefits", { ...(form.benefits ?? {}), intro: e.target.value })
+                          tset("benefits", { ...(jval("benefits") ?? {}), intro: e.target.value })
                         }
                       />
                     </div>
                     <div className="flex flex-col gap-1">
                       <Text size="xsmall">Λίστα — μία κατάσταση ανά γραμμή</Text>
                       <Textarea
-                        value={(form.benefits?.items ?? []).join("\n")}
+                        value={(jval("benefits")?.items ?? []).join("\n")}
                         onChange={(e) =>
-                          set("benefits", {
-                            ...(form.benefits ?? {}),
+                          tset("benefits", {
+                            ...(jval("benefits") ?? {}),
                             items: e.target.value.split("\n").map((x) => x.trim()).filter(Boolean),
                           })
                         }

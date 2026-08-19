@@ -38,7 +38,7 @@ export const PRODUCT_TITLE_EN: Record<string, string> = {
   "vamma-propolis-oros-machaira": "Propolis Tincture «Oros Machaira»",
   "vasilikos-poltos-oros-machaira": "Royal Jelly «Oros Machaira»",
   "ydromelo": "Mead",
-  "ydromelo-valentine-gift-box": "Mead",
+  "ydromelo-valentine-gift-box": "Mead – Valentine’s Gift Box",
 }
 
 /** Container / packaging words used in size labels (e.g. "1Kg · Πλαστικό"). */

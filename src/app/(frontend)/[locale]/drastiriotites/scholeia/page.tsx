@@ -203,8 +203,11 @@ const FALLBACK_EN: PView = {
 
 async function loadProgram(locale: string): Promise<PView> {
   const FALLBACK = locale === 'en' ? FALLBACK_EN : FALLBACK_EL
-  const p = await getSchoolProgram()
-  if (!p) return FALLBACK
+  const raw = await getSchoolProgram()
+  if (!raw) return FALLBACK
+  // For /en, read ONLY the translations.en overlay (the Greek base must not leak
+  // in); anything not translated falls back to the English FALLBACK below.
+  const p = locale === 'en' ? { ...(raw.translations?.en ?? {}) } : raw
   const s = <T,>(v: T | null | undefined, d: T): T => (v == null || v === '' ? d : v)
   return {
     title: s(p.title, FALLBACK.title),

@@ -29,6 +29,9 @@ export type SchoolProgram = {
   allergy_body?: string[] | null
   meta_title?: string | null
   meta_description?: string | null
+  /** Per-locale overlay edited in the Medusa admin (only the translatable fields).
+   *  When locale === 'en', `translations.en` replaces the matching base fields. */
+  translations?: { en?: Partial<Omit<SchoolProgram, 'translations'>> } | null
 }
 
 export async function getSchoolProgram(): Promise<SchoolProgram | null> {

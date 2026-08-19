@@ -4,12 +4,32 @@ import { Button, Container, Heading, Input, Label, Text, Textarea, toast } from 
 import { useEffect, useState } from "react"
 import { sdk } from "../../lib/sdk"
 import { Repeater } from "../../components/repeater"
+import { LangToggle } from "../../components/lang-toggle"
 
 const api = {
   get: <T,>(u: string) => sdk.client.fetch<T>(u, { method: "GET" }),
   post: <T,>(u: string, body: unknown) =>
     sdk.client.fetch<T>(u, { method: "POST", body: body as Record<string, unknown> }),
 }
+
+// Scalars that carry an English translation. hero_image + max_students are shared.
+const TRANSLATABLE_SCALARS = new Set([
+  "title",
+  "hero_image_alt",
+  "intro",
+  "closing",
+  "program_note",
+  "tour_title",
+  "tour_intro",
+  "workshop_intro",
+  "workshop_note",
+  "play_title",
+  "play_text",
+  "duration_text",
+  "allergy_title",
+  "meta_title",
+  "meta_description",
+])
 
 const SCALARS: { key: string; label: string; type?: "text" | "number" | "textarea"; full?: boolean }[] = [
   { key: "title", label: "Τίτλος" },
@@ -36,6 +56,18 @@ const SchoolProgramPage = () => {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const set = (k: string, v: any) => setForm((f) => ({ ...f, [k]: v }))
+
+  const [lang, setLang] = useState<"el" | "en">("el")
+  const en = lang === "en"
+  const tval = (k: string) => (en ? form.translations?.en?.[k] ?? "" : form[k] ?? "")
+  const tset = (k: string, v: any) =>
+    en
+      ? setForm((f) => ({
+          ...f,
+          translations: { ...(f.translations ?? {}), en: { ...(f.translations?.en ?? {}), [k]: v } },
+        }))
+      : set(k, v)
+  const jval = (k: string) => (en ? form.translations?.en?.[k] ?? form[k] : form[k])
 
   useEffect(() => {
     api
@@ -70,6 +102,18 @@ const SchoolProgramPage = () => {
         .map((x) => x.trim())
         .filter(Boolean)
       payload.status = form.status ?? "published"
+      // English overlay: drop empty scalars so blanks fall back to Greek.
+      if (form.translations?.en) {
+        const enOut: Record<string, any> = {}
+        for (const [k, v] of Object.entries(form.translations.en)) {
+          if (v === "" || v == null) continue
+          if (Array.isArray(v) && v.length === 0) continue
+          enOut[k] = v
+        }
+        payload.translations = Object.keys(enOut).length ? { ...form.translations, en: enOut } : null
+      } else {
+        payload.translations = form.translations ?? null
+      }
       await api.post("/admin/school-program", payload)
       toast.success("Αποθηκεύτηκε")
     } catch (e: any) {
@@ -92,30 +136,41 @@ const SchoolProgramPage = () => {
         <div className="px-6 py-8 text-ui-fg-subtle">Φόρτωση…</div>
       ) : (
         <div className="flex flex-col gap-6 px-6 py-6">
+          <LangToggle lang={lang} onChange={setLang} />
+
           <div className="grid grid-cols-2 gap-4">
-            {SCALARS.map((s) => (
-              <div key={s.key} className={`flex flex-col gap-1 ${s.full ? "col-span-2" : ""}`}>
-                <Label size="small" weight="plus">
-                  {s.label}
-                </Label>
-                {s.type === "textarea" ? (
-                  <Textarea value={form[s.key] ?? ""} onChange={(e) => set(s.key, e.target.value)} />
-                ) : (
-                  <Input
-                    type={s.type === "number" ? "number" : "text"}
-                    value={form[s.key] ?? ""}
-                    onChange={(e) => set(s.key, e.target.value)}
-                  />
-                )}
-              </div>
-            ))}
+            {SCALARS.map((s) => {
+              const translatable = TRANSLATABLE_SCALARS.has(s.key)
+              const locked = en && !translatable
+              const value = translatable ? tval(s.key) : form[s.key] ?? ""
+              const onChange = (v: string) => (translatable ? tset(s.key, v) : set(s.key, v))
+              return (
+                <div key={s.key} className={`flex flex-col gap-1 ${s.full ? "col-span-2" : ""}`}>
+                  <Label size="small" weight="plus">
+                    {s.label}
+                    {locked ? <span className="text-ui-fg-muted"> · κοινό</span> : null}
+                  </Label>
+                  {s.type === "textarea" ? (
+                    <Textarea value={value} disabled={locked} onChange={(e) => onChange(e.target.value)} />
+                  ) : (
+                    <Input
+                      type={s.type === "number" ? "number" : "text"}
+                      value={value}
+                      disabled={locked}
+                      onChange={(e) => onChange(e.target.value)}
+                    />
+                  )}
+                </div>
+              )
+            })}
             <div className="flex flex-col gap-1">
               <Label size="small" weight="plus">
                 Κατάσταση
               </Label>
               <select
-                className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm"
+                className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm disabled:opacity-50"
                 value={form.status ?? "published"}
+                disabled={en}
                 onChange={(e) => set("status", e.target.value)}
               >
                 <option value="draft">Πρόχειρο</option>
@@ -126,15 +181,15 @@ const SchoolProgramPage = () => {
 
           <Repeater
             label="Δραστ. 1 — στάσεις ξενάγησης"
-            value={form.tour_stops}
-            onChange={(v) => set("tour_stops", v)}
+            value={jval("tour_stops")}
+            onChange={(v) => tset("tour_stops", v)}
             fields={[{ key: "text", label: "Κείμενο", type: "textarea", width: "col-span-2" }]}
             blank={{ text: "" }}
           />
           <Repeater
             label="Δραστ. 2 — επιλογές εργαστηρίου"
-            value={form.workshop_options}
-            onChange={(v) => set("workshop_options", v)}
+            value={jval("workshop_options")}
+            onChange={(v) => tset("workshop_options", v)}
             fields={[
               { key: "key", label: "Κλειδί" },
               { key: "short", label: "Τίτλος" },
@@ -144,8 +199,8 @@ const SchoolProgramPage = () => {
           />
           <Repeater
             label="Κόστος (ανά παιδί)"
-            value={form.pricing}
-            onChange={(v) => set("pricing", v)}
+            value={jval("pricing")}
+            onChange={(v) => tset("pricing", v)}
             fields={[
               { key: "range", label: "Κλίμακα (π.χ. Μέχρι 25 παιδιά)", width: "col-span-2" },
               { key: "price", label: "Τιμή € (κενό = δωρεάν)", type: "number" },
@@ -155,8 +210,8 @@ const SchoolProgramPage = () => {
           />
           <Repeater
             label="Σημαντικές σημειώσεις"
-            value={form.notes}
-            onChange={(v) => set("notes", v)}
+            value={jval("notes")}
+            onChange={(v) => tset("notes", v)}
             fields={[
               { key: "title", label: "Τίτλος", width: "col-span-2" },
               { key: "body", label: "Κείμενο", type: "textarea", width: "col-span-2" },
@@ -170,8 +225,19 @@ const SchoolProgramPage = () => {
             </Label>
             <Textarea
               rows={4}
-              value={form._allergyText ?? ""}
-              onChange={(e) => set("_allergyText", e.target.value)}
+              value={
+                en
+                  ? (form.translations?.en?.allergy_body ?? form.allergy_body ?? []).join("\n")
+                  : form._allergyText ?? ""
+              }
+              onChange={(e) =>
+                en
+                  ? tset(
+                      "allergy_body",
+                      e.target.value.split("\n").map((x) => x.trim()).filter(Boolean),
+                    )
+                  : set("_allergyText", e.target.value)
+              }
             />
           </div>
           <div>

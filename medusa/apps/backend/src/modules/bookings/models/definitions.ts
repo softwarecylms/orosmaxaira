@@ -48,6 +48,12 @@ export const Activity = model.define("activity", {
   // Optional "Οφέλη" list (e.g. Μελισσοθεραπεία conditions): { intro?, items[] }.
   benefits: model.json().nullable(),
   related_slugs: model.json().nullable(), // string[]
+  // Per-locale overlay of the translatable fields, e.g. { en: { title, subtitle,
+  // description, price_tiers, features, … } }. The storefront spreads
+  // `translations.en` over the Greek base when locale === 'en' (see
+  // `src/lib/medusa/activities.ts`). Only translated strings live here; structural
+  // fields (slug, prices*, images, dates, currency) stay on the base record.
+  translations: model.json().nullable(),
   slots: model.hasMany(() => AvailabilitySlot, { mappedBy: "activity" }),
   bookings: model.hasMany(() => Booking, { mappedBy: "activity" }),
 })
@@ -140,6 +146,8 @@ export const Workshop = model.define("workshop", {
   booking_closed: model.boolean().default(false),
   meta_title: model.text().nullable(),
   meta_description: model.text().nullable(),
+  // Per-locale overlay of the translatable fields (see Activity.translations).
+  translations: model.json().nullable(),
   slots: model.hasMany(() => AvailabilitySlot, { mappedBy: "workshop" }),
   bookings: model.hasMany(() => Booking, { mappedBy: "workshop" }),
 })
@@ -176,4 +184,6 @@ export const SchoolProgram = model.define("school_program", {
   status: model.enum(["draft", "published"]).default("published"),
   meta_title: model.text().nullable(),
   meta_description: model.text().nullable(),
+  // Per-locale overlay of the translatable fields (see Activity.translations).
+  translations: model.json().nullable(),
 })

@@ -68,6 +68,9 @@ export type Activity = {
   /** Optional "Οφέλη" list (e.g. Μελισσοθεραπεία conditions). */
   benefits?: { intro?: string; items: string[] } | null
   related_slugs?: string[] | null
+  /** Per-locale overlay of the translatable fields, edited in the Medusa admin.
+   *  When locale === 'en', `translations.en` is spread over the base record. */
+  translations?: { en?: Partial<Activity> } | null
 }
 
 export type AvailabilitySlot = {
@@ -84,10 +87,11 @@ export type AvailabilitySlot = {
 /**
  * Fetch a published activity by slug, or null if it isn't in Medusa.
  *
- * Medusa stores only the Greek record (no per-locale field), so when
- * `locale === 'en'` we merge an English overlay (`activities-en.ts`) onto the
- * fetched activity — translating text only and keeping id/slug/prices/images/
- * months/currency/video untouched.
+ * The English text is edited in the Medusa admin and stored on the record as
+ * `translations.en`; when `locale === 'en'` we spread that overlay over the base
+ * (Greek) record — translating text only and keeping id/slug/prices/images/
+ * months/currency/video untouched. If the DB overlay is missing we fall back to
+ * the bundled `activities-en.ts` overlay (e.g. Medusa not yet backfilled).
  */
 export async function getActivity(slug: string, locale?: string): Promise<Activity | null> {
   const activity = await sdk.client
@@ -99,8 +103,9 @@ export async function getActivity(slug: string, locale?: string): Promise<Activi
     .catch(() => null)
 
   if (!activity) return null
-  if (locale === 'en' && ACTIVITY_EN[slug]) {
-    return { ...activity, ...ACTIVITY_EN[slug] }
+  if (locale === 'en') {
+    const overlay = activity.translations?.en ?? ACTIVITY_EN[slug]
+    if (overlay) return { ...activity, ...overlay }
   }
   return activity
 }

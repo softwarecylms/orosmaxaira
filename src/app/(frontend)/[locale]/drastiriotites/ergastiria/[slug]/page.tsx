@@ -104,8 +104,11 @@ async function loadWorkshop(slug: string, locale: string): Promise<WView | null>
   const ui = getActivitiesUi(locale)
   const t = pageCopy(locale)
   const monthsNom = ui.monthsNom
-  const m = await getMedusaWorkshop(slug)
-  if (m) {
+  const m = await getMedusaWorkshop(slug, locale)
+  // Use Medusa unless we're on /en and the backend hasn't been redeployed to
+  // serve `translations` yet — then fall through to the static English content
+  // so the page never regresses to Greek during a deploy window.
+  if (m && (locale !== 'en' || m.translations?.en)) {
     return {
       slug: m.slug,
       title: m.title,

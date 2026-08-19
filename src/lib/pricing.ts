@@ -57,7 +57,9 @@ export function comboAgeTiers(combo: PriceTier): AgeTier[] {
     key,
     label: labels[key] ?? DEFAULT_AGE_LABELS[key],
     price: Number(prices[key]) || 0,
-    note: key === 'infant' ? 'Δωρεάν' : undefined,
+    // A €0 (infant) tier shows the locale-aware "Free"/"Δωρεάν" label from the
+    // booking UI (`bui.free`) at the render site — don't hardcode it here.
+    note: undefined,
   }))
 }
 

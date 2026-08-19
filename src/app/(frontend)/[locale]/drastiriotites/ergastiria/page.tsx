@@ -77,11 +77,15 @@ export default async function ErgastiriaPage() {
   const locale = await getLocale()
   const ui = getActivitiesUi(locale)
   const t = pageCopy(locale)
-  // Medusa workshops are Greek-only (not translated); under /en use the
-  // locale-aware static data so titles/excerpts are English.
-  const medusa = locale === 'en' ? null : await getWorkshops()
-  const workshops: Row[] = medusa
-    ? medusa.map((w) => ({
+  // Medusa is the source of truth; the English overlay (translations.en) is
+  // applied server-side by getWorkshops(locale). Fall back to the static
+  // `publishedWorkshops` when Medusa is unreachable, OR (on /en) when the backend
+  // hasn't been redeployed yet to serve `translations` — so English never
+  // regresses to Greek during a deploy window.
+  const medusa = await getWorkshops(locale)
+  const useMedusa = !!medusa && (locale !== 'en' || medusa.some((w) => w.translations?.en))
+  const workshops: Row[] = useMedusa
+    ? medusa!.map((w) => ({
         slug: w.slug,
         title: w.title,
         excerpt: w.excerpt ?? '',
