@@ -209,8 +209,8 @@ export function ShopBrowser({
             className="absolute inset-x-0 top-0 h-4 w-full"
           />
         </div>
-        <div className="flex items-center justify-between">
-          <label className="flex min-w-[72px] items-center gap-1 rounded-[4px] border border-foreground px-2.5 py-2 text-[14px] text-foreground focus-within:ring-1 focus-within:ring-accent">
+        <div className="flex items-center gap-3">
+          <label className="flex min-w-[72px] flex-1 items-center gap-1 rounded-[4px] border border-foreground px-2.5 py-2 text-[14px] text-foreground focus-within:ring-1 focus-within:ring-accent">
             <span aria-hidden="true">€</span>
             <input
               type="text"
@@ -225,7 +225,7 @@ export function ShopBrowser({
               className="w-full min-w-0 bg-transparent outline-none"
             />
           </label>
-          <label className="flex min-w-[72px] items-center gap-1 rounded-[4px] border border-foreground px-2.5 py-2 text-[14px] text-foreground focus-within:ring-1 focus-within:ring-accent">
+          <label className="flex min-w-[72px] flex-1 items-center gap-1 rounded-[4px] border border-foreground px-2.5 py-2 text-[14px] text-foreground focus-within:ring-1 focus-within:ring-accent">
             <span aria-hidden="true">€</span>
             <input
               type="text"

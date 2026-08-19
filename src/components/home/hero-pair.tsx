@@ -29,7 +29,9 @@ export async function HeroPair() {
                   {HERO.left.heading}
                 </h1>
               </div>
-              <p className="max-w-[465px] text-[17px] leading-[24px] text-muted">{HERO.left.body}</p>
+              <p className="max-w-[465px] text-[17px] leading-[24px] text-muted [text-wrap:balance]">
+                {HERO.left.body}
+              </p>
               <CtaLink href={HERO.left.cta.href} variant="gold" className="mt-1">
                 {HERO.left.cta.label}
               </CtaLink>

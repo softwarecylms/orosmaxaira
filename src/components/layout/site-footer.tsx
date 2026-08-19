@@ -20,6 +20,11 @@ type SiteFooterProps = {
   locale: Locale
 }
 
+/** Google Maps place link for the apiary (Melini, Larnaca) — the footer address
+ *  line links here. */
+const MAPS_URL =
+  'https://www.google.com/maps/place/Cyprus+Honey+%22Oros+Maxaira%22/@34.8649999,33.1644093,17z/data=!3m1!4b1!4m6!3m5!1s0x14e0b239e555554f:0xc03e2e50ad7fa0f8!8m2!3d34.8649955!4d33.1669842!16s%2Fg%2F11g728vnj4'
+
 const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Facebook: FacebookSolid,
   Instagram: InstagramSolid,
@@ -105,15 +110,23 @@ export async function SiteFooter({ locale }: SiteFooterProps) {
                         </li>
                       ))
                     : (col.lines ?? []).map((line) => {
+                        const isAddress = /Μελίνη|Melini|Λάρνακα|Larnaca/.test(line)
                         const href = /^(Τηλ|Tel)/.test(line)
                           ? `tel:${line.replace(/[^+\d]/g, '')}`
                           : line.includes('@')
                             ? `mailto:${line.trim()}`
-                            : null
+                            : isAddress
+                              ? MAPS_URL
+                              : null
                         return (
                           <li key={line} className="text-[17px] leading-[27px] text-muted">
                             {href ? (
-                              <a href={href} className="transition-colors hover:text-accent">
+                              <a
+                                href={href}
+                                target={isAddress ? '_blank' : undefined}
+                                rel={isAddress ? 'noopener noreferrer' : undefined}
+                                className="transition-colors hover:text-accent"
+                              >
                                 {line}
                               </a>
                             ) : (

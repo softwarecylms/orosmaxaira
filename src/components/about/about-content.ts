@@ -58,7 +58,7 @@ export const ABOUT_PAGE = {
     {
       icon: 'eco' as AboutValueIcon,
       title: 'Περιβάλλον',
-      text: 'Πιστοποιημένοι με ISO 14001 & ISO 22000 - σεβασμός για τη γη και τις μέλισσες.',
+      text: 'Πιστοποιημένοι με **ISO 14001** & **ISO 22000** - σεβασμός για τη γη και τις μέλισσες.',
     },
     {
       icon: 'family' as AboutValueIcon,
@@ -125,7 +125,7 @@ export const ABOUT_PAGE = {
     ],
   },
 
-  band: 'Η λειτουργία όλων αυτών των χώρων και δραστηριοτήτων διέπεται από τη δέσμευσή μας για βιώσιμη ανάπτυξη και περιβαλλοντική ευθύνη, η οποία αποδεικνύεται έμπρακτα με την εφαρμογή του διεθνούς προτύπου ISO 14001: Σύστημα Περιβαλλοντικής Διαχείρισης. Παράλληλα, αναγνωρίζοντας την υψίστη σημασία της ασφάλειας των τροφίμων, πήραμε την πιστοποίηση ISO 22000: Σύστημα Διαχείρισης Ασφάλειας Τροφίμων, ενισχύοντας περαιτέρω την εμπιστοσύνη των καταναλωτών στα προϊόντα μας.',
+  band: 'Η λειτουργία όλων αυτών των χώρων και δραστηριοτήτων διέπεται από τη δέσμευσή μας για βιώσιμη ανάπτυξη και περιβαλλοντική ευθύνη, η οποία αποδεικνύεται έμπρακτα με την εφαρμογή του διεθνούς προτύπου **ISO 14001**: Σύστημα Περιβαλλοντικής Διαχείρισης. Παράλληλα, αναγνωρίζοντας την υψίστη σημασία της ασφάλειας των τροφίμων, πήραμε την πιστοποίηση **ISO 22000**: Σύστημα Διαχείρισης Ασφάλειας Τροφίμων, ενισχύοντας περαιτέρω την εμπιστοσύνη των καταναλωτών στα προϊόντα μας.',
 
   family: {
     heading: 'Η Οικογένειά μας',
@@ -191,7 +191,7 @@ const ABOUT_EN: AboutContent = {
 
   values: [
     { ...ABOUT_EL.values[0], title: 'Purity', text: 'Our honey reaches your table exactly as the bee makes it.' },
-    { ...ABOUT_EL.values[1], title: 'Environment', text: 'Certified to ISO 14001 & ISO 22000 — respect for the land and the bees.' },
+    { ...ABOUT_EL.values[1], title: 'Environment', text: 'Certified to **ISO 14001** & **ISO 22000** — respect for the land and the bees.' },
     { ...ABOUT_EL.values[2], title: 'Family', text: 'Since 1983, three generations with the same passion for nature and bees.' },
   ],
 
@@ -217,7 +217,7 @@ const ABOUT_EN: AboutContent = {
     ],
   },
 
-  band: 'The operation of all these spaces and activities is governed by our commitment to sustainable development and environmental responsibility, demonstrated in practice through the implementation of the international standard ISO 14001: Environmental Management System. At the same time, recognising the paramount importance of food safety, we obtained ISO 22000: Food Safety Management System certification, further strengthening consumer confidence in our products.',
+  band: 'The operation of all these spaces and activities is governed by our commitment to sustainable development and environmental responsibility, demonstrated in practice through the implementation of the international standard **ISO 14001**: Environmental Management System. At the same time, recognising the paramount importance of food safety, we obtained **ISO 22000**: Food Safety Management System certification, further strengthening consumer confidence in our products.',
 
   family: {
     heading: 'Our Family',

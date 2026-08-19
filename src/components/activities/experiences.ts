@@ -153,6 +153,65 @@ export const EXPERIENCES: Record<string, ActivityExperienceData> = {
       seasonLabel: 'Διαθέσιμη μόνο Μάρτιο–Οκτώβριο',
     },
   },
+
+  xenagiseis: {
+    slug: 'xenagiseis',
+    metaTitle: 'Γνωρίζω τη Μέλισσα — Ξεναγήσεις στο μελισσοκομείο Όρος Μαχαιρά',
+    metaDescription:
+      'Ξεναγήσεις στο μελισσοκομείο του Όρους Μαχαιρά: μια βιωματική «μελένια εμπειρία» περίπου 45 λεπτών με γνωριμία με τη μέλισσα, ζωντανή εμφιάλωση μελιού και γευσιγνωσία. Κατάλληλη για οικογένειες, σχολεία και ομάδες.',
+    hero: {
+      title: 'Γνωρίζω τη Μέλισσα',
+      description:
+        'Μια «μελένια εμπειρία» γνωριμίας με τη μέλισσα και την κυψέλη, με ζωντανή εμφιάλωση και γευσιγνωσία μελιού.',
+      image: '/images/activities/gnorizw.webp',
+      imageAlt: 'Ξενάγηση στο μελισσοκομείο του Όρους Μαχαιρά',
+    },
+    intro: {
+      eyebrow: 'Ξεναγήσεις',
+      heading: 'Η Μελένια Εμπειρία',
+      body: [
+        'Για όσους εκτιμούν τη γνώση μέσα από εμπειρίες, δημιουργήσαμε έναν ειδικά διαμορφωμένο χώρο όπου ο επισκέπτης μαθαίνει για τη μελισσοθεραπεία μέσα από ένα ξύλινο σπιτάκι, βλέπει τις μέλισσες και ανακαλύπτει τους ρόλους τους μέσα στην κυψέλη. Ταυτόχρονα γνωρίζει τα υπόλοιπα προϊόντα της κυψέλης και το πού χρησιμεύει το καθένα.',
+        'Στη συνέχεια ο επισκέπτης μαθαίνει εν συντομία την ιστορία της οικογενειακής μας επιχείρησης μέσα από βίντεο, παίζει ένα διαδραστικό παιχνίδι ερωτήσεων για το μέλι και τις μέλισσες και μεταφέρεται στο δωμάτιο εμφιάλωσης, όπου παρακολουθεί ζωντανά την εμφιάλωση μελιού απευθείας από τα βαρέλια ηρεμίας.',
+        'Μετά από αυτή την ξενάγηση των περίπου 45 λεπτών, μπορεί να γευτεί τα διάφορα είδη μελιού και να εκπαιδευτεί στο να αναγνωρίζει σωστά τι δοκιμάζει.',
+      ],
+      bold: ['μελισσοθεραπεία', 'ζωντανά την εμφιάλωση μελιού', 'γευτεί τα διάφορα είδη μελιού'],
+      label: 'Διάρκεια ~45 λεπτά',
+      book: { label: 'Κάντε κράτηση', href: '#cta' },
+    },
+    features: {
+      eyebrow: 'Η Εμπειρία',
+      heading: 'Τι Θα Ζήσετε',
+      items: [
+        {
+          title: 'Γνωριμία με τη μέλισσα',
+          text: 'Δείτε από κοντά τις μέλισσες, ανακαλύψτε τους ρόλους τους μέσα στην κυψέλη και τα προϊόντα της.',
+        },
+        {
+          title: 'Ζωντανή εμφιάλωση & παιχνίδι',
+          text: 'Μάθετε την ιστορία μας μέσα από βίντεο, παίξτε ένα διαδραστικό παιχνίδι και δείτε ζωντανά την εμφιάλωση μελιού.',
+        },
+        {
+          title: 'Γευσιγνωσία μελιού',
+          text: 'Δοκιμάστε διαφορετικά είδη μελιού και εκπαιδευτείτε να αναγνωρίζετε σωστά το καθένα.',
+        },
+      ],
+    },
+    gallery: {
+      eyebrow: 'Στιγμές',
+      heading: 'Στιγμές από τις Ξεναγήσεις',
+      images: Array.from({ length: 11 }, (_, i) => ({
+        src: `/images/activities/peripeteies/${String(i + 1).padStart(2, '0')}.webp`,
+        alt: 'Ξενάγηση στο μελισσοκομείο του Όρους Μαχαιρά',
+      })),
+    },
+    booking: {
+      activityName: 'Γνωρίζω τη μέλισσα',
+      eyebrow: 'Κράτηση',
+      heading: 'Κλείστε την ξενάγησή σας',
+      body: 'Κόστος: ενήλικοι €10, παιδιά 6–18 ετών €5, κάτω των 6 ετών δωρεάν. Καλέστε στο 99130092 (Μαρία) ή συμπληρώστε τη φόρμα για να κλείσετε ραντεβού. Θα λάβετε επιβεβαίωση εντός 24 ωρών.',
+      bold: ['99130092', 'φόρμα'],
+    },
+  },
 }
 
 const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
@@ -296,6 +355,68 @@ const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
       body: 'The experience takes place on specific days, mostly Saturdays, from March to October. Fill in the form or call 25622305. You will receive confirmation within 24 hours.',
       bold: ['form', '25622305'],
       seasonLabel: 'Available only March–October',
+    },
+  },
+
+  xenagiseis: {
+    ...EXPERIENCES.xenagiseis,
+    metaTitle: 'Getting to Know the Bee — Tours at the Oros Machaira apiary',
+    metaDescription:
+      'Tours at the Oros Machaira apiary: a hands-on ~45-minute “honey experience” — getting to know the bee, live honey bottling and honey tasting. Perfect for families, schools and groups.',
+    hero: {
+      ...EXPERIENCES.xenagiseis.hero,
+      title: 'Getting to Know the Bee',
+      description:
+        'A “honey experience” that introduces you to the bee and the hive, with live honey bottling and honey tasting.',
+      imageAlt: 'Guided tour at the Oros Machaira apiary',
+    },
+    intro: {
+      ...EXPERIENCES.xenagiseis.intro,
+      eyebrow: 'Tours',
+      heading: 'The Honey Experience',
+      body: [
+        'For those who appreciate knowledge through experiences, we have created a specially designed space where visitors learn about apitherapy through a wooden house, see the bees and discover their roles within the hive. At the same time they get to know the other products of the hive and what each one is used for.',
+        'Next, the visitor briefly learns the history of our family business through a video, plays an interactive question game about honey and bees, and is taken to the bottling room to watch live honey bottling directly from the calm barrels.',
+        'After this roughly 45-minute tour, they can taste the different types of honey and be trained to correctly identify what they are tasting.',
+      ],
+      bold: ['apitherapy', 'live honey bottling', 'taste the different types of honey'],
+      label: 'Duration ~45 minutes',
+      book: { label: 'Book now', href: '#cta' },
+    },
+    features: {
+      eyebrow: 'The Experience',
+      heading: 'What You Will Live',
+      items: [
+        {
+          title: 'Meet the bee',
+          text: 'See the bees up close and discover their roles within the hive, along with the products of the hive.',
+        },
+        {
+          title: 'Live bottling & game',
+          text: 'Learn our story through a video, play an interactive game and watch live honey bottling.',
+        },
+        {
+          title: 'Honey tasting',
+          text: 'Taste different types of honey and learn to recognise each one.',
+        },
+      ],
+    },
+    gallery: {
+      ...EXPERIENCES.xenagiseis.gallery!,
+      eyebrow: 'Moments',
+      heading: 'Moments from the Tours',
+      images: EXPERIENCES.xenagiseis.gallery!.images.map((g) => ({
+        ...g,
+        alt: 'Guided tour at the Oros Machaira apiary',
+      })),
+    },
+    booking: {
+      ...EXPERIENCES.xenagiseis.booking,
+      activityName: 'Getting to know the bee',
+      eyebrow: 'Booking',
+      heading: 'Book your tour',
+      body: 'Prices: adults €10, children 6–18 €5, under 6 free. Call 99130092 (Maria) or fill in the form to make an appointment. You will receive confirmation within 24 hours.',
+      bold: ['99130092', 'form'],
     },
   },
 }

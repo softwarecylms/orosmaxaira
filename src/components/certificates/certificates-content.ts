@@ -98,8 +98,8 @@ const CERTIFICATES_EN: CertificatesContent = {
     {
       code: 'ISO 14001',
       title: 'Environmental Management System',
-      image: CERTIFICATES_EL.certificates[0].image,
-      imageAlt: 'ISO 14001 certificate — Environmental Management System',
+      image: '/images/certificates/14001-en-preview.png',
+      imageAlt: 'ISO 14001 certificate (English) — Environmental Management System',
       body: [
         '**ISO 14001** is the international standard for Environmental Management Systems. It demonstrates our commitment to sustainable development and respect for nature and bees.',
         'Through responsible practices, we reduce our environmental footprint and protect the ecosystem of Machaira — the very ecosystem on which our beekeeping depends.',
@@ -116,8 +116,8 @@ const CERTIFICATES_EN: CertificatesContent = {
     {
       code: 'ISO 22000',
       title: 'Food Safety Management System',
-      image: CERTIFICATES_EL.certificates[1].image,
-      imageAlt: 'ISO 22000 certificate — Food Safety Management System',
+      image: '/images/certificates/22000-en-preview.png',
+      imageAlt: 'ISO 22000 certificate (English) — Food Safety Management System',
       body: [
         '**ISO 22000** is the international standard for Food Safety Management Systems. It certifies that every stage of our production — from the hive to packaging — follows strict hygiene and control procedures.',
         'This certification ensures full traceability of our products and adherence to HACCP principles across the entire production chain, so you can enjoy our honey and hive products with complete confidence.',

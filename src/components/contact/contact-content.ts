@@ -97,7 +97,7 @@ export const CONTACT_PAGE = {
     {
       icon: 'eco' as ValueIcon,
       title: 'Περιβάλλον',
-      text: 'Πιστοποιημένοι με ISO 14001 & ISO 22000 - σεβασμός για τη γη και τις μέλισσες.',
+      text: 'Πιστοποιημένοι με **ISO 14001** & **ISO 22000** - σεβασμός για τη γη και τις μέλισσες.',
     },
     {
       icon: 'family' as ValueIcon,
@@ -191,7 +191,7 @@ const CONTACT_PAGE_EN: ContactContent = {
     {
       icon: 'eco',
       title: 'Environment',
-      text: 'Certified to ISO 14001 & ISO 22000 — respect for the land and the bees.',
+      text: 'Certified to **ISO 14001** & **ISO 22000** — respect for the land and the bees.',
     },
     {
       icon: 'family',

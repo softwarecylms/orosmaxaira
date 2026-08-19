@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import { Download } from 'lucide-react'
 import { getLocale } from 'next-intl/server'
 import { getCertificatesContent, type Certificate } from '@/components/certificates/certificates-content'
 import { PageHero } from '@/components/shared/page-hero'
@@ -155,15 +154,6 @@ function CertificateSection({
               sizes="(min-width:1024px) 440px, 90vw"
               className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
             />
-          </a>
-          <a
-            href={pdf}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 rounded-[4px] border border-accent px-5 py-2.5 text-[15px] font-medium text-accent transition-colors hover:bg-accent hover:text-white"
-          >
-            <Download className="size-4" aria-hidden="true" />
-            {downloadLabel}
           </a>
         </div>
       </div>

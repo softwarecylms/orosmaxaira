@@ -7,6 +7,7 @@ import {
   type ContactIcon,
   type ValueIcon,
 } from '@/components/contact/contact-content'
+import { RichText } from '@/components/activities/detail/rich-text'
 import { ContactHero } from '@/components/contact/contact-hero'
 import { ContactMap } from '@/components/contact/contact-map'
 import { ContactMessageForm } from '@/components/contact/contact-message-form'
@@ -175,7 +176,9 @@ export default async function ContactPage() {
                 <h3 className="text-[20px] font-medium leading-[26.4px] text-foreground md:text-[22px]">
                   {v.title}
                 </h3>
-                <p className="text-[17px] leading-[24px] text-foreground">{v.text}</p>
+                <p className="text-[17px] leading-[24px] text-foreground">
+                  <RichText text={v.text} />
+                </p>
               </RevealItem>
             )
           })}

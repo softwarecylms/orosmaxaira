@@ -530,8 +530,10 @@ const HOME_EN: HomeContent = {
   HERO: {
     left: {
       eyebrow: 'AUTHENTIC TRADITION',
-      heading: 'Treasures of the Hive',
-      body: 'Discover our award-winning honey, our fine mead and our royal jelly, among others.',
+      // Non-breaking spaces keep "of the Hive" together on one line, and hold
+      // "our"/"among others" as units so the copy wraps cleanly.
+      heading: 'Treasures of the Hive',
+      body: 'Discover our award-winning honey, our fine mead and our royal jelly, among others.',
       cta: { label: 'Learn More', href: HERO.left.cta.href },
       image: HERO.left.image,
       imageAlt: 'Award-winning Oros Machaira honey on a wooden stand',

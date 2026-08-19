@@ -5,6 +5,7 @@ import { User, Building2 } from 'lucide-react'
 import { getAboutContent, type AboutValueIcon } from '@/components/about/about-content'
 import { OutdoorCarousel } from '@/components/about/outdoor-carousel'
 import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
+import { RichText } from '@/components/activities/detail/rich-text'
 import { CtaLink } from '@/components/home/cta-link'
 import { Counter } from '@/components/motion/counter'
 import { hreflangAlternates } from '@/lib/seo'
@@ -132,7 +133,9 @@ export default async function AboutPage() {
                 <h3 className="text-[20px] font-medium leading-[26.4px] text-foreground md:text-[22px]">
                   {v.title}
                 </h3>
-                <p className="text-[17px] leading-[24px] text-muted">{v.text}</p>
+                <p className="text-[17px] leading-[24px] text-muted">
+                  <RichText text={v.text} />
+                </p>
               </RevealItem>
             ),
           )}
@@ -193,7 +196,9 @@ export default async function AboutPage() {
       <section className="bg-accent py-10 text-white md:py-12">
         <div className="container-page">
           <RevealUp>
-            <p className="text-center text-[15px] leading-[24px] md:text-[17px]">{a.band}</p>
+            <p className="text-center text-[15px] leading-[24px] md:text-[17px]">
+              <RichText text={a.band} />
+            </p>
           </RevealUp>
         </div>
       </section>

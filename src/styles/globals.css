@@ -508,3 +508,10 @@
 .prose-blog .legacy-html > *:first-child {
   margin-top: 0;
 }
+
+/* The Latin display font (Gabarito) reads heavier than the Greek fallback
+   (Inter) at the same weight, so English display headings look bolder than the
+   Greek ones. Nudge them one step lighter on the English locale for balance. */
+html[lang='en'] .font-display {
+  font-weight: 600;
+}
