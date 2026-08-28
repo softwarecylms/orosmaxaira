@@ -21,12 +21,12 @@ export async function generateMetadata(): Promise<Metadata> {
       ? {
           title: 'Hands-on Workshops — Candles, Wax & Bee Crafts',
           description:
-            'Free hands-on workshops at the Oros Machaira apiary. Every season has its own workshop — always combined with the “Getting to Know the Bee” experience.',
+            'Hands-on workshops at the Oros Machaira apiary, always booked together with the “Getting to Know the Bee” experience and included in its price. Every season has its own workshop.',
         }
       : {
           title: 'Βιωματικά Εργαστήρια — Λαμπάδες, Κερί & Μελισσοκατασκευές',
           description:
-            'Δωρεάν βιωματικά εργαστήρια στο μελισσοκομείο του Όρους Μαχαιρά. Κάθε εποχή το δικό της εργαστήρι — πάντα σε συνδυασμό με την εμπειρία «Γνωρίζω τη μέλισσα».',
+            'Βιωματικά εργαστήρια στο μελισσοκομείο του Όρους Μαχαιρά, πάντα σε συνδυασμό με την εμπειρία «Γνωρίζω τη μέλισσα» και με την τιμή της να τα περιλαμβάνει. Κάθε εποχή το δικό της εργαστήρι.',
         }
   return { ...meta, alternates: hreflangAlternates(locale, '/drastiriotites/ergastiria') }
 }
@@ -40,8 +40,8 @@ function pageCopy(locale: string) {
         eyebrow: 'Creativity & Nature',
         heading: 'Hands-on Workshops',
         intro:
-          'Getting out into nature combined with creative activities is the best answer to a stressful everyday life. We organise free hands-on workshops at our apiary, both on weekends and on public holidays. It would be our pleasure to get to know you in person and spend a creative day together! The workshops are aimed at children and adults, giving every family the chance to share creative moments together.',
-        introBold: ['nature', 'creative activities', 'free'],
+          'Getting out into nature combined with creative activities is the best answer to a stressful everyday life. We organise hands-on workshops at our apiary, both on weekends and on public holidays. A workshop is always booked together with one of our experiences and is included in its price. It would be our pleasure to get to know you in person and spend a creative day together! The workshops are aimed at children and adults, giving every family the chance to share creative moments together.',
+        introBold: ['nature', 'creative activities', 'included in its price'],
         byAppointment: 'By appointment',
         availableNow: 'Available now',
       }
@@ -51,8 +51,8 @@ function pageCopy(locale: string) {
         eyebrow: 'Δημιουργία & Φύση',
         heading: 'Βιωματικά Εργαστήρια',
         intro:
-          'Η εξόρμηση στη φύση σε συνδυασμό με δημιουργικές δραστηριότητες είναι η καλύτερη λύση στην πιεστική καθημερινότητα. Διοργανώνουμε δωρεάν βιωματικά εργαστήρια στο μελισσοκομείο μας, τόσο τα Σαββατοκύριακα όσο και τις αργίες. Θα ήταν χαρά μας να σας γνωρίσουμε από κοντά και να περάσουμε μαζί μια δημιουργική μέρα! Τα εργαστήρια απευθύνονται σε παιδιά και μεγάλους, δίνοντας σε κάθε οικογένεια την ευκαιρία να περάσει δημιουργικές στιγμές μαζί.',
-        introBold: ['φύση', 'δημιουργικές δραστηριότητες', 'δωρεάν'],
+          'Η εξόρμηση στη φύση σε συνδυασμό με δημιουργικές δραστηριότητες είναι η καλύτερη λύση στην πιεστική καθημερινότητα. Διοργανώνουμε βιωματικά εργαστήρια στο μελισσοκομείο μας, τόσο τα Σαββατοκύριακα όσο και τις αργίες. Το εργαστήρι κλείνεται πάντα σε συνδυασμό με μία από τις εμπειρίες μας και περιλαμβάνεται στην τιμή της. Θα ήταν χαρά μας να σας γνωρίσουμε από κοντά και να περάσουμε μαζί μια δημιουργική μέρα! Τα εργαστήρια απευθύνονται σε παιδιά και μεγάλους, δίνοντας σε κάθε οικογένεια την ευκαιρία να περάσει δημιουργικές στιγμές μαζί.',
+        introBold: ['φύση', 'δημιουργικές δραστηριότητες', 'περιλαμβάνεται στην τιμή της'],
         byAppointment: 'Κατόπιν ραντεβού',
         availableNow: 'Τώρα διαθέσιμο',
       }
@@ -70,7 +70,7 @@ function monthsLabel(months: number[], monthsNom: string[], byAppointment: strin
   if (!months.length) return byAppointment
   const a = monthsNom[months[0] - 1]
   const b = monthsNom[months[months.length - 1] - 1]
-  return a === b ? a : `${a} – ${b}`
+  return a === b ? a : `${a}–${b}`
 }
 
 export default async function ErgastiriaPage() {

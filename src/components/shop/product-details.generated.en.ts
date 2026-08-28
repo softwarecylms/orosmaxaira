@@ -8,7 +8,7 @@ import type { ShopProductDetail } from './shop-content'
 
 export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
   "balance-care-gift-set": {
-    "description": "Care for balanced and healthy skin. A complete skincare set for the daily care of the face. Balance Care combines products that target hydration, revitalisation and the preservation of the skin's natural balance. With natural ingredients enriched with valuable elements from the hive, it offers targeted care for the face, eyes and lips, contributing to a healthier and better-groomed appearance. Includes: Moisturizing Face Cream 50 ml e | 1.69 fl. oz. US Eye Cream 30 ml e | 1 fl. oz. US Lip Balm . 4 ml e | 0.13 fl. oz. US FREE shipping on purchases over €50",
+    "description": "Care for balanced and healthy skin. A complete skincare set for the daily care of the face. Balance Care combines products that target hydration, revitalisation and the preservation of the skin's natural balance. With natural ingredients enriched with valuable elements from the hive, it offers targeted care for the face, eyes and lips, contributing to a healthier and better-groomed appearance. Includes: Moisturizing Face Cream 50 ml e | 1.69 fl. oz. US Eye Cream 30 ml e | 1 fl. oz. US Lip Balm . 4 ml e | 0.13 fl. oz. US FREE shipping on purchases over €70",
     "gallery": [
       "https://orosmaxaira.com/wp-content/uploads/2026/04/BALANCE-CARE-SET-WEBSITE.jpg"
     ],
@@ -69,7 +69,7 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
     ]
   },
   "nourish-care-gift-set": {
-    "description": "Deep, long-lasting nourishment and softness for the whole body. A complete skincare set that offers hydration and nourishment to the skin. Nourish Care combines products for the body, hands and lips, covering everyday care needs in a simple and meaningful way. With natural ingredients enriched with valuable elements from the hive, it helps hydrate, protect and keep the skin soft. Includes: Body Cream 100 ml e | 3.38 fl. oz. US Hand Cream (Red Grape) 50 ml e | 1.69 fl. oz. US Lip Balm . 4 ml e | 0.13 fl. oz. US FREE shipping on purchases over €50",
+    "description": "Deep, long-lasting nourishment and softness for the whole body. A complete skincare set that offers hydration and nourishment to the skin. Nourish Care combines products for the body, hands and lips, covering everyday care needs in a simple and meaningful way. With natural ingredients enriched with valuable elements from the hive, it helps hydrate, protect and keep the skin soft. Includes: Body Cream 100 ml e | 3.38 fl. oz. US Hand Cream (Red Grape) 50 ml e | 1.69 fl. oz. US Lip Balm . 4 ml e | 0.13 fl. oz. US FREE shipping on purchases over €70",
     "gallery": [
       "https://orosmaxaira.com/wp-content/uploads/2026/04/NOURISH-SET-WEBSITE.jpg"
     ],
@@ -127,7 +127,7 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
     ]
   },
   "everyday-care-duo-gift-set": {
-    "description": "Everyday hydration and protection for hands and lips. A practical and meaningful set for the daily care of the hands and lips. Everyday Care Duo combines two essential care products, ideal for hydration, protection and softness throughout the day. With natural ingredients enriched with valuable elements from the hive, it offers the care your skin needs, wherever you are. Includes: Hand Cream (Milk & Honey) 50 ml e | 1.69 fl. oz. US Lip Balm . 4 ml e | 0.13 fl. oz. US FREE shipping on purchases over €50",
+    "description": "Everyday hydration and protection for hands and lips. A practical and meaningful set for the daily care of the hands and lips. Everyday Care Duo combines two essential care products, ideal for hydration, protection and softness throughout the day. With natural ingredients enriched with valuable elements from the hive, it offers the care your skin needs, wherever you are. Includes: Hand Cream (Milk & Honey) 50 ml e | 1.69 fl. oz. US Lip Balm . 4 ml e | 0.13 fl. oz. US FREE shipping on purchases over €70",
     "gallery": [
       "https://orosmaxaira.com/wp-content/uploads/2026/04/EVERYDAY-CARE-DUO-SET-WEBSITE.jpg"
     ],
@@ -186,7 +186,7 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
     ]
   },
   "krema-somatos": {
-    "description": "A moisturizing body cream with a light texture that absorbs easily, leaving the skin soft and protected. With organic honey, propolis, royal jelly and beeswax. Suitable for daily use and all skin types. The Oros Machaira body cream is designed to offer intensive hydration and complete care to the skin of the body, giving it a feeling of softness and natural radiance. Its light texture absorbs easily, helping to maintain the skin's elasticity and reduce dryness. Its formulation includes organic honey, propolis, royal jelly and beeswax, ingredients known for their nourishing, moisturizing and protective properties. Ideal for daily use, it leaves the skin soft, hydrated and protected, without any greasy feeling. Suitable for all skin types. 100 ml e 3.38 fl. oz. US FREE shipping on purchases over €50",
+    "description": "A moisturizing body cream with a light texture that absorbs easily, leaving the skin soft and protected. With organic honey, propolis, royal jelly and beeswax. Suitable for daily use and all skin types. The Oros Machaira body cream is designed to offer intensive hydration and complete care to the skin of the body, giving it a feeling of softness and natural radiance. Its light texture absorbs easily, helping to maintain the skin's elasticity and reduce dryness. Its formulation includes organic honey, propolis, royal jelly and beeswax, ingredients known for their nourishing, moisturizing and protective properties. Ideal for daily use, it leaves the skin soft, hydrated and protected, without any greasy feeling. Suitable for all skin types. 100 ml e 3.38 fl. oz. US FREE shipping on purchases over €70",
     "gallery": [
       "https://orosmaxaira.com/wp-content/uploads/2026/02/body-lotion-oros-maxaira.png"
     ],
@@ -201,7 +201,7 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
         "body": "Ideal for daily use, it leaves the skin soft, hydrated and protected, without any greasy feeling. Suitable for all skin types. 100 ml e 3.38 fl. oz. US"
       },
       {
-        "body": "FREE shipping on purchases over €50"
+        "body": "FREE shipping on purchases over €70"
       }
     ],
     "addons": [
@@ -511,7 +511,7 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
     ]
   },
   "kiraloifi-gia-eyaisthites-epidermides": {
-    "description": "100% NATURAL BEESWAX SALVE FOR SENSITIVE SKIN, FRAGRANCE-FREE, WITH ORGANIC BEESWAX, HONEY, PROPOLIS AND ROYAL JELLY. 98% organic ingredients. A pure, therapeutic beeswax salve with organic beeswax, honey, propolis, royal jelly, calendula extract in organic olive oil and organic almond oil. Fragrance-free, ideal for sensitive skin. Suitable for sensitive skin, chafing and irritation. 50 ml e 1.69 fl. oz. US FREE shipping on purchases over €50",
+    "description": "100% NATURAL BEESWAX SALVE FOR SENSITIVE SKIN, FRAGRANCE-FREE, WITH ORGANIC BEESWAX, HONEY, PROPOLIS AND ROYAL JELLY. 98% organic ingredients. A pure, therapeutic beeswax salve with organic beeswax, honey, propolis, royal jelly, calendula extract in organic olive oil and organic almond oil. Fragrance-free, ideal for sensitive skin. Suitable for sensitive skin, chafing and irritation. 50 ml e 1.69 fl. oz. US FREE shipping on purchases over €70",
     "gallery": [
       "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-kiraloifi-gia-eyaisthites-epidermides-1.jpg"
     ],
@@ -536,7 +536,7 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
     ]
   },
   "kiraloifi-gia-skasmena-cheria": {
-    "description": "100% NATURAL BEESWAX SALVE FOR VERY DRY AND CRACKED HANDS WITH ORGANIC BEESWAX, HONEY, PROPOLIS AND ROYAL JELLY. 97% organic ingredients. A regenerating, therapeutic beeswax salve with pure organic beeswax, honey, propolis, royal jelly, calendula extract in organic olive oil, St John's wort oil, almond oil and shea butter, all sourced from certified organic cultivation. Ideal for cracked skin, hands, feet and elbows. Relieves minor burns and irritation. 50 ml e 1.69 fl. oz. US FREE shipping on purchases over €50",
+    "description": "100% NATURAL BEESWAX SALVE FOR VERY DRY AND CRACKED HANDS WITH ORGANIC BEESWAX, HONEY, PROPOLIS AND ROYAL JELLY. 97% organic ingredients. A regenerating, therapeutic beeswax salve with pure organic beeswax, honey, propolis, royal jelly, calendula extract in organic olive oil, St John's wort oil, almond oil and shea butter, all sourced from certified organic cultivation. Ideal for cracked skin, hands, feet and elbows. Relieves minor burns and irritation. 50 ml e 1.69 fl. oz. US FREE shipping on purchases over €70",
     "gallery": [
       "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-kiraloifi-gia-skasmena-cheria-1.jpg"
     ],
@@ -595,7 +595,7 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
     ]
   },
   "fysiki-kiraloifi-gia-spyrakia-kai-tsimpimata-entomon": {
-    "description": "Although our skin consists of only a very thin layer a few centimetres thick, it has enormous resilience. Sometimes, however, factors you may not be able to control bring unwanted \"visitors\" with them, such as pimples. 50 ml e 0.68 fl. oz. US FREE shipping on purchases over €50",
+    "description": "Although our skin consists of only a very thin layer a few centimetres thick, it has enormous resilience. Sometimes, however, factors you may not be able to control bring unwanted \"visitors\" with them, such as pimples. 50 ml e 0.68 fl. oz. US FREE shipping on purchases over €70",
     "gallery": [
       "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-fysiki-kiraloifi-gia-spyrakia-kai-tsimpimata-entomon-1.jpg"
     ],
@@ -617,7 +617,7 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
     ]
   },
   "enydatiki-krema-prosopoy": {
-    "description": "A natural moisturizing face cream with pure honey, propolis, royal jelly and hyaluronic acid for all skin types. 50 ml e 1.69 fl. oz. US FREE shipping on purchases over €50",
+    "description": "A natural moisturizing face cream with pure honey, propolis, royal jelly and hyaluronic acid for all skin types. 50 ml e 1.69 fl. oz. US FREE shipping on purchases over €70",
     "gallery": [
       "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-enydatiki-krema-prosopoy.jpg"
     ],
@@ -650,7 +650,7 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
     ]
   },
   "krema-cherion-milk-amp-honey": {
-    "description": "Hydration is everything for healthy skin. Hydrated hands mean healthy hands — soft to every touch, rested and, of course, radiant. 50 ml e 1.69 fl. oz. US FREE shipping on purchases over €50",
+    "description": "Hydration is everything for healthy skin. Hydrated hands mean healthy hands — soft to every touch, rested and, of course, radiant. 50 ml e 1.69 fl. oz. US FREE shipping on purchases over €70",
     "gallery": [
       "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-krema-cherion-milk-amp-honey.pg_.jpg"
     ],
@@ -678,7 +678,7 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
     ]
   },
   "krema-cherion-red-grape": {
-    "description": "Hydration is everything for healthy skin. Hydrated hands mean healthy hands — soft to every touch, rested and, of course, radiant. 50 ml e 1.69 fl. oz. US FREE shipping on purchases over €50",
+    "description": "Hydration is everything for healthy skin. Hydrated hands mean healthy hands — soft to every touch, rested and, of course, radiant. 50 ml e 1.69 fl. oz. US FREE shipping on purchases over €70",
     "gallery": [
       "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-krema-cherion-red-grape.jpg"
     ],
@@ -706,7 +706,7 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
     ]
   },
   "valsamo-gia-ta-cheili": {
-    "description": "100% NATURAL LIP BALM FOR CRACKED LIPS WITH PURE ORGANIC BEESWAX, HONEY, PROPOLIS, ROYAL JELLY AND CALENDULA. 99% organic ingredients. A pure, natural lip balm with organic beeswax, honey, propolis, royal jelly, calendula extract in organic olive oil, shea butter, almond oil, avocado oil, castor oil and sunflower oil, all from certified organic cultivation. 4 ml e 0.13 fl. oz. US FREE shipping on purchases over €50",
+    "description": "100% NATURAL LIP BALM FOR CRACKED LIPS WITH PURE ORGANIC BEESWAX, HONEY, PROPOLIS, ROYAL JELLY AND CALENDULA. 99% organic ingredients. A pure, natural lip balm with organic beeswax, honey, propolis, royal jelly, calendula extract in organic olive oil, shea butter, almond oil, avocado oil, castor oil and sunflower oil, all from certified organic cultivation. 4 ml e 0.13 fl. oz. US FREE shipping on purchases over €70",
     "gallery": [
       "https://orosmaxaira.com/wp-content/uploads/2021/10/Oros-Maxaira-lip-balm.jpg"
     ],

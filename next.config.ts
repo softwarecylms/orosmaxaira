@@ -31,6 +31,10 @@ const nextConfig: NextConfig = {
       { source: '/contact', destination: '/epikoinonia', permanent: true },
       { source: '/adopt-a-hive', destination: '/yiotheto-mia-kypseli', permanent: true },
       { source: '/privacy', destination: '/privacy-amp-cookie-policy', permanent: true },
+      // Articles keep the root permalinks of the previous site: /<slug>/ and
+      // /en/<slug>/. The interim /blog/<slug>/ URLs 301 there; the /blog index stays.
+      { source: '/blog/:slug/', destination: '/:slug/', permanent: true },
+      { source: '/en/blog/:slug/', destination: '/en/:slug/', permanent: true },
       // Under /en, Greek product handles redirect to the live site's English slug.
       ...enProductRedirects,
     ]

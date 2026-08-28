@@ -3,6 +3,7 @@
 import { sdk } from './client'
 import { getDefaultRegion } from './region'
 import type { HttpTypes } from '@medusajs/types'
+import { FREE_SHIPPING_OPTION_NAME, FREE_SHIPPING_THRESHOLD_EUR } from '../shipping'
 
 /**
  * Turn the (client-side) honey cart into a REAL Medusa order. The storefront
@@ -72,7 +73,24 @@ export async function placeMedusaOrder(
       }
     }
 
-    // 5. Shipping method — book the exact option the custom checkout displayed
+    // 5. Free shipping is EARNED, never just requested. Re-check the rule against
+    //    Medusa's own priced cart (the client is not trusted): the goods total
+    //    after any discount must reach the threshold. `item_total` is exactly
+    //    that — line items minus promotions, shipping excluded.
+    if (input.shippingOptionName === FREE_SHIPPING_OPTION_NAME) {
+      const { cart: priced } = await sdk.store.cart.retrieve(cartId, {
+        fields: 'item_total,discount_total',
+      })
+      const goodsTotal = Number(priced?.item_total ?? 0)
+      if (goodsTotal < FREE_SHIPPING_THRESHOLD_EUR) {
+        return {
+          error:
+            'Η παραγγελία σας δεν πληροί πλέον το όριο για δωρεάν μεταφορικά. Ανανεώστε τη σελίδα και δοκιμάστε ξανά.',
+        }
+      }
+    }
+
+    // 6. Shipping method — book the exact option the custom checkout displayed
     const { shipping_options } = await sdk.client.fetch<{
       shipping_options: HttpTypes.StoreCartShippingOption[]
     }>('/store/shipping-options', {
@@ -86,7 +104,7 @@ export async function placeMedusaOrder(
     if (!option) return { error: 'Δεν υπάρχει διαθέσιμος τρόπος αποστολής.' }
     await sdk.store.cart.addShippingMethod(cartId, { option_id: option.id })
 
-    // 6. Payment (system default provider — auto-authorizes)
+    // 7. Payment (system default provider — auto-authorizes)
     const fresh = await sdk.store.cart.retrieve(cartId, {
       fields: '*payment_collection,*payment_collection.payment_sessions',
     })
@@ -108,7 +126,7 @@ export async function placeMedusaOrder(
     if (!providerId) return { error: 'Δεν υπάρχει διαθέσιμος τρόπος πληρωμής.' }
     await sdk.store.payment.initiatePaymentSession(fresh.cart, { provider_id: providerId })
 
-    // 7. Complete → order
+    // 8. Complete → order
     const res = await sdk.store.cart.complete(cartId)
     if (res.type === 'order') return { orderId: res.order.id }
 

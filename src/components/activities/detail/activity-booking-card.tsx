@@ -44,7 +44,7 @@ export function ActivityBookingCard({
         {tiers.length ? (
           hasWeekend ? (
             // Single grid (header + rows share the same column tracks) so the
-            // Καθημ./Σαβ-Κυρ headers always align above their price columns.
+            // Καθημ./Σαβ–Κυρ headers always align above their price columns.
             <div className="grid grid-cols-[1fr_auto_auto] items-baseline gap-x-4 gap-y-2.5">
               <span />
               <span className="text-right text-[11px] font-semibold uppercase tracking-[0.04em] text-muted">
@@ -94,7 +94,7 @@ export function ActivityBookingCard({
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="flex w-full items-center justify-center gap-2 rounded-[4px] bg-accent p-[15px] text-[16px] font-semibold uppercase tracking-[0.02em] text-white transition-colors hover:bg-foreground"
+          className="flex w-full items-center justify-center gap-2 rounded-[4px] bg-accent p-[15px] text-[16px] font-semibold tracking-[0.02em] text-white transition-colors hover:bg-foreground"
         >
           <CalendarCheck className="size-5" aria-hidden="true" />
           {ui.bookingCheckAvailability}

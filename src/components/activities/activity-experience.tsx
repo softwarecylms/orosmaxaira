@@ -293,7 +293,7 @@ export function ActivityExperience({
                   <BoldText
                     text={data.booking.body}
                     bold={data.booking.bold}
-                    links={{ '25622305': 'tel:+35725622305' }}
+                    links={{ '+357 25622305': 'tel:+35725622305' }}
                     className="font-semibold text-white"
                   />
                 </p>

@@ -104,7 +104,7 @@ const ADOPT_EL = {
         title: 'Πρώτη Επίσκεψη',
         image: '/images/adopt/gallery/03.webp',
         imageClass: 'object-[center_80%]',
-        pills: ['Απρίλιος – Αύγουστος', 'έως 25 άτομα'],
+        pills: ['Απρίλιος–Αύγουστος', 'έως 25 άτομα'],
         activities: [
           {
             text:
@@ -122,7 +122,7 @@ const ADOPT_EL = {
         title: 'Δεύτερη Επίσκεψη',
         image: '/images/adopt/visit-2.webp',
         imageClass: 'object-[center_82%]',
-        pills: ['Ιούνιος – Οκτώβριος', 'έως 25 άτομα'],
+        pills: ['Ιούνιος–Οκτώβριος', 'έως 25 άτομα'],
         activities: [
           {
             text:
@@ -268,13 +268,13 @@ const ADOPT_EL = {
     body:
       'Η ομάδα μας θα σχεδιάσει μαζί σας την εμπειρία που ταιριάζει στην εταιρεία σας.',
     primary: { label: 'Επικοινωνήστε μαζί μας', href: '/epikoinonia' },
-    tel: { label: '25622305', href: 'tel:+35725622305' },
+    tel: { label: '+357 25622305', href: 'tel:+35725622305' },
     contact: {
       company: 'M.F. (OROS MAXAIRA) LTD',
-      phone: '25622305',
+      phone: '+357 25622305',
       phoneHref: 'tel:+35725622305',
       address: 'Melini, Larnaca 7716 · P.O. BOX 7718',
-      hours: 'Δευτ – Παρ 08:00–16:00 · Σαβ – Κυρ κατόπιν ραντεβού',
+      hours: 'Δευ–Παρ 08:00–16:00 · Σαβ–Κυρ κατόπιν ραντεβού',
     },
   },
 }
@@ -371,7 +371,7 @@ const ADOPT_EN: AdoptContent = {
         title: 'First Visit',
         image: ADOPT_EL.visits.items[0].image,
         imageClass: ADOPT_EL.visits.items[0].imageClass,
-        pills: ['April – August', 'up to 25 people'],
+        pills: ['April–August', 'up to 25 people'],
         activities: [
           {
             text:
@@ -389,7 +389,7 @@ const ADOPT_EN: AdoptContent = {
         title: 'Second Visit',
         image: ADOPT_EL.visits.items[1].image,
         imageClass: ADOPT_EL.visits.items[1].imageClass,
-        pills: ['June – October', 'up to 25 people'],
+        pills: ['June–October', 'up to 25 people'],
         activities: [
           {
             text:
@@ -472,7 +472,34 @@ const ADOPT_EN: AdoptContent = {
   testimonials: {
     eyebrow: 'Testimonials',
     heading: 'What the Teams Who Visited Us Say',
-    items: ADOPT_EL.testimonials.items,
+    // Two of the four testimonials were given in Greek; translated here so the
+    // English page never shows Greek quotes (the other two were written in English).
+    items: [
+      {
+        quote:
+          'Thank you so much for the excellent collaboration on our first visit. We all came back full of enthusiasm and new knowledge! I think the goal of learning through experience was achieved, and I really appreciate the warm welcome and the tour. I am delighted that we will be working together again this year!',
+        name: 'Antigoni Pafiti',
+        role: 'Sustainability Officer',
+      },
+      {
+        quote:
+          'Our guests and we absolutely loved the event on Saturday and we will definitely be offering this kind of experience again!',
+        name: 'Abi Thatcher Heitmann',
+        role: 'Business Development Director',
+      },
+      {
+        quote:
+          'I wanted to extend my heartfelt appreciation for the wonderful experience we had last Friday. It was indeed a great learning opportunity for all of us, and we’re eagerly looking forward to our next trip after the summer.',
+        name: 'Chloe Timmis',
+        role: 'Crewing Administration Manager',
+      },
+      {
+        quote:
+          'Thank you so much. We had a wonderful time, and the children were saying it was one of the best visits they have ever been on.',
+        name: 'Katerina Tortouri',
+        role: 'Design & Technology Teacher',
+      },
+    ],
   },
 
   form: {
@@ -499,7 +526,7 @@ const ADOPT_EN: AdoptContent = {
       phone: ADOPT_EL.cta.contact.phone,
       phoneHref: ADOPT_EL.cta.contact.phoneHref,
       address: ADOPT_EL.cta.contact.address,
-      hours: 'Mon – Fri 08:00–16:00 · Sat – Sun by appointment',
+      hours: 'Mon–Fri 08:00–16:00 · Sat–Sun by appointment',
     },
   },
 }

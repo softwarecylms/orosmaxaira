@@ -10,8 +10,7 @@ import { useCart, formatCents } from './cart-store'
 import { localizedProductTitle, localizedContainer } from '@/components/shop/product-i18n'
 import { getCartChrome } from './cart-ui'
 import { EASE, DURATION } from '@/lib/motion'
-
-const FREE_SHIPPING_THRESHOLD = 7000 // €70,00 in cents
+import { FREE_SHIPPING_THRESHOLD } from '@/lib/shipping'
 
 /**
  * Slide-out cart drawer — opens from the right when the header cart is clicked

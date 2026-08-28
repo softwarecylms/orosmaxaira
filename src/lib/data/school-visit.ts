@@ -49,7 +49,7 @@ export const MAX_STUDENTS = 50
 
 export type SchoolPriceTier = {
   range: string
-  price: number | null // null = free (teachers/escorts)
+  price: number | null // null = free (teachers/accompanying adults)
   note: string
 }
 
@@ -59,12 +59,12 @@ export const SCHOOL_PRICING: SchoolPriceTier[] = [
   { range: 'Δάσκαλοι & συνοδοί', price: null, note: 'όσοι συνοδεύουν την τάξη' },
 ]
 
-/** Per-child price for a headcount (teachers/escorts are free). ≤25 ⇒ €8, else €7. */
+/** Per-child price for a headcount (teachers/accompanying adults are free). ≤25 ⇒ €8, else €7. */
 export function pricePerChild(students: number): number {
   return students <= 25 ? 8 : 7
 }
 
-/** Estimated total for the children (teachers/escorts excluded — they're free). */
+/** Estimated total for the children (teachers/accompanying adults excluded — they're free). */
 export function estimateCost(students: number): number {
   if (!Number.isFinite(students) || students < 1) return 0
   return students * pricePerChild(students)
@@ -96,7 +96,7 @@ const SCHOOL_WORKSHOP_OPTIONS_EN: SchoolWorkshopOption[] = [
 const SCHOOL_PRICING_EN: SchoolPriceTier[] = [
   { range: 'Up to 25 children', price: 8, note: 'per child, incl. VAT' },
   { range: 'From 26 to 54 children', price: 7, note: 'per child, incl. VAT' },
-  { range: 'Teachers & escorts', price: null, note: 'everyone accompanying the class' },
+  { range: 'Teachers & accompanying adults', price: null, note: 'everyone accompanying the class' },
 ]
 
 export type SchoolVisitContent = {

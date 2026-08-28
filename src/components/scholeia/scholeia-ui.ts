@@ -129,7 +129,7 @@ const EN: ScholeiaUi = {
   notesAria: 'Notes and allergies',
   estimatedTotal: 'Estimated total',
   estimateBreakdown: (count, per) =>
-    `${count} ${count === 1 ? 'child' : 'children'} × €${per} per child · escorts free`,
+    `${count} ${count === 1 ? 'child' : 'children'} × €${per} per child · accompanying adults free`,
   requestNote:
     'This is a booking request — we will contact you to confirm availability.',
   sending: 'Sending…',

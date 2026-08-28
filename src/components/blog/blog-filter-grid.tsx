@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils'
 import type { BlogPost } from './blog-data'
 import type { BlogCategory } from './blog-categories'
 import { getBlogUi, formatBlogDate } from './blog-ui'
+import { articlePath } from '@/components/blog/article-url'
 
 /** Blog index grid with category filter chips on top. Filtering is client-side;
  *  the grid re-keys on the active category so the stagger replays each switch. */
@@ -75,7 +76,7 @@ export function BlogFilterGrid({
         {filtered.map((p) => (
           <RevealStaggerItem key={p.slug} hoverLift className="flex">
             <Link
-              href={`/blog/${p.slug}`}
+              href={articlePath(p.slug)}
               className="group flex w-full flex-col overflow-hidden rounded-[16px] bg-white shadow-card ring-1 ring-border/50 transition-shadow hover:shadow-card-lg"
             >
               <div className="relative aspect-[16/10] w-full overflow-hidden bg-offwhite">

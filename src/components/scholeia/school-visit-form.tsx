@@ -295,7 +295,7 @@ export function SchoolVisitForm({
         className={`${inputCls} resize-y`}
       />
 
-      {/* Live total — €8/child up to 25 children, €7/child for 26+ (escorts free) */}
+      {/* Live total — €8/child up to 25 children, €7/child for 26+ (accompanying adults free) */}
       {count > 0 && count <= maxStudents ? (
         <div className="flex flex-col gap-1 rounded-[8px] bg-accent/10 px-4 py-3">
           <div className="flex items-center justify-between gap-3">

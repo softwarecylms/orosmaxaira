@@ -5,6 +5,7 @@ import { getHomeContent } from './home-content'
 import { getBlogPosts } from '@/components/blog/blog-data'
 import { CtaLink } from './cta-link'
 import { RevealUp, RevealGroup, RevealItem } from './reveal-up'
+import { articlePath } from '@/components/blog/article-url'
 
 /** Section 10 — "Ο Κόσμος της Μέλισσας & της Φύσης" blog teaser (Figma 118:631).
  *  Shows the 3 most recent posts (a featured one + two), each linked to its page. */
@@ -32,7 +33,7 @@ export async function BlogTeaser() {
           {/* Featured article */}
           <RevealItem className="h-full min-w-0">
             <Link
-              href={`/blog/${featured.slug}`}
+              href={articlePath(featured.slug)}
               className="group flex h-full w-full flex-col overflow-hidden rounded-[4px] bg-white sm:flex-row sm:items-center sm:gap-6 lg:gap-8 2xl:gap-[50px]"
             >
               <div className="relative aspect-[471/427] w-full shrink-0 overflow-hidden sm:aspect-auto sm:h-[360px] sm:w-[320px] lg:w-[280px] xl:w-[380px] 2xl:h-[427px] 2xl:w-[471px]">
@@ -77,7 +78,7 @@ export async function BlogTeaser() {
               {items.map((item, i) => (
                 <Link
                   key={i}
-                  href={`/blog/${item.slug}`}
+                  href={articlePath(item.slug)}
                   className="group flex items-stretch gap-4 overflow-hidden rounded-[4px] bg-white 2xl:gap-[25px]"
                 >
                   <div className="relative aspect-[262/203] w-[130px] shrink-0 overflow-hidden sm:aspect-auto sm:h-[170px] sm:w-[200px] lg:w-[150px] xl:w-[200px] 2xl:h-[203px] 2xl:w-[262px]">

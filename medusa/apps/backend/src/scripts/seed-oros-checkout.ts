@@ -17,8 +17,10 @@ import {
 
 const SHIPPING = [
   { name: "ACS Κύπρος", code: "cy-acs", amount: 2.5 }, // pickup point
-  { name: "Παράδοση στο σπίτι", code: "cy-home", amount: 5 }, // home delivery (< €70)
-  { name: "Δωρεάν μεταφορικά", code: "free", amount: 0 }, // home delivery ≥ €70
+  { name: "Παράδοση στο σπίτι", code: "cy-home", amount: 5 }, // home delivery (under the threshold)
+  // Booked for ACS *or* home delivery once the discounted goods total reaches €70
+  // (see src/lib/shipping.ts — the storefront enforces the rule client + server side).
+  { name: "Δωρεάν μεταφορικά", code: "free", amount: 0 },
   { name: "Παράδοση Ελλάδα", code: "gr-standard", amount: 7 },
 ]
 

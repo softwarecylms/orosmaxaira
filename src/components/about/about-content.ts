@@ -206,7 +206,7 @@ const ABOUT_EN: AboutContent = {
 
   outdoor: {
     heading: 'And what you will find in our outdoor spaces',
-    cta: { label: 'Learn More', href: ABOUT_EL.outdoor.cta.href },
+    cta: { label: 'Learn more', href: ABOUT_EL.outdoor.cta.href },
     arrows: { prev: 'Previous', next: 'Next' },
     slides: [
       { ...ABOUT_EL.outdoor.slides[0], title: 'Workshops & Activities', text: 'A specially designed area for conducting workshops and educational activities.' },

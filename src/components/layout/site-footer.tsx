@@ -52,7 +52,6 @@ export async function SiteFooter({ locale }: SiteFooterProps) {
                 className="h-[59px] w-auto"
               />
             </Link>
-            <p className="max-w-[300px] text-[17px] leading-[24px] text-muted">{FOOTER.tagline}</p>
             <div className="flex items-center gap-3">
               <Link
                 href="/certificates#iso-14001"
@@ -80,6 +79,37 @@ export async function SiteFooter({ locale }: SiteFooterProps) {
                   className="size-[67px] object-contain"
                 />
               </Link>
+            </div>
+
+            {/* EU / ΘΑλΕΙΑ co-funding — sits with the other credential marks,
+                kept quiet: 20px logos and 11px type. */}
+            <div className="flex flex-col items-center gap-3 lg:mt-auto lg:items-start">
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 lg:justify-start">
+                <Image
+                  src="/images/funding/thaleia.png"
+                  alt={FOOTER.funding.thaleiaAlt}
+                  width={514}
+                  height={160}
+                  className="h-5 w-auto opacity-70"
+                />
+                <Image
+                  src="/images/funding/cyprus.png"
+                  alt={FOOTER.funding.cyprusAlt}
+                  width={196}
+                  height={160}
+                  className="h-5 w-auto opacity-70"
+                />
+                <Image
+                  src="/images/funding/eu.png"
+                  alt={FOOTER.funding.euAlt}
+                  width={873}
+                  height={160}
+                  className="h-5 w-auto opacity-70"
+                />
+              </div>
+              <p className="max-w-[300px] text-[11px] leading-[1.5] text-muted/80">
+                {FOOTER.funding.text}
+              </p>
             </div>
           </div>
 
@@ -199,6 +229,7 @@ export async function SiteFooter({ locale }: SiteFooterProps) {
             ))}
           </p>
         </div>
+
       </div>
     </footer>
   )

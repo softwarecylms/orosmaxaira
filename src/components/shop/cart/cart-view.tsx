@@ -7,8 +7,7 @@ import { Minus, Plus, X, ArrowRight, Check, Truck } from 'lucide-react'
 import { useCart, formatCents } from '@/components/commerce/cart-store'
 import { localizedProductTitle, localizedContainer } from '@/components/shop/product-i18n'
 import { getCartViewUi } from './cart-ui'
-
-const FREE_SHIPPING_THRESHOLD = 7000 // €70,00 in cents
+import { FREE_SHIPPING_THRESHOLD } from '@/lib/shipping'
 
 /** Client cart page: line items + order summary. Reads the local honey cart. */
 export function CartView() {

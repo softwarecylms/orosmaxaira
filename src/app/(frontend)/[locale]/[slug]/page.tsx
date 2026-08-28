@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { getLocale } from 'next-intl/server'
 import { Render } from '@measured/puck/rsc'
 import {
   getAllPageSlugs,
@@ -7,10 +8,13 @@ import {
   getPostBySlug,
   getRelatedPosts,
 } from '@/lib/cms'
-import { pageMetadata, postMetadata } from '@/lib/seo'
+import { hreflangAlternates, pageMetadata, postMetadata } from '@/lib/seo'
 import { puckConfig } from '@/puck/config'
 import { populatePuckData } from '@/puck/hydrate'
 import { BlogPostRender } from '@/blocks/blog-post'
+import { getBlogPosts } from '@/components/blog/blog-data'
+import { ArticleView } from '@/components/blog/article-view'
+import { articlePath } from '@/components/blog/article-url'
 import type { Data } from '@measured/puck'
 
 export const revalidate = 60
@@ -27,6 +31,13 @@ const RESERVED_TOP_LEVEL_SLUGS = new Set([
   '_next',
 ])
 
+/** Articles keep the previous site's root permalinks — `/<slug>/`, `/en/<slug>/`
+ *  — so they resolve here rather than under `/blog/`. Slugs are locale-invariant,
+ *  so the Greek list covers both locales. */
+function findArticle(slug: string, locale: string) {
+  return getBlogPosts(locale).find((p) => p.slug === slug)
+}
+
 export async function generateStaticParams() {
   const [pageSlugs, postSlugs] = await Promise.all([
     getAllPageSlugs(),
@@ -39,6 +50,9 @@ export async function generateStaticParams() {
   for (const s of postSlugs) {
     if (s && !RESERVED_TOP_LEVEL_SLUGS.has(s)) all.add(s)
   }
+  for (const p of getBlogPosts('el')) {
+    if (p.slug && !RESERVED_TOP_LEVEL_SLUGS.has(p.slug)) all.add(p.slug)
+  }
   return Array.from(all).map((slug) => ({ slug }))
 }
 
@@ -50,6 +64,22 @@ export async function generateMetadata({ params }: RouteProps) {
   if (page) return pageMetadata(page)
   const post = await getPostBySlug(slug)
   if (post) return postMetadata(post)
+
+  const locale = await getLocale()
+  const article = findArticle(slug, locale)
+  const alternates = hreflangAlternates(locale, articlePath(slug))
+  if (article) {
+    return {
+      title: article.title,
+      description: article.excerpt,
+      alternates,
+      openGraph: {
+        title: article.title,
+        description: article.excerpt,
+        images: article.image ? [article.image] : undefined,
+      },
+    }
+  }
   return { title: 'Not found' }
 }
 
@@ -74,6 +104,15 @@ export default async function CatchAllRoute({ params }: RouteProps) {
       ? await getRelatedPosts(primaryCategory.id, slug, 3)
       : []
     return <BlogPostRender post={post} relatedPosts={relatedPosts} />
+  }
+
+  const locale = await getLocale()
+  const article = findArticle(slug, locale)
+  if (article) {
+    const related = getBlogPosts(locale)
+      .filter((p) => p.slug !== slug)
+      .slice(0, 3)
+    return <ArticleView post={article} related={related} locale={locale} />
   }
 
   notFound()

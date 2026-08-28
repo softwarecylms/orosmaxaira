@@ -1,40 +1,13 @@
-import type { Metadata } from 'next'
 import Image from 'next/image'
-import { notFound } from 'next/navigation'
-import { getLocale } from 'next-intl/server'
 import { CalendarDays, Phone, Mail } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
-import { getBlogPosts } from '@/components/blog/blog-data'
 import { getBlogCategories, POST_CATEGORIES } from '@/components/blog/blog-categories'
 import { getBlogUi, formatBlogDate } from '@/components/blog/blog-ui'
 import { Reveal } from '@/components/motion/reveal'
 import { ArticleFeaturedImage } from '@/components/blog/article-featured-image'
 import { FacebookSolid, XSolid, LinkedinSolid } from '@/components/layout/social-icons'
-import { absoluteUrl, hreflangAlternates } from '@/lib/seo'
-
-export function generateStaticParams() {
-  // Slugs are locale-invariant (the URL is shared across el/en), so the Greek
-  // source list covers every locale.
-  return getBlogPosts('el').map((p) => ({ slug: p.slug }))
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}): Promise<Metadata> {
-  const { slug } = await params
-  const locale = await getLocale()
-  const post = getBlogPosts(locale).find((p) => p.slug === slug)
-  const alternates = hreflangAlternates(locale, `/blog/${slug}`)
-  if (!post) return { title: getBlogUi(locale).articleFallback, alternates }
-  return {
-    title: post.title,
-    description: post.excerpt,
-    alternates,
-    openGraph: { title: post.title, description: post.excerpt, images: post.image ? [post.image] : undefined },
-  }
-}
+import { articlePath, articleUrl } from '@/components/blog/article-url'
+import type { BlogPost } from '@/components/blog/blog-data'
 
 const BODY =
   'max-w-none text-[17px] leading-[1.75] text-muted ' +
@@ -46,18 +19,25 @@ const BODY =
   '[&_img]:my-7 [&_img]:w-full [&_img]:rounded-[14px] [&_strong]:font-semibold [&_strong]:text-foreground ' +
   '[&_blockquote]:my-6 [&_blockquote]:border-l-4 [&_blockquote]:border-accent/40 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted'
 
-export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const locale = await getLocale()
+/**
+ * The article page body. Lives here rather than in the route because articles are
+ * served from the root catch-all (`/<slug>/`) to match the permalinks of the
+ * previous WordPress site — see `src/components/blog/article-url.ts`.
+ */
+export function ArticleView({
+  post,
+  related,
+  locale,
+}: {
+  post: BlogPost
+  related: BlogPost[]
+  locale: string
+}) {
   const ui = getBlogUi(locale)
-  const posts = getBlogPosts(locale)
-  const post = posts.find((p) => p.slug === slug)
-  if (!post) notFound()
-
-  const related = posts.filter((p) => p.slug !== slug).slice(0, 3)
   const categorySlug = POST_CATEGORIES[post.slug]?.[0]
   const categoryName = getBlogCategories(locale).find((c) => c.slug === categorySlug)?.name
-  const url = absoluteUrl(`/blog/${post.slug}`)
+  // Share the locale's own permalink, not always the Greek one.
+  const url = articleUrl(post.slug, locale)
   const shares = [
     { icon: FacebookSolid, label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}` },
     { icon: XSolid, label: 'X', href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(post.title)}` },
@@ -116,7 +96,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <ul className="flex flex-col divide-y divide-border">
               {related.map((r) => (
                 <li key={r.slug} className="py-3 first:pt-0 last:pb-0">
-                  <Link href={`/blog/${r.slug}`} className="group flex gap-3">
+                  <Link href={articlePath(r.slug)} className="group flex gap-3">
                     {r.image ? (
                       <span className="relative size-16 shrink-0 overflow-hidden rounded-[8px] bg-white">
                         <Image src={r.image} alt="" fill sizes="64px" className="object-cover" />
@@ -143,7 +123,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               <div className="mt-4 flex flex-col gap-3 text-[14px] font-semibold text-white">
                 <a href="tel:+35725622305" className="flex items-center gap-3 transition-colors hover:text-white">
                   <Phone className="size-4 shrink-0 text-cream" aria-hidden="true" />
-                  25622305
+                  +357 25622305
                 </a>
                 <a href="mailto:info@orosmaxaira.com" className="flex items-center gap-3 transition-colors hover:text-white">
                   <Mail className="size-4 shrink-0 text-cream" aria-hidden="true" />

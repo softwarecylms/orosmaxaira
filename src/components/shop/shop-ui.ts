@@ -67,7 +67,7 @@ const SHOP_UI_EN: ShopUi = {
   banner: {
     heading: 'Activities',
     body: 'Visit our apiary for a unique family experience! See the hives up close and discover the secrets of the bee and honey.',
-    cta: { label: 'Learn More', href: SHOP_PAGE.banner.cta.href },
+    cta: { label: 'Learn more', href: SHOP_PAGE.banner.cta.href },
     image: SHOP_PAGE.banner.image,
     imageAlt: 'Bee on a honeycomb — Oros Machaira',
   },

@@ -107,7 +107,7 @@ export const ANNOUNCEMENT =
 
 export const CONTACT = {
   phone: '+357 25622305',
-  phoneShort: '25 622305',
+  phoneShort: '+357 25622305',
   phoneHref: 'tel:+35725622305',
   email: 'info@orosmaxaira.com',
 }
@@ -186,10 +186,10 @@ export const DEAL = {
     imageAlt: 'Υδρόμελο Melite — Όρος Μαχαιρά',
   },
   products: [
-    { category: 'Μέλι', title: 'Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-1.webp', href: '/product/meli-antheon-oros-machaira' },
+    { category: 'Μέλι', title: 'Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,00 – €27,50', image: '/images/home/deal-1.webp', href: '/product/meli-antheon-oros-machaira' },
     { category: 'Μέλι', title: 'Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-2.webp', href: '/product/avrasto-meli-antheon-oros-machaira' },
-    { category: 'Μέλι', title: 'Βασιλικός πολτός «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-3.webp', href: '/product/vasilikos-poltos-oros-machaira' },
-    { category: 'Μέλι', title: 'Υδρόμελο', price: '€3,50 – €31,00', image: '/images/home/deal-4.webp', href: '/product/ydromelo' },
+    { category: 'Μέλι', title: 'Βασιλικός πολτός «Όρος Μαχαιρά»', price: '€22,00', image: '/images/home/deal-3.webp', href: '/product/vasilikos-poltos-oros-machaira' },
+    { category: 'Μέλι', title: 'Υδρόμελο', price: '€16,00', image: '/images/home/deal-4.webp', href: '/product/ydromelo' },
     { category: 'Μέλι', title: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-5.webp', href: '/product/thymarisio-meli-oros-machaira' },
   ] satisfies HoneyProduct[],
 }
@@ -271,7 +271,7 @@ export const FLATLAY: {
       product: {
         category: 'Μέλι',
         title: 'Μέλι Ανθέων «Όρος Μαχαιρά»',
-        price: '€3,50 – €31,00',
+        price: '€3,00 – €27,50',
         image: '/images/home/products/unheated-honey.webp',
       },
     },
@@ -286,7 +286,7 @@ export const FLATLAY: {
       product: {
         category: 'Μέλι',
         title: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»',
-        price: '€4,00 – €33,00',
+        price: '€3,50 – €31,00',
         image: '/images/home/products/thyme-honey.webp',
       },
     },
@@ -407,7 +407,7 @@ export const FOOTER = {
         'Τηλ.: +357 25622305',
         'Μελίνη, Λάρνακα 7716',
         'P.O.BOX: 7718',
-        'Δε-Πα 08:00 – 16:00',
+        'Δευ–Παρ 08:00–16:00',
         'info@orosmaxaira.com',
       ],
     },
@@ -427,6 +427,13 @@ export const FOOTER = {
     { label: 'Πολιτική Αποστολών', href: '/politiki-apostolis-proionton' },
     { label: 'Πολιτική Απορρήτου & Cookies', href: '/privacy-amp-cookie-policy' },
   ],
+  /** EU / ΘΑλΕΙΑ co-funding notice shown as a quiet strip above the legal bar. */
+  funding: {
+    text: 'Το έργο υλοποιείται στο πλαίσιο του Προγράμματος Πολιτικής Συνοχής «ΘΑλΕΙΑ 2021-2027» με τη συγχρηματοδότηση της ΕΕ',
+    thaleiaAlt: 'ΘΑλΕΙΑ 2021-2027',
+    cyprusAlt: 'Κυπριακή Δημοκρατία',
+    euAlt: 'Με τη χρηματοδότηση της Ευρωπαϊκής Ένωσης',
+  },
 }
 
 // --- Bilingual bundle -----------------------------------------------------
@@ -445,7 +452,7 @@ const HOME_EL = {
 export type HomeContent = typeof HOME_EL
 
 const HOME_EN: HomeContent = {
-  READ_MORE: 'Learn More',
+  READ_MORE: 'Learn more',
   ANNOUNCEMENT: 'FREE shipping in Cyprus for orders over €70',
   CONTACT,
   SEARCH_PLACEHOLDER: '🍯 Honey',
@@ -534,15 +541,15 @@ const HOME_EN: HomeContent = {
       // "our"/"among others" as units so the copy wraps cleanly.
       heading: 'Treasures of the Hive',
       body: 'Discover our award-winning honey, our fine mead and our royal jelly, among others.',
-      cta: { label: 'Learn More', href: HERO.left.cta.href },
+      cta: { label: 'Learn more', href: HERO.left.cta.href },
       image: HERO.left.image,
       imageAlt: 'Award-winning Oros Machaira honey on a wooden stand',
     },
     right: {
       eyebrow: 'HANDS-ON EXPERIENCE',
       heading: 'Workshops & Events',
-      body: 'Come up to the mountain and live the magic of the apiary through unique, interactive workshops for the whole family.',
-      cta: { label: 'Learn More', href: HERO.right.cta.href },
+      body: 'Come up to the mountain and experience the magic of the apiary, through hands-on workshops for the whole family.',
+      cta: { label: 'Learn more', href: HERO.right.cta.href },
       image: HERO.right.image,
       imageAlt: 'A bee on a honeycomb',
     },
@@ -556,7 +563,7 @@ const HOME_EN: HomeContent = {
   TICKER: ['100% PURITY GUARANTEE', 'FAST DELIVERY', 'SECURE ONLINE PAYMENTS', 'ECO CONSCIOUS', 'FAST SERVICE'],
   DEAL: {
     heading: 'The Diamonds of Machaira',
-    cta: { label: 'Learn More', href: DEAL.cta.href },
+    cta: { label: 'Learn more', href: DEAL.cta.href },
     featured: { ...DEAL.featured, title: 'The Elixir of the Gods', imageAlt: 'Melite Mead — Oros Machaira' },
     products: [
       { ...DEAL.products[0], category: 'Honey', title: 'Flower Honey «Oros Machaira»' },
@@ -568,7 +575,7 @@ const HOME_EN: HomeContent = {
   },
   CATEGORIES: {
     heading: 'Our Products',
-    cta: { label: 'Learn More', href: CATEGORIES.cta.href },
+    cta: { label: 'Learn more', href: CATEGORIES.cta.href },
     items: [
       { ...CATEGORIES.items[0], title: 'Oros Machaira Honey' },
       { ...CATEGORIES.items[1], title: 'Bee Products' },
@@ -581,19 +588,19 @@ const HOME_EN: HomeContent = {
     eyebrow: 'HANDS-ON EXPERIENCE',
     heading: 'Adopt a Hive',
     body: 'Join the “Adopt a Hive” programme with your team and… “Bee-come a Hero” for the bees and the environment.',
-    cta: { label: 'Learn More', href: ADOPT.cta.href },
+    cta: { label: 'Learn more', href: ADOPT.cta.href },
     imageAlt: 'A bee on a honeycomb',
   },
   HERITAGE: {
     heading: 'From Generation to Generation',
-    cta: { label: 'Learn More', href: HERITAGE.cta.href },
+    cta: { label: 'Learn more', href: HERITAGE.cta.href },
     image: HERITAGE.image,
     imageAlt: 'The Oros Machaira family',
     paragraphs: [
       [
         { text: 'The story of ' },
         { text: '«Oros Machaira» ', bold: true },
-        { text: 'honey goes back to 1983, when Michalis Filippou began beekeeping together with his son-in-law, Costas Chimonas, starting with five hives they received from Costas Chimonas’s father. For around 30 years they worked hard together, with ' },
+        { text: 'honey goes back to 1983, when Michalis Filippou began beekeeping together with his brother-in-law, Costas Chimonas, starting with five hives they received from Costas Chimonas’s father. For around 30 years they worked hard together, with ' },
         { text: 'a love for nature', bold: true },
         { text: ', for the bee and its products.' },
       ],
@@ -615,7 +622,7 @@ const HOME_EN: HomeContent = {
   },
   BLOG: {
     heading: 'The World of Bees & Nature',
-    cta: { label: 'Learn More', href: BLOG.cta.href },
+    cta: { label: 'Learn more', href: BLOG.cta.href },
     badge: 'Articles',
     featured: {
       ...BLOG.featured,
@@ -662,7 +669,7 @@ const HOME_EN: HomeContent = {
           'Tel.: +357 25622305',
           'Melini, Larnaca 7716',
           'P.O.BOX: 7718',
-          'Mon–Fri 08:00 – 16:00',
+          'Mon–Fri 08:00–16:00',
           'info@orosmaxaira.com',
         ],
       },
@@ -676,6 +683,12 @@ const HOME_EN: HomeContent = {
       { label: 'Shipping Policy', href: '/politiki-apostolis-proionton' },
       { label: 'Privacy & Cookie Policy', href: '/privacy-amp-cookie-policy' },
     ],
+    funding: {
+      text: 'The project is implemented under the Cohesion Policy Programme “THALIA 2021-2027”, co-funded by the European Union',
+      thaleiaAlt: 'THALIA 2021-2027',
+      cyprusAlt: 'Republic of Cyprus',
+      euAlt: 'Co-funded by the European Union',
+    },
   },
 }
 

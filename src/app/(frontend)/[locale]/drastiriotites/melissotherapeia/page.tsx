@@ -22,7 +22,7 @@ function pageCopy(locale: string) {
         fallbackDuration: '20 min / session',
         fallbackCost: '€7 / session',
         fallbackSeasonPill: 'Available April–October',
-        fallbackPeriod: 'April – October',
+        fallbackPeriod: 'April–October',
         fallbackFrequency: 'Every 2nd day, for 3 weeks',
       }
     : {
@@ -31,7 +31,7 @@ function pageCopy(locale: string) {
         fallbackDuration: '20 λεπτά / συνεδρία',
         fallbackCost: '7€ / συνεδρία',
         fallbackSeasonPill: 'Διαθέσιμη Απρίλιο–Οκτώβριο',
-        fallbackPeriod: 'Απρίλιος – Οκτώβριος',
+        fallbackPeriod: 'Απρίλιος–Οκτώβριος',
         fallbackFrequency: 'Κάθε 2η ημέρα, για 3 εβδομάδες',
       }
 }
@@ -43,7 +43,7 @@ type MelissoView = {
   durationLabel?: string
   costLabel?: string // "7€ / συνεδρία"
   seasonPill?: string // "Διαθέσιμη Απρίλιο–Οκτώβριο"
-  periodLabel?: string // "Απρίλιος – Οκτώβριος"
+  periodLabel?: string // "Απρίλιος–Οκτώβριος"
   seasonStart?: number
   seasonEnd?: number
   heroImage: string
@@ -76,7 +76,7 @@ async function loadView(locale: string): Promise<MelissoView> {
       durationLabel: a.duration_label ?? undefined,
       costLabel,
       seasonPill: s && e ? `${ui.availablePrefix} ${ui.monthsAcc[s - 1]}–${ui.monthsAcc[e - 1]}` : undefined,
-      periodLabel: s && e ? `${ui.monthsNom[s - 1]} – ${ui.monthsNom[e - 1]}` : undefined,
+      periodLabel: s && e ? `${ui.monthsNom[s - 1]}–${ui.monthsNom[e - 1]}` : undefined,
       seasonStart: s,
       seasonEnd: e,
       heroImage: a.hero_image ?? '',

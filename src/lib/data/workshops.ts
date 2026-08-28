@@ -213,8 +213,8 @@ export function monthNameAccusative(m: number, locale = 'el'): string {
   return monthName(m).replace(/ς$/, '')
 }
 
-/** "Μάρτιος – Απρίλιος" for a season's months (array is in season order, so a
- *  winter [12,1,2] reads "Δεκέμβριος – Φεβρουάριος"). Empty ⇒ ''. */
+/** "Μάρτιος–Απρίλιος" for a season's months (array is in season order, so a
+ *  winter [12,1,2] reads "Δεκέμβριος–Φεβρουάριος"). Empty ⇒ ''. */
 export function monthRangeLabel(months: number[], locale = 'el'): string {
   if (!months.length) return ''
   if (months.length === 1) return monthName(months[0], false, locale)

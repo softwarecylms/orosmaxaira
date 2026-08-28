@@ -53,12 +53,12 @@ export const CONTACT_PAGE = {
       {
         icon: 'hours' as ContactIcon,
         title: 'Ώρες Λειτουργίας',
-        lines: ['Δευτέρα - Παρασκευή: 8πμ - 4μμ'],
+        lines: ['Δευ–Παρ 08:00–16:00'],
       },
       {
         icon: 'phone' as ContactIcon,
         title: 'Τηλέφωνο',
-        lines: ['25 622 305'],
+        lines: ['+357 25622305'],
         href: 'tel:+35725622305',
       },
       {
@@ -152,7 +152,7 @@ const CONTACT_PAGE_EN: ContactContent = {
       {
         ...CONTACT_PAGE.connect.items[0],
         title: 'Opening Hours',
-        lines: ['Monday - Friday: 8am - 4pm'],
+        lines: ['Mon–Fri 08:00–16:00'],
       },
       {
         ...CONTACT_PAGE.connect.items[1],

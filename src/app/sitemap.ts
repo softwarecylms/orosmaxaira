@@ -9,6 +9,7 @@ import {
   getAllTags,
 } from '@/lib/cms'
 import { siteUrl } from '@/lib/seo'
+import { getBlogPosts } from '@/components/blog/blog-data'
 
 export const revalidate = 3600
 
@@ -82,6 +83,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: 'weekly',
     priority: 0.7,
   })
+  // Articles live at the root, in both locales, matching the previous site.
+  for (const p of getBlogPosts('el')) {
+    if (!p.slug) continue
+    entries.push({
+      url: `${base}/${p.slug}/`,
+      lastModified: p.date ? new Date(p.date) : now,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    })
+    entries.push({
+      url: `${base}/en/${p.slug}/`,
+      lastModified: p.date ? new Date(p.date) : now,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    })
+  }
+
   entries.push({
     url: `${base}/blog`,
     lastModified: now,

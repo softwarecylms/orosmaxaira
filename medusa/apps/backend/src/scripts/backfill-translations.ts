@@ -278,7 +278,7 @@ const SCHOOL_EN: Record<string, any> = {
   pricing: [
     { range: "Up to 25 children", price: 8, note: "per child, incl. VAT" },
     { range: "From 26 to 54 children", price: 7, note: "per child, incl. VAT" },
-    { range: "Teachers & escorts", price: null, note: "everyone accompanying the class" },
+    { range: "Teachers & accompanying adults", price: null, note: "everyone accompanying the class" },
   ],
   notes: [
     { title: "Snacks & Drinks", body: "The children should bring their own snacks. Only honey and bee products are available at our premises." },

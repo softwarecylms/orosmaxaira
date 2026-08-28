@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { getLocale } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { getHomeContent, type HoneyProduct } from './home-content'
+import { listShopProducts } from '@/lib/medusa/shop'
 import { CtaLink } from './cta-link'
 import { DealCarousel } from './deal-carousel'
 import { ArrowRight } from './icons'
@@ -10,7 +11,20 @@ import { RevealUp } from './reveal-up'
 /** Section 4 — "Τα Διαμάντια του Μαχαιρά" (Figma 118:456). */
 export async function DealOfMonth({ products }: { products?: HoneyProduct[] }) {
   const { DEAL } = getHomeContent(await getLocale())
-  const items = (products?.length ? products : DEAL.products).slice(0, 5)
+  const curated = (products?.length ? products : DEAL.products).slice(0, 5)
+
+  // Prices come from Medusa (the shop is the source of truth) so a card can never
+  // advertise a different price from the product page. The curated list keeps its
+  // own order, images and titles; only the price is taken live. If Medusa is
+  // unreachable the static price stays as the fallback.
+  const catalogue = await listShopProducts().catch(() => null)
+  const items = catalogue
+    ? curated.map((p) => {
+        const handle = p.href.match(/\/product\/([^/]+)/)?.[1]
+        const live = handle ? catalogue.products.find((x) => x.handle === handle) : undefined
+        return live ? { ...p, price: live.price } : p
+      })
+    : curated
 
   return (
     <section data-testid="deal-of-month" className="bg-offwhite py-12 md:py-[70px]">

@@ -11,8 +11,12 @@ import { REFRIGERATED_HANDLES, isRefrigerated } from '@/components/shop/shop-con
 import { localizedProductTitle, localizedContainer } from '@/components/shop/product-i18n'
 import { getCheckoutUi } from './checkout-ui'
 import { cn } from '@/lib/utils'
+import {
+  FREE_SHIPPING_OPTION_NAME,
+  FREE_SHIPPING_THRESHOLD,
+  earnsFreeShipping,
+} from '@/lib/shipping'
 
-const FREE_SHIPPING_THRESHOLD = 7000 // €70,00 — free HOME delivery above this (Cyprus)
 const HOME_SHIPPING = 500 // €5,00 home delivery (Cyprus, below threshold)
 const ACS_SHIPPING = 250 // €2,50 ACS pickup (Cyprus)
 const GREECE_SHIPPING = 700 // €7,00 (Greece — never free)
@@ -234,8 +238,20 @@ export function CheckoutForm() {
   const refrigeratedBlocked =
     hasRefrigerated && (inGreece || REFRIGERATED_BLOCKED_DISTRICTS.includes(deliveryCity))
 
+  const appliedCoupon = coupon ? COUPONS[coupon] : null
+  const discount = appliedCoupon
+    ? Math.min(
+        subtotal,
+        appliedCoupon.kind === 'pct' ? Math.round((subtotal * appliedCoupon.value) / 100) : appliedCoupon.value,
+      )
+    : 0
+
+  // Free shipping is earned on what the customer actually pays for the goods —
+  // the subtotal AFTER any discount code, excluding shipping itself. A €72 cart
+  // with a €5 coupon settles at €67 and so still pays shipping.
+  const eligibleTotal = subtotal - discount
   // Free shipping applies to any Cyprus delivery over the threshold.
-  const cyprusFree = !inGreece && subtotal >= FREE_SHIPPING_THRESHOLD
+  const cyprusFree = !inGreece && earnsFreeShipping(eligibleTotal)
 
   const shipping = inGreece
     ? GREECE_SHIPPING
@@ -249,20 +265,13 @@ export function CheckoutForm() {
   const shippingOptionName = inGreece
     ? 'Παράδοση Ελλάδα'
     : cyprusFree
-      ? 'Δωρεάν μεταφορικά'
+      ? FREE_SHIPPING_OPTION_NAME
       : delivery === 'acs'
         ? 'ACS Κύπρος'
         : 'Παράδοση στο σπίτι'
 
-  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal)
-  const shippingProgress = Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100))
-  const appliedCoupon = coupon ? COUPONS[coupon] : null
-  const discount = appliedCoupon
-    ? Math.min(
-        subtotal,
-        appliedCoupon.kind === 'pct' ? Math.round((subtotal * appliedCoupon.value) / 100) : appliedCoupon.value,
-      )
-    : 0
+  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - eligibleTotal)
+  const shippingProgress = Math.min(100, Math.round((eligibleTotal / FREE_SHIPPING_THRESHOLD) * 100))
   const total = subtotal + shipping - discount
 
   function applyCoupon() {
