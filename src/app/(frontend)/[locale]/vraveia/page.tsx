@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: en
       ? 'The distinctions and awards of Oros Machaira — Cyprus Tourism Awards, Excellent Taste Awards, Cyprus Hospitality Awards, Specialist Awards and more.'
       : 'Οι διακρίσεις και τα βραβεία του Όρος Μαχαιρά — Cyprus Tourism Awards, Excellent Taste Awards, Cyprus Hospitality Awards, Specialist Awards και άλλα.',
-    alternates: hreflangAlternates(locale, '/awards'),
+    alternates: hreflangAlternates(locale, '/vraveia'),
   }
 }
 

@@ -163,7 +163,7 @@ const AWARDS_EL = {
           { text: '🥈 ' },
           { text: 'Αργυρό Βραβείο (Silver)', bold: true },
           {
-            text: ' — Βαθμολογία 4.5, στην κατηγορία «Rural/Mountain tourism, ecotourism, wine tourism & agro tourism», για τις βιωματικές μας εμπειρίες Adventures in the beehives (Περιπέτειες στις Μελισσοφωλιές).',
+            text: ' — Βαθμολογία 4.5, στην κατηγορία «Rural/Mountain tourism, ecotourism, wine tourism & agro tourism», για τις βιωματικές μας εμπειρίες Adventures at the hives (Περιπέτειες στις Μελισσοφωλιές).',
           },
         ],
       ],
@@ -206,7 +206,7 @@ const AWARDS_EN: AwardsContent = {
   hero: {
     title: 'Awards & Distinctions',
     description:
-      'Every award is a confirmation of our work, our tradition and our love for the bee and for nature. Explore the distinctions entrusted to us by leading institutions in Cyprus and abroad.',
+      'Every award is a confirmation of our work, our tradition and our love for the bee and for nature. Explore the awards we have received from leading organisations in Cyprus and abroad.',
     image: AWARDS_EL.hero.image,
     imageAlt: 'Gold Award, Cyprus Tourism Awards 2025 — Oros Machaira',
   },
@@ -215,14 +215,14 @@ const AWARDS_EN: AwardsContent = {
       slug: 'specialist-awards-2026',
       event: 'Specialist Awards 2026',
       year: '2026',
-      subject: 'Raw Flower Honey',
-      badges: [{ tier: 'bronze', label: 'Bronze Award', meta: 'Score 65' }],
+      subject: 'Raw (Unheated) Blossom Honey',
+      badges: [{ tier: 'bronze', label: 'Bronze Award', meta: '65/100' }],
       lead: [
-        { text: 'With great pride, we announce that our ' },
-        { text: 'Raw Flower Honey', href: AVRASTO },
+        { text: 'We are proud to announce that our ' },
+        { text: 'Raw (Unheated) Blossom Honey', href: AVRASTO },
         { text: ' was distinguished with the ' },
         { text: 'Bronze Award', bold: true },
-        { text: ' at the Specialist Awards 2026, achieving a score of 65!' },
+        { text: ' at the Specialist Awards 2026, achieving a score of 65/100!' },
       ],
       body: [[{ text: 'The judges singled out our honey for:', bold: true }]],
       highlights: [
@@ -238,20 +238,20 @@ const AWARDS_EN: AwardsContent = {
       org: 'Boussias Cyprus',
       year: '2025',
       subject: 'MELITE Mead',
-      badges: [{ tier: 'gold', label: 'Gold Award', meta: 'Cypriot Beverage · Score 8.2' }],
+      badges: [{ tier: 'gold', label: 'Gold Award', meta: 'Cypriot Beverage · 8.2/10' }],
       lead: [
-        { text: 'With special pride and emotion, we announce that ' },
+        { text: 'We are proud to announce that ' },
         { text: 'MELITE Mead', href: YDROMELO },
         { text: ' by Oros Machaira won the ' },
         { text: 'Gold Award', bold: true },
-        { text: ' at the celebrated Cyprus Tourism Awards, the leading institution organised by Boussias Cyprus.' },
+        { text: ' at the Cyprus Tourism Awards, the leading awards programme run by Boussias Cyprus.' },
       ],
       body: [
         [
           { text: 'In the ' },
           { text: 'Cypriot Beverage', bold: true },
           {
-            text: ' category, our traditional mead stood out with an impressive score of 8.2, confirming its superior quality and its contribution to showcasing Cyprus’s gastronomic heritage.',
+            text: ' category, our traditional mead stood out with an impressive score of 8.2/10, confirming its superior quality and its contribution to showcasing Cyprus’s gastronomic heritage.',
           },
         ],
       ],
@@ -262,11 +262,11 @@ const AWARDS_EN: AwardsContent = {
       event: 'Excellent Taste Awards 2025',
       org: 'London',
       year: '2025',
-      subject: 'Raw honey',
+      subject: 'Raw (Unheated) Blossom Honey',
       badges: [{ tier: 'gold', label: 'Gold Award' }],
       lead: [
-        { text: 'With pride and great joy, we share with you that our ' },
-        { text: 'raw honey', href: AVRASTO },
+        { text: 'Our ' },
+        { text: 'Raw (Unheated) Blossom Honey', href: AVRASTO },
         { text: ' received a ' },
         { text: 'Gold Award', bold: true },
         { text: ' at the Excellent Taste Awards 2025 – London.' },
@@ -280,14 +280,14 @@ const AWARDS_EN: AwardsContent = {
     },
     {
       slug: 'ge-neo-epicheirein-2025',
-      event: 'Ge’ Neo Epicheirein Young Entrepreneurship Awards 2025',
+      event: 'Young Entrepreneurship Awards 2025 (CCCI)',
       org: 'CCCI',
       year: '2025',
       subject: 'Menelaos Filippou',
       badges: [{ tier: 'first', label: 'Award', meta: 'Category: Industrial Enterprises' }],
       lead: [
         {
-          text: 'The Selection Committee of the CCCI for the “Ge’ Neo Epicheirein” young entrepreneurs awards chose ',
+          text: 'The Selection Committee of the CCCI for its Young Entrepreneurship Awards chose ',
         },
         { text: 'Menelaos Filippou', bold: true },
         { text: ' to be honoured in the Industrial Enterprises category for 2025.' },
@@ -301,7 +301,7 @@ const AWARDS_EN: AwardsContent = {
           },
         ],
       ],
-      note: 'This award was accepted by Maria Solomonidou on Menelaos’s behalf, as he was abroad at the time.',
+      note: 'The award was accepted by Maria Solomonidou on behalf of Menelaos Filippou, who was abroad at the time.',
       images: pics('ge-neo-epicheirein-2025'),
     },
     {
@@ -310,24 +310,22 @@ const AWARDS_EN: AwardsContent = {
       org: 'City of Dreams',
       year: '2024',
       badges: [
-        { tier: 'gold', label: 'Gold Award', meta: 'Score 7.3' },
-        { tier: 'silver', label: 'Silver Award', meta: 'Score 4.5' },
+        { tier: 'gold', label: 'Gold Award', meta: '7.3/10' },
+        { tier: 'silver', label: 'Silver Award', meta: '4.5/10' },
       ],
-      lead: 'With immense joy, we announce that Oros Machaira received two very important distinctions at the Cyprus Tourism Awards ceremony, held at City of Dreams.',
+      lead: 'Oros Machaira received two important distinctions at the Cyprus Tourism Awards ceremony, held at City of Dreams.',
       body: [
-        'The institution’s judging panel honoured us with two distinctions, rewarding our vision for nature and people:',
+        'The judging panel honoured us with two distinctions, rewarding our vision for nature and people:',
         [
-          { text: '🥇 ' },
           { text: 'Gold Award', bold: true },
           {
-            text: ' — Score 7.3, in the “Initiatives to protect the environment / Raising awareness” category, for the pioneering Adopt a Hive programme.',
+            text: ' — 7.3/10, in the “Initiatives to protect the environment / Raising awareness” category, for the pioneering Adopt a Hive programme.',
           },
         ],
         [
-          { text: '🥈 ' },
           { text: 'Silver Award', bold: true },
           {
-            text: ' — Score 4.5, in the “Rural/Mountain tourism, ecotourism, wine tourism & agro tourism” category, for our experiential Adventures in the Beehives.',
+            text: ' — 4.5/10, in the “Rural/Mountain tourism, ecotourism, wine tourism & agro tourism” category, for our experiential Adventures at the Hives.',
           },
         ],
       ],

@@ -38,7 +38,7 @@ function pageCopy(locale: string) {
         activityLabel: (n: string) => `Activity ${n} · 45 min`,
         workshopTitle: 'Creative Workshop',
         or: 'or',
-        pillDuration: '≈ 2h 30′ · 09:30–12:00',
+        pillDuration: 'Approx. 2 hrs 30 min · 09:30–12:00',
         pillMax: (n: number) => `Up to ${n} students`,
         pillLevel: 'Primary schools',
         sectionProgram: 'The programme',
@@ -119,11 +119,11 @@ const FALLBACK_EL: PView = {
   workshopIntro: 'Επιλέγετε ένα από τα δύο βιωματικά εργαστήρια:',
   workshopOptions: SCHOOL_WORKSHOP_OPTIONS as unknown as PView['workshopOptions'],
   workshopNote: 'Και στα δύο εργαστήρια, τα παιδιά παίρνουν μαζί τους την κατασκευή τους.',
-  playTitle: 'Ελεύθερο Παιχνίδι στον Παιδότοπο',
+  playTitle: 'Ελεύθερο παιχνίδι',
   playText:
-    'Τα παιδιά θα απολαύσουν ελεύθερο παιχνίδι στον χώρο της παιδικής χαράς, με χρόνο για ξεκούραση και σνακ.',
+    'Χρόνος στον παιδότοπο για παιχνίδι, ξεκούραση και σνακ.',
   durationText:
-    'Το πρόγραμμα διαρκεί περίπου 2 ώρες και 30 λεπτά, μεταξύ 09:30–12:00 (συμπεριλαμβάνεται και ο χρόνος που θα χρειαστούν τα παιδιά για να φάνε το πρωινό που θα φέρουν μαζί τους). Είναι ευέλικτο ανάλογα με την ώρα άφιξής σας, με όλες τις ομάδες να εναλλάσσονται κάθε 45 λεπτά.',
+    'Το πρόγραμμα διαρκεί περίπου 2 ώρες και 30 λεπτά, μεταξύ 09:30–12:00 (συμπεριλαμβάνεται και ο χρόνος που θα χρειαστούν τα παιδιά για να φάνε το πρωινό που θα φέρουν μαζί τους). Το πρόγραμμα είναι ευέλικτο ανάλογα με την ώρα άφιξής σας, με όλες τις ομάδες να εναλλάσσονται κάθε 45 λεπτά.',
   maxStudents: MAX_STUDENTS,
   pricing: SCHOOL_PRICING,
   notes: [
@@ -139,7 +139,7 @@ const FALLBACK_EL: PView = {
   allergyTitle: 'Αλλεργίες & Ιατρικές Καταστάσεις',
   allergyBody: [
     'Παρακαλούμε να μας ενημερώσετε εκ των προτέρων για τυχόν ιατρικές καταστάσεις ή αλλεργίες (κυρίως σε ξηρούς καρπούς, μέλι, μέλισσες).',
-    'Καθώς οι μέλισσες υπάρχουν φυσικά στο περιβάλλον μας, παιδιά ή προσωπικό με αλλεργία στις μέλισσες συνιστάται έντονα να μην συμμετέχουν στην επίσκεψη.',
+    'Καθώς οι μέλισσες υπάρχουν φυσικά στο περιβάλλον μας, παιδιά ή προσωπικό με αλλεργία στις μέλισσες δεν πρέπει να συμμετέχουν στην επίσκεψη.',
   ],
   metaTitle: 'Εκπαιδευτικές Επισκέψεις Σχολείων',
   metaDescription:
@@ -153,38 +153,38 @@ const FALLBACK_EN: PView = {
   heroImage: '/images/adopt/visit-2.webp',
   heroAlt: 'Students on an educational visit to the Oros Machaira apiary',
   intro:
-    'Our apiary is open for visits by primary schools. We have shaped a programme that meets the educational needs of pupils, combining information, creativity and contact with nature.',
+    'Our apiary is open to primary school groups. We have designed a programme that meets pupils’ educational needs, combining information, creativity and contact with nature.',
   closing:
     'We look forward to welcoming you and the children for a beautiful, educational day full of knowledge and fun.',
   programNote:
-    'The children are split into two or three groups, depending on the number of pupils, and rotate through the following three activities — every 45 minutes.',
+    'The children are split into two or three groups, depending on the number of pupils, and rotate through the three activities below, changing every 45 minutes.',
   tourTitle: 'Educational Tour',
   tourIntro:
     'An organised tour of our indoor and outdoor educational spaces, which includes:',
   tourStops: [
     {
-      text: 'A visit to the bee-therapy house to get to know the products of the bee and their uses, and to learn about the roles of the bees within the hive.',
+      text: 'A visit to our apitherapy room to get to know the products of the bee and their uses, and to learn about the roles of the bees within the hive.',
     },
     {
       text: 'A screening of an educational video showing a queen bee laying eggs, along with interesting facts about the anatomy and communication of bees.',
     },
-    { text: 'A knowledge quiz with small gifts from our shop for the participants.' },
+    { text: 'A quiz, with a small gift from our shop for every participant.' },
     { text: 'A honey tasting and important information about honey.' },
   ],
   workshopIntro: 'You choose one of the two hands-on workshops:',
   workshopOptions: EN_SCHOOL.workshopOptions as unknown as PView['workshopOptions'],
   workshopNote: 'In both workshops, the children take their creation home with them.',
-  playTitle: 'Free Play in the Playground',
+  playTitle: 'Free play',
   playText:
-    'The children will enjoy free play in the playground area, with time to rest and have a snack.',
+    'Time in the playground to run around, rest and have a snack.',
   durationText:
-    'The programme lasts approximately 2 hours and 30 minutes, between 09:30–12:00 (including the time the children will need to eat the breakfast they bring with them). It is flexible depending on your arrival time, with all groups rotating every 45 minutes.',
+    'The programme lasts approximately 2 hours and 30 minutes, between 09:30–12:00 (including the time the children will need to eat the breakfast they bring with them). The schedule is flexible, depending on your arrival time, with all groups rotating every 45 minutes.',
   maxStudents: MAX_STUDENTS,
   pricing: EN_SCHOOL.pricing,
   notes: [
     {
       title: 'Snacks & Drinks',
-      body: 'The children should bring their own snacks. Only honey and bee products are available at our premises.',
+      body: 'The children should bring their own snacks. The only food and drink available on site are our honey and bee products.',
     },
     {
       title: 'Supervision',
@@ -194,7 +194,7 @@ const FALLBACK_EN: PView = {
   allergyTitle: 'Allergies & Medical Conditions',
   allergyBody: [
     'Please inform us in advance of any medical conditions or allergies (mainly to nuts, honey, bees).',
-    'As bees are naturally present in our environment, children or staff with a bee allergy are strongly advised not to take part in the visit.',
+    'As bees are naturally present in our environment, children or staff with a bee allergy must not take part in the visit.',
   ],
   metaTitle: 'School Educational Visits',
   metaDescription:
@@ -446,10 +446,17 @@ export default async function SchoolVisitsPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 {v.notes.map((n, i) => {
                   const Icon = NOTE_ICONS[i] ?? Info
+                  // Supervision is a liability statement — give it its own
+                  // full-width, outlined block instead of one card among several.
+                  const isSupervision = /supervision|επίβλεψη/i.test(n.body)
                   return (
                     <div
                       key={n.title}
-                      className="flex items-start gap-4 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50"
+                      className={
+                        isSupervision
+                          ? "flex items-start gap-4 rounded-[16px] border border-foreground/30 bg-white p-5 sm:col-span-2"
+                          : "flex items-start gap-4 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50"
+                      }
                     >
                       <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
                         <Icon className="size-5" aria-hidden="true" />

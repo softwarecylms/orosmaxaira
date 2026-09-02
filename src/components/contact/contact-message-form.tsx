@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useLocale } from 'next-intl'
 import { getContactContent } from './contact-content'
+import { Link } from '@/i18n/navigation'
 import { RevealUp } from '@/components/home/reveal-up'
 
 const inputCls =
@@ -49,6 +50,23 @@ export function ContactMessageForm() {
               aria-label={f.message}
               className={`${inputCls} h-[150px] resize-none`}
             />
+            <p className="text-[14px] leading-[20px] text-muted">{f.requiredNote}</p>
+
+            {/* GDPR: explicit consent, with the policy one click away. */}
+            <label className="flex items-start gap-3 text-[15px] leading-[22px] text-foreground">
+              <input type="checkbox" required className="mt-1 size-[18px] shrink-0 accent-accent" />
+              <span>
+                {f.consentPre}
+                <Link
+                  href="/privacy-amp-cookie-policy"
+                  className="text-accent underline underline-offset-2 hover:text-gold-strong"
+                >
+                  {f.consentLink}
+                </Link>
+                {f.consentPost}
+              </span>
+            </label>
+
             <button
               type="submit"
               className="flex items-center justify-center rounded-[4px] bg-accent p-[15px] text-[17px] leading-[24px] text-white transition-colors hover:bg-foreground"

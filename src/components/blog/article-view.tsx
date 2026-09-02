@@ -7,6 +7,7 @@ import { Reveal } from '@/components/motion/reveal'
 import { ArticleFeaturedImage } from '@/components/blog/article-featured-image'
 import { FacebookSolid, XSolid, LinkedinSolid } from '@/components/layout/social-icons'
 import { articlePath, articleUrl } from '@/components/blog/article-url'
+import { ArticleCta, splitForCta } from '@/components/blog/article-cta'
 import type { BlogPost } from '@/components/blog/blog-data'
 
 const BODY =
@@ -85,8 +86,23 @@ export function ArticleView({
             </span>
           </div>
 
-          {/* eslint-disable-next-line react/no-danger */}
-          <div className={`mt-7 ${BODY}`} dangerouslySetInnerHTML={{ __html: post.content }} />
+          {(() => {
+            const parts = splitForCta(post.content)
+            return (
+              <>
+                {/* eslint-disable-next-line react/no-danger */}
+                <div className={`mt-7 ${BODY}`} dangerouslySetInnerHTML={{ __html: parts[0] }} />
+                {parts.length === 2 ? (
+                  <>
+                    <ArticleCta locale={locale} />
+                    {/* eslint-disable-next-line react/no-danger */}
+                    <div className={BODY} dangerouslySetInnerHTML={{ __html: parts[1] }} />
+                  </>
+                ) : null}
+                <ArticleCta locale={locale} />
+              </>
+            )
+          })()}
         </article>
 
         {/* ── Sidebar (≈30%) ── */}
@@ -123,7 +139,7 @@ export function ArticleView({
               <div className="mt-4 flex flex-col gap-3 text-[14px] font-semibold text-white">
                 <a href="tel:+35725622305" className="flex items-center gap-3 transition-colors hover:text-white">
                   <Phone className="size-4 shrink-0 text-cream" aria-hidden="true" />
-                  +357 25622305
+                  +357 25 622 305
                 </a>
                 <a href="mailto:info@orosmaxaira.com" className="flex items-center gap-3 transition-colors hover:text-white">
                   <Mail className="size-4 shrink-0 text-cream" aria-hidden="true" />

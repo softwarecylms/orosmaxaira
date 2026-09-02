@@ -97,7 +97,7 @@ const ACTIVITIES_PAGE_EL: ActivitiesContent = {
       {
         image: '/images/activities/melisotherapia.webp',
         title: 'Μελισσοθεραπεία',
-        text: 'Αναπνεύστε τον αέρα της κυψέλης σε έναν ελεγχόμενο χώρο — μια μοναδική εμπειρία ευεξίας.',
+        text: 'Αναπνεύστε τον αέρα της κυψέλης σε έναν ελεγχόμενο χώρο — μια μοναδική εμπειρία χαλάρωσης.',
         href: '/drastiriotites/melissotherapeia',
         rating: 4.9,
         reviews: 300,
@@ -108,7 +108,7 @@ const ACTIVITIES_PAGE_EL: ActivitiesContent = {
   programs: {
     eyebrow: 'Για Σχολεία & Οργανισμούς',
     heading: 'Εκπαιδευτικά Προγράμματα με Περιβαλλοντικό Αντίκτυπο',
-    sub: 'Προγράμματα με εκπαιδευτικό, περιβαλλοντικό και κοινωνικό αντίκτυπο,\nειδικά σχεδιασμένα για σχολεία, εταιρείες και οργανισμούς.',
+    sub: 'Προγράμματα με εκπαιδευτικό, περιβαλλοντικό και κοινωνικό αντίκτυπο, ειδικά σχεδιασμένα για σχολεία, εταιρείες και οργανισμούς.',
     items: [
       {
         image: '/images/adopt/visit-2.webp',
@@ -158,7 +158,7 @@ const ACTIVITIES_PAGE_EN: ActivitiesContent = {
     eyebrow: 'Oros Machaira Academy',
     title: 'Learn, explore, create',
     description:
-      'The world of the bee is waiting for you — hands-on tours, workshops and educational programmes for young and old.',
+      'The world of the bee is waiting for you — hands-on tours, workshops and educational programmes whatever your age.',
     image: p.hero.image,
     imageAlt: 'A hands-on experience at the Oros Machaira apiary',
   },
@@ -176,7 +176,7 @@ const ACTIVITIES_PAGE_EN: ActivitiesContent = {
       },
       {
         ...p.experiences.items[1],
-        title: 'Adventures in the Beehives',
+        title: 'Adventures at the Hives',
         text: 'Visitors put on a beekeeper suit and get to know the life of the bees up close.',
         badge: 'Almost Sold Out',
       },
@@ -188,7 +188,7 @@ const ACTIVITIES_PAGE_EN: ActivitiesContent = {
       {
         ...p.experiences.items[3],
         title: 'Bee Therapy',
-        text: 'Breathe the air of the hive in a controlled space — a unique wellness experience.',
+        text: 'Breathe the air of the hive in a controlled space — a unique, calming experience.',
       },
     ],
   },
@@ -196,7 +196,7 @@ const ACTIVITIES_PAGE_EN: ActivitiesContent = {
   programs: {
     eyebrow: 'For Schools & Organisations',
     heading: 'Educational Programmes with Environmental Impact',
-    sub: 'Programmes with an educational, environmental and social impact,\nspecially designed for schools, companies and organisations.',
+    sub: 'Programmes with an educational, environmental and social impact, specially designed for schools, companies and organisations.',
     items: [
       {
         ...p.programs.items[0],
@@ -207,7 +207,7 @@ const ACTIVITIES_PAGE_EN: ActivitiesContent = {
       {
         ...p.programs.items[1],
         title: 'Adopt a Hive Programme',
-        text: 'The innovative, award-winning CSR programme that turns environmental giving into a meaningful, collective team-building experience.',
+        text: 'The innovative, award-winning CSR programme that turns environmental action into a meaningful team experience.',
         cta: 'Learn more',
       },
     ],
@@ -290,7 +290,7 @@ const UI_EL: ActivitiesUi = {
   breadcrumbActivities: 'Δραστηριότητες',
   breadcrumbWorkshops: 'Εργαστήρια',
   more: 'Περισσότερα',
-  importantNote: 'Σημαντική σημείωση:',
+  importantNote: 'Καλό να ξέρετε:',
   availablePrefix: 'Διαθέσιμη',
   relatedEyebrow: 'Δείτε επίσης',
   relatedHeading: 'Ανακαλύψτε Περισσότερα',
@@ -300,7 +300,7 @@ const UI_EL: ActivitiesUi = {
   sectionDetails: 'Λεπτομέρειες',
   sectionReviews: 'Κριτικές',
   sectionHowItWorks: 'Πώς Λειτουργεί',
-  sectionBenefits: 'Οφέλη',
+  sectionBenefits: 'Η Εμπειρία',
   sectionUsefulInfo: 'Χρήσιμες πληροφορίες',
   frequency: 'Συχνότητα:',
   reviewsBasedOn: (n) => `Βασισμένο σε ${n} κριτικές`,
@@ -333,17 +333,17 @@ const UI_EN: ActivitiesUi = {
   breadcrumbActivities: 'Activities',
   breadcrumbWorkshops: 'Workshops',
   more: 'Learn more',
-  importantNote: 'Important note:',
+  importantNote: 'Good to know:',
   availablePrefix: 'Available',
   relatedEyebrow: 'See also',
   relatedHeading: 'Discover More',
   moments: 'Moments',
-  momentsFrom: (t) => `Moments from «${t}»`,
+  momentsFrom: (t) => `Moments from “${t}”`,
   sectionDescription: 'Description',
   sectionDetails: 'Details',
   sectionReviews: 'Reviews',
   sectionHowItWorks: 'How It Works',
-  sectionBenefits: 'Benefits',
+  sectionBenefits: 'The Experience',
   sectionUsefulInfo: 'Useful information',
   frequency: 'Frequency:',
   reviewsBasedOn: (n) => `Based on ${n} reviews`,

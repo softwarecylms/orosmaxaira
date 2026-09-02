@@ -41,6 +41,8 @@ export type AccountUi = {
   loginSubmit: string
   noAccount: string
   registerLink: string
+  /** Guest-checkout escape hatch on the sign-in screen. */
+  guestCheckout: string
   // register
   registerTitle: string
   registerSubtitle: string
@@ -136,10 +138,11 @@ const EL: AccountUi = {
   countryCyprus: 'Κύπρος',
   countryGreece: 'Ελλάδα',
   loginTitle: 'Σύνδεση',
-  loginSubtitle: 'Συνδεθείτε στον λογαριασμό σας',
+  loginSubtitle: 'Καλώς ήρθατε ξανά',
   loginSubmit: 'Σύνδεση',
   noAccount: 'Δεν έχετε λογαριασμό;',
-  registerLink: 'Εγγραφή',
+  registerLink: 'Δημιουργήστε έναν',
+  guestCheckout: 'Συνεχίστε ως επισκέπτης',
   registerTitle: 'Δημιουργία λογαριασμού',
   registerSubtitle: 'Παρακολουθήστε τις παραγγελίες σας και αποθηκεύστε τις διευθύνσεις σας',
   passwordHint: 'Τουλάχιστον 8 χαρακτήρες',
@@ -206,10 +209,11 @@ const EN: AccountUi = {
   countryCyprus: 'Cyprus',
   countryGreece: 'Greece',
   loginTitle: 'Sign in',
-  loginSubtitle: 'Sign in to your account',
+  loginSubtitle: 'Welcome back',
   loginSubmit: 'Sign in',
   noAccount: 'Don’t have an account?',
-  registerLink: 'Register',
+  registerLink: 'Create one',
+    guestCheckout: 'Continue as guest',
   registerTitle: 'Create an account',
   registerSubtitle: 'Track your orders and save your addresses',
   passwordHint: 'At least 8 characters',

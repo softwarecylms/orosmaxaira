@@ -17,6 +17,7 @@ import { ProductView } from '@/components/shop/product/product-view'
 import type { AddonProduct } from '@/components/shop/product/product-purchase'
 import { ProductTabs } from '@/components/shop/product/product-tabs'
 import { BenefitsBar } from '@/components/shop/product/benefits-bar'
+import { FaqSchema } from '@/components/seo/faq-schema'
 import { RelatedCarousel } from '@/components/shop/product/related-carousel'
 import { RevealUp } from '@/components/home/reveal-up'
 import { canonicalHandle, productHreflang } from '@/components/shop/product-slugs'
@@ -77,6 +78,12 @@ export default async function ProductPage({ params }: Params) {
       variantId: addonVariants[handleOf(p)]?.variantId,
     }))
 
+  // Sections whose heading is a question are a genuine FAQ — expose them as
+  // FAQPage structured data so they can surface as rich results.
+  const faqs = (detail.sections ?? [])
+    .filter((s) => s.heading && /[?;]\s*$/.test(s.heading) && s.body)
+    .map((s) => ({ question: s.heading as string, answer: s.body as string }))
+
   return (
     <>
       {/* Breadcrumb */}
@@ -103,6 +110,7 @@ export default async function ProductPage({ params }: Params) {
       </section>
 
       <BenefitsBar />
+      <FaqSchema faqs={faqs} />
 
       {/* Description / nutrition — narrower than the full-width info section */}
       {detail.sections?.length || detail.nutrition ? (

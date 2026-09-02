@@ -298,12 +298,12 @@ export function ShopBrowser({
             </div>
           </div>
 
-          {/* Find us — desktop only */}
-          <div className="mt-[30px] hidden flex-col gap-4 lg:flex">
-            <h3 className="text-[22px] font-medium leading-[26.4px] text-foreground">
+          {/* Follow us — social links, desktop only */}
+          <div className="mt-[30px] hidden flex-wrap items-center gap-x-3 gap-y-2 lg:flex">
+            <h3 className="text-[15px] font-medium leading-[22px] text-foreground">
               {ui.findUs}
             </h3>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               {FOOTER.social.map((s) => {
                 const Icon = SOCIAL_ICONS[s.name]
                 return (
@@ -313,9 +313,9 @@ export function ShopBrowser({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={s.name}
-                    className="flex size-8 items-center justify-center text-foreground transition-colors hover:text-accent"
+                    className="flex size-7 items-center justify-center text-foreground transition-colors hover:text-accent"
                   >
-                    {Icon ? <Icon className="size-8" /> : null}
+                    {Icon ? <Icon className="size-7" /> : null}
                   </Link>
                 )
               })}

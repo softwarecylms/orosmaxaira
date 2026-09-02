@@ -16,7 +16,7 @@ export function CertificationsNote({ className }: { className?: string }) {
   const en = useLocale() === 'en'
   return (
     <Link
-      href="/certificates"
+      href="/pistopioiseis"
       target="_blank"
       rel="noopener noreferrer"
       aria-label={en ? 'See our certifications' : 'Δείτε τις πιστοποιήσεις'}

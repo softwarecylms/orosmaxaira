@@ -29,10 +29,10 @@ const ADOPT_EL = {
     image: '/images/adopt/hero.webp',
     imageAlt:
       'Ομάδα εργαζομένων με στολές μελισσοκόμου γύρω από μια κηρήθρα στο μελισσοκομείο του Όρους Μαχαιρά',
-    // Tagline renders with «Bee-come a Hero» in accent gold.
+    // Tagline renders with Bee-come a Hero in accent gold.
     taglinePre:
       'Γίνε και εσύ με την ομάδα σου μέρος του προγράμματος «Υιοθετώ μια κυψέλη» και…',
-    taglineAccent: '«Bee-come a Hero»',
+    taglineAccent: 'Bee-come a Hero',
     taglinePost: 'για τις μέλισσες και το περιβάλλον.',
     ctaPrimary: { label: 'Υιοθετήστε μια κυψέλη', href: '#cta' },
     ctaSecondary: { label: 'Δείτε το πακέτο', href: '#package' },
@@ -130,7 +130,7 @@ const ADOPT_EL = {
           },
           {
             text:
-              '≈20 κιλά μέλι ανά κυψέλη, σε φιάλες των 250g — αποκλειστικά εταιρικά δώρα για τους εργαζομένους ή τους πελάτες σας.',
+              'Περίπου 20 kg μέλι ανά κυψέλη, σε βάζα των 250 g — αποκλειστικά εταιρικά δώρα για τους εργαζομένους ή τους πελάτες σας.',
           },
           {
             text:
@@ -268,10 +268,10 @@ const ADOPT_EL = {
     body:
       'Η ομάδα μας θα σχεδιάσει μαζί σας την εμπειρία που ταιριάζει στην εταιρεία σας.',
     primary: { label: 'Επικοινωνήστε μαζί μας', href: '/epikoinonia' },
-    tel: { label: '+357 25622305', href: 'tel:+35725622305' },
+    tel: { label: '+357 25 622 305', href: 'tel:+35725622305' },
     contact: {
       company: 'M.F. (OROS MAXAIRA) LTD',
-      phone: '+357 25622305',
+      phone: '+357 25 622 305',
       phoneHref: 'tel:+35725622305',
       address: 'Melini, Larnaca 7716 · P.O. BOX 7718',
       hours: 'Δευ–Παρ 08:00–16:00 · Σαβ–Κυρ κατόπιν ραντεβού',
@@ -298,8 +298,8 @@ const ADOPT_EN: AdoptContent = {
     imageAlt:
       'A team of employees in beekeeper suits gathered around a honeycomb at the Oros Machaira apiary',
     taglinePre:
-      'Join our «Adopt a Hive» programme with your team and…',
-    taglineAccent: '«Bee-come a Hero»',
+      'Join our “Adopt a Hive” programme with your team and…',
+    taglineAccent: 'Bee-come a Hero',
     taglinePost: 'for the bees and the environment.',
     ctaPrimary: { label: 'Adopt a Hive', href: ADOPT_EL.hero.ctaPrimary.href },
     ctaSecondary: { label: 'See the package', href: ADOPT_EL.hero.ctaSecondary.href },
@@ -315,16 +315,16 @@ const ADOPT_EN: AdoptContent = {
   intro: {
     eyebrow: 'The Initiative',
     hook:
-      'What if every business were not only limited to business goals, but broadened its vision to environmental issues and needs as well?',
+      'What if a company looked beyond its commercial goals, to the needs of the environment as well?',
     body:
-      'The “Adopt a Hive” programme is a pioneering initiative by “Oros Machaira” that offers your company a unique opportunity to directly contribute to the well-being of our planet, while fostering the spirit of teamwork and cooperation among your employees.',
+      'The “Adopt a Hive” programme is a pioneering initiative by Oros Machaira that gives your company a direct way to support pollinators and the environment, while bringing your team closer together.',
     ctaLabel: 'Adopt a Hive',
     whyHeading: 'Why Adopt a Hive?',
     benefits: [
       {
         icon: 'Sprout',
-        title: 'You save the pollinators',
-        text: 'Every hive strengthens the bee population and the propagation of plants.',
+        title: 'You help protect pollinators',
+        text: 'Every hive supports bee populations and the pollination of plants.',
       },
       {
         icon: 'Users',
@@ -333,8 +333,8 @@ const ADOPT_EN: AdoptContent = {
       },
       {
         icon: 'GraduationCap',
-        title: 'You gain knowledge & experience',
-        text: 'Hands-on contact with the world of beekeeping and the ecosystem.',
+        title: 'You gain knowledge and experience',
+        text: 'Hands-on insight into beekeeping and the ecosystem it depends on.',
       },
     ],
   },
@@ -346,7 +346,7 @@ const ADOPT_EN: AdoptContent = {
       {
         num: '01',
         title: 'Hive Adoption',
-        text: 'A hive is adopted and maintained by us in the name of your company.',
+        text: 'We set up and maintain a hive in your company’s name.',
       },
       {
         num: '02',
@@ -357,7 +357,7 @@ const ADOPT_EN: AdoptContent = {
       {
         num: '03',
         title: 'Certificate of Adoption',
-        text: 'An official certificate recognising your contribution to the preservation of bees.',
+        text: 'An official certificate recognising your contribution to bee conservation.',
       },
     ],
   },
@@ -393,17 +393,17 @@ const ADOPT_EN: AdoptContent = {
         activities: [
           {
             text:
-              'The second group of your team experiences all the activities of the first visit — except for the hive painting.',
+              'The second group takes part in the same activities as the first visit, apart from painting the hive.',
           },
           {
             text:
-              '≈20 kilos of honey per hive, in 250g jars — exclusive corporate gifts for your employees or clients.',
+              'Approx. 20 kg of honey per hive, in 250 g jars — exclusive corporate gifts for your employees or clients.',
           },
           {
             text:
               'The hive is maintained by experienced beekeepers in the name of your company throughout the adoption.',
           },
-          { text: 'You receive regular reports & videos on the real status of your hive.' },
+          { text: 'You receive regular updates and video reports on how your hive is doing.' },
         ],
       },
     ],
@@ -465,7 +465,7 @@ const ADOPT_EN: AdoptContent = {
 
   partners: {
     eyebrow: 'Member companies',
-    heading: 'The Companies That Trusted Us',
+    heading: 'The companies who trust us',
     logos: ADOPT_EL.partners.logos,
   },
 

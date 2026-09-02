@@ -22,6 +22,10 @@ export function LoginForm() {
         autoComplete="current-password"
       />
       <SubmitButton className="mt-1 w-full">{t.loginSubmit}</SubmitButton>
+      {/* Buying does not require an account — say so rather than hiding it. */}
+      <Link href="/checkout" className="text-center text-[15px] text-muted underline underline-offset-2 hover:text-accent">
+        {t.guestCheckout}
+      </Link>
       <p className="text-center text-[14px] text-muted">
         {t.noAccount}{' '}
         <Link href="/account/register" className="font-medium text-accent hover:underline">

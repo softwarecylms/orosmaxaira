@@ -19,9 +19,9 @@ const SECTIONS: LegalSection[] = [
     body: [
       [
         'Οι τιμές υπόκεινται σε αλλαγές χωρίς προειδοποίηση. Μικρές παραλλαγές προδιαγραφών δεν δίνουν το δικαίωμα στον αγοραστή να κάνει οποιοδήποτε παράπονο.',
-        'Αν τα προϊόντα είναι προβληματικά, παρακαλούμε όπως μας ενημερώσετε μέσα σε 24 ώρες.',
+        'Πρέπει να μας ενημερώσετε για οποιαδήποτε ζημιά εντός 24 ωρών από την παραλαβή, γι’ αυτό παρακαλούμε ελέγξτε τα προϊόντα σας κατά την παράδοση.',
         'Οι παραγγελίες που παραδίδονται ενδέχεται να υπόκεινται σε χρέωση αποστολής — ελέγξτε την πολιτική αποστολής των προϊόντων.',
-        'Το όνομα και η διεύθυνση του κατόχου της κάρτας και η διεύθυνση παράδοσης πρέπει να είναι ίδια για την 1η παραγγελία.',
+        'Το όνομα και η διεύθυνση του κατόχου της κάρτας και η διεύθυνση παράδοσης πρέπει να είναι ίδια για την πρώτη παραγγελία.',
         'Δεν παραδίδουμε σε αριθμούς P.O. Box.',
         'Η πολιτική της εταιρείας είναι να αποστέλλονται τα προϊόντα εντός 4 εργάσιμων ημερών από την παραλαβή της παραγγελίας σας· ωστόσο αυτό μπορεί να διαφέρει ανάλογα με τα αποθέματα. Οι χρόνοι που αναφέρονται δίνονται με καλή πίστη, αλλά δεν είναι δεσμευτικοί.',
         'Η εταιρεία Μ.Φ. Όρος Μαχαιρά Ltd δεν φέρει ευθύνη για καθυστερήσεις στην παράδοση από τη μεταφορική εταιρεία.',
@@ -54,12 +54,12 @@ const SECTIONS_EN: LegalSection[] = [
     heading: 'Order terms',
     body: [
       [
-        'Prices are subject to change without notice. Minor specification variations do not entitle the purchaser to rescind the contract.',
-        'Claims for damaged goods must notify within 24 hours of receipt, please inspect goods immediately.',
-        'Orders delivered may be subject to a delivery charge, check our Shipping Policy.',
-        'The cardholder’s name and address and delivery address must be the same for the 1st order.',
+        'Prices are subject to change without notice. Minor variations in specification do not entitle you to cancel the order.',
+        'You must notify us of any damage within 24 hours of receipt, so please inspect your goods on delivery.',
+        'Orders delivered may be subject to a delivery charge; see our Shipping Policy.',
+        'The cardholder’s name and address and delivery address must be the same for the first order.',
         'We do not deliver to P.O. Box numbers.',
-        'The company policy is to dispatch goods within 4 working days of receiving your order, however this can vary subject to availability of stock. Times quoted are made in good faith, but shall not be binding.',
+        'The company policy is to dispatch goods within 4 working days of receiving your order, although this can vary depending on stock availability. Times quoted are given in good faith and are not binding.',
         'M.F. Oros Maxaira Ltd cannot accept responsibility for transport delays causing late delivery.',
         'Late delivery does not entitle you to refuse or cancel the order.',
       ],
@@ -68,8 +68,8 @@ const SECTIONS_EN: LegalSection[] = [
   {
     heading: 'Limitation of liability',
     body: [
-      'The user will indemnify M.F. Oros Maxaira Ltd against all claims, liabilities, damages, costs and expenses, including legal fees which may or may not arise out of the use of information of any kind contained within this website.',
-      'Whilst all reasonable endeavors have been made to check the accuracy of the information contained within this site, M.F. Oros Maxaira Ltd does not warrant the accuracy of the information contained herein. Further, M.F. Oros Maxaira Ltd or any other associated company or companies will not be liable for any direct, indirect or consequential loss arising from the use of the information and material contained within this website or any other site which the user may access through this website.',
+      'The user will indemnify M.F. Oros Maxaira Ltd against all claims, liabilities, damages, costs and expenses, including legal fees, arising out of the use of information of any kind contained within this website.',
+      'While all reasonable endeavours have been made to check the accuracy of the information contained within this site, M.F. Oros Maxaira Ltd does not warrant the accuracy of the information contained herein. Further, M.F. Oros Maxaira Ltd or any other associated company or companies will not be liable for any direct, indirect or consequential loss arising from the use of the information and material contained within this website or any other site which the user may access through this website.',
     ],
   },
 ]

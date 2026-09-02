@@ -77,7 +77,7 @@ export default async function AboutPage() {
               </div>
             </RevealItem>
             <RevealItem>
-              <CtaLink href="/awards" variant="gold" className="mt-2 lg:self-start">
+              <CtaLink href="/vraveia" variant="gold" className="mt-2 lg:self-start">
                 {a.hero.awardsCta}
               </CtaLink>
             </RevealItem>

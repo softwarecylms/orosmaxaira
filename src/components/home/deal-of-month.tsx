@@ -3,6 +3,7 @@ import { getLocale } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { getHomeContent, type HoneyProduct } from './home-content'
 import { listShopProducts } from '@/lib/medusa/shop'
+import { categoryLabel } from '@/components/shop/shop-content'
 import { CtaLink } from './cta-link'
 import { DealCarousel } from './deal-carousel'
 import { ArrowRight } from './icons'
@@ -10,7 +11,8 @@ import { RevealUp } from './reveal-up'
 
 /** Section 4 — "Τα Διαμάντια του Μαχαιρά" (Figma 118:456). */
 export async function DealOfMonth({ products }: { products?: HoneyProduct[] }) {
-  const { DEAL } = getHomeContent(await getLocale())
+  const locale = await getLocale()
+  const { DEAL } = getHomeContent(locale)
   const curated = (products?.length ? products : DEAL.products).slice(0, 5)
 
   // Prices come from Medusa (the shop is the source of truth) so a card can never
@@ -22,7 +24,10 @@ export async function DealOfMonth({ products }: { products?: HoneyProduct[] }) {
     ? curated.map((p) => {
         const handle = p.href.match(/\/product\/([^/]+)/)?.[1]
         const live = handle ? catalogue.products.find((x) => x.handle === handle) : undefined
-        return live ? { ...p, price: live.price } : p
+        // Category too: Royal Jelly and Mead are Bee Products, not Honey.
+        return live
+          ? { ...p, price: live.price, category: categoryLabel(live.category, locale) }
+          : p
       })
     : curated
 
@@ -44,7 +49,7 @@ export async function DealOfMonth({ products }: { products?: HoneyProduct[] }) {
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/50" />
             <RevealUp className="relative z-10 mb-12 flex flex-col items-center gap-2 px-6 text-center">
-              <h3 className="font-display text-[22px] font-bold capitalize leading-[28px] text-white">
+              <h3 className="font-display text-[22px] font-bold leading-[28px] text-white">
                 {DEAL.featured.title}
               </h3>
               <ArrowRight className="size-4 text-white" />

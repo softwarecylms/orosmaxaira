@@ -7,12 +7,12 @@ import { Link, useRouter } from '@/i18n/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Minus, Plus, ShoppingCart, Check } from 'lucide-react'
 import type { ShopProduct, ShopProductDetail, ShopVariationSize } from '../shop-content'
-import { isRefrigerated } from '../shop-content'
+import { isRefrigerated, displaySizeLabel } from '../shop-content'
 import { getProductUi } from './product-ui'
 import { useCart, parsePrice } from '@/components/commerce/cart-store'
 import { displayPrice, cn } from '@/lib/utils'
 import { RevealGroup, RevealItem } from '@/components/home/reveal-up'
-import { RichText } from '@/components/activities/detail/rich-text'
+import { DescriptionBody } from './description-body'
 import { CertificationsNote } from '@/components/certificates/certifications-note'
 import {
   FacebookSolid,
@@ -63,7 +63,7 @@ export function ProductPurchase({
   const cheapest = hasVariations
     ? sizes.reduce((a, b) => (b.sortPrice < a.sortPrice ? b : a))
     : null
-  const phone = '+357 25622305'
+  const phone = '+357 25 622 305'
 
   // Title price: the selected variant's price once chosen, else "Από €<min>"
   // for ranges/variations, else the single price.
@@ -129,9 +129,7 @@ export function ProductPurchase({
 
       {detail.description ? (
         <RevealItem>
-          <p className="max-w-[600px] whitespace-pre-line text-[17px] leading-[24px] text-muted">
-            <RichText text={detail.description} />
-          </p>
+          <DescriptionBody text={detail.description} />
         </RevealItem>
       ) : null}
 
@@ -167,7 +165,7 @@ export function ProductPurchase({
                       : 'border-muted text-muted hover:border-foreground hover:text-foreground',
                   )}
                 >
-                  {s.label}
+                  {displaySizeLabel(s.label)}
                 </button>
               )
             })}

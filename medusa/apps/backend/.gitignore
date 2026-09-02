@@ -24,3 +24,6 @@ build
 !.yarn/versions
 
 .medusa
+# Local-only helper: contains a plaintext admin password. Never commit.
+# (Also excluded from the Railway build via .railwayignore.)
+src/scripts/reset-admin-password.ts

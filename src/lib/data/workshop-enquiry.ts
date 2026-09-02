@@ -27,7 +27,7 @@ const WORKSHOP_EXPERIENCES_EN: { key: WorkshopExperienceKey; label: string }[] =
   { key: 'gnorizw', label: 'Getting to Know the Bee + hands-on workshop' },
   {
     key: 'gnorizw-peripeteies',
-    label: 'Getting to Know the Bee + Adventures in the Beehives + hands-on workshop',
+    label: 'Getting to Know the Bee + Adventures at the Hives + hands-on workshop',
   },
 ]
 

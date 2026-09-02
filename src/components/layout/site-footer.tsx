@@ -54,7 +54,7 @@ export async function SiteFooter({ locale }: SiteFooterProps) {
             </Link>
             <div className="flex items-center gap-3">
               <Link
-                href="/certificates#iso-14001"
+                href="/pistopioiseis#iso-14001"
                 aria-label={t('isoView', { code: '14001' })}
                 className="transition-opacity hover:opacity-80"
               >
@@ -67,7 +67,7 @@ export async function SiteFooter({ locale }: SiteFooterProps) {
                 />
               </Link>
               <Link
-                href="/certificates#iso-22000"
+                href="/pistopioiseis#iso-22000"
                 aria-label={t('isoView', { code: '22000' })}
                 className="transition-opacity hover:opacity-80"
               >

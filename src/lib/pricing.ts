@@ -46,9 +46,9 @@ const DEFAULT_AGE_LABELS = {
     infant: 'Βρέφη & Νήπια (0–3 ετών)',
   },
   en: {
-    adult: 'Adults (12+)',
-    child: 'Children (4–11)',
-    infant: 'Infants & Toddlers (0–3)',
+    adult: 'Ages 12+',
+    child: 'Ages 4–11',
+    infant: 'Under 4',
   },
 }
 

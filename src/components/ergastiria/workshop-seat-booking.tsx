@@ -122,7 +122,7 @@ export function WorkshopSeatBooking({
               href="tel:+35725622305"
               className="text-[15px] font-semibold text-foreground transition-colors hover:text-accent"
             >
-              +357 25622305
+              +357 25 622 305
             </a>
           </div>
         </div>
@@ -414,7 +414,7 @@ function WorkshopBookingModal({
                 <div className="flex flex-col items-center gap-3 py-12 text-center">
                   <p className="text-[15px] text-muted">{bui.noDatesAvailable}</p>
                   <a href="tel:+35725622305" className="text-[15px] font-semibold text-accent hover:underline">
-                    {bui.callAt('+357 25622305')}
+                    {bui.callAt('+357 25 622 305')}
                   </a>
                 </div>
               ) : (

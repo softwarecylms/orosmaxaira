@@ -26,7 +26,7 @@ const PRODUCT_UI_EL = {
   addonAria: (title: string) => `Προσθήκη ${title} στο καλάθι`,
   delivery: {
     reach: 'Παραδίδουμε σε Κύπρο & Ελλάδα',
-    free: 'Δωρεάν μεταφορικά στην Κύπρο άνω των 70€',
+    free: 'Δωρεάν μεταφορικά στην Κύπρο για παραγγελίες άνω των €70',
   },
   help: { title: 'Χρειάζεστε βοήθεια;', call: 'Καλέστε μας στο ' },
   share: { title: 'Κοινοποίηση σε:', aria: 'Κοινοποίηση' },
@@ -68,7 +68,7 @@ const PRODUCT_UI_EN: ProductUi = {
   addonAria: (title: string) => `Add ${title} to cart`,
   delivery: {
     reach: 'We deliver to Cyprus & Greece',
-    free: 'Free shipping in Cyprus over €70',
+    free: 'Free shipping in Cyprus on orders over €70',
   },
   help: { title: 'Need help?', call: 'Call us at ' },
   share: { title: 'Share on:', aria: 'Share' },

@@ -17,22 +17,22 @@ import { hreflangAlternates } from '@/lib/seo'
 function pageCopy(locale: string) {
   return locale === 'en'
     ? {
-        eyebrow: 'Alternative Medicine',
+        eyebrow: 'A Traditional Practice',
         sessionWord: 'session',
         fallbackDuration: '20 min / session',
         fallbackCost: '€7 / session',
         fallbackSeasonPill: 'Available April–October',
         fallbackPeriod: 'April–October',
-        fallbackFrequency: 'Every 2nd day, for 3 weeks',
+        fallbackFrequency: 'Every other day for three weeks, 20 minutes per session.',
       }
     : {
-        eyebrow: 'Εναλλακτική Ιατρική',
+        eyebrow: 'Παραδοσιακή Πρακτική',
         sessionWord: 'συνεδρία',
         fallbackDuration: '20 λεπτά / συνεδρία',
         fallbackCost: '7€ / συνεδρία',
         fallbackSeasonPill: 'Διαθέσιμη Απρίλιο–Οκτώβριο',
         fallbackPeriod: 'Απρίλιος–Οκτώβριος',
-        fallbackFrequency: 'Κάθε 2η ημέρα, για 3 εβδομάδες',
+        fallbackFrequency: 'Κάθε 2η ημέρα, για 3 εβδομάδες, 20 λεπτά ανά συνεδρία.',
       }
 }
 
@@ -68,7 +68,12 @@ async function loadView(locale: string): Promise<MelissoView> {
     // First price tier → "7€ / συνεδρία" (per-session, matching the duration).
     const tier = a.price_tiers?.[0]
     const price = tier?.price != null && tier.price !== '' ? Number(tier.price) : NaN
-    const costLabel = Number.isFinite(price) ? `${price}€ / ${t.sessionWord}` : undefined
+    // Euro sign leads in English (€7), trails in Greek (7€).
+    const costLabel = Number.isFinite(price)
+      ? locale === 'en'
+        ? `€${price} / ${t.sessionWord}`
+        : `${price}€ / ${t.sessionWord}`
+      : undefined
     return {
       metaTitle: a.meta_title ?? a.title,
       metaDescription: a.meta_description ?? undefined,
@@ -217,7 +222,7 @@ export default async function MelissotherapeiaPage() {
                 <p className="flex items-center gap-2.5 rounded-[12px] bg-offwhite px-4 py-3 text-[15px] leading-[1.5] text-foreground ring-1 ring-border/50">
                   <Repeat className="size-4 shrink-0 text-accent" aria-hidden="true" />
                   <span>
-                    <span className="font-semibold">{ui.frequency}</span> {v.frequency}.
+                    <span className="font-semibold">{ui.frequency}</span> {v.frequency}
                   </span>
                 </p>
               ) : null}

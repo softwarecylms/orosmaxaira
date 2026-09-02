@@ -278,7 +278,7 @@ export function BookingModal({
                     href="tel:+35799130092"
                     className="text-[15px] font-semibold text-accent hover:underline"
                   >
-                    {ui.callAt('+357 99 130092')}
+                    {ui.callAt('+357 99 130 092')}
                   </a>
                 </div>
               ) : (

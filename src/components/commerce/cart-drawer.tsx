@@ -8,6 +8,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Minus, Plus, X, ArrowRight, ShoppingBag, Check, Truck } from 'lucide-react'
 import { useCart, formatCents } from './cart-store'
 import { localizedProductTitle, localizedContainer } from '@/components/shop/product-i18n'
+import { displaySizeLabel } from '@/components/shop/shop-content'
 import { getCartChrome } from './cart-ui'
 import { EASE, DURATION } from '@/lib/motion'
 import { FREE_SHIPPING_THRESHOLD } from '@/lib/shipping'
@@ -153,7 +154,7 @@ export function CartDrawer() {
                             {localizedContainer(item.container, locale)
                               ? `${localizedContainer(item.container, locale)} · `
                               : ''}
-                            {item.size}
+                            {displaySizeLabel(item.size)}
                           </p>
                         ) : null}
 

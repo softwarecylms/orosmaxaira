@@ -96,7 +96,7 @@ export function BlogFilterGrid({
                 ) : null}
               </div>
               <div className="flex flex-1 flex-col gap-2 p-5">
-                <span className="flex items-center gap-2 text-[12px] uppercase tracking-wide text-muted">
+                <span className="flex items-center gap-2 text-[12px] tracking-wide text-muted">
                   <CalendarDays className="size-3.5 text-accent" aria-hidden="true" />
                   {formatBlogDate(p.date, locale, p.dateText)}
                 </span>

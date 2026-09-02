@@ -115,7 +115,7 @@ export function ActivityBookingCard({
               href="tel:+35799130092"
               className="text-[15px] font-semibold text-foreground transition-colors hover:text-accent"
             >
-              +357 99 130092
+              +357 99 130 092
             </a>
           </div>
         </div>

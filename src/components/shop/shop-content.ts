@@ -123,7 +123,7 @@ export const SHOP_PAGE = {
     image: '/images/shop/activities-bee.webp',
     imageAlt: 'Μέλισσα σε κηρήθρα — Όρος Μαχαιρά',
   },
-  findUs: 'Βρείτε μας:',
+  findUs: 'Ακολουθήστε μας',
 }
 
 export const SHOP_PRODUCTS: ShopProduct[] = [
@@ -157,7 +157,7 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
   { category: 'Μέλι', title: 'Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,00 – €27,50', sortPrice: 300, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn.jpg', imageAlt: 'Μέλι Ανθέων «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/meli-antheon-oros-machaira/' },
   { category: 'Μέλι', title: 'Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', sortPrice: 350, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-meli.jpg', imageAlt: 'Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/avrasto-meli-antheon-oros-machaira/' },
   { category: 'Μέλι', title: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»', price: '€4,00 – €33,00', sortPrice: 400, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-thimarisio-meli.jpg', imageAlt: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»', href: 'https://orosmaxaira.com/product/thymarisio-meli-oros-machaira/' },
-  { category: 'Προϊόντα Μέλισσας', title: 'Κερί Μέλισσας (200-250γρ)', price: '€4,50', sortPrice: 450, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-melissokeri.jpg', imageAlt: 'Κερί Μέλισσας (200-250γρ)', href: 'https://orosmaxaira.com/product/melissokeri/' },
+  { category: 'Προϊόντα Μέλισσας', title: 'Κερί Μέλισσας (200–250 γρ)', price: '€4,50', sortPrice: 450, inStock: true, image: 'https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-melissokeri.jpg', imageAlt: 'Κερί Μέλισσας (200–250 γρ)', href: 'https://orosmaxaira.com/product/melissokeri/' },
 ]
 
 /** Price-filter bounds derived from the catalogue (in whole euros). */
@@ -215,7 +215,7 @@ const THYM_IMG = {
 export const PRODUCT_DETAILS: Record<string, ShopProductDetail> = {
   'thymarisio-meli-oros-machaira': {
     description:
-      'Το Θυμαρίσιο μέλι «Όρος Μαχαιρά» έχει δυνατό άρωμα και γεμάτη γεύση. Θεωρείται το καλύτερο και πιο ακριβό μέλι της Κύπρου.',
+      'Το Θυμαρίσιο μέλι «Όρος Μαχαιρά» έχει δυνατό άρωμα και βαθιά, γεμάτη γεύση — περισσότερο χαρακτηριστική παρά έντονα γλυκιά. Θεωρείται από τα καλύτερα μέλια που παράγει η Κύπρος.',
     gallery: [
       THYM_IMG['100g'],
       THYM_IMG['330g'],
@@ -237,26 +237,26 @@ export const PRODUCT_DETAILS: Record<string, ShopProductDetail> = {
     addons: ['ydromelo', 'vasilikos-poltos-oros-machaira', 'meli-me-foyntoykia'],
     sections: [
       {
-        body: 'Το θυμαρίσιο μέλι είναι ένα είδος μελιού που φτιάχνεται από το νέκταρ των αγριολούλουδων. Είναι ένα σκουρόχρωμο μέλι που έχει μοναδική, έντονη γεύση και άρωμα. Χρησιμοποιείται συχνά στη μεσογειακή μαγειρική και συχνά συνδυάζεται με τυρί, κρέατα και λαχανικά.',
+        body: 'Το θυμαρίσιο μέλι φτιάχνεται από το νέκταρ του ανθισμένου θυμαριού. Είναι ένα σκουρόχρωμο μέλι που έχει μοναδική, έντονη γεύση και άρωμα. Χρησιμοποιείται συχνά στη μεσογειακή μαγειρική και συχνά συνδυάζεται με τυρί, κρέατα και λαχανικά.',
       },
       {
-        heading: 'Ιδιότητες και οφέλη για την υγεία',
-        body: 'Το θυμαρίσιο μέλι είναι πηγή αντιοξειδωτικών, συμπεριλαμβανομένων των φαινολικών οξέων και των φλαβονοειδών, τα οποία πιστεύεται ότι βοηθούν στην προστασία από το οξειδωτικό άγχος. Περιέχει επίσης αντιβακτηριακές και αντιμυκητιακές ιδιότητες και μπορεί να βοηθήσει στη μείωση της φλεγμονής και στη βελτίωση της πέψης. Επιπλέον, πιστεύεται ότι βοηθά στην ενίσχυση του ανοσοποιητικού συστήματος και στη μείωση της κόπωσης.',
+        heading: 'Χαρακτήρας και γεύση',
+        body: 'Το θυμαρίσιο μέλι ξεχωρίζει για το έντονο, αρωματικό του προφίλ: μύτη από θυμάρι και άγρια βότανα, γεύση βαθιά και επίμονη, με ελαφρώς πικάντικη επίγευση. Το χρώμα του κυμαίνεται από ανοιχτό κεχριμπαρένιο μέχρι βαθύ χρυσό, ανάλογα με τη χρονιά και την περιοχή συλλογής. Κρυσταλλώνει αργά — χαρακτηριστικό του γνήσιου θυμαρίσιου μελιού.',
       },
       {
-        heading: 'Πότε παράγεται το θυμαρίσιο μέλι',
+        heading: 'Πότε παράγεται το θυμαρίσιο μέλι;',
         body: 'Το θυμαρίσιο μέλι παράγεται συνήθως τους καλοκαιρινούς μήνες και αρχές του φθινοπώρου, όταν ανθίζει το θυμάρι, συνήθως τον Ιούνιο και τον Ιούλιο μέχρι και τον Σεπτέμβριο.',
       },
       {
-        heading: 'Τι γεύση έχει το θυμαρίσιο μέλι',
+        heading: 'Τι γεύση έχει το θυμαρίσιο μέλι;',
         body: 'Το θυμαρίσιο μέλι έχει γλυκιά και ελαφρώς γήινη γεύση. Δεν είναι τόσο έντονα γλυκό όσο άλλες ποικιλίες μελιού, αλλά εξακολουθεί να είναι αρκετά γλυκό για να χρησιμοποιείται σε επιδόρπια και ποτά.',
       },
       {
-        heading: 'Τι χρώμα έχει το θυμαρίσιο μέλι',
+        heading: 'Τι χρώμα έχει το θυμαρίσιο μέλι;',
         body: 'Το θυμαρίσιο μέλι έχει συνήθως σκούρο κεχριμπαρένιο χρώμα.',
       },
       {
-        heading: 'Από που να το αγοράσετε',
+        heading: 'Πού να το αγοράσετε',
         body: 'Προτείνουμε να κάνετε την παραγγελία online μέσα από το website μας καθώς η διαθεσιμότητα στις υπεραγορές είναι περιορισμένη.',
       },
     ],
@@ -287,7 +287,7 @@ export const PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
   'thymarisio-meli-oros-machaira': {
     ...PRODUCT_DETAILS['thymarisio-meli-oros-machaira'],
     description:
-      'Thyme honey «Oros Machaira» has a strong aroma and a full flavour. It is considered the finest and most prized honey of Cyprus.',
+      'Oros Machaira thyme honey is strongly aromatic, with a deep, savoury character rather than a purely sweet one. Widely regarded as the finest honey Cyprus produces.',
     variations: {
       sizes: [
         { label: '100g', container: 'Glass', price: '€3,50', sortPrice: 350, image: THYM_IMG['100g'] },
@@ -300,26 +300,26 @@ export const PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
     },
     sections: [
       {
-        body: 'Thyme honey is a type of honey made from the nectar of wildflowers. It is a dark honey with a unique, intense flavour and aroma. It is often used in Mediterranean cooking and pairs well with cheese, meats and vegetables.',
+        body: 'Thyme honey is made from the nectar of wild thyme in bloom. It is a dark honey with a unique, intense flavour and aroma. It is often used in Mediterranean cooking and pairs well with cheese, meats and vegetables.',
       },
       {
-        heading: 'Properties and health benefits',
-        body: 'Thyme honey is a source of antioxidants, including phenolic acids and flavonoids, which are believed to help protect against oxidative stress. It also has antibacterial and antifungal properties and may help reduce inflammation and improve digestion. In addition, it is thought to help strengthen the immune system and reduce fatigue.',
+        heading: 'Character and taste',
+        body: 'Thyme honey stands out for its intense, aromatic profile: a nose of thyme and wild herbs, a deep and lingering taste, with a slightly peppery finish. Its colour ranges from light amber to deep gold depending on the year and the area it was gathered in. It crystallises slowly — a hallmark of genuine thyme honey.',
       },
       {
-        heading: 'When is thyme honey produced',
+        heading: 'When is thyme honey produced?',
         body: 'Thyme honey is usually produced during the summer months and early autumn, when thyme is in bloom — typically from June and July through to September.',
       },
       {
-        heading: 'What does thyme honey taste like',
+        heading: 'What does thyme honey taste like?',
         body: 'Thyme honey has a sweet and slightly earthy flavour. It is not as intensely sweet as other honey varieties, but it is still sweet enough to be used in desserts and drinks.',
       },
       {
-        heading: 'What colour is thyme honey',
+        heading: 'What colour is thyme honey?',
         body: 'Thyme honey usually has a dark amber colour.',
       },
       {
-        heading: 'Where to buy it',
+        heading: 'Where to buy',
         body: 'We recommend ordering online through our website, as availability in supermarkets is limited.',
       },
     ],
@@ -360,3 +360,19 @@ export const SHOP_PRICE_MIN = Math.floor(
 export const SHOP_PRICE_MAX = Math.ceil(
   Math.max(...SHOP_PRODUCTS.map((p) => productPriceRangeCents(p)[1])) / 100,
 )
+
+/**
+ * Display form of a variant size label: a space between the number and its
+ * unit, and a lower-case `kg` — "500g" → "500 g", "1Kg" → "1 kg".
+ *
+ * Display only. The stored label stays exactly as Medusa has it, because it is
+ * also the value used to select a variant and to identify the line in the cart;
+ * rewriting it would break that matching and any cart already in a customer's
+ * browser.
+ */
+export function displaySizeLabel(label: string): string {
+  return label
+    .replace(/(\d)\s?(kg|Kg|KG)\b/g, '$1 kg')
+    .replace(/(\d)(g|gr|ml|mL)\b/g, '$1 $2')
+    .replace(/(\d) gr\b/g, '$1 g')
+}

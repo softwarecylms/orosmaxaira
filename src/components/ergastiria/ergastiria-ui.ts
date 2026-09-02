@@ -164,11 +164,11 @@ const EN: ErgastiriaUi = {
 
   comboTitle: 'How workshops are booked',
   comboBodyPre:
-    'Hands-on workshops are not booked on their own. They are always combined either with the ',
-  comboBodyMid: ' experience, or with the combination ',
-  comboBodyPost: '.',
+    'Workshops are always booked together with ',
+  comboBodyMid: ', or with “Getting to Know the Bee” and ',
+  comboBodyPost: ' combined.',
   gnorizwLabel: '“Getting to Know the Bee”',
-  peripeteiesLabel: '“Adventures in the Beehives”',
+  peripeteiesLabel: '“Adventures at the Hives”',
 
   chooseCombo: 'Choose a combination',
   required: '(required)',
@@ -199,7 +199,7 @@ const EN: ErgastiriaUi = {
   reservationAria: (t) => `Booking — ${t}`,
 
   bookOnline: 'Book online',
-  instantConfirm: 'Instant confirmation & receipt email. Cancellation up to 72 hours before.',
+  instantConfirm: 'You’ll receive instant confirmation and a receipt by email. Cancellation up to 72 hours before.',
   workshopBookingTitle: 'Workshop booking',
   confirmTitle: 'Booking confirmation',
   stepProgram: 'Choose a programme',

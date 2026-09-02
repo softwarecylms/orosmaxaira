@@ -41,10 +41,10 @@ export const CONTACT_PAGE = {
   },
 
   connect: {
-    heading: 'Συνδεθείτε μαζί μας',
+    heading: 'Επικοινωνήστε μαζί μας',
     body: [
       {
-        text: 'Αν ενδιαφέρεστε να επισκεφτείτε το μελισσοκομείο μας και να ζήσετε τις βιωματικές δραστηριότητες που προσφέρει, μπορείτε να το κάνετε ',
+        text: 'Θέλετε να επισκεφτείτε το μελισσοκομείο μας; Μπορείτε να κλείσετε την επίσκεψή σας ',
       },
       { text: 'εδώ', href: '/drastiriotites', accent: true },
       { text: '.' },
@@ -58,13 +58,13 @@ export const CONTACT_PAGE = {
       {
         icon: 'phone' as ContactIcon,
         title: 'Τηλέφωνο',
-        lines: ['+357 25622305'],
+        lines: ['+357 25 622 305'],
         href: 'tel:+35725622305',
       },
       {
         icon: 'location' as ContactIcon,
         title: 'Επισκεφθείτε μας',
-        lines: ['Μελίνη, Λάρνακα 7716', 'P.O.BOX: 7718'],
+        lines: ['Μελίνη, Λάρνακα 7716'],
         href: 'https://maps.app.goo.gl/EUCGrKmDcbkCV8CL7',
       },
       {
@@ -83,7 +83,11 @@ export const CONTACT_PAGE = {
     email: 'Email*',
     phone: 'Τηλέφωνο',
     message: 'Μήνυμα*',
-    submit: 'Αποστολή',
+    submit: 'Αποστολή μηνύματος',
+    requiredNote: '* Υποχρεωτικό πεδίο',
+    consentPre: 'Συμφωνώ με την ',
+    consentLink: 'Πολιτική Απορρήτου',
+    consentPost: '.',
     thankYou:
       'Σας ευχαριστούμε! Το μήνυμά σας στάλθηκε — θα επικοινωνήσουμε σύντομα μαζί σας. 🐝',
   },
@@ -140,10 +144,10 @@ const CONTACT_PAGE_EN: ContactContent = {
   },
 
   connect: {
-    heading: 'Connect With Us',
+    heading: 'Get in touch',
     body: [
       {
-        text: 'If you are interested in visiting our apiary and experiencing the hands-on activities it offers, you can do it ',
+        text: 'Interested in visiting our apiary? You can book your visit ',
       },
       { text: 'here', href: '/drastiriotites', accent: true },
       { text: '.' },
@@ -156,12 +160,12 @@ const CONTACT_PAGE_EN: ContactContent = {
       },
       {
         ...CONTACT_PAGE.connect.items[1],
-        title: 'Telephone',
+        title: 'Phone',
       },
       {
         ...CONTACT_PAGE.connect.items[2],
         title: 'Visit Us',
-        lines: ['Melini, Larnaca 7716', 'P.O.BOX: 7718'],
+        lines: ['Melini, Larnaca 7716'],
       },
       {
         ...CONTACT_PAGE.connect.items[3],
@@ -171,13 +175,17 @@ const CONTACT_PAGE_EN: ContactContent = {
   },
 
   form: {
-    heading: 'Send Us a Message',
-    firstName: 'Name*',
-    lastName: 'Surname*',
+    heading: 'Send us a message',
+    firstName: 'First name*',
+    lastName: 'Last name*',
     email: 'Email*',
-    phone: 'Telephone',
+    phone: 'Phone',
     message: 'Message*',
-    submit: 'Send',
+    submit: 'Send message',
+    requiredNote: '* Required field',
+    consentPre: 'I agree to the ',
+    consentLink: 'Privacy Policy',
+    consentPost: '.',
     thankYou:
       'Thank you! Your message has been sent — we’ll be in touch soon. 🐝',
   },
@@ -196,7 +204,7 @@ const CONTACT_PAGE_EN: ContactContent = {
     {
       icon: 'family',
       title: 'Family',
-      text: 'Since 1983, three generations with the same passion for nature and the bees.',
+      text: 'Since 1983, three generations with the same passion for nature and bees.',
     },
   ],
 }

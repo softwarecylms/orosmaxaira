@@ -126,10 +126,10 @@ const WORKSHOPS_EN_TEXT: Record<string, WorkshopI18n> = {
   melissolampades: {
     title: 'Beeswax Easter Candles',
     excerpt:
-      'Just before Easter, make your own beeswax Easter candle from honeycomb sheets and take it home for free.',
+      'Just before Easter, make your own beeswax Easter candle from sheets of beeswax foundation and take it home for free.',
     seasonLabel: 'Easter',
     description:
-      'Just before **Easter**, we welcome you and our little friends at our apiary for a creative and fun workshop dedicated to the bee and its wax!\n\nYoung and old alike will have the chance to learn about the bee and natural wax, while creating their very own Easter beeswax candle.\n\nUsing sheets of beeswax honeycomb, you will wrap the wick and build your own candle. Then, with a variety of Easter decorations, you will decorate it just as you like, creating a truly unique Easter candle.\n\nAt the end of the workshop, every participant takes home **for free** the Easter candle they created, ready for Easter!',
+      'Just before **Easter**, we welcome you and the little ones to our apiary for a creative and fun workshop dedicated to the bee and its wax!\n\nYoung and old alike will have the chance to learn about the bee and natural wax, while creating their very own Easter beeswax candle.\n\nUsing sheets of beeswax honeycomb, you will wrap the wick and build your own candle. Then, with a variety of Easter decorations, you will decorate it just as you like, creating a truly unique Easter candle.\n\nAt the end of the workshop, every participant takes home the Easter candle they made, **free of charge** — ready for Easter!',
   },
   'fytefsi-sporon': {
     title: 'Planting Seeds in Pots & Decorating',
@@ -137,7 +137,7 @@ const WORKSHOPS_EN_TEXT: Record<string, WorkshopI18n> = {
       'Plant your seeds in little pots, paint them and learn how we help the bees — take your pot home for free.',
     seasonLabel: 'Summer',
     description:
-      'We welcome you, your family and our little friends at our apiary for a **summer** workshop dedicated to the joy of planting, creativity and the protection of bees!\n\nYoung and old alike will have the chance to plant their own seeds in little pots and paint the outside, adding colour and giving their imagination free rein.\n\nThrough this creative activity, we will learn how planting plants and flowers can help the bees by offering them precious sources of food. At the same time, we will get to know better the importance of **pollination** and the decisive role of bees in nature and the environment.\n\nAt the end of the workshop, every participant takes home **for free** the little pot they planted and decorated, to care for it and watch it grow!',
+      'We welcome you, your family and the little ones to our apiary for a **summer** workshop dedicated to the joy of planting, creativity and the protection of bees!\n\nYoung and old alike will have the chance to plant their own seeds in little pots and paint the outside, adding colour and giving their imagination free rein.\n\nThrough this creative activity, we will learn how planting plants and flowers can help the bees by offering them precious sources of food. At the same time, we will get to know better the importance of **pollination** and the decisive role of bees in nature and the environment.\n\nAt the end of the workshop, every participant takes home the little pot they planted and decorated, **free of charge**, to care for it and watch it grow!',
   },
   'ergastiria-mageirikis': {
     title: 'Cooking Workshop for Honey Truffles',
@@ -145,7 +145,7 @@ const WORKSHOPS_EN_TEXT: Record<string, WorkshopI18n> = {
       'Make homemade truffles with Oros Machaira honey and spreads, cook with products of the hive and taste what you create.',
     seasonLabel: 'Autumn',
     description:
-      'We welcome you at our apiary for a tasty and creative workshop, dedicated to **honey** and the products of the hive and their use in cooking!\n\nYoung and old alike will have the chance to make homemade **honey truffles** and **Oros Machaira spreads**, discovering new ways of using honey and the products of the hive through simple and delicious recipes.\n\nDuring the workshop, you will prepare your own creations, learning at the same time how honey and bee products can be creatively woven into our everyday diet and used in different sweet and savoury recipes.\n\nAnd of course, at the end of the workshop we will have the chance to taste together everything we made, rounding off an experience full of flavours, aromas and… honey!',
+      'We welcome you to our apiary for a tasty and creative workshop, dedicated to **honey** and the products of the hive and their use in cooking!\n\nYoung and old alike will have the chance to make homemade **honey truffles** and **Oros Machaira spreads**, discovering new ways of using honey and the products of the hive through simple and delicious recipes.\n\nDuring the workshop, you will prepare your own creations, while learning how honey and bee products can be creatively woven into our everyday diet and used in different sweet and savoury recipes.\n\nAnd of course, at the end of the workshop we will have the chance to taste together everything we made, rounding off an experience full of flavours, aromas and… honey!',
   },
   keraloifes: {
     title: 'Making Natural Beeswax Salves',
@@ -153,7 +153,7 @@ const WORKSHOPS_EN_TEXT: Record<string, WorkshopI18n> = {
       'Make your own natural beeswax salve step by step and take it home for free.',
     seasonLabel: 'Winter',
     description:
-      'We welcome you at our apiary for a creative workshop dedicated to **beeswax** and making natural beeswax salves!\n\nYoung and old alike will have the chance to get to know beeswax better and discover how it can be used, combined with other natural ingredients, to make a salve.\n\nDuring the workshop, we will follow the preparation process together step by step and each participant will create their own **natural beeswax salve**, learning at the same time more about the ingredients we use and their role in the final product.\n\nAt the end of the workshop, every participant takes home **for free** the salve they created, as a special keepsake from their experience in the world of the bee!',
+      'We welcome you to our apiary for a creative workshop dedicated to **beeswax** and making natural beeswax salves!\n\nYoung and old alike will have the chance to get to know beeswax better and discover how it can be used, combined with other natural ingredients, to make a salve.\n\nDuring the workshop, we will follow the preparation process together step by step and each participant makes their own **natural beeswax salve**, while learning more about the ingredients we use and their role in the final product.\n\nAt the end of the workshop, every participant takes home the salve they made, **free of charge**, as a special keepsake from their experience in the world of the bee!',
   },
   'peritiligma-fagitou': {
     title: 'Beeswax Food Wraps',
@@ -161,7 +161,7 @@ const WORKSHOPS_EN_TEXT: Record<string, WorkshopI18n> = {
       'Make your own reusable beeswax food wrap — an eco-friendly choice for every day.',
     seasonLabel: 'By appointment',
     description:
-      'We welcome you, your family and our little friends at our apiary for a creative and **eco-friendly** workshop dedicated to beeswax and sustainable everyday living!\n\nYoung and old alike will have the chance to get to know natural beeswax better and learn how we can reduce the use of plastic film in the everyday storage and transport of our food.\n\nDuring the workshop, you will create your own **reusable food wrap** from beeswax, which can be used for the children’s school sandwiches, fruit and all sorts of food.\n\nThrough a pleasant and creative experience, we will discover together how a product of the bee can become a more eco-friendly choice in our daily lives, helping to reduce the use of plastic.\n\nAt the end of the workshop, every participant takes home **for free** the beeswax wrap they created, ready to use!',
+      'We welcome you, your family and the little ones to our apiary for a creative and **eco-friendly** workshop dedicated to beeswax and sustainable everyday living!\n\nYoung and old alike will have the chance to get to know natural beeswax better and learn how we can reduce the use of plastic film in the everyday storage and transport of our food.\n\nDuring the workshop, you will create your own **reusable food wrap** from beeswax, which can be used for the children’s school sandwiches, fruit and all sorts of food.\n\nThrough a pleasant and creative experience, we will discover together how a product of the bee can become a more eco-friendly choice in our daily lives, helping to reduce the use of plastic.\n\nAt the end of the workshop, every participant takes home the beeswax wrap they made, **free of charge** — ready to use!',
   },
   'kerines-dimiourgies': {
     title: 'Handmade Plaster Figures',
@@ -169,7 +169,7 @@ const WORKSHOPS_EN_TEXT: Record<string, WorkshopI18n> = {
       'Paint handmade plaster figures inspired by the bee and take your creation home for free.',
     seasonLabel: 'By appointment',
     description:
-      'We welcome you, your family and your friends at our apiary for a creative and fun workshop full of colour, imagination and… bees!\n\nYoung and old alike will have the chance to get to know the wonderful world of the bee better, painting handmade **plaster figures** in the shapes of bees, honeycombs and other designs inspired by life in the hive.\n\nWith colours and plenty of imagination, each participant will paint their own unique figure, in a pleasant and relaxing workshop that leaves room for creativity and fun.\n\nAt the end of the workshop, every participant takes home **for free** the plaster creation they painted, as a lovely keepsake from their experience in the world of the bees!',
+      'We welcome you, your family and your friends to our apiary for a creative and fun workshop full of colour, imagination and… bees!\n\nYoung and old alike will have the chance to get to know the wonderful world of the bee better, painting handmade **plaster figures** in the shapes of bees, honeycombs and other designs inspired by life in the hive.\n\nWith colours and plenty of imagination, each participant will paint their own unique figure, in a pleasant and relaxing workshop that leaves room for creativity and fun.\n\nAt the end of the workshop, every participant takes home the plaster creation they painted, **free of charge**, as a lovely keepsake from their experience in the world of the bees!',
   },
 }
 

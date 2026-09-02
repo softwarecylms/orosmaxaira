@@ -42,7 +42,10 @@ export function FlatlayHotspot({ item, index }: { item: FlatlayPrice; index: num
         aria-label={`${item.product.title} — ${displayPrice(item.product.price, locale)}`}
         className="flex cursor-pointer items-center justify-center rounded-full bg-white px-3.5 py-1.5 text-[14px] leading-[20px] text-foreground shadow-[0_6px_20px_-8px_rgba(0,0,0,0.35)] outline-none transition-transform focus-visible:ring-2 focus-visible:ring-accent group-hover:scale-105 lg:px-5 lg:py-2.5 lg:text-[17px] lg:leading-[24px]"
       >
-        {item.value}
+        {/* `value` is stored as a bare amount ("7,50") and shared by both
+            locale bundles — the currency is added here so it can never drift.
+            Built as one string so React does not split it into two text nodes. */}
+        {`€${item.value}`}
       </span>
 
       {/* Quick-view card */}

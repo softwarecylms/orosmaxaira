@@ -90,7 +90,7 @@ export function SchoolBookingCard({
               href="tel:+35725622305"
               className="text-[15px] font-semibold text-foreground transition-colors hover:text-accent"
             >
-              +357 25622305
+              +357 25 622 305
             </a>
           </div>
         </div>

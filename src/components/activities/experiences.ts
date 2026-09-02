@@ -13,24 +13,24 @@ export const EXPERIENCES: Record<string, ActivityExperienceData> = {
     slug: 'melissotherapeia',
     metaTitle: 'Μελισσοθεραπεία στην Κύπρο — Όρος Μαχαιρά',
     metaDescription:
-      'Μελισσοθεραπεία στο Όρος Μαχαιρά: μια θεραπευτική πρακτική της εναλλακτικής ιατρικής με τα προϊόντα της κυψέλης και την εισπνοή του αέρα της. Ραντεβού Απρίλιο–Οκτώβριο.',
+      'Μελισσοθεραπεία στο Όρος Μαχαιρά: μια παραδοσιακή πρακτική με τα προϊόντα της κυψέλης και την εισπνοή του αέρα της. Ραντεβού Απρίλιο–Οκτώβριο.',
     hero: {
       title: 'Μελισσοθεραπεία',
       description:
-        'Μια θεραπευτική πρακτική της εναλλακτικής ιατρικής, με τα πολύτιμα προϊόντα της κυψέλης.',
+        'Μια παραδοσιακή πρακτική, με τα πολύτιμα προϊόντα της κυψέλης.',
       image: '/images/activities/melisotherapia.webp',
       imageAlt: 'Μελισσοθεραπεία — εισπνοή του αέρα της κυψέλης',
     },
     intro: {
-      eyebrow: 'Εναλλακτική Ιατρική',
+      eyebrow: 'Παραδοσιακή Πρακτική',
       heading: 'Η Δύναμη της Κυψέλης',
       body: [
-        'Πρώτοι ανακάλυψαν και εφάρμοσαν τη Μελισσοθεραπεία οι αρχαίοι Αιγύπτιοι. Η Μελισσοθεραπεία είναι μία εκτενής θεραπευτική πρακτική η οποία ανήκει στην εναλλακτική ιατρική και χρησιμοποιεί τα παράγωγα της κυψέλης (μέλι, βασιλικό πολτό, γύρη, δηλητήριο μέλισσας, πρόπολη) σε διάφορες θεραπευτικές εφαρμογές.',
-        'Η Μελισσοθεραπεία, με φυσικό τρόπο, μας βοηθά να ξεπεράσουμε πολλά προβλήματα υγείας και είναι εξαιρετική για παιδιά, αθλητές αλλά και ηλικιωμένους.',
+        'Πρώτοι ανακάλυψαν και εφάρμοσαν τη Μελισσοθεραπεία οι αρχαίοι Αιγύπτιοι. Η Μελισσοθεραπεία είναι μια παραδοσιακή πρακτική που αξιοποιεί τα παράγωγα της κυψέλης (μέλι, βασιλικό πολτό, γύρη, πρόπολη) και τον θερμό αέρα της, σε μια εμπειρία χαλάρωσης μέσα στο μελισσοκομείο.',
+        'Στο Όρος Μαχαιρά προσφέρεται ως μια ήρεμη, αισθητηριακή εμπειρία μέσα στη φύση και είναι κατάλληλη για ενήλικες και παιδιά.',
       ],
-      bold: ['εναλλακτική ιατρική', 'παράγωγα της κυψέλης', 'προβλήματα υγείας'],
+      bold: ['παραδοσιακή πρακτική', 'παράγωγα της κυψέλης', 'εμπειρία χαλάρωσης'],
       label: 'Διαθέσιμη Απρίλιο–Οκτώβριο',
-      note: 'Τα παράγωγα της μέλισσας και η εισπνοή του αέρα της κυψέλης δεν είναι φάρμακα ούτε υποκαθιστούν τα ειδικά φάρμακα. Λειτουργούν παράλληλα και συμπληρωματικά με την κανονική θεραπεία — όχι ως αντικατάστασή της.',
+      note: 'Η μελισσοθεραπεία δεν είναι ιατρική πράξη. Τα προϊόντα της κυψέλης και η εισπνοή του αέρα της δεν είναι φάρμακα: δεν προλαμβάνουν, δεν αντιμετωπίζουν και δεν θεραπεύουν ασθένειες, ούτε υποκαθιστούν την ιατρική συμβουλή ή την αγωγή σας. Αν έχετε πρόβλημα υγείας ή γνωστή αλλεργία σε προϊόντα μέλισσας ή σε τσιμπήματα, συμβουλευτείτε πρώτα τον γιατρό σας.',
       video:
         'https://www.youtube.com/embed/oN8yOrjoJY4?autoplay=1&mute=1&loop=1&playlist=oN8yOrjoJY4&controls=0&modestbranding=1&rel=0&playsinline=1',
       book: { label: 'Κάντε κράτηση', href: '#cta' },
@@ -41,33 +41,30 @@ export const EXPERIENCES: Record<string, ActivityExperienceData> = {
       items: [
         {
           title: 'Εισπνοή αέρα κυψέλης',
-          text: 'Μέσω ειδικής αναπνευστικής μάσκας εισπνέετε τον θερμό αέρα της κυψέλης, με τις ευεργετικές του ουσίες.',
+          text: 'Μέσω ειδικής αναπνευστικής μάσκας εισπνέετε τον θερμό, αρωματικό αέρα της κυψέλης.',
         },
         {
           title: 'Προϊόντα της κυψέλης',
-          text: 'Μέλι, πρόπολη, γύρη, βασιλικός πολτός και δηλητήριο μέλισσας αξιοποιούνται για τις ευεργετικές τους ιδιότητες.',
+          text: 'Μέλι, πρόπολη, γύρη και βασιλικός πολτός συνοδεύουν την εμπειρία.',
         },
         {
           title: 'Περίοδος & διάρκεια',
-          text: 'Εφαρμόζεται Απρίλιο–Οκτώβριο: για αισθητά αποτελέσματα, τρεις εβδομάδες, κάθε δεύτερη ημέρα για 20 λεπτά.',
+          text: 'Εφαρμόζεται Απρίλιο–Οκτώβριο: τρεις εβδομάδες, κάθε δεύτερη ημέρα για 20 λεπτά.',
         },
       ],
     },
     benefits: {
-      eyebrow: 'Οφέλη',
-      heading: 'Σε Τι Βοηθά η Μελισσοθεραπεία',
+      eyebrow: 'Η Εμπειρία',
+      heading: 'Τι Θα Ζήσετε στη Μελισσοθεραπεία',
       intro:
-        'Οι αρχαίοι Αιγύπτιοι, εκτός των άλλων, χρησιμοποιούσαν την εισπνοή αέρα από το εσωτερικό της κυψέλης στη θεραπεία διάφορων αναπνευστικών προβλημάτων. Εισπνέοντας τον θερμό αέρα της κυψέλης, μέσω μιας ειδικής αναπνευστικής μάσκας εισάγονται στον οργανισμό ουσίες με ισχυρή θεραπευτική δράση, οι οποίες είναι εξαιρετικά ευεργετικές στην ανθρώπινη ψυχοσωματική κατάσταση. Ο αέρας του εσωτερικού της κυψέλης, διαποτισμένος με ουσιώδη αρώματα, βοηθά τους ανθρώπους στην αντιμετώπιση των πιο κάτω καταστάσεων:',
+        'Οι αρχαίοι Αιγύπτιοι ήταν από τους πρώτους που κάθισαν δίπλα στην κυψέλη για να αναπνεύσουν τον αέρα της. Σήμερα, στο δικό μας μελισσοκομείο, η εμπειρία παραμένει το ίδιο απλή: κάθεστε αναπαυτικά, φοράτε την ειδική μάσκα και αφήνετε τον θερμό, αρωματικό αέρα της κυψέλης και τον ήχο του μελισσιού να σας συνοδεύσουν για είκοσι λεπτά. Να τι περιλαμβάνει κάθε συνεδρία:',
       items: [
-        'Βρογχίτιδα',
-        'Άσθμα',
-        'Χρόνιες παθήσεις των πνευμόνων',
-        'Ευαισθησία στις λοιμώξεις',
-        'Αδύνατο ανοσοποιητικό σύστημα',
-        'Λοιμώξεις του αναπνευστικού συστήματος',
-        'Χρόνιοι πονοκέφαλοι, ημικρανίες',
-        'Στρες',
-        'Κατάθλιψη',
+        'Ο θερμός αέρας της κυψέλης, μέσω ειδικής αναπνευστικής μάσκας',
+        'Τα φυσικά αρώματα του κεριού, της πρόπολης και του μελιού',
+        'Ο χαρακτηριστικός ήχος και ο παλμός του μελισσιού',
+        'Είκοσι λεπτά ησυχίας μέσα στη φύση του Μαχαιρά',
+        'Ασφαλής, ελεγχόμενος χώρος — χωρίς άμεση επαφή με τις μέλισσες',
+        'Καθοδήγηση από έμπειρο μελισσοκόμο σε όλη τη διάρκεια',
       ],
     },
     gallery: {
@@ -82,8 +79,8 @@ export const EXPERIENCES: Record<string, ActivityExperienceData> = {
       activityName: 'Μελισσοθεραπεία',
       eyebrow: 'Κράτηση',
       heading: 'Κλείστε το ραντεβού σας',
-      body: 'Η μελισσοθεραπεία εφαρμόζεται από τον Απρίλιο έως τον Οκτώβριο. Συμπληρώστε τη φόρμα ή καλέστε στο +357 25622305 για να κλείσετε ραντεβού. Θα λάβετε σχετική ενημέρωση εντός 24 ωρών.',
-      bold: ['φόρμα', '+357 25622305'],
+      body: 'Η μελισσοθεραπεία εφαρμόζεται από τον Απρίλιο έως τον Οκτώβριο. Συμπληρώστε τη φόρμα ή καλέστε στο +357 25 622 305 για να κλείσετε ραντεβού. Θα λάβετε σχετική ενημέρωση εντός 24 ωρών.',
+      bold: ['φόρμα', '+357 25 622 305'],
       seasonStartMonth: 4,
       seasonEndMonth: 10,
       seasonLabel: 'Διαθέσιμη μόνο Απρίλιο–Οκτώβριο',
@@ -146,8 +143,8 @@ export const EXPERIENCES: Record<string, ActivityExperienceData> = {
       activityName: 'Περιπέτειες στις κυψέλες',
       eyebrow: 'Κράτηση',
       heading: 'Εκδηλώστε ενδιαφέρον',
-      body: 'Η εμπειρία γίνεται συγκεκριμένες ημέρες, κυρίως Σάββατα, από τον Μάρτιο έως τον Οκτώβριο. Συμπληρώστε τη φόρμα ή καλέστε στο +357 25622305. Θα λάβετε σχετική ενημέρωση εντός 24 ωρών.',
-      bold: ['φόρμα', '+357 25622305'],
+      body: 'Η εμπειρία γίνεται συγκεκριμένες ημέρες, κυρίως Σάββατα, από τον Μάρτιο έως τον Οκτώβριο. Συμπληρώστε τη φόρμα ή καλέστε στο +357 25 622 305. Θα λάβετε σχετική ενημέρωση εντός 24 ωρών.',
+      bold: ['φόρμα', '+357 25 622 305'],
       seasonStartMonth: 3,
       seasonEndMonth: 10,
       seasonLabel: 'Διαθέσιμη μόνο Μάρτιο–Οκτώβριο',
@@ -217,27 +214,27 @@ export const EXPERIENCES: Record<string, ActivityExperienceData> = {
 const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
   melissotherapeia: {
     ...EXPERIENCES.melissotherapeia,
-    metaTitle: 'Bee Therapy (Apitherapy) in Cyprus — Oros Machaira',
+    metaTitle: 'Apitherapy (Bee Therapy) in Cyprus — Oros Machaira',
     metaDescription:
-      'Bee therapy at Oros Machaira: a therapeutic practice of alternative medicine using the products of the hive and the inhalation of its air. Appointments April–October.',
+      'Apitherapy at Oros Machaira: a traditional practice with the products of the hive and the inhalation of its air. Appointments April–October.',
     hero: {
       ...EXPERIENCES.melissotherapeia.hero,
-      title: 'Bee Therapy',
+      title: 'Apitherapy (Bee Therapy)',
       description:
-        'A therapeutic practice of alternative medicine, using the precious products of the hive.',
+        'A traditional practice using the precious products of the hive.',
       imageAlt: 'Bee therapy — inhaling the air of the hive',
     },
     intro: {
       ...EXPERIENCES.melissotherapeia.intro,
-      eyebrow: 'Alternative Medicine',
+      eyebrow: 'A Traditional Practice',
       heading: 'The Power of the Hive',
       body: [
-        'Bee therapy was first discovered and applied by the ancient Egyptians. It is an extensive therapeutic practice that belongs to alternative medicine and uses the products of the hive (honey, royal jelly, pollen, bee venom, propolis) in a variety of therapeutic applications.',
-        'In a natural way, bee therapy helps us overcome many health problems and is excellent for children, athletes and the elderly alike.',
+        'Apitherapy has been practised since antiquity — the ancient Egyptians are among the earliest known users. It is a traditional practice that draws on the products of the hive (honey, royal jelly, pollen, propolis) and on its warm air, in a relaxing experience inside the apiary.',
+        'At Oros Machaira it is offered as a calm, sensory experience in nature, suitable for adults and children alike.',
       ],
-      bold: ['alternative medicine', 'products of the hive', 'health problems'],
+      bold: ['traditional practice', 'products of the hive', 'relaxing experience'],
       label: 'Available April–October',
-      note: 'The bee products and the inhalation of hive air are not medicines, nor do they replace prescribed medication. They work alongside and complement conventional treatment — never as a substitute for it.',
+      note: 'Apitherapy is not a medical treatment. The products of the hive and the inhalation of hive air are not medicines: they do not prevent, treat or cure any disease, and they are not a substitute for medical advice or prescribed medication. If you have a health condition or a known allergy to bee products or bee stings, please consult your doctor first.',
       book: { label: 'Book now', href: '#cta' },
     },
     features: {
@@ -246,33 +243,30 @@ const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
       items: [
         {
           title: 'Inhaling hive air',
-          text: 'Through a special breathing mask you inhale the warm air of the hive, with its beneficial substances.',
+          text: 'Through a special breathing mask you inhale the warm, aromatic air of the hive.',
         },
         {
           title: 'Products of the hive',
-          text: 'Honey, propolis, pollen, royal jelly and bee venom are used for their beneficial properties.',
+          text: 'Honey, propolis, pollen and royal jelly accompany the experience.',
         },
         {
           title: 'Season & duration',
-          text: 'Applied April–October: for noticeable results, three weeks, every second day for 20 minutes.',
+          text: 'Available April–October: three weeks, every second day for 20 minutes.',
         },
       ],
     },
     benefits: {
-      eyebrow: 'Benefits',
-      heading: 'What Bee Therapy Helps With',
+      eyebrow: 'The Experience',
+      heading: 'What a Session Involves',
       intro:
-        'The ancient Egyptians, among others, used the inhalation of air from inside the hive to treat various respiratory problems. Inhaling the warm air of the hive through a special breathing mask, substances with strong therapeutic action are introduced into the body, which are extremely beneficial to the human psychosomatic state. The air inside the hive, impregnated with essential aromas, helps people deal with the following issues:',
+        'The ancient Egyptians were among the first to sit beside a hive and breathe its air. At our apiary the experience remains just as simple: you settle into a comfortable seat, put on the special mask, and let the warm, aromatic air of the hive and the sound of the colony keep you company for twenty minutes. Each session includes:',
       items: [
-        'Bronchitis',
-        'Asthma',
-        'Chronic diseases of the lungs',
-        'Susceptibility to infections',
-        'Weak immune system',
-        'Respiratory infections',
-        'Chronic headaches, migraines',
-        'Stress',
-        'Depression',
+        'The warm air of the hive, through a dedicated breathing mask',
+        'The natural aromas of beeswax, propolis and honey',
+        'The distinctive sound and pulse of the colony',
+        'Twenty minutes of quiet in the nature of Machairas',
+        'A safe, controlled space — with no direct contact with the bees',
+        'The guidance of an experienced beekeeper throughout',
       ],
     },
     gallery: {
@@ -289,22 +283,22 @@ const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
       activityName: 'Bee Therapy',
       eyebrow: 'Booking',
       heading: 'Book your appointment',
-      body: 'Bee therapy is applied from April to October. Fill in the form or call +357 25622305 to book an appointment. You will receive confirmation within 24 hours.',
-      bold: ['form', '+357 25622305'],
+      body: 'Bee therapy is applied from April to October. Fill in the form or call +357 25 622 305 to book an appointment. You will receive confirmation within 24 hours.',
+      bold: ['form', '+357 25 622 305'],
       seasonLabel: 'Available only April–October',
     },
   },
 
   'peripeteies-stis-kypseles': {
     ...EXPERIENCES['peripeteies-stis-kypseles'],
-    metaTitle: 'Adventures in the Beehives — Oros Machaira',
+    metaTitle: 'Adventures at the Hives — Oros Machaira',
     metaDescription:
-      'Adventures in the beehives: dress as beekeepers and open the hive with the help of our staff. A hands-on experience for young and old, available March–October.',
+      'Adventures at the hives: suit up and open the hive with the help of our staff. A hands-on experience for all ages, available March–October.',
     hero: {
       ...EXPERIENCES['peripeteies-stis-kypseles'].hero,
-      title: 'Adventures in the Beehives',
+      title: 'Adventures at the Hives',
       description:
-        'Dress as beekeepers and open the hive — a hands-on experience for young and old.',
+        'Suit up and open the hive — a hands-on experience for all ages.',
       imageAlt: 'Visitors in beekeeper suits opening the hive',
     },
     intro: {
@@ -317,7 +311,7 @@ const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
       ],
       bold: ['beekeeper suit', 'bee community', 'registering your interest'],
       label: 'Available only March–October',
-      note: 'The experience takes place only from March to October, as in winter the bees get cold and become aggressive when we open their hive.',
+      note: 'The experience takes place only from March to October, as in winter the bees get cold and become aggressive when we open the hive.',
       book: { label: 'Book now', href: '#cta' },
     },
     features: {
@@ -325,7 +319,7 @@ const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
       heading: 'What You Will Live',
       items: [
         {
-          title: 'Dress as beekeepers',
+          title: 'Suit up',
           text: 'Put on the beekeeper suit and feel safe right next to the hives.',
         },
         {
@@ -333,7 +327,7 @@ const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
           text: 'With the help of our staff, open the hive and see the bee community up close.',
         },
         {
-          title: 'For young & old',
+          title: 'All ages welcome',
           text: 'A safe, guided experience, suitable for children and adults alike.',
         },
       ],
@@ -344,16 +338,16 @@ const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
       heading: 'Moments from the Adventures',
       images: EXPERIENCES['peripeteies-stis-kypseles'].gallery!.images.map((g) => ({
         ...g,
-        alt: 'Adventures in the beehives at the Oros Machaira apiary',
+        alt: 'Adventures at the hives at the Oros Machaira apiary',
       })),
     },
     booking: {
       ...EXPERIENCES['peripeteies-stis-kypseles'].booking,
-      activityName: 'Adventures in the beehives',
+      activityName: 'Adventures at the hives',
       eyebrow: 'Booking',
       heading: 'Register your interest',
-      body: 'The experience takes place on specific days, mostly Saturdays, from March to October. Fill in the form or call +357 25622305. You will receive confirmation within 24 hours.',
-      bold: ['form', '+357 25622305'],
+      body: 'The experience takes place on specific days, mostly Saturdays, from March to October. Fill in the form or call +357 25 622 305. You will receive confirmation within 24 hours.',
+      bold: ['form', '+357 25 622 305'],
       seasonLabel: 'Available only March–October',
     },
   },
@@ -375,8 +369,8 @@ const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
       eyebrow: 'Tours',
       heading: 'The Honey Experience',
       body: [
-        'For those who appreciate knowledge through experiences, we have created a specially designed space where visitors learn about apitherapy through a wooden house, see the bees and discover their roles within the hive. At the same time they get to know the other products of the hive and what each one is used for.',
-        'Next, the visitor briefly learns the history of our family business through a video, plays an interactive question game about honey and bees, and is taken to the bottling room to watch live honey bottling directly from the calm barrels.',
+        'For anyone who likes to learn by doing, we have created a specially designed space where visitors discover apitherapy through a wooden house, see the bees and discover their roles within the hive. At the same time they get to know the other products of the hive and what each one is used for.',
+        'Next, the visitor briefly learns the history of our family business through a video, takes part in an interactive quiz about honey and bees, and is taken to the bottling room to watch live honey bottling directly from the calm barrels.',
         'After this roughly 45-minute tour, they can taste the different types of honey and be trained to correctly identify what they are tasting.',
       ],
       bold: ['apitherapy', 'live honey bottling', 'taste the different types of honey'],

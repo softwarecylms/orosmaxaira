@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: en
       ? 'The certifications of Oros Machaira — ISO 22000 (Food Safety) and ISO 14001 (Environmental Management). View and download the official certificates.'
       : 'Οι πιστοποιήσεις του Όρος Μαχαιρά — ISO 22000 (Ασφάλεια Τροφίμων) και ISO 14001 (Περιβαλλοντική Διαχείριση). Δείτε και κατεβάστε τα επίσημα πιστοποιητικά.',
-    alternates: hreflangAlternates(locale, '/certificates'),
+    alternates: hreflangAlternates(locale, '/pistopioiseis'),
   }
 }
 
@@ -31,7 +31,7 @@ export default async function CertificatesPage() {
   const { hero, certificates } = getCertificatesContent(locale)
 
   const homeUrl = en ? `${SITE}/en` : SITE
-  const pageUrl = en ? `${SITE}/en/certificates` : `${SITE}/certificates`
+  const pageUrl = en ? `${SITE}/en/pistopioiseis` : `${SITE}/pistopioiseis`
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',

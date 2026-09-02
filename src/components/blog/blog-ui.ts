@@ -23,6 +23,10 @@ export type BlogUi = {
   contactTitle: string
   contactBody: string
   contactCta: string
+  /** Shop CTA shown inside and at the end of an article. */
+  shopCtaTitle: string
+  shopCtaBody: string
+  shopCtaLabel: string
   contactImageAlt: string
   /** Breadcrumb back to the blog index. */
   breadcrumbBlog: string
@@ -46,6 +50,10 @@ const EL: BlogUi = {
   contactBody:
     'Έχετε απορίες για τα προϊόντα ή τις δραστηριότητές μας; Η ομάδα μας είναι εδώ για εσάς.',
   contactCta: 'Επικοινωνία',
+  shopCtaTitle: 'Αγοράστε αγνό κυπριακό μέλι',
+  shopCtaBody:
+    'Μέλι, υδρόμελο, βασιλικός πολτός και φυσικά καλλυντικά, απευθείας από το μελισσοκομείο μας στον Μαχαιρά.',
+  shopCtaLabel: 'Δείτε τα προϊόντα μας',
   contactImageAlt: 'Μέλισσα πάνω σε κίτρινο λουλούδι',
   breadcrumbBlog: 'Blog',
   articleFallback: 'Άρθρο',
@@ -53,7 +61,7 @@ const EL: BlogUi = {
   heroImageAlt: 'Μελισσοκόμος κρατά πλαίσιο με μέλισσες σε χωράφι',
   metaTitle: 'Blog',
   metaDescription:
-    'Νέα, άρθρα και συνταγές από το Όρος Μαχαιρά — για το μέλι, τις μέλισσες, την υγεία και τη μελισσοκομία.',
+    'Νέα, άρθρα και συνταγές από το Όρος Μαχαιρά — για το μέλι, τις μέλισσες, τη διατροφή και τη μελισσοκομία.',
 }
 
 const EN: BlogUi = {
@@ -67,6 +75,10 @@ const EN: BlogUi = {
   contactBody:
     'Have questions about our products or activities? Our team is here for you.',
   contactCta: 'Contact',
+  shopCtaTitle: 'Buy pure Cypriot honey',
+  shopCtaBody:
+    'Honey, mead, royal jelly and natural cosmetics, straight from our apiary at Machaira.',
+  shopCtaLabel: 'Shop our products',
   contactImageAlt: 'A bee on a yellow flower',
   breadcrumbBlog: 'Blog',
   articleFallback: 'Article',
@@ -74,7 +86,7 @@ const EN: BlogUi = {
   heroImageAlt: 'A beekeeper holding a frame of bees in a field',
   metaTitle: 'Blog',
   metaDescription:
-    'News, articles and recipes from Oros Machaira — about honey, bees, health and beekeeping.',
+    'News, articles and recipes from Oros Machaira — about honey, bees, food and beekeeping.',
 }
 
 /** Locale-aware blog UI bundle. el = Greek source of truth, en = English. */

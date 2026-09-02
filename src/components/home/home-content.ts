@@ -106,8 +106,8 @@ export const ANNOUNCEMENT =
   'ΔΩΡΕΑΝ αποστολή στην Κύπρο για παραγγελίες άνω των €70'
 
 export const CONTACT = {
-  phone: '+357 25622305',
-  phoneShort: '+357 25622305',
+  phone: '+357 25 622 305',
+  phoneShort: '+357 25 622 305',
   phoneHref: 'tel:+35725622305',
   email: 'info@orosmaxaira.com',
 }
@@ -188,8 +188,8 @@ export const DEAL = {
   products: [
     { category: 'Μέλι', title: 'Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,00 – €27,50', image: '/images/home/deal-1.webp', href: '/product/meli-antheon-oros-machaira' },
     { category: 'Μέλι', title: 'Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-2.webp', href: '/product/avrasto-meli-antheon-oros-machaira' },
-    { category: 'Μέλι', title: 'Βασιλικός πολτός «Όρος Μαχαιρά»', price: '€22,00', image: '/images/home/deal-3.webp', href: '/product/vasilikos-poltos-oros-machaira' },
-    { category: 'Μέλι', title: 'Υδρόμελο', price: '€16,00', image: '/images/home/deal-4.webp', href: '/product/ydromelo' },
+    { category: 'Προϊόντα Μέλισσας', title: 'Βασιλικός πολτός «Όρος Μαχαιρά»', price: '€22,00', image: '/images/home/deal-3.webp', href: '/product/vasilikos-poltos-oros-machaira' },
+    { category: 'Προϊόντα Μέλισσας', title: 'Υδρόμελο', price: '€16,00', image: '/images/home/deal-4.webp', href: '/product/ydromelo' },
     { category: 'Μέλι', title: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»', price: '€3,50 – €31,00', image: '/images/home/deal-5.webp', href: '/product/thymarisio-meli-oros-machaira' },
   ] satisfies HoneyProduct[],
 }
@@ -210,7 +210,7 @@ export const CATEGORIES = {
 export const ADOPT = {
   eyebrow: 'ΒΙΩΜΑΤΙΚΗ ΕΜΠΕΙΡΙΑ',
   heading: 'Υιοθετώ μια κυψέλη',
-  body: 'Γίνε και εσύ με την ομάδα σου μέρος του προγράμματος "Υιοθετώ μια κυψέλη" και… "Bee-come a Hero" για τις μέλισσες και το περιβάλλον.',
+  body: 'Γίνε και εσύ με την ομάδα σου μέρος του προγράμματος "Υιοθετώ μια κυψέλη" και… Bee-come a Hero για τις μέλισσες και το περιβάλλον.',
   cta: { label: READ_MORE, href: '/yiotheto-mia-kypseli' },
   image: '/images/home/adopt-bee.webp',
   imageAlt: 'Μέλισσα πάνω σε κηρήθρα',
@@ -227,7 +227,7 @@ export const HERITAGE = {
     [
       { text: 'Η ιστορία του μελιού ' },
       { text: '«Όρος Μαχαιρά» ', bold: true },
-      { text: 'πάει πίσω στο 1983. Τότε ο Μιχάλης Φιλίππου άρχισε τη μελισοκομία μαζί με τον γαμπρό του, τον Κώστα Χειμώνα έχοντας πέντε κυψέλες τις οποίες πήραν από τον πατέρα του Κώστα Χειμώνα. Για 30 περίπου χρόνια δούλεψαν μαζί σκληρά και με ' },
+      { text: 'πάει πίσω στο 1983. Τότε ο Μιχάλης Φιλίππου άρχισε τη μελισοκομία μαζί με τον γαμπρό του, τον Κώστα Χειμώνα έχοντας πέντε κυψέλες τις οποίες πήραν από τον πατέρα του Κώστα. Για 30 περίπου χρόνια δούλεψαν μαζί σκληρά και με ' },
       { text: 'αγάπη για τη φύση', bold: true },
       { text: ', τη μέλισσα και τα προϊόντα της.' },
     ],
@@ -348,7 +348,7 @@ export const BLOG = {
     imageAlt: 'Αγνό κυπριακό μέλι Όρος Μαχαιρά',
     title: 'Πού να Αγοράσεις Αγνό Κυπριακό Μέλι στην Κύπρο',
     excerpt:
-      'Το φυσικό αγνό μέλι τοπικής παραγωγής δεν είναι απλά θέμα trend η πολυτέλειας, είναι και θέμα υγείας και βιωσιμότητας...',
+      'Το φυσικό αγνό μέλι τοπικής παραγωγής δεν είναι απλά θέμα trend η πολυτέλειας, είναι και θέμα ποιότητας και βιωσιμότητας...',
     author: 'orosmachaira',
     avatar: '/images/home/blog-avatar.webp',
     href: '/',
@@ -382,7 +382,7 @@ export const FOOTER = {
       links: [
         { label: 'Αρχική', href: '/' },
         { label: 'Ποιοί είμαστε', href: '/poioi-eimaste' },
-        { label: 'Βραβεία', href: '/awards' },
+        { label: 'Βραβεία', href: '/vraveia' },
         { label: 'Προϊόντα', href: '/proionta' },
         { label: 'Δραστηριότητες', href: '/drastiriotites' },
         { label: 'Υιοθετώ μια κυψέλη', href: '/yiotheto-mia-kypseli' },
@@ -404,9 +404,8 @@ export const FOOTER = {
       title: 'Επικοινωνία',
       lines: [
         'M.F. (OROS MAXAIRA) LTD.',
-        'Τηλ.: +357 25622305',
+        'Τηλ.: +357 25 622 305',
         'Μελίνη, Λάρνακα 7716',
-        'P.O.BOX: 7718',
         'Δευ–Παρ 08:00–16:00',
         'info@orosmaxaira.com',
       ],
@@ -429,8 +428,8 @@ export const FOOTER = {
   ],
   /** EU / ΘΑλΕΙΑ co-funding notice shown as a quiet strip above the legal bar. */
   funding: {
-    text: 'Το έργο υλοποιείται στο πλαίσιο του Προγράμματος Πολιτικής Συνοχής «ΘΑλΕΙΑ 2021-2027» με τη συγχρηματοδότηση της ΕΕ',
-    thaleiaAlt: 'ΘΑλΕΙΑ 2021-2027',
+    text: 'Το έργο υλοποιείται στο πλαίσιο του Προγράμματος Πολιτικής Συνοχής «ΘΑλΕΙΑ 2021–2027» με τη συγχρηματοδότηση της ΕΕ',
+    thaleiaAlt: 'ΘΑλΕΙΑ 2021–2027',
     cyprusAlt: 'Κυπριακή Δημοκρατία',
     euAlt: 'Με τη χρηματοδότηση της Ευρωπαϊκής Ένωσης',
   },
@@ -479,7 +478,7 @@ const HOME_EN: HomeContent = {
           title: 'Experiences',
           links: [
             { label: 'Getting to Know the Bee', href: '/drastiriotites/xenagiseis' },
-            { label: 'Adventures in the Beehives', href: '/drastiriotites/peripeteies-stis-kypseles' },
+            { label: 'Adventures at the Hives', href: '/drastiriotites/peripeteies-stis-kypseles' },
             { label: 'Workshops', href: '/drastiriotites/ergastiria' },
             { label: 'Bee Therapy', href: '/drastiriotites/melissotherapeia' },
           ],
@@ -501,8 +500,8 @@ const HOME_EN: HomeContent = {
       title: 'Honey',
       href: '/proionta/meli',
       links: [
-        { label: 'Flower Honey', href: '/product/meli-antheon-oros-machaira' },
-        { label: 'Raw (Unheated) Flower Honey', href: '/product/avrasto-meli-antheon-oros-machaira' },
+        { label: 'Blossom Honey', href: '/product/meli-antheon-oros-machaira' },
+        { label: 'Raw (Unheated) Blossom Honey', href: '/product/avrasto-meli-antheon-oros-machaira' },
         { label: 'Thyme Honey', href: '/product/thymarisio-meli-oros-machaira' },
       ],
     },
@@ -537,10 +536,9 @@ const HOME_EN: HomeContent = {
   HERO: {
     left: {
       eyebrow: 'AUTHENTIC TRADITION',
-      // Non-breaking spaces keep "of the Hive" together on one line, and hold
-      // "our"/"among others" as units so the copy wraps cleanly.
+      // Non-breaking spaces keep "of the Hive" together on one line.
       heading: 'Treasures of the Hive',
-      body: 'Discover our award-winning honey, our fine mead and our royal jelly, among others.',
+      body: 'Discover our award-winning honey, our fine mead, our royal jelly and more.',
       cta: { label: 'Learn more', href: HERO.left.cta.href },
       image: HERO.left.image,
       imageAlt: 'Award-winning Oros Machaira honey on a wooden stand',
@@ -558,7 +556,7 @@ const HOME_EN: HomeContent = {
     { icon: 'purity', title: '100% Purity Guarantee', body: 'Straight from our apiary in Melini, with no additives.' },
     { icon: 'delivery', title: 'Fast Delivery', body: 'Fast and secure shipping of your order.' },
     { icon: 'eco', title: 'Eco Conscious', body: 'We use recyclable and sustainable packaging materials.' },
-    { icon: 'payment', title: 'Secure Online Payments', body: 'Shop with confidence using a credit/debit card.' },
+    { icon: 'payment', title: 'Secure online payments', body: 'Shop with confidence using your credit or debit card.' },
   ],
   TICKER: ['100% PURITY GUARANTEE', 'FAST DELIVERY', 'SECURE ONLINE PAYMENTS', 'ECO CONSCIOUS', 'FAST SERVICE'],
   DEAL: {
@@ -566,11 +564,11 @@ const HOME_EN: HomeContent = {
     cta: { label: 'Learn more', href: DEAL.cta.href },
     featured: { ...DEAL.featured, title: 'The Elixir of the Gods', imageAlt: 'Melite Mead — Oros Machaira' },
     products: [
-      { ...DEAL.products[0], category: 'Honey', title: 'Flower Honey «Oros Machaira»' },
-      { ...DEAL.products[1], category: 'Honey', title: 'Raw (Unheated) Flower Honey «Oros Machaira»' },
-      { ...DEAL.products[2], category: 'Honey', title: 'Royal Jelly «Oros Machaira»' },
-      { ...DEAL.products[3], category: 'Honey', title: 'Mead' },
-      { ...DEAL.products[4], category: 'Honey', title: 'Thyme Honey «Oros Machaira»' },
+      { ...DEAL.products[0], category: 'Honey', title: 'Oros Machaira Blossom Honey' },
+      { ...DEAL.products[1], category: 'Honey', title: 'Oros Machaira Raw (Unheated) Blossom Honey' },
+      { ...DEAL.products[2], category: 'Bee Products', title: 'Oros Machaira Royal Jelly' },
+      { ...DEAL.products[3], category: 'Bee Products', title: 'Mead' },
+      { ...DEAL.products[4], category: 'Honey', title: 'Oros Machaira Thyme Honey' },
     ],
   },
   CATEGORIES: {
@@ -587,7 +585,7 @@ const HOME_EN: HomeContent = {
     ...ADOPT,
     eyebrow: 'HANDS-ON EXPERIENCE',
     heading: 'Adopt a Hive',
-    body: 'Join the “Adopt a Hive” programme with your team and… “Bee-come a Hero” for the bees and the environment.',
+    body: 'Join the “Adopt a Hive” programme with your team and… Bee-come a Hero for the bees and the environment.',
     cta: { label: 'Learn more', href: ADOPT.cta.href },
     imageAlt: 'A bee on a honeycomb',
   },
@@ -599,13 +597,13 @@ const HOME_EN: HomeContent = {
     paragraphs: [
       [
         { text: 'The story of ' },
-        { text: '«Oros Machaira» ', bold: true },
-        { text: 'honey goes back to 1983, when Michalis Filippou began beekeeping together with his brother-in-law, Costas Chimonas, starting with five hives they received from Costas Chimonas’s father. For around 30 years they worked hard together, with ' },
-        { text: 'a love for nature', bold: true },
-        { text: ', for the bee and its products.' },
+        { text: 'Oros Machaira ', bold: true },
+        { text: 'honey goes back to 1983, when Michalis Filippou began beekeeping together with his brother-in-law, Costas Chimonas, starting with five hives given to them by Costas’s father. For some 30 years they worked side by side, driven by ' },
+        { text: 'a love of nature', bold: true },
+        { text: ', of bees and of everything the hive produces.' },
       ],
       [
-        { text: 'Once their children had grown up, they decided it would be best for the whole family for each to follow his own path. The sons of Michalis Filippou have today taken the reins of the company, which produces the full range of bee products, packages them and brings them to market under the «Oros Machaira» brand.' },
+        { text: 'Once their children had grown up, they decided it would be best for everyone if each family followed its own path. The sons of Michalis Filippou have today taken the reins of the company, which produces the full range of bee products, packages them and brings them to market under the Oros Machaira brand.' },
       ],
     ],
   },
@@ -613,10 +611,10 @@ const HOME_EN: HomeContent = {
     image: FLATLAY.image,
     imageAlt: 'Oros Machaira products on a marble surface',
     prices: [
-      { ...FLATLAY.prices[0], product: { ...FLATLAY.prices[0].product, category: 'Honey', title: 'Flower Honey «Oros Machaira»' } },
-      { ...FLATLAY.prices[1], product: { ...FLATLAY.prices[1].product, category: 'Honey', title: 'Thyme Honey «Oros Machaira»' } },
-      { ...FLATLAY.prices[2], product: { ...FLATLAY.prices[2].product, category: 'Bee Products', title: 'Mead «Oros Machaira»' } },
-      { ...FLATLAY.prices[3], product: { ...FLATLAY.prices[3].product, category: 'Bee Products', title: 'Royal Jelly «Oros Machaira»' } },
+      { ...FLATLAY.prices[0], product: { ...FLATLAY.prices[0].product, category: 'Honey', title: 'Oros Machaira Blossom Honey' } },
+      { ...FLATLAY.prices[1], product: { ...FLATLAY.prices[1].product, category: 'Honey', title: 'Oros Machaira Thyme Honey' } },
+      { ...FLATLAY.prices[2], product: { ...FLATLAY.prices[2].product, category: 'Bee Products', title: 'Oros Machaira Mead' } },
+      { ...FLATLAY.prices[3], product: { ...FLATLAY.prices[3].product, category: 'Bee Products', title: 'Oros Machaira Royal Jelly' } },
       { ...FLATLAY.prices[4], product: { ...FLATLAY.prices[4].product, category: 'Natural Cosmetics', title: 'Milk & Honey Hand Cream' } },
     ],
   },
@@ -629,7 +627,7 @@ const HOME_EN: HomeContent = {
       imageAlt: 'Pure Cypriot Oros Machaira honey',
       title: 'Where to Buy Pure Cypriot Honey in Cyprus',
       excerpt:
-        'Locally produced, pure natural honey isn’t just a matter of trend or luxury — it’s a matter of health and sustainability…',
+        'Locally produced, pure natural honey isn’t just a matter of trend or luxury — it’s a matter of quality and sustainability…',
     },
     items: [
       { ...BLOG.items[0], title: 'M.F. Oros Machaira Ltd Strengthens its Sustainability with Specialised Support and EU Co-financing' },
@@ -644,7 +642,7 @@ const HOME_EN: HomeContent = {
         links: [
           { label: 'Home', href: '/' },
           { label: 'About Us', href: '/poioi-eimaste' },
-          { label: 'Awards', href: '/awards' },
+          { label: 'Awards', href: '/vraveia' },
           { label: 'Products', href: '/proionta' },
           { label: 'Activities', href: '/drastiriotites' },
           { label: 'Adopt a Hive', href: '/yiotheto-mia-kypseli' },
@@ -666,9 +664,8 @@ const HOME_EN: HomeContent = {
         title: 'Contact',
         lines: [
           'M.F. (OROS MAXAIRA) LTD.',
-          'Tel.: +357 25622305',
+          'Tel.: +357 25 622 305',
           'Melini, Larnaca 7716',
-          'P.O.BOX: 7718',
           'Mon–Fri 08:00–16:00',
           'info@orosmaxaira.com',
         ],
@@ -684,8 +681,8 @@ const HOME_EN: HomeContent = {
       { label: 'Privacy & Cookie Policy', href: '/privacy-amp-cookie-policy' },
     ],
     funding: {
-      text: 'The project is implemented under the Cohesion Policy Programme “THALIA 2021-2027”, co-funded by the European Union',
-      thaleiaAlt: 'THALIA 2021-2027',
+      text: 'The project is implemented under the Cohesion Policy Programme “THALIA 2021–2027”, co-funded by the European Union',
+      thaleiaAlt: 'THALIA 2021–2027',
       cyprusAlt: 'Republic of Cyprus',
       euAlt: 'Co-funded by the European Union',
     },

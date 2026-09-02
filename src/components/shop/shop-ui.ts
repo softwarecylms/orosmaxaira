@@ -31,7 +31,7 @@ const SHOP_UI_EL = {
   },
   filtersToggle: { open: 'Φίλτρα', close: 'Κλείσιμο φίλτρων' },
   banner: SHOP_PAGE.banner,
-  findUs: SHOP_PAGE.findUs, // Βρείτε μας:
+  findUs: SHOP_PAGE.findUs, // Ακολουθήστε μας
   sortAria: 'Ταξινόμηση',
   sortLabel: (s: ShopSort): string => SHOP_SORTS.find((o) => o.value === s)?.label ?? '',
   /** e.g. "1 προϊόν" / "5 προϊόντα" */
@@ -45,10 +45,9 @@ const SHOP_UI_EL = {
   meta: {
     listingTitle: 'Προϊόντα',
     listingDescription:
-      'Όλα τα προϊόντα Όρος Μαχαιρά — αγνό μέλι, προϊόντα μέλισσας, φυσικά καλλυντικά και πακέτα δώρων.',
+      'Όλα τα προϊόντα Όρος Μαχαιρά: αγνό κυπριακό μέλι, προϊόντα μέλισσας, φυσικά καλλυντικά και πακέτα δώρων από τα μελίσσια μας στη Μελίνη. Αποστολή σε Κύπρο.',
     /** fallback title for an unknown category slug */
     titleFallback: 'Προϊόντα',
-    categoryDescription: (label: string) => `${label} — Όρος Μαχαιρά.`,
   },
 }
 
@@ -66,12 +65,12 @@ const SHOP_UI_EN: ShopUi = {
   filtersToggle: { open: 'Filters', close: 'Close filters' },
   banner: {
     heading: 'Activities',
-    body: 'Visit our apiary for a unique family experience! See the hives up close and discover the secrets of the bee and honey.',
+    body: 'Visit our apiary for a unique family experience! See the hives up close and discover the secrets of bees and honey.',
     cta: { label: 'Learn more', href: SHOP_PAGE.banner.cta.href },
     image: SHOP_PAGE.banner.image,
     imageAlt: 'Bee on a honeycomb — Oros Machaira',
   },
-  findUs: 'Find us:',
+  findUs: 'Follow us',
   sortAria: 'Sort by',
   sortLabel: (s: ShopSort) => SORT_LABELS_EN[s] ?? '',
   count: (n: number) => `${n} ${n === 1 ? 'product' : 'products'}`,
@@ -83,9 +82,8 @@ const SHOP_UI_EN: ShopUi = {
   meta: {
     listingTitle: 'Products',
     listingDescription:
-      'All Oros Machaira products — pure honey, bee products, natural cosmetics and gift sets.',
+      'Every Oros Machaira product: raw Cypriot honey, bee products, natural cosmetics and gift sets from our own hives in Melini. Delivered in Cyprus and Greece.',
     titleFallback: 'Products',
-    categoryDescription: (label: string) => `${label} — Oros Machaira.`,
   },
 }
 

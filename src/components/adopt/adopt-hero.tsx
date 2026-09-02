@@ -10,7 +10,7 @@ import { floatY } from '@/lib/motion'
 import { getAdoptContent } from './adopt-content'
 
 /** Full-bleed programme hero — parallax photo, dark overlay, wordmark + tagline
- *  («Bee-come a Hero» in accent) and the primary CTA. Parallax is driven off the
+ *  (Bee-come a Hero in accent) and the primary CTA. Parallax is driven off the
  *  page scroll (the hero sits at the top), avoiding element-target scroll
  *  measurement; both parallax and mount-stagger disable under reduced motion. */
 export function AdoptHero() {

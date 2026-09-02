@@ -21,12 +21,12 @@ export async function generateMetadata(): Promise<Metadata> {
       ? {
           title: 'Hands-on Workshops — Candles, Wax & Bee Crafts',
           description:
-            'Hands-on workshops at the Oros Machaira apiary, always booked together with the “Getting to Know the Bee” experience and included in its price. Every season has its own workshop.',
+            'Hands-on workshops at the Oros Machaira apiary. All materials are included, and you take your creation home free of charge. Every season has its own workshop.',
         }
       : {
           title: 'Βιωματικά Εργαστήρια — Λαμπάδες, Κερί & Μελισσοκατασκευές',
           description:
-            'Βιωματικά εργαστήρια στο μελισσοκομείο του Όρους Μαχαιρά, πάντα σε συνδυασμό με την εμπειρία «Γνωρίζω τη μέλισσα» και με την τιμή της να τα περιλαμβάνει. Κάθε εποχή το δικό της εργαστήρι.',
+            'Βιωματικά εργαστήρια στο μελισσοκομείο του Όρους Μαχαιρά. Τα υλικά περιλαμβάνονται και παίρνετε τη δημιουργία σας δωρεάν μαζί σας. Κάθε εποχή το δικό της εργαστήρι.',
         }
   return { ...meta, alternates: hreflangAlternates(locale, '/drastiriotites/ergastiria') }
 }
@@ -40,8 +40,8 @@ function pageCopy(locale: string) {
         eyebrow: 'Creativity & Nature',
         heading: 'Hands-on Workshops',
         intro:
-          'Getting out into nature combined with creative activities is the best answer to a stressful everyday life. We organise hands-on workshops at our apiary, both on weekends and on public holidays. A workshop is always booked together with one of our experiences and is included in its price. It would be our pleasure to get to know you in person and spend a creative day together! The workshops are aimed at children and adults, giving every family the chance to share creative moments together.',
-        introBold: ['nature', 'creative activities', 'included in its price'],
+          'Getting out into nature combined with creative activities is the best answer to a stressful everyday life. We organise hands-on workshops at our apiary, both on weekends and on public holidays. A workshop is always booked together with one of our experiences. All materials are included, and you take your creation home free of charge. It would be our pleasure to get to know you in person and spend a creative day together! The workshops are aimed at children and adults, giving every family the chance to share creative moments together.',
+        introBold: ['nature', 'creative activities', 'free of charge'],
         byAppointment: 'By appointment',
         availableNow: 'Available now',
       }
@@ -51,8 +51,8 @@ function pageCopy(locale: string) {
         eyebrow: 'Δημιουργία & Φύση',
         heading: 'Βιωματικά Εργαστήρια',
         intro:
-          'Η εξόρμηση στη φύση σε συνδυασμό με δημιουργικές δραστηριότητες είναι η καλύτερη λύση στην πιεστική καθημερινότητα. Διοργανώνουμε βιωματικά εργαστήρια στο μελισσοκομείο μας, τόσο τα Σαββατοκύριακα όσο και τις αργίες. Το εργαστήρι κλείνεται πάντα σε συνδυασμό με μία από τις εμπειρίες μας και περιλαμβάνεται στην τιμή της. Θα ήταν χαρά μας να σας γνωρίσουμε από κοντά και να περάσουμε μαζί μια δημιουργική μέρα! Τα εργαστήρια απευθύνονται σε παιδιά και μεγάλους, δίνοντας σε κάθε οικογένεια την ευκαιρία να περάσει δημιουργικές στιγμές μαζί.',
-        introBold: ['φύση', 'δημιουργικές δραστηριότητες', 'περιλαμβάνεται στην τιμή της'],
+          'Η εξόρμηση στη φύση σε συνδυασμό με δημιουργικές δραστηριότητες είναι η καλύτερη λύση στην πιεστική καθημερινότητα. Διοργανώνουμε βιωματικά εργαστήρια στο μελισσοκομείο μας, τόσο τα Σαββατοκύριακα όσο και τις αργίες. Το εργαστήρι κλείνεται πάντα σε συνδυασμό με μία από τις εμπειρίες μας. Τα υλικά περιλαμβάνονται και παίρνετε τη δημιουργία σας δωρεάν μαζί σας. Θα ήταν χαρά μας να σας γνωρίσουμε από κοντά και να περάσουμε μαζί μια δημιουργική μέρα! Τα εργαστήρια απευθύνονται σε παιδιά και μεγάλους, δίνοντας σε κάθε οικογένεια την ευκαιρία να περάσει δημιουργικές στιγμές μαζί.',
+        introBold: ['φύση', 'δημιουργικές δραστηριότητες', 'δωρεάν'],
         byAppointment: 'Κατόπιν ραντεβού',
         availableNow: 'Τώρα διαθέσιμο',
       }

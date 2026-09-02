@@ -11,6 +11,21 @@ function paragraphs(text?: string | null): string[] {
     .filter(Boolean)
 }
 
+/** ISO review date -> reader-friendly form ("12 August 2025" / "12 Αυγούστου 2025").
+ *  The stored value stays ISO so it sorts and so <time dateTime> stays machine-readable. */
+function formatReviewDate(iso: string, locale: string): string {
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return iso
+  // Reviews carried over from Google are only dated to the month ("2025-10"),
+  // so render them month-precision rather than inventing a day.
+  const monthOnly = /^\d{4}-\d{2}$/.test(iso)
+  return new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'el-GR', {
+    ...(monthOnly ? {} : { day: 'numeric' }),
+    month: 'long',
+    year: 'numeric',
+  }).format(d)
+}
+
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="font-display text-[22px] font-bold leading-[1.2] text-foreground md:text-[26px]">
@@ -125,7 +140,11 @@ export function ActivitySections({
                   </figcaption>
                   {r.rating ? <Stars value={r.rating} locale={locale} /> : null}
                 </div>
-                {r.date ? <time className="text-[13px] text-muted">{r.date}</time> : null}
+                {r.date ? (
+                    <time dateTime={r.date} className="text-[13px] text-muted">
+                      {formatReviewDate(r.date, locale)}
+                    </time>
+                  ) : null}
                 <blockquote className="text-[14.5px] leading-[1.65] text-muted">
                   {r.body}
                 </blockquote>

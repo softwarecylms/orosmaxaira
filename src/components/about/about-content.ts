@@ -68,7 +68,7 @@ export const ABOUT_PAGE = {
   ],
 
   indoor: {
-    heading: 'Τι θα βρείτε στους εσωτερικούς μας χώρους',
+    heading: 'Στους εσωτερικούς μας χώρους',
     cards: [
       {
         title: 'Προεργασία & Εμφιάλωση',
@@ -89,7 +89,7 @@ export const ABOUT_PAGE = {
   },
 
   outdoor: {
-    heading: 'Και τι θα βρείτε στους εξωτερικούς μας χώρους',
+    heading: 'Στους εξωτερικούς μας χώρους',
     cta: { label: 'Δείτε περισσότερα', href: '/drastiriotites' },
     arrows: { prev: 'Προηγούμενο', next: 'Επόμενο' },
     slides: [
@@ -119,7 +119,7 @@ export const ABOUT_PAGE = {
       {
         title: 'Μελισσοθεραπεία',
         href: '/drastiriotites/melissotherapeia',
-        text: 'Έναν ειδικό χώρο για μελισσοθεραπεία, για όσους αναζητούν τις ευεργετικές ιδιότητες του περιβάλλοντος της κυψέλης.',
+        text: 'Έναν ειδικό χώρο για μελισσοθεραπεία, για όσους θέλουν να ζήσουν από κοντά την ατμόσφαιρα της κυψέλης.',
         image: '/images/about/outdoor-therapy.png',
       },
     ],
@@ -156,7 +156,7 @@ const ABOUT_EN: AboutContent = {
   meta: {
     title: 'About Us',
     description:
-      'We are a bee-keeping family, working professionally in the bee-keeping sector since 1983 — pure Cypriot honey from the flowers and herbs of Machaira.',
+      'We are a beekeeping family, working professionally in the beekeeping sector since 1983 — pure Cypriot honey from the flowers and herbs of Machaira.',
   },
 
   breadcrumb: [
@@ -168,8 +168,8 @@ const ABOUT_EN: AboutContent = {
     eyebrow: 'OUR STORY',
     title: 'About Us',
     body: [
-      'We are a bee-keeping family. Since 1983, we have been working professionally in the bee-keeping sector. Over all these years, thanks to our hard work and a love of bees, we have managed to build strong relationships with our customers, founded on trust.',
-      'We take a responsible approach to the entire process of making honey — from the hive to the consumer — meaning we can ensure the high quality and authenticity of our honey.',
+      'We are a beekeeping family. We have been beekeeping professionally since 1983. Over the years, hard work and a love of bees have helped us build strong relationships with our customers, founded on trust.',
+      'We take responsibility for every stage of the process — from the hive to your table — which is how we can guarantee the quality and authenticity of our honey.',
     ],
     image: ABOUT_EL.hero.image,
     imageAlt: 'The Oros Machaira family at the apiary',
@@ -183,7 +183,7 @@ const ABOUT_EN: AboutContent = {
 
   stats: [
     { ...ABOUT_EL.stats[0], label: 'Years of experience' },
-    { ...ABOUT_EL.stats[1], label: 'Trusted customers' },
+    { ...ABOUT_EL.stats[1], label: 'Customers who trust us' },
     { ...ABOUT_EL.stats[2], label: 'Tonnes of honey per year' },
     { ...ABOUT_EL.stats[3], label: 'Quality Awards' },
     { ...ABOUT_EL.stats[4], label: 'Points of sale' },
@@ -196,28 +196,28 @@ const ABOUT_EN: AboutContent = {
   ],
 
   indoor: {
-    heading: 'In our indoor spaces you will find',
+    heading: 'In our indoor spaces',
     cards: [
-      { ...ABOUT_EL.indoor.cards[0], title: 'Processing & Bottling', text: 'A room for the processing and bottling of our honeys.' },
-      { ...ABOUT_EL.indoor.cards[1], title: 'Our History', text: 'A viewing room with our history and the magical world of the bee.' },
+      { ...ABOUT_EL.indoor.cards[0], title: 'Processing & Bottling', text: 'Where we process and bottle our honey.' },
+      { ...ABOUT_EL.indoor.cards[1], title: 'Our History', text: 'A screening room where we tell our story and introduce the world of the bee.' },
       { ...ABOUT_EL.indoor.cards[2], title: 'Reception & Tasting', text: 'A welcoming reception and tasting area to try out our products.' },
     ],
   },
 
   outdoor: {
-    heading: 'And what you will find in our outdoor spaces',
+    heading: 'In our outdoor spaces',
     cta: { label: 'Learn more', href: ABOUT_EL.outdoor.cta.href },
     arrows: { prev: 'Previous', next: 'Next' },
     slides: [
       { ...ABOUT_EL.outdoor.slides[0], title: 'Workshops & Activities', text: 'A specially designed area for conducting workshops and educational activities.' },
       { ...ABOUT_EL.outdoor.slides[1], title: 'Lush Gardens', text: 'Lush gardens featuring apiary plants, providing food for our bees and a beautiful environment for visitors.' },
-      { ...ABOUT_EL.outdoor.slides[2], title: 'Educational Games', text: 'Interactive educational games for young and old alike, themed around the bee and its products.' },
+      { ...ABOUT_EL.outdoor.slides[2], title: 'Educational Games', text: 'Interactive educational games for children and adults alike alike, themed around the bee and its products.' },
       { ...ABOUT_EL.outdoor.slides[3], title: 'Visiting the Hives', text: 'The unique opportunity to visit the hives (with appropriate protection), experiencing the world of the beehive up close.' },
-      { ...ABOUT_EL.outdoor.slides[4], title: 'Apitherapy', text: 'A special area dedicated to apitherapy, for those seeking the beneficial properties of the hive environment.' },
+      { ...ABOUT_EL.outdoor.slides[4], title: 'Apitherapy', text: 'A special area dedicated to apitherapy, for those who want to experience the atmosphere of the hive at first hand.' },
     ],
   },
 
-  band: 'The operation of all these spaces and activities is governed by our commitment to sustainable development and environmental responsibility, demonstrated in practice through the implementation of the international standard **ISO 14001**: Environmental Management System. At the same time, recognising the paramount importance of food safety, we obtained **ISO 22000**: Food Safety Management System certification, further strengthening consumer confidence in our products.',
+  band: 'Everything we do in these spaces is guided by our commitment to sustainability and environmental responsibility — a commitment we put into practice through **ISO 14001**, the international environmental management standard. Food safety matters just as much, which is why we are also certified to **ISO 22000**, the food safety management standard, further strengthening consumer confidence in our products.',
 
   family: {
     heading: 'Our Family',

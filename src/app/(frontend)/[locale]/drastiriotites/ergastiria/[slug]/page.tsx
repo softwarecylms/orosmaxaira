@@ -53,7 +53,7 @@ function getDefaultCombos(locale: string): PriceTier[] {
         { key: 'gnorizw', label: 'Getting to Know the Bee', price: 12, note: 'per person · indicative price' },
         {
           key: 'gnorizw-peripeteies',
-          label: 'Getting to Know the Bee + Adventures in the Beehives',
+          label: 'Getting to Know the Bee + Adventures at the Hives',
           price: 20,
           note: 'per person · indicative price',
         },

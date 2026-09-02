@@ -19,18 +19,18 @@ export const ACTIVITY_EN: Record<string, Partial<Activity>> = {
       'A hands-on tour into the world of the bee — observe the bees through glass hives, without a beekeeper suit.',
     hero_image_alt: 'Getting to Know the Bee — a hands-on tour at Oros Machaira',
     description:
-      'For those who appreciate **knowledge through experience**, we created a space where visitors learn what apitherapy is, observe the bees through glass hives (without needing to wear a beekeeper suit) and discover their roles inside the hive.\n\nThey get to know the products of the hive and their uses, learn the story of our family business through a video and play an interactive question game. At the end, they taste our varieties of honey and other products made from honey such as mead, honeycomb and the blend of honey-and-nut spreads.',
+      'For anyone who likes to **learn by doing**, we have created a space where visitors discover what apitherapy is, observe the bees through glass hives (without needing to wear a beekeeper suit) and discover their roles inside the hive.\n\nThey get to know the products of the hive and their uses, learn the story of our family business through a video and take part in an interactive quiz. At the end, they taste our varieties of honey and other products from the hive, such as mead, honeycomb and our honey-and-nut spreads.',
     details:
-      '**Duration:** 1 hour\n**Ages:** suitable for the whole family — from young children to adults. No beekeeper suit is needed; the bees are observed safely through glass hives.',
+      '**Duration:** 1 hour\n**Good to know:** no beekeeper suit is needed — the bees are observed safely through glass hives.',
     duration_label: '1 hour',
     age_label: 'For all ages',
     meta_title: 'Getting to Know the Bee — Tours | Oros Machaira',
     meta_description:
       'A hands-on tour at the Oros Machaira apiary: observe the bees through glass hives, get to know the products of the hive and taste our honeys. Book online.',
     price_tiers: [
-      { key: 'adult', label: 'Adults (12+)', price: 8 },
-      { key: 'child', label: 'Children (4–11)', price: 4 },
-      { key: 'infant', label: 'Infants & Toddlers (0–3)', price: 0, note: 'Free' },
+      { key: 'adult', label: 'Ages 12+', price: 8 },
+      { key: 'child', label: 'Ages 4–11', price: 4 },
+      { key: 'infant', label: 'Under 4', price: 0, note: 'Free' },
     ],
     features: [
       {
@@ -43,7 +43,7 @@ export const ACTIVITY_EN: Record<string, Partial<Activity>> = {
       },
       {
         title: 'Tasting & game',
-        text: 'Watch our story on video, play an interactive question game and taste our varieties of honey.',
+        text: 'Watch our story on video, take part in an interactive quiz and taste our varieties of honey.',
       },
     ],
     policies: [
@@ -53,7 +53,7 @@ export const ACTIVITY_EN: Record<string, Partial<Activity>> = {
       },
       {
         title: 'Booking Changes',
-        body: 'To change the date or time, you can call [+357 99 130092](tel:+35799130092). Changes are subject to availability.',
+        body: 'To change the date or time, you can call [+357 99 130 092](tel:+35799130092). Changes are subject to availability.',
       },
     ],
     reviews: [
@@ -77,28 +77,28 @@ export const ACTIVITY_EN: Record<string, Partial<Activity>> = {
   },
 
   'peripeteies-stis-kypseles': {
-    title: 'Adventures in the Beehives',
+    title: 'Adventures at the Hives',
     subtitle:
-      'Dress as beekeepers and open the hive — a hands-on experience for young and old.',
+      'Suit up and open the hive — a hands-on experience for all ages.',
     hero_image_alt: 'Visitors in beekeeper suits opening the hive',
     description:
-      'A **hands-on experience**, suitable for children and adults, where the visitor dresses in a beekeeper suit and visits our hives. With the help of our experienced staff, you open the hive and observe the bee community up close.\n\nThe experience takes place only at weekends and booking in advance through the website is essential.',
+      'A **hands-on experience**, suitable for children and adults, where the visitor dresses in a beekeeper suit and visits our hives. With the help of our experienced staff, you open the hive and observe the bee community up close.',
     details:
       '**Duration:** 45 minutes\n**Ages:** there is no limit — the activity is suitable for the whole family. Beekeeper suits are provided for all participants and the entire experience is guided by an experienced beekeeper. We recommend wearing closed shoes and long trousers.',
-    note: 'The experience is offered only in combination with the “Getting to Know the Bee” programme or one of the workshops, at weekends from July to November. It does not take place in winter, as the bees get cold and become aggressive when we open their hive.',
+    note: 'The experience runs at weekends from July to November, and only in combination with the “Getting to Know the Bee” programme or one of the workshops — please book in advance through the website. It does not run in winter, as the bees get cold and become aggressive when we open the hive.',
     duration_label: '45 minutes',
     age_label: 'No age limit',
-    meta_title: 'Adventures in the Beehives — Oros Machaira',
+    meta_title: 'Adventures at the Hives — Oros Machaira',
     meta_description:
-      'Adventures in the beehives: dress as beekeepers and open the hive with the help of our staff. A hands-on experience for young and old — combined with “Getting to Know the Bee” or a workshop, weekends only, July–November.',
+      'Adventures at the hives: suit up and open the hive with the help of our staff. A hands-on experience for all ages — combined with “Getting to Know the Bee” or a workshop, weekends only, July–November.',
     price_tiers: [
-      { key: 'adult', label: 'Adults (12+)', price: 15 },
-      { key: 'child', label: 'Children (4–11)', price: 13 },
-      { key: 'infant', label: 'Infants & Toddlers (0–3)', price: 0, note: 'Free' },
+      { key: 'adult', label: 'Ages 12+', price: 15 },
+      { key: 'child', label: 'Ages 4–11', price: 13 },
+      { key: 'infant', label: 'Under 4', price: 0, note: 'Free' },
     ],
     features: [
       {
-        title: 'Dress as beekeepers',
+        title: 'Suit up',
         text: 'Put on the beekeeper suit and feel safe right next to the hives.',
       },
       {
@@ -106,7 +106,7 @@ export const ACTIVITY_EN: Record<string, Partial<Activity>> = {
         text: 'With the help of our staff, open the hive and see the bee community up close.',
       },
       {
-        title: 'For young & old',
+        title: 'All ages welcome',
         text: 'A safe, guided experience, suitable for children and adults alike.',
       },
     ],
@@ -117,7 +117,7 @@ export const ACTIVITY_EN: Record<string, Partial<Activity>> = {
       },
       {
         title: 'Booking Changes',
-        body: 'To change the date or time, you can call [+357 99 130092](tel:+35799130092). Changes are subject to availability.',
+        body: 'To change the date or time, you can call [+357 99 130 092](tel:+35799130092). Changes are subject to availability.',
       },
     ],
     reviews: [
@@ -128,58 +128,55 @@ export const ACTIVITY_EN: Record<string, Partial<Activity>> = {
         body: 'An amazing experience! The kids loved putting on the suit and opening the hive. The beekeeper explained everything patiently. We would do it again!',
       },
       {
-        name: 'Valentinos Filippou',
-        date: '2025-09-20',
+        name: 'Nedi Kaffa',
+        date: '2025-10',
         rating: 5,
-        body: 'A unique hands-on activity for the whole family. We saw the queen, tasted fresh honey and learned how important bees are. Highly recommended.',
+        body: 'Top place to take kids for an adventure to get to know and respect nature! We had a tour with bee suits, learnt about bees in two different settings did a honey tasting and then constructed a bee hotel!',
       },
     ],
     gallery: Array.from({ length: 11 }, (_, i) => ({
       url: `/images/activities/peripeteies/${String(i + 1).padStart(2, '0')}.webp`,
-      alt: 'Adventures in the beehives at the Oros Machaira apiary',
+      alt: 'Adventures at the hives at the Oros Machaira apiary',
     })),
   },
 
   melissotherapeia: {
-    title: 'Bee Therapy',
-    subtitle: 'A therapeutic practice of alternative medicine, using the precious products of the hive.',
+    title: 'Apitherapy (Bee Therapy)',
+    subtitle: 'A traditional practice using the precious products of the hive.',
     hero_image_alt: 'Bee therapy — inhaling the air of the hive',
     description:
-      'Bee therapy was first discovered and applied by the ancient Egyptians. It is an extensive therapeutic practice that belongs to alternative medicine and uses the products of the hive (honey, royal jelly, pollen, bee venom, propolis) in a variety of therapeutic applications.\n\nIn a natural way, bee therapy helps us overcome many health problems and is excellent for children, athletes and the elderly alike.',
-    details: 'Every 2nd day, for 3 weeks, 20 minutes per session.',
-    note: 'The bee products and the inhalation of hive air are not medicines, nor do they replace prescribed medication. They work alongside and complement conventional treatment — never as a substitute for it.',
+      'Apitherapy has been practised since antiquity — the ancient Egyptians are among the earliest known users. It is a traditional practice that draws on the products of the hive (honey, royal jelly, pollen, propolis) and on its warm air, in a relaxing experience inside the apiary.\n\nAt Oros Machaira it is offered as a calm, sensory experience in nature, suitable for adults and children alike.',
+    details: 'Every other day for three weeks, 20 minutes per session.',
+    note: 'Apitherapy is not a medical treatment. The products of the hive and the inhalation of hive air are not medicines: they do not prevent, treat or cure any disease, and they are not a substitute for medical advice or prescribed medication. If you have a health condition or a known allergy to bee products or bee stings, please consult your doctor first.',
     duration_label: '20 min / session',
     age_label: 'For all ages',
-    meta_title: 'Bee Therapy (Apitherapy) in Cyprus — Oros Machaira',
+    meta_title: 'Apitherapy (Bee Therapy) in Cyprus — Oros Machaira',
     meta_description:
-      'Bee therapy at Oros Machaira: a therapeutic practice of alternative medicine using the products of the hive and the inhalation of its air. Appointments April–October.',
+      'Apitherapy at Oros Machaira: a traditional practice with the products of the hive and the inhalation of its air. Appointments April–October.',
     features: [
       {
         title: 'Inhaling hive air',
-        text: 'Through a special breathing mask you inhale the warm air of the hive, with its beneficial substances.',
+        text: 'Through a special breathing mask you inhale the warm, aromatic air of the hive.',
       },
       {
         title: 'Products of the hive',
-        text: 'Honey, propolis, pollen, royal jelly and bee venom are used for their beneficial properties.',
+        text: 'Honey, propolis, pollen and royal jelly accompany the experience.',
       },
       {
         title: 'Season & duration',
-        text: 'Applied April–October: for noticeable results, three weeks, every second day for 20 minutes.',
+        text: 'Available April–October: three weeks, every second day for 20 minutes.',
       },
     ],
     benefits: {
       intro:
-        'The ancient Egyptians, among others, used the inhalation of air from inside the hive to treat various respiratory problems. Inhaling the warm air of the hive through a special breathing mask, substances with strong therapeutic action are introduced into the body, which are extremely beneficial to the human psychosomatic state. The air inside the hive, impregnated with essential aromas, helps people deal with the following issues:',
+        'The ancient Egyptians were among the first to sit beside a hive and breathe its air. At our apiary the experience remains just as simple: you settle into a comfortable seat, put on the special mask, and let the warm, aromatic air of the hive and the sound of the colony keep you company for twenty minutes. Each session includes:',
       items: [
-        'Bronchitis',
-        'Asthma',
-        'Chronic diseases of the lungs',
-        'Susceptibility to infections',
-        'Weak immune system',
-        'Respiratory infections',
-        'Chronic headaches, migraines',
-        'Stress',
-        'Depression',
+        'The warm air of the hive, through a dedicated breathing mask',
+        'The natural aromas of beeswax, propolis and honey',
+        'The distinctive sound and pulse of the colony',
+        'Twenty minutes of quiet in the nature of Machairas',
+        'A safe, controlled space — with no direct contact with the bees',
+        'The guidance of an experienced beekeeper throughout',
       ],
     },
   },

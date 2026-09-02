@@ -131,7 +131,7 @@ const SECTIONS_EN: LegalSection[] = [
   {
     heading: 'Security',
     body: [
-      'We apply appropriate technical and organizational measures to protect your data against unauthorized access, loss or misuse.',
+      'We apply appropriate technical and organisational measures to protect your data against unauthorised access, loss or misuse.',
     ],
   },
 ]
