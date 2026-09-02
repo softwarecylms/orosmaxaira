@@ -1078,7 +1078,7 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
     ],
     "sections": [
       {
-        "body": "Beeswax has been used as an antiseptic, and research shows that it was used in the treatment of wounds in other eras. The ancient Egyptians and Chinese used it thousands of years ago for embalming, in paintings, as a cosmetic and as a medicine."
+        "body": "Beeswax has been part of human life for thousands of years. The ancient Egyptians and Chinese used it for embalming, in paintings and as a cosmetic."
       },
       {
         "body": "It is produced by the wax glands of worker bees, which are responsible for many important functions of a hive. In essence, the workers collect the nectar of the flowers and carry it to the hive, where it is turned either into honey or into wax. Beeswax is used to build the honeycomb. In the honeycomb, pollen and surplus honey are stored. Beeswax is white at first and darkens over time."
