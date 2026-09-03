@@ -58,7 +58,7 @@ export default async function seedSchoolProgram({ container }: ExecArgs) {
     max_students: 50,
     pricing: [
       { range: "Μέχρι 25 παιδιά", price: 8, note: "ανά παιδί, με ΦΠΑ" },
-      { range: "Από 26 έως 54 παιδιά", price: 7, note: "ανά παιδί, με ΦΠΑ" },
+      { range: "Από 26 έως 50 παιδιά", price: 7, note: "ανά παιδί, με ΦΠΑ" },
       { range: "Δάσκαλοι & συνοδοί", price: null, note: "όσοι συνοδεύουν την τάξη" },
     ],
     notes: [

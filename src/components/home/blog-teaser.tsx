@@ -55,19 +55,6 @@ export async function BlogTeaser() {
                 {featured.excerpt ? (
                   <p className="line-clamp-3 text-[17px] leading-[24px] text-muted">{featured.excerpt}</p>
                 ) : null}
-                <div className="flex items-center gap-2.5">
-                  <Image
-                    src={BLOG.featured.avatar}
-                    alt={BLOG.featured.author}
-                    width={20}
-                    height={20}
-                    className="size-5 rounded-full object-cover"
-                  />
-                  <p className="text-[14px] leading-[21px]">
-                    <span className="text-muted">by</span>{' '}
-                    <span className="text-foreground">{BLOG.featured.author}</span>
-                  </p>
-                </div>
               </div>
             </Link>
           </RevealItem>

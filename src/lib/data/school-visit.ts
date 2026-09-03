@@ -55,7 +55,7 @@ export type SchoolPriceTier = {
 
 export const SCHOOL_PRICING: SchoolPriceTier[] = [
   { range: 'Μέχρι 25 παιδιά', price: 8, note: 'ανά παιδί, με ΦΠΑ' },
-  { range: 'Από 26 έως 54 παιδιά', price: 7, note: 'ανά παιδί, με ΦΠΑ' },
+  { range: `Από 26 έως ${MAX_STUDENTS} παιδιά`, price: 7, note: 'ανά παιδί, με ΦΠΑ' },
   { range: 'Δάσκαλοι & συνοδοί', price: null, note: 'όσοι συνοδεύουν την τάξη' },
 ]
 
@@ -95,7 +95,7 @@ const SCHOOL_WORKSHOP_OPTIONS_EN: SchoolWorkshopOption[] = [
 
 const SCHOOL_PRICING_EN: SchoolPriceTier[] = [
   { range: 'Up to 25 children', price: 8, note: 'per child, incl. VAT' },
-  { range: 'From 26 to 54 children', price: 7, note: 'per child, incl. VAT' },
+  { range: `From 26 to ${MAX_STUDENTS} children`, price: 7, note: 'per child, incl. VAT' },
   { range: 'Teachers & accompanying adults', price: null, note: 'everyone accompanying the class' },
 ]
 

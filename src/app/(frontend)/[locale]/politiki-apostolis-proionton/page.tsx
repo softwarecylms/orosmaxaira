@@ -97,7 +97,7 @@ const META = {
   en: {
     title: 'Shipping Policy',
     description:
-      'Oros Maxaira shipping policy — destinations, shipping cost, free delivery in Cyprus over €70, delivery times and terms.',
+      'Oros Machaira shipping policy — destinations, shipping cost, free delivery in Cyprus over €70, delivery times and terms.',
   },
 }
 

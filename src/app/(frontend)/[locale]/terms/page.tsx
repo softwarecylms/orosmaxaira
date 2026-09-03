@@ -80,7 +80,7 @@ const SECTIONS_EN: LegalSection[] = [
   {
     heading: 'General terms',
     body: [
-      'This online store is owned and operated by Oros Maxaira. Browsing and using the website, as well as placing orders, imply the unconditional acceptance of these terms.',
+      'This online store is owned and operated by M.F. Oros Maxaira Ltd. Browsing and using the website, as well as placing orders, imply the unconditional acceptance of these terms.',
       'We reserve the right to amend these terms at any time. The terms in force are those displayed on the website at the time of your order.',
     ],
   },
@@ -129,7 +129,7 @@ const SECTIONS_EN: LegalSection[] = [
   {
     heading: 'Limitation of liability',
     body: [
-      'Oros Maxaira is not liable for delays or failure to perform caused by events of force majeure or by factors beyond our reasonable control.',
+      'M.F. Oros Maxaira Ltd is not liable for delays or failure to perform caused by events of force majeure or by factors beyond our reasonable control.',
     ],
   },
   {
@@ -149,7 +149,7 @@ const META = {
   en: {
     title: 'Terms & Conditions',
     description:
-      'The terms and conditions of use of the Oros Maxaira online store — orders, shipping, returns and payments.',
+      'The terms and conditions of use of the Oros Machaira online store — orders, shipping, returns and payments.',
   },
 }
 

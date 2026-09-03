@@ -277,7 +277,7 @@ const SCHOOL_EN: Record<string, any> = {
     "The programme lasts approximately 2 hours and 30 minutes, between 09:30–12:00 (including the time the children will need to eat the breakfast they bring with them). The schedule is flexible, depending on your arrival time, with all groups rotating every 45 minutes.",
   pricing: [
     { range: "Up to 25 children", price: 8, note: "per child, incl. VAT" },
-    { range: "From 26 to 54 children", price: 7, note: "per child, incl. VAT" },
+    { range: "From 26 to 50 children", price: 7, note: "per child, incl. VAT" },
     { range: "Teachers & accompanying adults", price: null, note: "everyone accompanying the class" },
   ],
   notes: [

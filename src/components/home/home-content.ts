@@ -349,8 +349,6 @@ export const BLOG = {
     title: 'Πού να Αγοράσεις Αγνό Κυπριακό Μέλι στην Κύπρο',
     excerpt:
       'Το φυσικό αγνό μέλι τοπικής παραγωγής δεν είναι απλά θέμα trend η πολυτέλειας, είναι και θέμα ποιότητας και βιωσιμότητας...',
-    author: 'orosmachaira',
-    avatar: '/images/home/blog-avatar.webp',
     href: '/',
   },
   items: [
@@ -403,7 +401,7 @@ export const FOOTER = {
     {
       title: 'Επικοινωνία',
       lines: [
-        'M.F. (OROS MAXAIRA) LTD.',
+        'M.F. Oros Maxaira Ltd',
         'Τηλ.: +357 25 622 305',
         'Μελίνη, Λάρνακα 7716',
         'Δευ–Παρ 08:00–16:00',
@@ -630,7 +628,7 @@ const HOME_EN: HomeContent = {
         'Locally produced, pure natural honey isn’t just a matter of trend or luxury — it’s a matter of quality and sustainability…',
     },
     items: [
-      { ...BLOG.items[0], title: 'M.F. Oros Machaira Ltd Strengthens its Sustainability with Specialised Support and EU Co-financing' },
+      { ...BLOG.items[0], title: 'M.F. Oros Maxaira Ltd Strengthens its Sustainability with Specialised Support and EU Co-financing' },
       { ...BLOG.items[1], title: 'Reviving the Cypriot native bee: an innovative collaboration to preserve and identify the breed' },
     ],
   },
@@ -663,7 +661,7 @@ const HOME_EN: HomeContent = {
       {
         title: 'Contact',
         lines: [
-          'M.F. (OROS MAXAIRA) LTD.',
+          'M.F. Oros Maxaira Ltd',
           'Tel.: +357 25 622 305',
           'Melini, Larnaca 7716',
           'Mon–Fri 08:00–16:00',

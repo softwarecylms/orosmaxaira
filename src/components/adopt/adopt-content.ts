@@ -270,7 +270,7 @@ const ADOPT_EL = {
     primary: { label: 'Επικοινωνήστε μαζί μας', href: '/epikoinonia' },
     tel: { label: '+357 25 622 305', href: 'tel:+35725622305' },
     contact: {
-      company: 'M.F. (OROS MAXAIRA) LTD',
+      company: 'M.F. Oros Maxaira Ltd',
       phone: '+357 25 622 305',
       phoneHref: 'tel:+35725622305',
       address: 'Melini, Larnaca 7716 · P.O. BOX 7718',

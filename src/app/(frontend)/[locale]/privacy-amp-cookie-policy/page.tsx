@@ -78,7 +78,7 @@ const SECTIONS_EN: LegalSection[] = [
   {
     heading: 'Introduction',
     body: [
-      'Oros Maxaira respects your privacy and is committed to protecting your personal data. This policy describes how we collect, use and protect your data, in accordance with the General Data Protection Regulation (EU) 2016/679 (GDPR).',
+      'Oros Machaira respects your privacy and is committed to protecting your personal data. This policy describes how we collect, use and protect your data, in accordance with the General Data Protection Regulation (EU) 2016/679 (GDPR).',
     ],
   },
   {
@@ -145,7 +145,7 @@ const META = {
   en: {
     title: 'Privacy & Cookie Policy',
     description:
-      'How Oros Maxaira collects, uses and protects your personal data, in accordance with the General Data Protection Regulation (GDPR).',
+      'How Oros Machaira collects, uses and protects your personal data, in accordance with the General Data Protection Regulation (GDPR).',
   },
 }
 
