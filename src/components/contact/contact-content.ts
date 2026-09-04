@@ -64,7 +64,7 @@ export const CONTACT_PAGE = {
       {
         icon: 'location' as ContactIcon,
         title: 'Επισκεφθείτε μας',
-        lines: ['Μελίνη, Λάρνακα 7716'],
+        lines: ['Μελίνη, 7716 Λάρνακα, Κύπρος'],
         href: 'https://maps.app.goo.gl/EUCGrKmDcbkCV8CL7',
       },
       {
@@ -165,7 +165,7 @@ const CONTACT_PAGE_EN: ContactContent = {
       {
         ...CONTACT_PAGE.connect.items[2],
         title: 'Visit Us',
-        lines: ['Melini, Larnaca 7716'],
+        lines: ['Melini, 7716 Larnaca, Cyprus'],
       },
       {
         ...CONTACT_PAGE.connect.items[3],

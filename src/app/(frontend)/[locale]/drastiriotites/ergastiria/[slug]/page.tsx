@@ -12,6 +12,7 @@ import type { PriceTier } from '@/lib/medusa/activities'
 import { getWorkshop as getStaticWorkshop } from '@/lib/data/workshops'
 import { getActivitiesUi } from '@/components/activities/activities-content'
 import { RevealUp } from '@/components/home/reveal-up'
+import { PreviewBridge } from '@/components/preview/preview-bridge'
 import { SectionHead } from '@/components/shared/section-head'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
 import { RichText } from '@/components/activities/detail/rich-text'
@@ -205,6 +206,9 @@ export default async function WorkshopDetailPage({
 
   return (
     <>
+      {/* Click-to-edit for the admin preview; inert without ?preview=1. */}
+      <PreviewBridge />
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
@@ -237,7 +241,7 @@ export default async function WorkshopDetailPage({
       <section className="container-page pb-12 pt-2 md:pb-[60px]">
         {/* Header */}
         <RevealUp>
-          <div className="flex flex-col gap-4">
+          <div data-edit="header" className="flex flex-col gap-4">
             <span className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">
               {t.eyebrow}
             </span>
@@ -263,7 +267,7 @@ export default async function WorkshopDetailPage({
         {/* Hero image */}
         {w.image ? (
           <RevealUp className="mt-6">
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[20px] bg-offwhite shadow-card md:aspect-[16/7]">
+            <div data-edit="hero" className="relative aspect-[16/9] w-full overflow-hidden rounded-[20px] bg-offwhite shadow-card md:aspect-[16/7]">
               <Image
                 src={w.image}
                 alt={w.title}
@@ -279,7 +283,7 @@ export default async function WorkshopDetailPage({
         {/* Content + sticky booking card */}
         <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px] lg:items-start lg:gap-12">
           <div className="flex min-w-0 flex-col gap-8">
-            <section className="flex flex-col gap-5">
+            <section data-edit="description" className="flex flex-col gap-5">
               <h2 className="font-display text-[22px] font-bold leading-[1.2] text-foreground md:text-[26px]">
                 {ui.sectionDescription}
               </h2>
@@ -297,7 +301,7 @@ export default async function WorkshopDetailPage({
 
           {/* Sticky booking card — real seat booking when the workshop has
               scheduled dates, otherwise the enquiry form. */}
-          <div className="flex flex-col gap-4 lg:sticky lg:top-[150px] lg:self-start">
+          <div data-edit="booking" className="flex flex-col gap-4 lg:sticky lg:top-[150px] lg:self-start">
             {w.bookingClosed ? (
               <WorkshopClosedNotice seasonLabel={w.seasonLabel} />
             ) : bookable ? (
@@ -317,7 +321,7 @@ export default async function WorkshopDetailPage({
 
       {/* Gallery */}
       {w.gallery.length ? (
-        <section className="bg-offwhite py-12 md:py-[70px]">
+        <section data-edit="gallery" className="bg-offwhite py-12 md:py-[70px]">
           <div className="container-wide flex flex-col gap-8">
             <SectionHead eyebrow={ui.moments} heading={ui.momentsFrom(w.title)} />
             <GalleryCarousel images={w.gallery} />

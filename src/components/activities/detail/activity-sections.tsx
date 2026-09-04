@@ -47,7 +47,7 @@ export function ActivitySections({
   return (
     <div className="flex flex-col gap-11">
       {hasDesc ? (
-        <section className="flex flex-col gap-6">
+        <section data-edit="description" className="flex flex-col gap-6">
           <SectionHeading>{ui.sectionDescription}</SectionHeading>
           <RichBody text={activity.description ?? ''} />
           {activity.features?.length ? (
@@ -72,7 +72,7 @@ export function ActivitySections({
       ) : null}
 
       {hasDetails ? (
-        <section className="flex flex-col gap-5">
+        <section data-edit="details" className="flex flex-col gap-5">
           <SectionHeading>{ui.sectionDetails}</SectionHeading>
           <RichBody text={activity.details ?? ''} />
           {activity.note ? (

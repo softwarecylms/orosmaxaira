@@ -51,7 +51,7 @@ export const WORKSHOPS: Workshop[] = [
   },
   {
     slug: 'fytefsi-sporon',
-    title: 'Φύτευση σπόρων σε γλαστράκια & διακόσμηση',
+    title: 'Φύτεψε & Ζωγράφισε το Γλαστράκι σου',
     excerpt:
       'Φυτέψτε τους σπόρους σας σε γλαστράκια, ζωγραφίστε τα και μάθετε πώς βοηθάμε τις μέλισσες — πάρτε το γλαστράκι σας δωρεάν.',
     description:
@@ -63,7 +63,7 @@ export const WORKSHOPS: Workshop[] = [
   },
   {
     slug: 'ergastiria-mageirikis',
-    title: 'Εργαστήρι Μαγειρικής για Τρουφάκια',
+    title: 'Τρουφάκια Μελιού',
     excerpt:
       'Φτιάξτε σπιτικά τρουφάκια με μέλι και αλοιφές Όρος Μαχαιρά, μαγειρέψτε με προϊόντα της κυψέλης και δοκιμάστε ό,τι δημιουργήσατε.',
     description:
@@ -132,7 +132,7 @@ const WORKSHOPS_EN_TEXT: Record<string, WorkshopI18n> = {
       'Just before **Easter**, we welcome you and the little ones to our apiary for a creative and fun workshop dedicated to the bee and its wax!\n\nYoung and old alike will have the chance to learn about the bee and natural wax, while creating their very own Easter beeswax candle.\n\nUsing sheets of beeswax honeycomb, you will wrap the wick and build your own candle. Then, with a variety of Easter decorations, you will decorate it just as you like, creating a truly unique Easter candle.\n\nAt the end of the workshop, every participant takes home the Easter candle they made, **free of charge** — ready for Easter!',
   },
   'fytefsi-sporon': {
-    title: 'Planting Seeds in Pots & Decorating',
+    title: 'Plant & Paint Your Own Pot',
     excerpt:
       'Plant your seeds in little pots, paint them and learn how we help the bees — take your pot home for free.',
     seasonLabel: 'Summer',
@@ -140,7 +140,7 @@ const WORKSHOPS_EN_TEXT: Record<string, WorkshopI18n> = {
       'We welcome you, your family and the little ones to our apiary for a **summer** workshop dedicated to the joy of planting, creativity and the protection of bees!\n\nYoung and old alike will have the chance to plant their own seeds in little pots and paint the outside, adding colour and giving their imagination free rein.\n\nThrough this creative activity, we will learn how planting plants and flowers can help the bees by offering them precious sources of food. At the same time, we will get to know better the importance of **pollination** and the decisive role of bees in nature and the environment.\n\nAt the end of the workshop, every participant takes home the little pot they planted and decorated, **free of charge**, to care for it and watch it grow!',
   },
   'ergastiria-mageirikis': {
-    title: 'Cooking Workshop for Honey Truffles',
+    title: 'Honey Truffle Cooking Workshop',
     excerpt:
       'Make homemade truffles with Oros Machaira honey and spreads, cook with products of the hive and taste what you create.',
     seasonLabel: 'Autumn',

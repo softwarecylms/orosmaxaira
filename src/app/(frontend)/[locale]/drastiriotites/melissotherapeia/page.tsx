@@ -6,6 +6,7 @@ import { CalendarRange, Check, ChevronRight, Clock, Info, Repeat } from 'lucide-
 import { RevealUp } from '@/components/home/reveal-up'
 import { SectionHead } from '@/components/shared/section-head'
 import { RichText } from '@/components/activities/detail/rich-text'
+import { PreviewBridge } from '@/components/preview/preview-bridge'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
 import { MelissotherapeiaBooking } from '@/components/melissotherapeia/melissotherapeia-booking'
 import { getActivity } from '@/lib/medusa/activities'
@@ -143,6 +144,8 @@ export default async function MelissotherapeiaPage() {
 
   return (
     <>
+      <PreviewBridge />
+
       {/* Breadcrumb */}
       <div className="container-page pb-2.5 pt-4">
         <RevealUp>
@@ -166,7 +169,7 @@ export default async function MelissotherapeiaPage() {
       <section className="container-page pb-12 pt-2 md:pb-[60px]">
         {/* Header */}
         <RevealUp>
-          <div className="flex flex-col gap-4">
+          <div data-edit="header" className="flex flex-col gap-4">
             <span className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">
               {t.eyebrow}
             </span>
@@ -192,7 +195,7 @@ export default async function MelissotherapeiaPage() {
         {/* Hero image */}
         {v.heroImage ? (
           <RevealUp className="mt-6">
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[20px] bg-offwhite shadow-card md:aspect-[16/7]">
+            <div data-edit="hero" className="relative aspect-[16/9] w-full overflow-hidden rounded-[20px] bg-offwhite shadow-card md:aspect-[16/7]">
               <Image
                 src={v.heroImage}
                 alt={v.heroAlt}
@@ -209,7 +212,7 @@ export default async function MelissotherapeiaPage() {
         <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px] lg:items-start lg:gap-12">
           <div className="flex min-w-0 flex-col gap-11">
             {/* Περιγραφή */}
-            <section className="flex flex-col gap-5">
+            <section data-edit="description" className="flex flex-col gap-5">
               <h2 className="font-display text-[22px] font-bold leading-[1.2] text-foreground md:text-[26px]">
                 {ui.sectionDescription}
               </h2>
@@ -243,7 +246,7 @@ export default async function MelissotherapeiaPage() {
 
             {/* Πώς Λειτουργεί — features */}
             {v.features.length ? (
-              <section className="flex flex-col gap-6">
+              <section data-edit="description" className="flex flex-col gap-6">
                 <h2 className="font-display text-[22px] font-bold leading-[1.2] text-foreground md:text-[26px]">
                   {ui.sectionHowItWorks}
                 </h2>
@@ -268,7 +271,7 @@ export default async function MelissotherapeiaPage() {
 
             {/* Οφέλη — benefits */}
             {v.benefits?.items?.length ? (
-              <section className="flex flex-col gap-5">
+              <section data-edit="benefits" className="flex flex-col gap-5">
                 <h2 className="font-display text-[22px] font-bold leading-[1.2] text-foreground md:text-[26px]">
                   {ui.sectionBenefits}
                 </h2>
@@ -297,7 +300,7 @@ export default async function MelissotherapeiaPage() {
 
             {/* Disclaimer note */}
             {v.disclaimer ? (
-              <p className="flex items-start gap-2.5 rounded-[14px] bg-accent-soft p-4 text-[14px] leading-[1.6] text-foreground/80 ring-1 ring-accent/15">
+              <p data-edit="details" className="flex items-start gap-2.5 rounded-[14px] bg-accent-soft p-4 text-[14px] leading-[1.6] text-foreground/80 ring-1 ring-accent/15">
                 <Info className="mt-0.5 size-4 shrink-0 text-gold-strong" aria-hidden="true" />
                 <span>
                   <span className="font-semibold text-foreground/90">{ui.importantNote} </span>
@@ -308,7 +311,7 @@ export default async function MelissotherapeiaPage() {
           </div>
 
           {/* Sticky booking card */}
-          <div className="lg:sticky lg:top-[150px] lg:self-start">
+          <div data-edit="booking" className="lg:sticky lg:top-[150px] lg:self-start">
             <MelissotherapeiaBooking
               durationLabel={v.durationLabel}
               periodLabel={v.periodLabel}
@@ -323,7 +326,7 @@ export default async function MelissotherapeiaPage() {
 
       {/* Gallery */}
       {v.gallery.length ? (
-        <section className="bg-offwhite py-12 md:py-[70px]">
+        <section data-edit="gallery" className="bg-offwhite py-12 md:py-[70px]">
           <div className="container-wide flex flex-col gap-8">
             <SectionHead eyebrow={ui.moments} heading={getExperiences(locale).melissotherapeia.gallery!.heading} />
             <GalleryCarousel images={v.gallery} />

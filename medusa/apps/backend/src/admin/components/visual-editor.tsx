@@ -37,6 +37,13 @@ export function VisualEditor({
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop")
   const [nonce, setNonce] = useState(0)
   const [active, setActive] = useState(sections[0]?.key ?? "")
+  /**
+   * Keys the loaded page actually renders (it reports them on load). Sections
+   * that are missing stay in the list — a gallery with no images yet has no
+   * element to click, and hiding it would make the first image unaddable — but
+   * they are dimmed so it is clear why clicking the page won't reach them.
+   */
+  const [present, setPresent] = useState<string[] | null>(null)
   const frame = useRef<HTMLIFrameElement>(null)
 
   useEffect(() => {
@@ -46,7 +53,12 @@ export function VisualEditor({
   // Preview → panel: a section was clicked in the page.
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
-      if (e.data?.source !== "oros-preview" || e.data.type !== "select") return
+      if (e.data?.source !== "oros-preview") return
+      if (e.data.type === "ready" && Array.isArray(e.data.keys)) {
+        setPresent(e.data.keys.filter((k: unknown) => typeof k === "string"))
+        return
+      }
+      if (e.data.type !== "select") return
       if (sections.some((s) => s.key === e.data.key)) setActive(e.data.key)
     }
     window.addEventListener("message", onMessage)
@@ -72,20 +84,24 @@ export function VisualEditor({
         <Text size="xsmall" weight="plus" className="px-1 pb-1 text-ui-fg-muted">
           ΕΝΟΤΗΤΕΣ
         </Text>
-        {sections.map((s) => (
-          <button
-            key={s.key}
-            type="button"
-            onClick={() => pick(s.key)}
-            className={`rounded-md px-3 py-2 text-left text-sm transition-colors ${
-              s.key === current?.key
-                ? "bg-ui-bg-base text-ui-fg-base shadow-elevation-card-rest"
-                : "text-ui-fg-subtle hover:bg-ui-bg-base-hover"
-            }`}
-          >
-            {s.label}
-          </button>
-        ))}
+        {sections.map((s) => {
+          const missing = !!present && !present.includes(s.key)
+          return (
+            <button
+              key={s.key}
+              type="button"
+              onClick={() => pick(s.key)}
+              title={missing ? "Δεν εμφανίζεται ακόμη στη σελίδα" : undefined}
+              className={`rounded-md px-3 py-2 text-left text-sm transition-colors ${
+                s.key === current?.key
+                  ? "bg-ui-bg-base text-ui-fg-base shadow-elevation-card-rest"
+                  : "text-ui-fg-subtle hover:bg-ui-bg-base-hover"
+              } ${missing ? "opacity-50" : ""}`}
+            >
+              {s.label}
+            </button>
+          )
+        })}
       </div>
 
       {/* Preview */}

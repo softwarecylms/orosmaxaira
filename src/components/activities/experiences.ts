@@ -91,11 +91,11 @@ export const EXPERIENCES: Record<string, ActivityExperienceData> = {
     slug: 'peripeteies-stis-kypseles',
     metaTitle: 'Περιπέτειες στις Κυψέλες — Όρος Μαχαιρά',
     metaDescription:
-      'Περιπέτειες στις κυψέλες: ντυθείτε μελισσοκόμοι και ανοίξτε την κυψέλη με τη βοήθεια του προσωπικού μας. Μια βιωματική εμπειρία για μικρούς και μεγάλους, διαθέσιμη Μάρτιο–Οκτώβριο.',
+      'Περιπέτειες στις κυψέλες: ντυθείτε μελισσοκόμοι και ανοίξτε την κυψέλη με τη βοήθεια του προσωπικού μας. Μια βιωματική εμπειρία για παιδιά από 2 ετών και ενήλικες, διαθέσιμη Μάρτιο–Οκτώβριο.',
     hero: {
       title: 'Περιπέτειες στις Κυψέλες',
       description:
-        'Ντυθείτε μελισσοκόμοι και ανοίξτε την κυψέλη — μια βιωματική εμπειρία για μικρούς και μεγάλους.',
+        'Ντυθείτε μελισσοκόμοι και ανοίξτε την κυψέλη — μια βιωματική εμπειρία για παιδιά από 2 ετών και ενήλικες.',
       image: '/images/activities/episkepsi.webp',
       imageAlt: 'Επισκέπτες με στολή μελισσοκόμου ανοίγουν την κυψέλη',
     },
@@ -103,7 +103,7 @@ export const EXPERIENCES: Record<string, ActivityExperienceData> = {
       eyebrow: 'Βιωματική Εμπειρία',
       heading: 'Μέσα στην Κυψέλη',
       body: [
-        'Μια βιωματική εμπειρία, κατάλληλη για παιδιά και ενήλικες, όπου ο επισκέπτης ντύνεται με τη στολή του μελισσοκόμου και επισκέπτεται τις κυψέλες μας. Με τη βοήθεια του έμπειρου προσωπικού μας, ανοίγετε την κυψέλη και παρατηρείτε από κοντά την κοινωνία της μέλισσας.',
+        'Μια βιωματική εμπειρία, κατάλληλη για παιδιά και ενήλικες, όπου ο επισκέπτης ντύνεται με τη στολή του μελισσοκόμου και επισκέπτεται τις κυψέλες μας. Με τη βοήθεια του έμπειρου προσωπικού μας, ανοίγετε την κυψέλη και παρατηρείτε από κοντά την κοινωνία της μέλισσας. Η συμμετοχή επιτρέπεται από 2 ετών και άνω, με υποχρεωτική συνοδεία γονέα ή κηδεμόνα για τους ανηλίκους.',
         'Η εμπειρία πραγματοποιείται μόνο συγκεκριμένες ώρες και ημέρες — ως επί το πλείστον τα Σάββατα. Γι’ αυτό είναι απαραίτητη η εκδήλωση ενδιαφέροντος μέσω της φόρμας.',
       ],
       bold: ['στολή του μελισσοκόμου', 'κοινωνία της μέλισσας', 'εκδήλωση ενδιαφέροντος'],
@@ -126,8 +126,8 @@ export const EXPERIENCES: Record<string, ActivityExperienceData> = {
           text: 'Με τη βοήθεια του προσωπικού μας, ανοίξτε την κυψέλη και δείτε από κοντά την κοινωνία της μέλισσας.',
         },
         {
-          title: 'Για μικρούς & μεγάλους',
-          text: 'Μια ασφαλής, καθοδηγούμενη εμπειρία, κατάλληλη τόσο για παιδιά όσο και για ενήλικες.',
+          title: 'Από 2 ετών & άνω',
+          text: 'Μια ασφαλής, καθοδηγούμενη εμπειρία για παιδιά από 2 ετών και ενήλικες — οι ανήλικοι πάντα με συνοδεία γονέα ή κηδεμόνα.',
         },
       ],
     },
@@ -293,12 +293,12 @@ const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
     ...EXPERIENCES['peripeteies-stis-kypseles'],
     metaTitle: 'Adventures at the Hives — Oros Machaira',
     metaDescription:
-      'Adventures at the hives: suit up and open the hive with the help of our staff. A hands-on experience for all ages, available March–October.',
+      'Adventures at the hives: suit up and open the hive with the help of our staff. A hands-on experience for ages 2 and up, available March–October.',
     hero: {
       ...EXPERIENCES['peripeteies-stis-kypseles'].hero,
       title: 'Adventures at the Hives',
       description:
-        'Suit up and open the hive — a hands-on experience for all ages.',
+        'Suit up and open the hive — a hands-on experience for ages 2 and up.',
       imageAlt: 'Visitors in beekeeper suits opening the hive',
     },
     intro: {
@@ -306,7 +306,7 @@ const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
       eyebrow: 'Hands-on Experience',
       heading: 'Inside the Hive',
       body: [
-        'A hands-on experience, suitable for children and adults, where the visitor dresses in a beekeeper suit and visits our hives. With the help of our experienced staff, you open the hive and observe the bee community up close.',
+        'A hands-on experience, suitable for children and adults, where the visitor dresses in a beekeeper suit and visits our hives. With the help of our experienced staff, you open the hive and observe the bee community up close. Participation is open from age 2 and up, and under-18s must be accompanied by a parent or guardian.',
         'The experience takes place only on specific hours and days — mostly on Saturdays. That is why registering your interest through the form is essential.',
       ],
       bold: ['beekeeper suit', 'bee community', 'registering your interest'],
@@ -327,8 +327,8 @@ const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
           text: 'With the help of our staff, open the hive and see the bee community up close.',
         },
         {
-          title: 'All ages welcome',
-          text: 'A safe, guided experience, suitable for children and adults alike.',
+          title: 'Ages 2 and up',
+          text: 'A safe, guided experience for children from age 2 and adults — under-18s always accompanied by a parent or guardian.',
         },
       ],
     },

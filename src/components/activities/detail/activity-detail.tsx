@@ -3,6 +3,7 @@ import { Link } from '@/i18n/navigation'
 import { ChevronRight, Clock, Users, CalendarRange } from 'lucide-react'
 import type { Activity } from '@/lib/medusa/activities'
 import { RevealUp } from '@/components/home/reveal-up'
+import { PreviewBridge } from '@/components/preview/preview-bridge'
 import { SectionHead } from '@/components/shared/section-head'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
 import { getActivitiesUi } from '@/components/activities/activities-content'
@@ -44,6 +45,9 @@ export function ActivityDetail({
 
   return (
     <>
+      {/* Click-to-edit for the admin preview; inert without ?preview=1. */}
+      <PreviewBridge />
+
       {/* Breadcrumb */}
       <div className="container-page pb-2.5 pt-4">
         <RevealUp>
@@ -67,7 +71,7 @@ export function ActivityDetail({
       <section className="container-page pb-12 pt-2 md:pb-[60px]">
         {/* Header */}
         <RevealUp>
-          <div className="flex flex-col gap-4">
+          <div data-edit="header" className="flex flex-col gap-4">
             <h1 className="font-display text-[32px] font-bold leading-[1.06] text-foreground md:text-[46px]">
               {activity.title}
             </h1>
@@ -106,7 +110,7 @@ export function ActivityDetail({
         {/* Hero image */}
         {activity.hero_image ? (
           <RevealUp className="mt-6">
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[20px] bg-offwhite shadow-card md:aspect-[16/7]">
+            <div data-edit="hero" className="relative aspect-[16/9] w-full overflow-hidden rounded-[20px] bg-offwhite shadow-card md:aspect-[16/7]">
               <Image
                 src={activity.hero_image}
                 alt={activity.hero_image_alt ?? activity.title}
@@ -130,7 +134,7 @@ export function ActivityDetail({
 
           {/* Offset clears the sticky header (~142px) so the card's top price
               row isn't tucked underneath it. */}
-          <div className="flex flex-col gap-4 lg:sticky lg:top-[150px] lg:self-start">
+          <div data-edit="booking" className="flex flex-col gap-4 lg:sticky lg:top-[150px] lg:self-start">
             <ActivityBookingCard activity={activity} locale={locale} />
             <CertificationsNote />
           </div>
@@ -139,7 +143,7 @@ export function ActivityDetail({
 
       {/* Gallery */}
       {galleryImages.length ? (
-        <section className="bg-offwhite py-12 md:py-[70px]">
+        <section data-edit="gallery" className="bg-offwhite py-12 md:py-[70px]">
           <div className="container-wide flex flex-col gap-8">
             <SectionHead eyebrow={ui.moments} heading={ui.momentsFrom(activity.title)} />
             <GalleryCarousel images={galleryImages} />

@@ -20,6 +20,7 @@ import { ImageGallery } from "./image-gallery"
 import { RichTextarea } from "./rich-textarea"
 import { ViewPageButton } from "./view-page-button"
 import { LangToggle } from "./lang-toggle"
+import { VisualEditor, type EditorSection } from "./visual-editor"
 
 // Scalar fields that carry an English translation. Structural fields (slug, image,
 // rank, months, status, currency, booking_closed) are shared and stay Greek-only.
@@ -52,23 +53,37 @@ const AGE_LABELS = {
   infant: "Βρέφη & Νήπια (0–3 ετών)",
 }
 
+type Tab = "basics" | "content" | "seo" | "availability" | "bookings"
+
+/**
+ * `group` picks the tab a field renders in. "content" fields have no grid of
+ * their own — they are reached by clicking their section in the visual editor.
+ * `save()` walks the whole array regardless, so grouping can never drop a field
+ * from the payload.
+ */
 const SCALARS: {
   key: string
   label: string
+  group: Exclude<Tab, "availability" | "bookings">
   type?: "text" | "number" | "textarea" | "image"
   full?: boolean
 }[] = [
-  { key: "title", label: "Τίτλος" },
-  { key: "slug", label: "Permalink (slug)" },
-  { key: "season_label", label: "Εποχή (π.χ. Πάσχα)" },
-  { key: "image", label: "Κύρια εικόνα", type: "image", full: true },
-  { key: "duration_label", label: "Διάρκεια" },
-  { key: "age_label", label: "Ηλικίες" },
-  { key: "rank", label: "Σειρά εμφάνισης", type: "number" },
-  { key: "excerpt", label: "Σύντομη περιγραφή", type: "textarea", full: true },
-  { key: "description", label: "Περιγραφή (** = έντονα)", type: "textarea", full: true },
-  { key: "meta_title", label: "SEO τίτλος", full: true },
-  { key: "meta_description", label: "SEO περιγραφή", type: "textarea", full: true },
+  // ── Βασικά & Κόστος ──
+  { key: "title", label: "Τίτλος", group: "basics" },
+  { key: "slug", label: "Permalink (slug)", group: "basics" },
+  { key: "season_label", label: "Εποχή (π.χ. Πάσχα)", group: "basics" },
+  { key: "duration_label", label: "Διάρκεια", group: "basics" },
+  { key: "age_label", label: "Ηλικίες", group: "basics" },
+  { key: "rank", label: "Σειρά εμφάνισης", group: "basics", type: "number" },
+
+  // ── Περιεχόμενο (reached through the visual editor) ──
+  { key: "image", label: "Κύρια εικόνα", group: "content", type: "image", full: true },
+  { key: "excerpt", label: "Σύντομη περιγραφή (κάρτα λίστας)", group: "content", type: "textarea", full: true },
+  { key: "description", label: "Περιγραφή", group: "content", type: "textarea", full: true },
+
+  // ── SEO ──
+  { key: "meta_title", label: "SEO τίτλος", group: "seo", full: true },
+  { key: "meta_description", label: "SEO περιγραφή", group: "seo", type: "textarea", full: true },
 ]
 
 type Slot = {
@@ -170,6 +185,8 @@ export function WorkshopEditor({
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  // Bumped after a successful save so the visual editor reloads its preview.
+  const [savedAt, setSavedAt] = useState(0)
   const [gen, setGen] = useState({
     weekday: "6",
     start_time: "11:00",
@@ -276,6 +293,7 @@ export function WorkshopEditor({
       }
       await api.post(`/admin/workshops/${workshopId}`, payload)
       toast.success("Αποθηκεύτηκε")
+      setSavedAt((n) => n + 1)
       onSaved()
     } catch (e: any) {
       toast.error("Σφάλμα αποθήκευσης: " + (e?.message ?? e))
@@ -347,6 +365,171 @@ export function WorkshopEditor({
     .filter((r: ComboRow) => r.key)
     .map((r: ComboRow) => ({ key: r.key, label: r.label || r.key }))
 
+  const renderScalar = (s: (typeof SCALARS)[number]) => {
+    const translatable = TRANSLATABLE_SCALARS.has(s.key)
+    const locked = en && !translatable
+    const value = translatable ? tval(s.key) : form[s.key] ?? ""
+    const onChange = (v: string) => (translatable ? tset(s.key, v) : set(s.key, v))
+    return (
+      <div key={s.key} className={`flex flex-col gap-1 ${s.full ? "col-span-2" : ""}`}>
+        <Label size="small" weight="plus">
+          {s.label}
+          {locked ? <span className="text-ui-fg-muted"> · κοινό</span> : null}
+        </Label>
+        {s.type === "image" ? (
+          <ImagePicker
+            value={value}
+            onChange={onChange}
+            disabled={locked}
+            hint={locked ? "κοινό για όλες τις γλώσσες" : undefined}
+          />
+        ) : s.type === "textarea" ? (
+          <RichTextarea value={value} disabled={locked} onChange={onChange} />
+        ) : (
+          <Input
+            type={s.type === "number" ? "number" : "text"}
+            value={value}
+            disabled={locked}
+            onChange={(e) => onChange(e.target.value)}
+          />
+        )}
+      </div>
+    )
+  }
+
+  const scalarFields = (group: "basics" | "content" | "seo") =>
+    SCALARS.filter((s) => s.group === group).map(renderScalar)
+
+  /** One scalar by key — used to compose a visual-editor section. */
+  const field = (key: string) => {
+    const s = SCALARS.find((x) => x.key === key)
+    return s ? renderScalar(s) : null
+  }
+
+  /* Programmes & prices. In EN only the visible combo strings are editable —
+     the prices themselves live on the Greek base record. */
+  const combosBlock = en ? (
+    <div className="flex flex-col gap-3 rounded-lg border border-ui-border-base p-4">
+      <Label size="small" weight="plus">
+        Προγράμματα — αγγλικές ετικέτες
+      </Label>
+      {(form._comboRows ?? []).filter((r: ComboRow) => r.key).length === 0 ? (
+        <Text size="xsmall" className="text-ui-fg-subtle">
+          Δεν υπάρχουν προγράμματα ακόμη (προσθέστε τα στα Ελληνικά).
+        </Text>
+      ) : (
+        (form._comboRows ?? [])
+          .filter((r: ComboRow) => r.key)
+          .map((r: ComboRow) => (
+            <div key={r.key} className="flex flex-col gap-2 rounded-md bg-ui-bg-subtle p-3">
+              <Text size="xsmall" className="text-ui-fg-subtle">
+                {r.key} · {r.label || "—"}
+              </Text>
+              <Input
+                placeholder="Label (EN)"
+                value={comboLabels[r.key]?.label ?? ""}
+                onChange={(e) => setComboLabel(r.key, "label", e.target.value)}
+              />
+              <Input
+                placeholder="Long label (EN)"
+                value={comboLabels[r.key]?.long_label ?? ""}
+                onChange={(e) => setComboLabel(r.key, "long_label", e.target.value)}
+              />
+              <Input
+                placeholder="Note (EN)"
+                value={comboLabels[r.key]?.note ?? ""}
+                onChange={(e) => setComboLabel(r.key, "note", e.target.value)}
+              />
+            </div>
+          ))
+      )}
+    </div>
+  ) : (
+    <>
+      <Repeater<ComboRow>
+        label="Προγράμματα & τιμές (συνδυασμοί εμπειρίας)"
+        value={form._comboRows}
+        onChange={(v) => set("_comboRows", v)}
+        fields={[
+          { key: "key", label: "Κλειδί (half / full)" },
+          { key: "label", label: "Ετικέτα (π.χ. Μισό πρόγραμμα)" },
+          { key: "long_label", label: "Πλήρης περιγραφή συνδυασμού", width: "col-span-2" },
+          { key: "start_time", label: "Ώρα από (π.χ. 11:00)" },
+          { key: "end_time", label: "Ώρα έως" },
+          { key: "adult", label: "€ Ενήλικες (12+)", type: "number" },
+          { key: "child", label: "€ Παιδιά (4–11)", type: "number" },
+          { key: "infant", label: "€ Βρέφη (0–3)", type: "number" },
+          { key: "price", label: "€ Ενιαία τιμή (μόνο για αίτημα)", type: "number" },
+          { key: "note", label: "Σημείωση", width: "col-span-2" },
+        ]}
+        blank={{
+          key: "",
+          label: "",
+          long_label: "",
+          start_time: "",
+          end_time: "",
+          adult: 0,
+          child: 0,
+          infant: 0,
+          price: "",
+          note: "",
+        }}
+      />
+      <Text size="xsmall" className="text-ui-fg-subtle">
+        Συμπληρώστε τιμές ανά ηλικία για online κράτηση (half/full). Η «Ενιαία
+        τιμή» χρησιμοποιείται μόνο για εργαστήρια με φόρμα αιτήματος.
+      </Text>
+    </>
+  )
+
+  const featuresField = (
+    <Repeater
+      label="Χαρακτηριστικά (features)"
+      value={jval("features")}
+      onChange={(v) => tset("features", v)}
+      fields={[
+        { key: "title", label: "Τίτλος", width: "col-span-2" },
+        { key: "text", label: "Κείμενο", type: "textarea", width: "col-span-2" },
+      ]}
+      blank={{ title: "", text: "" }}
+    />
+  )
+
+  const galleryField = (
+    <ImageGallery
+      label="Εικόνες gallery"
+      value={jval("gallery")}
+      onChange={(v) => tset("gallery", v)}
+    />
+  )
+
+  /** Each key matches a `data-edit` marker on the public workshop page. */
+  const sections: EditorSection[] = [
+    {
+      key: "header",
+      label: "Κεφαλίδα",
+      render: () => (
+        <>
+          {field("title")}
+          {field("excerpt")}
+        </>
+      ),
+    },
+    { key: "hero", label: "Κύρια εικόνα", render: () => field("image") },
+    {
+      key: "description",
+      label: "Περιγραφή",
+      render: () => (
+        <>
+          {field("description")}
+          {featuresField}
+        </>
+      ),
+    },
+    { key: "booking", label: "Κάρτα κράτησης", render: () => combosBlock },
+    { key: "gallery", label: "Gallery", render: () => galleryField },
+  ]
+
   return (
     <FocusModal open={open} onOpenChange={(v) => !v && onClose()}>
       <FocusModal.Content>
@@ -367,10 +550,12 @@ export function WorkshopEditor({
           {loading ? (
             <div className="p-8 text-ui-fg-subtle">Φόρτωση…</div>
           ) : (
-            <Tabs defaultValue="content" className="flex flex-1 flex-col">
+            <Tabs defaultValue="basics" className="flex flex-1 flex-col">
               <div className="border-b border-ui-border-base px-6 pt-4">
                 <Tabs.List>
-                  <Tabs.Trigger value="content">Περιεχόμενο & Τιμές</Tabs.Trigger>
+                  <Tabs.Trigger value="basics">Βασικά &amp; Κόστος</Tabs.Trigger>
+                  <Tabs.Trigger value="content">Περιεχόμενο</Tabs.Trigger>
+                  <Tabs.Trigger value="seo">SEO</Tabs.Trigger>
                   <Tabs.Trigger value="availability">
                     Διαθεσιμότητα ({slots.length})
                   </Tabs.Trigger>
@@ -378,43 +563,12 @@ export function WorkshopEditor({
                 </Tabs.List>
               </div>
 
-              {/* CONTENT */}
-              <Tabs.Content value="content" className="overflow-y-auto p-6">
+              {/* BASICS & PRICING */}
+              <Tabs.Content value="basics" className="overflow-y-auto p-6">
                 <div className="mx-auto flex max-w-3xl flex-col gap-6">
                   <LangToggle lang={lang} onChange={setLang} />
-
                   <div className="grid grid-cols-2 gap-4">
-                    {SCALARS.map((s) => {
-                      const translatable = TRANSLATABLE_SCALARS.has(s.key)
-                      const locked = en && !translatable
-                      const value = translatable ? tval(s.key) : form[s.key] ?? ""
-                      const onChange = (v: string) => (translatable ? tset(s.key, v) : set(s.key, v))
-                      return (
-                        <div key={s.key} className={`flex flex-col gap-1 ${s.full ? "col-span-2" : ""}`}>
-                          <Label size="small" weight="plus">
-                            {s.label}
-                            {locked ? <span className="text-ui-fg-muted"> · κοινό</span> : null}
-                          </Label>
-                          {s.type === "image" ? (
-                            <ImagePicker
-                              value={value}
-                              onChange={onChange}
-                              disabled={locked}
-                              hint={locked ? "κοινό για όλες τις γλώσσες" : undefined}
-                            />
-                          ) : s.type === "textarea" ? (
-                            <RichTextarea value={value} disabled={locked} onChange={onChange} />
-                          ) : (
-                            <Input
-                              type={s.type === "number" ? "number" : "text"}
-                              value={value}
-                              disabled={locked}
-                              onChange={(e) => onChange(e.target.value)}
-                            />
-                          )}
-                        </div>
-                      )
-                    })}
+                    {scalarFields("basics")}
                     <div className="flex flex-col gap-1">
                       <Label size="small" weight="plus">
                         Μήνες (1–12, με κόμμα · κενό = κατόπιν ραντεβού)
@@ -456,97 +610,31 @@ export function WorkshopEditor({
                       </select>
                     </div>
                   </div>
+                  {combosBlock}
+                </div>
+              </Tabs.Content>
 
-                  {en ? (
-                    /* EN: translate combo labels only — prices stay on the Greek base. */
-                    <div className="flex flex-col gap-3 rounded-lg border border-ui-border-base p-4">
-                      <Label size="small" weight="plus">
-                        Προγράμματα — αγγλικές ετικέτες
-                      </Label>
-                      {(form._comboRows ?? []).filter((r: ComboRow) => r.key).length === 0 ? (
-                        <Text size="xsmall" className="text-ui-fg-subtle">
-                          Δεν υπάρχουν προγράμματα ακόμη (προσθέστε τα στα Ελληνικά).
-                        </Text>
-                      ) : (
-                        (form._comboRows ?? [])
-                          .filter((r: ComboRow) => r.key)
-                          .map((r: ComboRow) => (
-                            <div key={r.key} className="flex flex-col gap-2 rounded-md bg-ui-bg-subtle p-3">
-                              <Text size="xsmall" className="text-ui-fg-subtle">
-                                {r.key} · {r.label || "—"}
-                              </Text>
-                              <Input
-                                placeholder="Label (EN)"
-                                value={comboLabels[r.key]?.label ?? ""}
-                                onChange={(e) => setComboLabel(r.key, "label", e.target.value)}
-                              />
-                              <Input
-                                placeholder="Long label (EN)"
-                                value={comboLabels[r.key]?.long_label ?? ""}
-                                onChange={(e) => setComboLabel(r.key, "long_label", e.target.value)}
-                              />
-                              <Input
-                                placeholder="Note (EN)"
-                                value={comboLabels[r.key]?.note ?? ""}
-                                onChange={(e) => setComboLabel(r.key, "note", e.target.value)}
-                              />
-                            </div>
-                          ))
-                      )}
-                    </div>
-                  ) : (
-                    <>
-                      <Repeater<ComboRow>
-                        label="Προγράμματα & τιμές (συνδυασμοί εμπειρίας)"
-                        value={form._comboRows}
-                        onChange={(v) => set("_comboRows", v)}
-                        fields={[
-                          { key: "key", label: "Κλειδί (half / full)" },
-                          { key: "label", label: "Ετικέτα (π.χ. Μισό πρόγραμμα)" },
-                          { key: "long_label", label: "Πλήρης περιγραφή συνδυασμού", width: "col-span-2" },
-                          { key: "start_time", label: "Ώρα από (π.χ. 11:00)" },
-                          { key: "end_time", label: "Ώρα έως" },
-                          { key: "adult", label: "€ Ενήλικες (12+)", type: "number" },
-                          { key: "child", label: "€ Παιδιά (4–11)", type: "number" },
-                          { key: "infant", label: "€ Βρέφη (0–3)", type: "number" },
-                          { key: "price", label: "€ Ενιαία τιμή (μόνο για αίτημα)", type: "number" },
-                          { key: "note", label: "Σημείωση", width: "col-span-2" },
-                        ]}
-                        blank={{
-                          key: "",
-                          label: "",
-                          long_label: "",
-                          start_time: "",
-                          end_time: "",
-                          adult: 0,
-                          child: 0,
-                          infant: 0,
-                          price: "",
-                          note: "",
-                        }}
-                      />
-                      <Text size="xsmall" className="text-ui-fg-subtle">
-                        Συμπληρώστε τιμές ανά ηλικία για online κράτηση (half/full). Η
-                        «Ενιαία τιμή» χρησιμοποιείται μόνο για εργαστήρια με φόρμα αιτήματος.
-                      </Text>
-                    </>
-                  )}
+              {/* CONTENT — click a section in the page to edit it */}
+              <Tabs.Content value="content" className="overflow-y-auto p-6">
+                <div className="flex flex-col gap-5">
+                  <LangToggle lang={lang} onChange={setLang} />
+                  <VisualEditor
+                    kind="workshop"
+                    slug={form.slug as string | undefined}
+                    sections={sections}
+                    reloadToken={savedAt}
+                  />
+                </div>
+              </Tabs.Content>
 
-                  <Repeater
-                    label="Χαρακτηριστικά (features)"
-                    value={jval("features")}
-                    onChange={(v) => tset("features", v)}
-                    fields={[
-                      { key: "title", label: "Τίτλος", width: "col-span-2" },
-                      { key: "text", label: "Κείμενο", type: "textarea", width: "col-span-2" },
-                    ]}
-                    blank={{ title: "", text: "" }}
-                  />
-                  <ImageGallery
-                    label="Εικόνες gallery"
-                    value={jval("gallery")}
-                    onChange={(v) => tset("gallery", v)}
-                  />
+              {/* SEO */}
+              <Tabs.Content value="seo" className="overflow-y-auto p-6">
+                <div className="mx-auto flex max-w-3xl flex-col gap-6">
+                  <LangToggle lang={lang} onChange={setLang} />
+                  <div className="grid grid-cols-2 gap-4">{scalarFields("seo")}</div>
+                  <Text size="xsmall" className="text-ui-fg-subtle">
+                    Η SEO περιγραφή αποδίδεται καλύτερα στους 140–155 χαρακτήρες.
+                  </Text>
                 </div>
               </Tabs.Content>
 

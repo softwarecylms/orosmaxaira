@@ -19,7 +19,7 @@ export function ActivityPolicies({
   locale?: string
 }) {
   return (
-    <div className="flex flex-col gap-4">
+    <div data-edit="policies" className="flex flex-col gap-4">
       <h2 className="font-display text-[22px] font-bold leading-[1.2] text-foreground md:text-[26px]">
         {getActivitiesUi(locale).sectionUsefulInfo}
       </h2>

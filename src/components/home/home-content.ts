@@ -403,7 +403,7 @@ export const FOOTER = {
       lines: [
         'M.F. Oros Maxaira Ltd',
         'Τηλ.: +357 25 622 305',
-        'Μελίνη, Λάρνακα 7716',
+        'Μελίνη, 7716 Λάρνακα, Κύπρος',
         'Δευ–Παρ 08:00–16:00',
         'info@orosmaxaira.com',
       ],
@@ -663,7 +663,7 @@ const HOME_EN: HomeContent = {
         lines: [
           'M.F. Oros Maxaira Ltd',
           'Tel.: +357 25 622 305',
-          'Melini, Larnaca 7716',
+          'Melini, 7716 Larnaca, Cyprus',
           'Mon–Fri 08:00–16:00',
           'info@orosmaxaira.com',
         ],

@@ -100,7 +100,8 @@ const EL: ErgastiriaUi = {
   comboBodyPre:
     'Τα βιωματικά εργαστήρια δεν κρατούνται αυτόνομα. Συνδυάζονται πάντα είτε με την εμπειρία ',
   comboBodyMid: ', είτε με τον συνδυασμό ',
-  comboBodyPost: '.',
+  comboBodyPost:
+    '. Στους συνδυασμούς που περιλαμβάνουν το άνοιγμα κυψέλης («Περιπέτειες στις Κυψέλες») η συμμετοχή επιτρέπεται από 2 ετών και άνω, με υποχρεωτική συνοδεία γονέα ή κηδεμόνα για τους ανηλίκους.',
   gnorizwLabel: '«Γνωρίζω τη μέλισσα»',
   peripeteiesLabel: '«Περιπέτειες στις Κυψέλες»',
 
@@ -165,8 +166,9 @@ const EN: ErgastiriaUi = {
   comboTitle: 'How workshops are booked',
   comboBodyPre:
     'Workshops are always booked together with ',
-  comboBodyMid: ', or with “Getting to Know the Bee” and ',
-  comboBodyPost: ' combined.',
+  comboBodyMid: ', or with ',
+  comboBodyPost:
+    ' combined. Combinations that include opening a hive (“Adventures at the Hives”) are open from age 2 and up, and under-18s must be accompanied by a parent or guardian.',
   gnorizwLabel: '“Getting to Know the Bee”',
   peripeteiesLabel: '“Adventures at the Hives”',
 

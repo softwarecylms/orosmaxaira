@@ -55,27 +55,27 @@ const ACTIVITY_EN: Record<string, any> = {
 
   "peripeteies-stis-kypseles": {
     title: "Adventures at the Hives",
-    subtitle: "Suit up and open the hive — a hands-on experience for all ages.",
+    subtitle: "Suit up and open the hive — a hands-on experience for ages 2 and up.",
     hero_image_alt: "Visitors in beekeeper suits opening the hive",
     description:
       "A **hands-on experience**, suitable for children and adults, where the visitor dresses in a beekeeper suit and visits our hives. With the help of our experienced staff, you open the hive and observe the bee community up close.",
     details:
-      "**Duration:** 45 minutes\n**Ages:** there is no limit — the activity is suitable for the whole family. Beekeeper suits are provided for all participants and the entire experience is guided by an experienced beekeeper. We recommend wearing closed shoes and long trousers.",
+      "**Duration:** 45 minutes\n**Ages:** from 2 years and up. Under-18s take part only when accompanied by a parent or guardian, who stays with them throughout. Beekeeper suits are provided for all participants and the entire experience is guided by an experienced beekeeper. We recommend wearing closed shoes and long trousers.",
     note: "The experience runs at weekends from July to November, and only in combination with the “Getting to Know the Bee” programme or one of the workshops — please book in advance through the website. It does not run in winter, as the bees get cold and become aggressive when we open the hive.",
     duration_label: "45 minutes",
-    age_label: "No age limit",
+    age_label: "Ages 2+, with a parent",
     meta_title: "Adventures at the Hives — Oros Machaira",
     meta_description:
-      "Adventures at the hives: suit up and open the hive with the help of our staff. A hands-on experience for all ages — combined with “Getting to Know the Bee” or a workshop, weekends only, July–November.",
+      "Adventures at the hives: suit up and open the hive with the help of our staff. A hands-on experience for ages 2 and up — combined with “Getting to Know the Bee” or a workshop, weekends only, July–November.",
     price_tiers: [
       { key: "adult", label: "Ages 12+", price: 15 },
       { key: "child", label: "Ages 4–11", price: 13 },
-      { key: "infant", label: "Under 4", price: 0, note: "Free" },
+      { key: "infant", label: "Ages 2–3", price: 0, note: "Free" },
     ],
     features: [
       { title: "Suit up", text: "Put on the beekeeper suit and feel safe right next to the hives." },
       { title: "Open the hive", text: "With the help of our staff, open the hive and see the bee community up close." },
-      { title: "All ages welcome", text: "A safe, guided experience, suitable for children and adults alike." },
+      { title: "Ages 2 and up", text: "A safe, guided experience for children from age 2 and adults — under-18s always accompanied by a parent or guardian." },
     ],
     policies: [
       { title: "Cancellation Policy", body: "Cancel up to 72 hours in advance for a full refund." },
@@ -139,7 +139,7 @@ const WORKSHOP_EN_TEXT: Record<
       "Just before **Easter**, we welcome you and the little ones to our apiary for a creative and fun workshop dedicated to the bee and its wax!\n\nYoung and old alike will have the chance to learn about the bee and natural wax, while creating their very own Easter beeswax candle.\n\nUsing sheets of beeswax honeycomb, you will wrap the wick and build your own candle. Then, with a variety of Easter decorations, you will decorate it just as you like, creating a truly unique Easter candle.\n\nAt the end of the workshop, every participant takes home the Easter candle they made, **free of charge** — ready for Easter!",
   },
   "fytefsi-sporon": {
-    title: "Planting Seeds in Pots & Decorating",
+    title: "Plant & Paint Your Own Pot",
     excerpt:
       "Plant your seeds in little pots, paint them and learn how we help the bees — take your pot home for free.",
     season_label: "Summer",
@@ -147,7 +147,7 @@ const WORKSHOP_EN_TEXT: Record<
       "We welcome you, your family and the little ones to our apiary for a **summer** workshop dedicated to the joy of planting, creativity and the protection of bees!\n\nYoung and old alike will have the chance to plant their own seeds in little pots and paint the outside, adding colour and giving their imagination free rein.\n\nThrough this creative activity, we will learn how planting plants and flowers can help the bees by offering them precious sources of food. At the same time, we will get to know better the importance of **pollination** and the decisive role of bees in nature and the environment.\n\nAt the end of the workshop, every participant takes home the little pot they planted and decorated, **free of charge**, to care for it and watch it grow!",
   },
   "ergastiria-mageirikis": {
-    title: "Cooking Workshop for Honey Truffles",
+    title: "Honey Truffle Cooking Workshop",
     excerpt:
       "Make homemade truffles with Oros Machaira honey and spreads, cook with products of the hive and taste what you create.",
     season_label: "Autumn",

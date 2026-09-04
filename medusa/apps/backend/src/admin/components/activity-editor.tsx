@@ -21,6 +21,7 @@ import { ImageGallery } from "./image-gallery"
 import { RichTextarea } from "./rich-textarea"
 import { ViewPageButton } from "./view-page-button"
 import { LangToggle } from "./lang-toggle"
+import { VisualEditor, type EditorSection } from "./visual-editor"
 
 const api = {
   get: <T,>(u: string) => sdk.client.fetch<T>(u, { method: "GET" }),
@@ -33,31 +34,48 @@ const WEEKDAYS = [
   "Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο",
 ]
 
+type Tab = "basics" | "content" | "seo" | "availability" | "bookings"
+
+/**
+ * `group` picks the tab a field renders in. "content" fields do not get a grid
+ * of their own — they are reached by clicking their section in the visual
+ * editor. `save()` walks the whole array regardless, so grouping can never drop
+ * a field from the payload.
+ *
+ * `rating` / `review_count` are deliberately absent: the reviews were removed
+ * as unverifiable, and an editable rating with nothing behind it would invite
+ * them back. They keep their stored values (null / 0) because `save()` only
+ * sends the keys listed here.
+ */
 const CONTENT_SCALARS: {
   key: string
   label: string
+  group: Exclude<Tab, "availability" | "bookings">
   type?: "text" | "number" | "textarea" | "image"
   full?: boolean
   /** For an image field: the companion alt key, rendered inside the image box. */
   altKey?: string
 }[] = [
-  { key: "title", label: "Τίτλος" },
-  { key: "slug", label: "Permalink (slug)" },
-  { key: "subtitle", label: "Υπότιτλος", full: true },
-  { key: "hero_image", label: "Κύρια εικόνα", type: "image", full: true, altKey: "hero_image_alt" },
-  { key: "video_url", label: "Video URL", full: true },
-  { key: "description", label: "Περιγραφή", type: "textarea", full: true },
-  { key: "details", label: "Λεπτομέρειες", type: "textarea", full: true },
-  { key: "note", label: "Σημαντική σημείωση", type: "textarea", full: true },
-  { key: "rating", label: "Βαθμολογία (0–5)", type: "number" },
-  { key: "review_count", label: "Αριθμός κριτικών", type: "number" },
-  { key: "duration_label", label: "Διάρκεια" },
-  { key: "age_label", label: "Ηλικίες" },
-  { key: "season_start_month", label: "Σεζόν από (μήνας 1–12)", type: "number" },
-  { key: "season_end_month", label: "Σεζόν έως (μήνας 1–12)", type: "number" },
-  { key: "currency", label: "Νόμισμα" },
-  { key: "meta_title", label: "SEO τίτλος", full: true },
-  { key: "meta_description", label: "SEO περιγραφή", type: "textarea", full: true },
+  // ── Βασικά & Κόστος ──
+  { key: "title", label: "Τίτλος", group: "basics" },
+  { key: "slug", label: "Permalink (slug)", group: "basics" },
+  { key: "duration_label", label: "Διάρκεια", group: "basics" },
+  { key: "age_label", label: "Ηλικίες", group: "basics" },
+  { key: "season_start_month", label: "Σεζόν από (μήνας 1–12)", group: "basics", type: "number" },
+  { key: "season_end_month", label: "Σεζόν έως (μήνας 1–12)", group: "basics", type: "number" },
+  { key: "currency", label: "Νόμισμα", group: "basics" },
+
+  // ── Περιεχόμενο (reached through the visual editor) ──
+  { key: "subtitle", label: "Υπότιτλος", group: "content", full: true },
+  { key: "hero_image", label: "Κύρια εικόνα", group: "content", type: "image", full: true, altKey: "hero_image_alt" },
+  { key: "video_url", label: "Video URL", group: "content", full: true },
+  { key: "description", label: "Περιγραφή", group: "content", type: "textarea", full: true },
+  { key: "details", label: "Λεπτομέρειες", group: "content", type: "textarea", full: true },
+  { key: "note", label: "Σημαντική σημείωση", group: "content", type: "textarea", full: true },
+
+  // ── SEO ──
+  { key: "meta_title", label: "SEO τίτλος", group: "seo", full: true },
+  { key: "meta_description", label: "SEO περιγραφή", group: "seo", type: "textarea", full: true },
 ]
 
 const NUMERIC = new Set([
@@ -127,6 +145,8 @@ export function ActivityEditor({
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  // Bumped after a successful save so the visual editor reloads its preview.
+  const [savedAt, setSavedAt] = useState(0)
   const [gen, setGen] = useState({
     weekday: "6",
     start_time: "10:00",
@@ -226,6 +246,7 @@ export function ActivityEditor({
       }
       await api.post(`/admin/activities/${activityId}`, payload)
       toast.success("Αποθηκεύτηκε")
+      setSavedAt((n) => n + 1)
       onSaved()
     } catch (e: any) {
       toast.error("Σφάλμα αποθήκευσης: " + (e?.message ?? e))
@@ -290,6 +311,179 @@ export function ActivityEditor({
     return s ? `${s.date} ${s.start_time}` : "—"
   }
 
+  /** Render one scalar field. Shared (non-translatable) fields are read-only in
+   *  EN mode — the label says "· κοινό". */
+  const renderScalar = (s: (typeof CONTENT_SCALARS)[number]) => {
+    const translatable = TRANSLATABLE_SCALARS.has(s.key)
+    const locked = en && !translatable
+    const value = translatable ? tval(s.key) : form[s.key] ?? ""
+    const onChange = (v: string) => (translatable ? tset(s.key, v) : set(s.key, v))
+    return (
+      <div key={s.key} className={`flex flex-col gap-1 ${s.full ? "col-span-2" : ""}`}>
+        <Label size="small" weight="plus">
+          {s.label}
+          {locked ? <span className="text-ui-fg-muted"> · κοινό</span> : null}
+        </Label>
+        {s.type === "image" ? (
+          <ImagePicker
+            value={value}
+            onChange={onChange}
+            disabled={locked}
+            hint={locked ? "κοινό για όλες τις γλώσσες" : undefined}
+            alt={s.altKey ? tval(s.altKey) : undefined}
+            onAltChange={s.altKey ? (v) => tset(s.altKey!, v) : undefined}
+          />
+        ) : s.type === "textarea" ? (
+          <RichTextarea value={value} disabled={locked} onChange={onChange} />
+        ) : (
+          <Input
+            type={s.type === "number" ? "number" : "text"}
+            value={value}
+            disabled={locked}
+            onChange={(e) => onChange(e.target.value)}
+          />
+        )}
+      </div>
+    )
+  }
+
+  const scalarFields = (group: "basics" | "content" | "seo") =>
+    CONTENT_SCALARS.filter((s) => s.group === group).map(renderScalar)
+
+  /** One scalar by key — used to compose a visual-editor section. */
+  const field = (key: string) => {
+    const s = CONTENT_SCALARS.find((x) => x.key === key)
+    return s ? renderScalar(s) : null
+  }
+
+  const repeaterFeatures = (
+    <Repeater
+      label="Χαρακτηριστικά (features)"
+      value={jval("features")}
+      onChange={(v) => tset("features", v)}
+      fields={[
+        { key: "title", label: "Τίτλος", width: "col-span-2" },
+        { key: "text", label: "Κείμενο", type: "textarea", width: "col-span-2" },
+      ]}
+      blank={{ title: "", text: "" }}
+    />
+  )
+  const repeaterPolicies = (
+    <Repeater
+      label="Πολιτικές (accordion)"
+      value={jval("policies")}
+      onChange={(v) => tset("policies", v)}
+      fields={[
+        { key: "title", label: "Τίτλος", width: "col-span-2" },
+        { key: "body", label: "Κείμενο", type: "textarea", width: "col-span-2" },
+      ]}
+      blank={{ title: "", body: "" }}
+    />
+  )
+  const repeaterPrices = (
+    <Repeater
+      label="Τιμές (price tiers)"
+      value={jval("price_tiers")}
+      onChange={(v) => tset("price_tiers", v)}
+      fields={[
+        { key: "key", label: "Κλειδί (adult/child/infant)" },
+        { key: "price", label: "Τιμή καθημ. (€)", type: "number" },
+        { key: "weekend_price", label: "Τιμή Σ/Κ (€, προαιρετικό)", type: "number" },
+        { key: "label", label: "Ετικέτα", width: "col-span-2" },
+        { key: "note", label: "Σημείωση (π.χ. Δωρεάν)", width: "col-span-2" },
+      ]}
+      blank={{ key: "", label: "", price: 0, weekend_price: "", note: "" }}
+    />
+  )
+  const galleryField = (
+    <ImageGallery
+      label="Εικόνες gallery"
+      value={jval("gallery")}
+      onChange={(v) => tset("gallery", v)}
+    />
+  )
+  const benefitsField = (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-1">
+        <Text size="xsmall">Εισαγωγή</Text>
+        <Textarea
+          value={jval("benefits")?.intro ?? ""}
+          onChange={(e) => tset("benefits", { ...(jval("benefits") ?? {}), intro: e.target.value })}
+        />
+      </div>
+      <div className="flex flex-col gap-1">
+        <Text size="xsmall">Λίστα — ένα στοιχείο ανά γραμμή</Text>
+        <Textarea
+          value={(jval("benefits")?.items ?? []).join("\n")}
+          onChange={(e) =>
+            tset("benefits", {
+              ...(jval("benefits") ?? {}),
+              items: e.target.value.split("\n").map((x) => x.trim()).filter(Boolean),
+            })
+          }
+        />
+      </div>
+    </div>
+  )
+
+  /** Each key matches a `data-edit` marker on the public activity page. */
+  const sections: EditorSection[] = [
+    {
+      key: "header",
+      label: "Κεφαλίδα",
+      render: () => (
+        <>
+          {field("title")}
+          {field("subtitle")}
+        </>
+      ),
+    },
+    {
+      key: "hero",
+      label: "Κύρια εικόνα",
+      render: () => (
+        <>
+          {field("hero_image")}
+          {field("video_url")}
+        </>
+      ),
+    },
+    {
+      key: "description",
+      label: "Περιγραφή",
+      render: () => (
+        <>
+          {field("description")}
+          {repeaterFeatures}
+        </>
+      ),
+    },
+    {
+      key: "details",
+      label: "Λεπτομέρειες",
+      render: () => (
+        <>
+          {field("details")}
+          {field("note")}
+        </>
+      ),
+    },
+    { key: "benefits", label: "Οφέλη / Η εμπειρία", render: () => benefitsField },
+    { key: "policies", label: "Πολιτικές", render: () => repeaterPolicies },
+    { key: "gallery", label: "Gallery", render: () => galleryField },
+    {
+      key: "booking",
+      label: "Κάρτα κράτησης",
+      render: () => (
+        <>
+          {field("duration_label")}
+          {field("age_label")}
+          {repeaterPrices}
+        </>
+      ),
+    },
+  ]
+
   return (
     <FocusModal open={open} onOpenChange={(v) => !v && onClose()}>
       <FocusModal.Content>
@@ -310,10 +504,12 @@ export function ActivityEditor({
           {loading ? (
             <div className="p-8 text-ui-fg-subtle">Φόρτωση…</div>
           ) : (
-            <Tabs defaultValue="content" className="flex flex-1 flex-col">
+            <Tabs defaultValue="basics" className="flex flex-1 flex-col">
               <div className="border-b border-ui-border-base px-6 pt-4">
                 <Tabs.List>
-                  <Tabs.Trigger value="content">Περιεχόμενο & Τιμές</Tabs.Trigger>
+                  <Tabs.Trigger value="basics">Βασικά &amp; Κόστος</Tabs.Trigger>
+                  <Tabs.Trigger value="content">Περιεχόμενο</Tabs.Trigger>
+                  <Tabs.Trigger value="seo">SEO</Tabs.Trigger>
                   <Tabs.Trigger value="availability">
                     Διαθεσιμότητα ({slots.length})
                   </Tabs.Trigger>
@@ -323,55 +519,12 @@ export function ActivityEditor({
                 </Tabs.List>
               </div>
 
-              {/* CONTENT */}
-              <Tabs.Content value="content" className="overflow-y-auto p-6">
+              {/* BASICS & PRICING */}
+              <Tabs.Content value="basics" className="overflow-y-auto p-6">
                 <div className="mx-auto flex max-w-3xl flex-col gap-6">
                   <LangToggle lang={lang} onChange={setLang} />
-
                   <div className="grid grid-cols-2 gap-4">
-                    {CONTENT_SCALARS.map((s) => {
-                      if (s.key === "status") return null
-                      const translatable = TRANSLATABLE_SCALARS.has(s.key)
-                      // Shared (non-translatable) fields are read-only in EN mode.
-                      const locked = en && !translatable
-                      const value = translatable ? tval(s.key) : form[s.key] ?? ""
-                      const onChange = (v: string) =>
-                        translatable ? tset(s.key, v) : set(s.key, v)
-                      return (
-                        <div
-                          key={s.key}
-                          className={`flex flex-col gap-1 ${s.full ? "col-span-2" : ""}`}
-                        >
-                          <Label size="small" weight="plus">
-                            {s.label}
-                            {locked ? <span className="text-ui-fg-muted"> · κοινό</span> : null}
-                          </Label>
-                          {s.type === "image" ? (
-                            <ImagePicker
-                              value={value}
-                              onChange={onChange}
-                              disabled={locked}
-                              hint={locked ? "κοινό για όλες τις γλώσσες" : undefined}
-                              alt={s.altKey ? tval(s.altKey) : undefined}
-                              onAltChange={s.altKey ? (v) => tset(s.altKey!, v) : undefined}
-                            />
-                          ) : s.type === "textarea" ? (
-                            <RichTextarea
-                              value={value}
-                              disabled={locked}
-                              onChange={onChange}
-                            />
-                          ) : (
-                            <Input
-                              type={s.type === "number" ? "number" : "text"}
-                              value={value}
-                              disabled={locked}
-                              onChange={(e) => onChange(e.target.value)}
-                            />
-                          )}
-                        </div>
-                      )
-                    })}
+                    {scalarFields("basics")}
                     <div className="flex flex-col gap-1">
                       <Label size="small" weight="plus">
                         Κατάσταση
@@ -401,85 +554,31 @@ export function ActivityEditor({
                       </select>
                     </div>
                   </div>
+                  {repeaterPrices}
+                </div>
+              </Tabs.Content>
 
-                  <Repeater
-                    label="Τιμές (price tiers)"
-                    value={jval("price_tiers")}
-                    onChange={(v) => tset("price_tiers", v)}
-                    fields={[
-                      { key: "key", label: "Κλειδί (adult/child/infant)" },
-                      { key: "price", label: "Τιμή καθημ. (€)", type: "number" },
-                      { key: "weekend_price", label: "Τιμή Σ/Κ (€, προαιρετικό)", type: "number" },
-                      { key: "label", label: "Ετικέτα", width: "col-span-2" },
-                      { key: "note", label: "Σημείωση (π.χ. Δωρεάν)", width: "col-span-2" },
-                    ]}
-                    blank={{ key: "", label: "", price: 0, weekend_price: "", note: "" }}
+              {/* CONTENT — click a section in the page to edit it */}
+              <Tabs.Content value="content" className="overflow-y-auto p-6">
+                <div className="flex flex-col gap-5">
+                  <LangToggle lang={lang} onChange={setLang} />
+                  <VisualEditor
+                    kind="activity"
+                    slug={form.slug as string | undefined}
+                    sections={sections}
+                    reloadToken={savedAt}
                   />
-                  <Repeater
-                    label="Χαρακτηριστικά (features)"
-                    value={jval("features")}
-                    onChange={(v) => tset("features", v)}
-                    fields={[
-                      { key: "title", label: "Τίτλος", width: "col-span-2" },
-                      { key: "text", label: "Κείμενο", type: "textarea", width: "col-span-2" },
-                    ]}
-                    blank={{ title: "", text: "" }}
-                  />
-                  <Repeater
-                    label="Πολιτικές (accordion)"
-                    value={jval("policies")}
-                    onChange={(v) => tset("policies", v)}
-                    fields={[
-                      { key: "title", label: "Τίτλος", width: "col-span-2" },
-                      { key: "body", label: "Κείμενο", type: "textarea", width: "col-span-2" },
-                    ]}
-                    blank={{ title: "", body: "" }}
-                  />
-                  <ImageGallery
-                    label="Εικόνες gallery"
-                    value={jval("gallery")}
-                    onChange={(v) => tset("gallery", v)}
-                  />
-                  <Repeater
-                    label="Κριτικές"
-                    value={jval("reviews")}
-                    onChange={(v) => tset("reviews", v)}
-                    fields={[
-                      { key: "name", label: "Όνομα" },
-                      { key: "rating", label: "Βαθμ. (1–5)", type: "number" },
-                      { key: "date", label: "Ημ/νία" },
-                      { key: "body", label: "Κείμενο", type: "textarea", width: "col-span-2" },
-                    ]}
-                    blank={{ name: "", rating: 5, date: "", body: "" }}
-                  />
+                </div>
+              </Tabs.Content>
 
-                  {/* Οφέλη — for enquiry activities like Μελισσοθεραπεία. */}
-                  <div className="flex flex-col gap-3 rounded-lg border border-ui-border-base p-4">
-                    <Label size="small" weight="plus">
-                      Οφέλη (π.χ. Μελισσοθεραπεία)
-                    </Label>
-                    <div className="flex flex-col gap-1">
-                      <Text size="xsmall">Εισαγωγή</Text>
-                      <Textarea
-                        value={jval("benefits")?.intro ?? ""}
-                        onChange={(e) =>
-                          tset("benefits", { ...(jval("benefits") ?? {}), intro: e.target.value })
-                        }
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <Text size="xsmall">Λίστα — μία κατάσταση ανά γραμμή</Text>
-                      <Textarea
-                        value={(jval("benefits")?.items ?? []).join("\n")}
-                        onChange={(e) =>
-                          tset("benefits", {
-                            ...(jval("benefits") ?? {}),
-                            items: e.target.value.split("\n").map((x) => x.trim()).filter(Boolean),
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
+              {/* SEO */}
+              <Tabs.Content value="seo" className="overflow-y-auto p-6">
+                <div className="mx-auto flex max-w-3xl flex-col gap-6">
+                  <LangToggle lang={lang} onChange={setLang} />
+                  <div className="grid grid-cols-2 gap-4">{scalarFields("seo")}</div>
+                  <Text size="xsmall" className="text-ui-fg-subtle">
+                    Η SEO περιγραφή αποδίδεται καλύτερα στους 140–155 χαρακτήρες.
+                  </Text>
                 </div>
               </Tabs.Content>
 
