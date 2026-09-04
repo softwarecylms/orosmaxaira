@@ -14,6 +14,9 @@ export function middleware(request: NextRequest) {
   const response = intlMiddleware(request)
   // Keep the whole site out of search indexes (pre-launch). Remove at launch.
   response.headers.set('X-Robots-Tag', 'noindex, nofollow')
+  // Framing for the admin's `?preview=1` iframe is handled in `next.config.ts`,
+  // which is where `X-Frame-Options` is set — config headers are applied after
+  // middleware, so deleting it here would not stick.
   return response
 }
 

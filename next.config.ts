@@ -68,16 +68,41 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
   async headers() {
+    const baseSecurity = [
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+      {
+        key: 'Permissions-Policy',
+        value: 'camera=(), microphone=(), geolocation=()',
+      },
+    ]
+
+    // Ordinary requests: framing locked to this origin.
     const securityHeaders = {
       source: '/(.*)',
+      missing: [{ type: 'query' as const, key: 'preview', value: '1' }],
+      headers: [...baseSecurity, { key: 'X-Frame-Options', value: 'SAMEORIGIN' }],
+    }
+
+    // Admin live preview (`?preview=1`): the Medusa admin needs to embed the page
+    // and lives on another host. `X-Frame-Options` cannot allow-list a second
+    // origin, so this variant omits it and uses CSP `frame-ancestors` instead —
+    // an explicit allow-list rather than a blanket relaxation. Ordinary visitors
+    // keep SAMEORIGIN, which matters because these pages carry a cart and checkout.
+    const previewOrigins = (
+      process.env.ADMIN_PREVIEW_ORIGINS ??
+      'http://localhost:9009 https://medusa-backend-production-068e.up.railway.app'
+    )
+      .split(/[\s,]+/)
+      .filter(Boolean)
+      .join(' ')
+
+    const previewHeaders = {
+      source: '/(.*)',
+      has: [{ type: 'query' as const, key: 'preview', value: '1' }],
       headers: [
-        { key: 'X-Content-Type-Options', value: 'nosniff' },
-        { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-        { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-        {
-          key: 'Permissions-Policy',
-          value: 'camera=(), microphone=(), geolocation=()',
-        },
+        ...baseSecurity,
+        { key: 'Content-Security-Policy', value: `frame-ancestors 'self' ${previewOrigins}` },
       ],
     }
 
@@ -88,10 +113,11 @@ const nextConfig: NextConfig = {
     // after every edit, surfacing as "Cannot read properties of undefined
     // (reading 'call')" / hydration errors until a manual hard refresh.
     if (process.env.NODE_ENV !== 'production') {
-      return [securityHeaders]
+      return [previewHeaders, securityHeaders]
     }
 
     return [
+      previewHeaders,
       securityHeaders,
       {
         source: '/_next/static/(.*)',
