@@ -17,6 +17,8 @@ import { Trash, ArrowDownTray } from "@medusajs/icons"
 import { sdk } from "../lib/sdk"
 import { Repeater } from "./repeater"
 import { ImagePicker } from "./image-picker"
+import { RichTextarea } from "./rich-textarea"
+import { ViewPageButton } from "./view-page-button"
 import { LangToggle } from "./lang-toggle"
 
 const api = {
@@ -292,9 +294,12 @@ export function ActivityEditor({
             <Text className="text-ui-fg-subtle">
               {form.title ? `Επεξεργασία: ${form.title}` : "Δραστηριότητα"}
             </Text>
-            <Button size="small" onClick={save} isLoading={saving}>
-              Αποθήκευση
-            </Button>
+            <div className="flex items-center gap-2">
+              <ViewPageButton kind="activity" slug={form.slug as string | undefined} />
+              <Button size="small" onClick={save} isLoading={saving}>
+                Αποθήκευση
+              </Button>
+            </div>
           </div>
         </FocusModal.Header>
         <FocusModal.Body className="flex flex-col overflow-y-auto">
@@ -344,10 +349,10 @@ export function ActivityEditor({
                               hint={locked ? "κοινό για όλες τις γλώσσες" : undefined}
                             />
                           ) : s.type === "textarea" ? (
-                            <Textarea
+                            <RichTextarea
                               value={value}
                               disabled={locked}
-                              onChange={(e) => onChange(e.target.value)}
+                              onChange={onChange}
                             />
                           ) : (
                             <Input

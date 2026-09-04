@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { Button, FocusModal, Input, Text, Select, IconButton } from "@medusajs/ui"
 import { Photo, Trash, MagnifyingGlass } from "@medusajs/icons"
-import { sdk } from "../lib/sdk"
+import { useLibrary, type Library } from "../lib/storefront"
 
 /**
  * Image field with a visual library picker, in place of a bare URL text input.
@@ -14,29 +14,6 @@ import { sdk } from "../lib/sdk"
  * The stored value is unchanged: the same `/images/...` path or absolute URL as
  * before, so nothing downstream needs to know this picker exists.
  */
-
-type MediaItem = { path: string; name: string; folder: string; bytes: number }
-
-type Library = {
-  origin: string
-  folders: string[]
-  items: MediaItem[]
-  error?: string
-}
-
-/** Module-level cache so opening several pickers hits the API once. */
-let libraryPromise: Promise<Library> | null = null
-function loadLibrary(): Promise<Library> {
-  libraryPromise ??= sdk.client
-    .fetch<Library>("/admin/media", { method: "GET" })
-    .catch((e) => ({
-      origin: "",
-      folders: [],
-      items: [],
-      error: (e as Error)?.message ?? "Η βιβλιοθήκη δεν φορτώθηκε",
-    }))
-  return libraryPromise
-}
 
 /** Absolute src for a stored value, so thumbnails render inside the admin. */
 function srcFor(value: string, origin: string): string {
@@ -63,15 +40,7 @@ export function ImagePicker({
   hint?: string
 }) {
   const [open, setOpen] = useState(false)
-  const [lib, setLib] = useState<Library | null>(null)
-
-  useEffect(() => {
-    let alive = true
-    loadLibrary().then((l) => alive && setLib(l))
-    return () => {
-      alive = false
-    }
-  }, [])
+  const lib = useLibrary()
 
   const origin = lib?.origin ?? ""
   const current = (value ?? "").trim()

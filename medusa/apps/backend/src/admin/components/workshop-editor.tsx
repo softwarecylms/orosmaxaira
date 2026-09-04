@@ -10,13 +10,14 @@ import {
   Table,
   Tabs,
   Text,
-  Textarea,
   toast,
 } from "@medusajs/ui"
 import { Trash, ArrowDownTray } from "@medusajs/icons"
 import { sdk } from "../lib/sdk"
 import { Repeater } from "./repeater"
 import { ImagePicker } from "./image-picker"
+import { RichTextarea } from "./rich-textarea"
+import { ViewPageButton } from "./view-page-button"
 import { LangToggle } from "./lang-toggle"
 
 // Scalar fields that carry an English translation. Structural fields (slug, image,
@@ -353,9 +354,12 @@ export function WorkshopEditor({
             <Text className="text-ui-fg-subtle">
               {form.title ? `Επεξεργασία: ${form.title}` : "Εργαστήρι"}
             </Text>
-            <Button size="small" onClick={save} isLoading={saving}>
-              Αποθήκευση
-            </Button>
+            <div className="flex items-center gap-2">
+              <ViewPageButton kind="workshop" slug={form.slug as string | undefined} />
+              <Button size="small" onClick={save} isLoading={saving}>
+                Αποθήκευση
+              </Button>
+            </div>
           </div>
         </FocusModal.Header>
         <FocusModal.Body className="flex flex-col overflow-y-auto">
@@ -397,7 +401,7 @@ export function WorkshopEditor({
                               hint={locked ? "κοινό για όλες τις γλώσσες" : undefined}
                             />
                           ) : s.type === "textarea" ? (
-                            <Textarea value={value} disabled={locked} onChange={(e) => onChange(e.target.value)} />
+                            <RichTextarea value={value} disabled={locked} onChange={onChange} />
                           ) : (
                             <Input
                               type={s.type === "number" ? "number" : "text"}

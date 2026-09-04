@@ -2,14 +2,7 @@ import { Info } from 'lucide-react'
 import type { Activity } from '@/lib/medusa/activities'
 import { getActivitiesUi } from '@/components/activities/activities-content'
 import { Stars } from './stars'
-import { RichText } from './rich-text'
-
-function paragraphs(text?: string | null): string[] {
-  return (text ?? '')
-    .split(/\n{2,}/)
-    .map((s) => s.trim())
-    .filter(Boolean)
-}
+import { RichBody } from '@/components/content/rich-body'
 
 /** ISO review date -> reader-friendly form ("12 August 2025" / "12 Αυγούστου 2025").
  *  The stored value stays ISO so it sorts and so <time dateTime> stays machine-readable. */
@@ -56,16 +49,7 @@ export function ActivitySections({
       {hasDesc ? (
         <section className="flex flex-col gap-6">
           <SectionHeading>{ui.sectionDescription}</SectionHeading>
-          <div className="flex flex-col gap-4">
-            {paragraphs(activity.description).map((p, i) => (
-              <p
-                key={i}
-                className="whitespace-pre-line text-[16px] leading-[1.8] text-muted md:text-[17px]"
-              >
-                <RichText text={p} />
-              </p>
-            ))}
-          </div>
+          <RichBody text={activity.description ?? ''} />
           {activity.features?.length ? (
             <div className="grid gap-3 sm:grid-cols-3">
               {activity.features.map((f, i) => (
@@ -90,14 +74,7 @@ export function ActivitySections({
       {hasDetails ? (
         <section className="flex flex-col gap-5">
           <SectionHeading>{ui.sectionDetails}</SectionHeading>
-          {paragraphs(activity.details).map((p, i) => (
-            <p
-              key={i}
-              className="whitespace-pre-line text-[16px] leading-[1.8] text-muted md:text-[17px]"
-            >
-              <RichText text={p} />
-            </p>
-          ))}
+          <RichBody text={activity.details ?? ''} />
           {activity.note ? (
             <p className="flex items-start gap-2.5 rounded-[14px] bg-accent-soft p-4 text-[14px] leading-[1.6] text-foreground/80 ring-1 ring-accent/15">
               <Info className="mt-0.5 size-4 shrink-0 text-gold-strong" aria-hidden="true" />
