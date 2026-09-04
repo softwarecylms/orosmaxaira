@@ -446,17 +446,10 @@ export default async function SchoolVisitsPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 {v.notes.map((n, i) => {
                   const Icon = NOTE_ICONS[i] ?? Info
-                  // Supervision is a liability statement — give it its own
-                  // full-width, outlined block instead of one card among several.
-                  const isSupervision = /supervision|επίβλεψη/i.test(n.body)
                   return (
                     <div
                       key={n.title}
-                      className={
-                        isSupervision
-                          ? "flex items-start gap-4 rounded-[16px] border border-foreground/30 bg-white p-5 sm:col-span-2"
-                          : "flex items-start gap-4 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50"
-                      }
+                      className="flex items-start gap-4 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50"
                     >
                       <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
                         <Icon className="size-5" aria-hidden="true" />

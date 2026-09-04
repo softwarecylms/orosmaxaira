@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { sdk } from "../../lib/sdk"
 import { Repeater } from "../../components/repeater"
 import { LangToggle } from "../../components/lang-toggle"
+import { ViewPageButton } from "../../components/view-page-button"
 
 const api = {
   get: <T,>(u: string) => sdk.client.fetch<T>(u, { method: "GET" }),
@@ -127,9 +128,12 @@ const SchoolProgramPage = () => {
     <Container className="p-0">
       <div className="flex items-center justify-between px-6 py-4">
         <Heading>Εκπαιδευτικές Επισκέψεις Σχολείων</Heading>
-        <Button size="small" onClick={save} isLoading={saving}>
-          Αποθήκευση
-        </Button>
+        <div className="flex items-center gap-2">
+          <ViewPageButton kind="school" />
+          <Button size="small" onClick={save} isLoading={saving}>
+            Αποθήκευση
+          </Button>
+        </div>
       </div>
 
       {loading ? (
