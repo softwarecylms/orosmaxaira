@@ -47,10 +47,6 @@ const ACTIVITY_EN: Record<string, any> = {
       { title: "Cancellation Policy", body: "Cancel up to 72 hours in advance for a full refund." },
       { title: "Booking Changes", body: "To change the date or time, you can call [+357 99 130 092](tel:+35799130092). Changes are subject to availability." },
     ],
-    reviews: [
-      { name: "Elena Georgiou", date: "2025-08-12", rating: 5, body: "A wonderful experience for the whole family! We saw the bees through the glass hives and the kids loved the interactive game and the honey tasting." },
-      { name: "Andreas Christodoulou", date: "2025-10-03", rating: 5, body: "A very informative tour. We learned about apitherapy and the products of the hive, and tasted wonderful honeys and mead. Highly recommended!" },
-    ],
     gallery: Array.from({ length: 9 }, (_, i) => ({
       url: `/images/xenagiseis/${String(i + 1).padStart(2, "0")}.webp`,
       alt: "Moments from the “Getting to Know the Bee” tour at Oros Machaira",
@@ -84,10 +80,6 @@ const ACTIVITY_EN: Record<string, any> = {
     policies: [
       { title: "Cancellation Policy", body: "Cancel up to 72 hours in advance for a full refund." },
       { title: "Booking Changes", body: "To change the date or time, you can call [+357 99 130 092](tel:+35799130092). Changes are subject to availability." },
-    ],
-    reviews: [
-      { name: "Maria Tittoni", date: "2025-07-29", rating: 5, body: "An amazing experience! The kids loved putting on the suit and opening the hive. The beekeeper explained everything patiently. We would do it again!" },
-      { name: "Nedi Kaffa", date: "2025-10", rating: 5, body: "Top place to take kids for an adventure to get to know and respect nature! We had a tour with bee suits, learnt about bees in two different settings did a honey tasting and then constructed a bee hotel!" },
     ],
     gallery: Array.from({ length: 11 }, (_, i) => ({
       url: `/images/activities/peripeteies/${String(i + 1).padStart(2, "0")}.webp`,
