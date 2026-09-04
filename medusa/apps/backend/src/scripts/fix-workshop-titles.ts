@@ -5,65 +5,71 @@ import type BookingsModuleService from "../modules/bookings/service"
 
 /**
  * Two workshop names were descriptions rather than titles — weak as product
- * names on the hub cards, the detail H1 and in search results. Renamed in both
- * locales:
+ * names on the hub cards, the detail H1 and in search results.
  *
  *   Φύτευση σπόρων σε γλαστράκια & διακόσμηση → Φύτεψε & Ζωγράφισε το Γλαστράκι σου
  *   Planting Seeds in Pots & Decorating       → Plant & Paint Your Own Pot
- *   Εργαστήρι Μαγειρικής για Τρουφάκια        → Τρουφάκια Μελιού
+ *   Εργαστήρι Μαγειρικής για Τρουφάκια        → Εργαστήρι Μαγειρικής για Τρουφάκια Μελιού
  *   Cooking Workshop for Honey Truffles       → Honey Truffle Cooking Workshop
  *
- * Rewrites the Greek base row AND the `translations.en` overlay. A re-seed would
- * also update titles, but it re-syncs availability and clobbers admin edits —
- * this only touches the names. Idempotent.
+ * The names below are ASSIGNED, not phrase-replaced: each new name contains the
+ * old one as a substring, so a replace would re-fire on itself. Assigning makes
+ * the script idempotent whatever the row currently holds — and safe to run on a
+ * DB that is one rename behind. A re-seed would also rename these, but it
+ * re-syncs availability and clobbers admin edits; this only touches the names.
  *
  *   npx medusa exec ./src/scripts/fix-workshop-titles.ts
  *
  * Run against local AND the Railway prod DB (see the deploy notes).
  */
 
-const REPLACEMENTS: [string, string][] = [
-  // Greek base row (title + meta_title)
-  ["Φύτευση σπόρων σε γλαστράκια & διακόσμηση", "Φύτεψε & Ζωγράφισε το Γλαστράκι σου"],
-  ["Φύτευση σπόρων σε γλαστράκια — Εργαστήρι", "Φύτεψε & Ζωγράφισε το Γλαστράκι σου — Εργαστήρι"],
-  ["Εργαστήρι Μαγειρικής — Τρουφάκια με μέλι", "Τρουφάκια Μελιού — Εργαστήρι Μαγειρικής"],
-  ["Εργαστήρι Μαγειρικής για Τρουφάκια", "Τρουφάκια Μελιού"],
-  // English overlay
-  ["Planting Seeds in Pots & Decorating", "Plant & Paint Your Own Pot"],
-  ["Cooking Workshop for Honey Truffles", "Honey Truffle Cooking Workshop"],
-]
+type Rename = {
+  title: string
+  meta_title: string
+  en: { title: string; meta_title: string }
+}
 
-const SLUGS = ["fytefsi-sporon", "ergastiria-mageirikis"]
-
-function retarget(value: string): string {
-  return REPLACEMENTS.reduce((out, [from, to]) => out.split(from).join(to), value)
+const RENAMES: Record<string, Rename> = {
+  "fytefsi-sporon": {
+    title: "Φύτεψε & Ζωγράφισε το Γλαστράκι σου",
+    meta_title: "Φύτεψε & Ζωγράφισε το Γλαστράκι σου — Εργαστήρι | Όρος Μαχαιρά",
+    en: {
+      title: "Plant & Paint Your Own Pot",
+      meta_title: "Plant & Paint Your Own Pot — Hands-on Workshop | Oros Machaira",
+    },
+  },
+  "ergastiria-mageirikis": {
+    title: "Εργαστήρι Μαγειρικής για Τρουφάκια Μελιού",
+    meta_title: "Εργαστήρι Μαγειρικής για Τρουφάκια Μελιού | Όρος Μαχαιρά",
+    en: {
+      title: "Honey Truffle Cooking Workshop",
+      meta_title: "Honey Truffle Cooking Workshop — Hands-on Workshop | Oros Machaira",
+    },
+  },
 }
 
 export default async function fixWorkshopTitles({ container }: ExecArgs) {
   const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
   const bookings = container.resolve<BookingsModuleService>(BOOKINGS_MODULE)
 
-  const workshops = (await bookings.listWorkshops({})).filter((w: { slug?: string }) =>
-    SLUGS.includes(w.slug ?? "")
+  const workshops = (await bookings.listWorkshops({})).filter(
+    (w: { slug?: string }) => !!w.slug && w.slug in RENAMES
   )
 
   let changed = 0
   for (const workshop of workshops) {
+    const target = RENAMES[workshop.slug as string]
     const update: Record<string, unknown> = {}
 
-    for (const field of ["title", "meta_title"] as const) {
-      const value = (workshop as Record<string, unknown>)[field]
-      if (typeof value !== "string") continue
-      const next = retarget(value)
-      if (next !== value) update[field] = next
-    }
+    if (workshop.title !== target.title) update.title = target.title
+    if (workshop.meta_title !== target.meta_title) update.meta_title = target.meta_title
 
-    // The EN overlay round-trips through its serialised form.
-    const translations = (workshop as { translations?: unknown }).translations
-    if (translations) {
-      const before = JSON.stringify(translations)
-      const after = retarget(before)
-      if (after !== before) update.translations = JSON.parse(after)
+    // Keep the EN overlay in step — everything else in `translations.en` stays.
+    const translations = ((workshop as { translations?: Record<string, any> }).translations ??
+      {}) as Record<string, any>
+    const en = translations.en ?? {}
+    if (en.title !== target.en.title || en.meta_title !== target.en.meta_title) {
+      update.translations = { ...translations, en: { ...en, ...target.en } }
     }
 
     if (!Object.keys(update).length) continue
