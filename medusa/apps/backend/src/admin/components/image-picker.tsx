@@ -124,7 +124,7 @@ export function ImagePicker({
   )
 }
 
-function LibraryModal({
+export function LibraryModal({
   lib,
   current,
   onPick,

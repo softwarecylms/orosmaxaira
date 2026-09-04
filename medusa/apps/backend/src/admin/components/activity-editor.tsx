@@ -17,6 +17,7 @@ import { Trash, ArrowDownTray } from "@medusajs/icons"
 import { sdk } from "../lib/sdk"
 import { Repeater } from "./repeater"
 import { ImagePicker } from "./image-picker"
+import { ImageGallery } from "./image-gallery"
 import { RichTextarea } from "./rich-textarea"
 import { ViewPageButton } from "./view-page-button"
 import { LangToggle } from "./lang-toggle"
@@ -428,15 +429,10 @@ export function ActivityEditor({
                     ]}
                     blank={{ title: "", body: "" }}
                   />
-                  <Repeater
+                  <ImageGallery
                     label="Εικόνες gallery"
                     value={jval("gallery")}
                     onChange={(v) => tset("gallery", v)}
-                    fields={[
-                      { key: "url", label: "Εικόνα", type: "image", width: "col-span-2" },
-                      { key: "alt", label: "Alt", width: "col-span-2" },
-                    ]}
-                    blank={{ url: "", alt: "" }}
                   />
                   <Repeater
                     label="Κριτικές"
