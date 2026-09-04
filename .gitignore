@@ -61,3 +61,6 @@ playwright-report
 public/awards.docx
 # client-supplied source documents (specs, brief docx) — never shipped
 *.docx
+
+# Generated index of public/images for the Medusa admin image picker
+public/media-manifest.json

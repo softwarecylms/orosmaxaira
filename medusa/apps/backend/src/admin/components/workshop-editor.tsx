@@ -16,6 +16,7 @@ import {
 import { Trash, ArrowDownTray } from "@medusajs/icons"
 import { sdk } from "../lib/sdk"
 import { Repeater } from "./repeater"
+import { ImagePicker } from "./image-picker"
 import { LangToggle } from "./lang-toggle"
 
 // Scalar fields that carry an English translation. Structural fields (slug, image,
@@ -52,13 +53,13 @@ const AGE_LABELS = {
 const SCALARS: {
   key: string
   label: string
-  type?: "text" | "number" | "textarea"
+  type?: "text" | "number" | "textarea" | "image"
   full?: boolean
 }[] = [
   { key: "title", label: "Τίτλος" },
   { key: "slug", label: "Permalink (slug)" },
   { key: "season_label", label: "Εποχή (π.χ. Πάσχα)" },
-  { key: "image", label: "Κύρια εικόνα (URL)" },
+  { key: "image", label: "Κύρια εικόνα", type: "image", full: true },
   { key: "duration_label", label: "Διάρκεια" },
   { key: "age_label", label: "Ηλικίες" },
   { key: "rank", label: "Σειρά εμφάνισης", type: "number" },
@@ -389,7 +390,13 @@ export function WorkshopEditor({
                             {s.label}
                             {locked ? <span className="text-ui-fg-muted"> · κοινό</span> : null}
                           </Label>
-                          {s.type === "textarea" ? (
+                          {s.type === "image" ? (
+                            <ImagePicker
+                              value={value}
+                              onChange={onChange}
+                              hint={locked ? "κοινό για όλες τις γλώσσες" : undefined}
+                            />
+                          ) : s.type === "textarea" ? (
                             <Textarea value={value} disabled={locked} onChange={(e) => onChange(e.target.value)} />
                           ) : (
                             <Input
@@ -534,7 +541,7 @@ export function WorkshopEditor({
                     value={jval("gallery")}
                     onChange={(v) => tset("gallery", v)}
                     fields={[
-                      { key: "url", label: "URL", width: "col-span-2" },
+                      { key: "url", label: "Εικόνα", type: "image", width: "col-span-2" },
                       { key: "alt", label: "Alt", width: "col-span-2" },
                     ]}
                     blank={{ url: "", alt: "" }}

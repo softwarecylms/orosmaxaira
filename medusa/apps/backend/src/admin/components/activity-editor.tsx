@@ -16,6 +16,7 @@ import {
 import { Trash, ArrowDownTray } from "@medusajs/icons"
 import { sdk } from "../lib/sdk"
 import { Repeater } from "./repeater"
+import { ImagePicker } from "./image-picker"
 import { LangToggle } from "./lang-toggle"
 
 const api = {
@@ -32,13 +33,13 @@ const WEEKDAYS = [
 const CONTENT_SCALARS: {
   key: string
   label: string
-  type?: "text" | "number" | "textarea"
+  type?: "text" | "number" | "textarea" | "image"
   full?: boolean
 }[] = [
   { key: "title", label: "Τίτλος" },
   { key: "slug", label: "Permalink (slug)" },
   { key: "subtitle", label: "Υπότιτλος", full: true },
-  { key: "hero_image", label: "Κύρια εικόνα (URL)" },
+  { key: "hero_image", label: "Κύρια εικόνα", type: "image", full: true },
   { key: "hero_image_alt", label: "Alt κύριας εικόνας" },
   { key: "video_url", label: "Video URL", full: true },
   { key: "description", label: "Περιγραφή", type: "textarea", full: true },
@@ -336,7 +337,13 @@ export function ActivityEditor({
                             {s.label}
                             {locked ? <span className="text-ui-fg-muted"> · κοινό</span> : null}
                           </Label>
-                          {s.type === "textarea" ? (
+                          {s.type === "image" ? (
+                            <ImagePicker
+                              value={value}
+                              onChange={onChange}
+                              hint={locked ? "κοινό για όλες τις γλώσσες" : undefined}
+                            />
+                          ) : s.type === "textarea" ? (
                             <Textarea
                               value={value}
                               disabled={locked}
@@ -421,7 +428,7 @@ export function ActivityEditor({
                     value={jval("gallery")}
                     onChange={(v) => tset("gallery", v)}
                     fields={[
-                      { key: "url", label: "URL", width: "col-span-2" },
+                      { key: "url", label: "Εικόνα", type: "image", width: "col-span-2" },
                       { key: "alt", label: "Alt", width: "col-span-2" },
                     ]}
                     blank={{ url: "", alt: "" }}

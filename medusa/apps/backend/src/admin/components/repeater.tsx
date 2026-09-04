@@ -1,10 +1,11 @@
 import { Button, IconButton, Input, Label, Text } from "@medusajs/ui"
 import { Plus, Trash } from "@medusajs/icons"
+import { ImagePicker } from "./image-picker"
 
 export type RepeaterField = {
   key: string
   label: string
-  type?: "text" | "number" | "textarea"
+  type?: "text" | "number" | "textarea" | "image"
   width?: string // tailwind col span helper, e.g. "col-span-2"
 }
 
@@ -48,7 +49,12 @@ export function Repeater<T extends Record<string, unknown>>({
                 <Text size="xsmall" className="text-ui-fg-subtle">
                   {f.label}
                 </Text>
-                {f.type === "textarea" ? (
+                {f.type === "image" ? (
+                    <ImagePicker
+                      value={String(row[f.key] ?? "")}
+                      onChange={(v) => setCell(i, f.key, v)}
+                    />
+                  ) : f.type === "textarea" ? (
                   <textarea
                     className="min-h-[64px] w-full rounded-md border border-ui-border-base bg-ui-bg-field px-2 py-1.5 text-sm outline-none focus:border-ui-border-interactive"
                     value={String(row[f.key] ?? "")}
