@@ -18,6 +18,7 @@ import {
   Video,
 } from 'lucide-react'
 import { RevealUp } from '@/components/home/reveal-up'
+import { PreviewBridge } from '@/components/preview/preview-bridge'
 import { SchoolBookingCard } from '@/components/scholeia/school-booking-card'
 import {
   MAX_STUDENTS,
@@ -297,6 +298,10 @@ export default async function SchoolVisitsPage() {
 
   return (
     <>
+      {/* Click-to-edit for the admin preview. Inert unless the page is loaded
+          with `?preview=1` inside an iframe. */}
+      <PreviewBridge />
+
       {/* Breadcrumb */}
       <div className="container-page pb-2.5 pt-4">
         <RevealUp>
@@ -320,7 +325,7 @@ export default async function SchoolVisitsPage() {
       <section className="container-page pb-12 pt-2 md:pb-[60px]">
         {/* Header */}
         <RevealUp>
-          <div className="flex flex-col gap-4">
+          <div data-edit="header" className="flex flex-col gap-4">
             <h1 className="font-display text-[32px] font-bold leading-[1.06] text-foreground md:text-[46px]">
               {v.title}
             </h1>
@@ -356,20 +361,20 @@ export default async function SchoolVisitsPage() {
         <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px] lg:items-start lg:gap-12">
           <div className="flex min-w-0 flex-col gap-11">
             {/* Περιγραφή */}
-            <section className="flex flex-col gap-4">
+            <section data-edit="description" className="flex flex-col gap-4">
               <SectionHeading>{ui.sectionDescription}</SectionHeading>
               <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">{v.intro}</p>
               <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">{v.closing}</p>
             </section>
 
             {/* Το πρόγραμμα — three rotating activities */}
-            <section className="flex flex-col gap-6">
+            <section data-edit="program" className="flex flex-col gap-6">
               <SectionHeading>{t.sectionProgram}</SectionHeading>
               <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">{v.programNote}</p>
 
               <div className="flex flex-col gap-4">
                 {/* Δ1 */}
-                <div className="flex flex-col gap-5 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50 md:p-6">
+                <div data-edit="activity1" className="flex flex-col gap-5 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50 md:p-6">
                   <ActivityHead n="1" icon={BookOpenText} title={v.tourTitle} label={t.activityLabel('1')} />
                   <p className="text-[15px] leading-[1.7] text-muted">{v.tourIntro}</p>
                   <ul className="grid gap-3 sm:grid-cols-2">
@@ -391,7 +396,7 @@ export default async function SchoolVisitsPage() {
                 </div>
 
                 {/* Δ2 */}
-                <div className="flex flex-col gap-5 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50 md:p-6">
+                <div data-edit="activity2" className="flex flex-col gap-5 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50 md:p-6">
                   <ActivityHead n="2" icon={Palette} title={t.workshopTitle} label={t.activityLabel('2')} />
                   <p className="text-[15px] leading-[1.7] text-muted">{v.workshopIntro}</p>
                   <div className="grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr]">
@@ -420,7 +425,7 @@ export default async function SchoolVisitsPage() {
                 </div>
 
                 {/* Δ3 */}
-                <div className="flex flex-col gap-4 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50 md:p-6">
+                <div data-edit="activity3" className="flex flex-col gap-4 rounded-[16px] bg-offwhite p-5 ring-1 ring-border/50 md:p-6">
                   <ActivityHead n="3" icon={PartyPopper} title={v.playTitle} label={t.activityLabel('3')} />
                   <p className="text-[15px] leading-[1.7] text-muted">{v.playText}</p>
                 </div>
@@ -428,7 +433,7 @@ export default async function SchoolVisitsPage() {
             </section>
 
             {/* Διάρκεια & ροή */}
-            <section className="flex flex-col gap-5">
+            <section data-edit="duration" className="flex flex-col gap-5">
               <SectionHeading>{t.sectionDuration}</SectionHeading>
               <p className="text-[16px] leading-[1.8] text-muted md:text-[17px]">{v.durationText}</p>
               <p className="flex items-start gap-2.5 rounded-[14px] bg-accent-soft p-4 text-[14px] leading-[1.6] text-foreground/80 ring-1 ring-accent/15">
@@ -441,7 +446,7 @@ export default async function SchoolVisitsPage() {
             </section>
 
             {/* Σημαντικές σημειώσεις */}
-            <section className="flex flex-col gap-5">
+            <section data-edit="notes" className="flex flex-col gap-5">
               <SectionHeading>{t.sectionNotes}</SectionHeading>
               <div className="grid gap-4 sm:grid-cols-2">
                 {v.notes.map((n, i) => {
@@ -463,7 +468,7 @@ export default async function SchoolVisitsPage() {
                 })}
 
                 {/* Allergies — safety warning, emphasised */}
-                <div className="flex items-start gap-4 rounded-[16px] border border-accent/40 bg-accent/[0.07] p-5 sm:col-span-2">
+                <div data-edit="allergies" className="flex items-start gap-4 rounded-[16px] border border-accent/40 bg-accent/[0.07] p-5 sm:col-span-2">
                   <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent text-white">
                     <ShieldAlert className="size-5" aria-hidden="true" />
                   </span>
