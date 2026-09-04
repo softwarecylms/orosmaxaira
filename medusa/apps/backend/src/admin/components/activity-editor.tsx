@@ -38,12 +38,13 @@ const CONTENT_SCALARS: {
   label: string
   type?: "text" | "number" | "textarea" | "image"
   full?: boolean
+  /** For an image field: the companion alt key, rendered inside the image box. */
+  altKey?: string
 }[] = [
   { key: "title", label: "Τίτλος" },
   { key: "slug", label: "Permalink (slug)" },
   { key: "subtitle", label: "Υπότιτλος", full: true },
-  { key: "hero_image", label: "Κύρια εικόνα", type: "image", full: true },
-  { key: "hero_image_alt", label: "Alt κύριας εικόνας" },
+  { key: "hero_image", label: "Κύρια εικόνα", type: "image", full: true, altKey: "hero_image_alt" },
   { key: "video_url", label: "Video URL", full: true },
   { key: "description", label: "Περιγραφή", type: "textarea", full: true },
   { key: "details", label: "Λεπτομέρειες", type: "textarea", full: true },
@@ -183,6 +184,8 @@ export function ActivityEditor({
         let v = form[s.key]
         if (NUMERIC.has(s.key)) v = v === "" || v == null ? null : Number(v)
         payload[s.key] = v
+        // Alt lives inside the image field rather than as a row of its own.
+        if (s.altKey) payload[s.altKey] = form[s.altKey] ?? ""
       }
       for (const k of ["price_tiers", "gallery", "features", "policies", "reviews", "related_slugs"]) {
         if (form[k] !== undefined) payload[k] = form[k]
@@ -347,7 +350,10 @@ export function ActivityEditor({
                             <ImagePicker
                               value={value}
                               onChange={onChange}
+                              disabled={locked}
                               hint={locked ? "κοινό για όλες τις γλώσσες" : undefined}
+                              alt={s.altKey ? tval(s.altKey) : undefined}
+                              onAltChange={s.altKey ? (v) => tset(s.altKey!, v) : undefined}
                             />
                           ) : s.type === "textarea" ? (
                             <RichTextarea

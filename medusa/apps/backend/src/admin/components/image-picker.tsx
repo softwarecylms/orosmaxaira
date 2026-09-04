@@ -33,11 +33,18 @@ export function ImagePicker({
   value,
   onChange,
   hint,
+  disabled,
+  alt,
+  onAltChange,
 }: {
   label?: string
   value: string | null | undefined
   onChange: (next: string) => void
   hint?: string
+  disabled?: boolean
+  /** Alt text, shown inside the box so it travels with the image it describes. */
+  alt?: string
+  onAltChange?: (next: string) => void
 }) {
   const [open, setOpen] = useState(false)
   const lib = useLibrary()
@@ -53,11 +60,12 @@ export function ImagePicker({
         </Text>
       ) : null}
 
+      <div className="flex flex-col gap-2 rounded-lg border border-ui-border-base bg-ui-bg-subtle p-2">
       <div className="flex items-start gap-3">
         {/* Thumbnail — click to open the library */}
         <button
           type="button"
-          onClick={() => setOpen(true)}
+          onClick={() => !disabled && setOpen(true)}
           title="Επιλογή από τη βιβλιοθήκη"
           className="group relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-ui-border-base bg-ui-bg-field transition-colors hover:border-ui-border-interactive"
         >
@@ -81,11 +89,18 @@ export function ImagePicker({
         <div className="flex min-w-0 flex-1 flex-col gap-1.5">
           <Input
             value={current}
+            disabled={disabled}
             placeholder="/images/… ή https://…"
             onChange={(e) => onChange(e.target.value)}
           />
           <div className="flex items-center gap-2">
-            <Button size="small" variant="secondary" type="button" onClick={() => setOpen(true)}>
+            <Button
+              size="small"
+              variant="secondary"
+              type="button"
+              disabled={disabled}
+              onClick={() => setOpen(true)}
+            >
               <Photo />
               Βιβλιοθήκη
             </Button>
@@ -95,6 +110,7 @@ export function ImagePicker({
                 variant="transparent"
                 type="button"
                 title="Αφαίρεση"
+                disabled={disabled}
                 onClick={() => onChange("")}
               >
                 <Trash />
@@ -107,6 +123,17 @@ export function ImagePicker({
             ) : null}
           </div>
         </div>
+      </div>
+
+      {onAltChange ? (
+        <input
+          value={alt ?? ""}
+          placeholder="Alt — τι δείχνει η εικόνα"
+          title="Εναλλακτικό κείμενο (alt)"
+          onChange={(e) => onAltChange(e.target.value)}
+          className="w-full rounded-md border border-ui-border-base bg-ui-bg-field px-2 py-1.5 text-sm outline-none focus:border-ui-border-interactive"
+        />
+      ) : null}
       </div>
 
       {open ? (

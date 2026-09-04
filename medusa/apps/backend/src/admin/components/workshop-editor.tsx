@@ -399,6 +399,7 @@ export function WorkshopEditor({
                             <ImagePicker
                               value={value}
                               onChange={onChange}
+                              disabled={locked}
                               hint={locked ? "κοινό για όλες τις γλώσσες" : undefined}
                             />
                           ) : s.type === "textarea" ? (

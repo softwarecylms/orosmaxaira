@@ -38,10 +38,11 @@ const SCALARS: {
   label: string
   type?: "text" | "number" | "textarea" | "image"
   full?: boolean
+  /** For an image field: the companion alt key, rendered inside the image box. */
+  altKey?: string
 }[] = [
   { key: "title", label: "Τίτλος" },
-  { key: "hero_image", label: "Κύρια εικόνα", type: "image", full: true },
-  { key: "hero_image_alt", label: "Alt κύριας εικόνας" },
+  { key: "hero_image", label: "Κύρια εικόνα", type: "image", full: true, altKey: "hero_image_alt" },
   { key: "max_students", label: "Μέγιστος αριθμός παιδιών", type: "number" },
   { key: "intro", label: "Περιγραφή — 1η παράγραφος", type: "textarea", full: true },
   { key: "closing", label: "Περιγραφή — κλείσιμο", type: "textarea", full: true },
@@ -94,6 +95,8 @@ const SchoolProgramPage = () => {
         let v = form[s.key]
         if (s.type === "number") v = v === "" || v == null ? null : Number(v)
         payload[s.key] = v
+        // Alt lives inside the image field rather than as a row of its own.
+        if (s.altKey) payload[s.altKey] = form[s.altKey] ?? ""
       }
       for (const k of ["tour_stops", "workshop_options", "pricing", "notes"]) {
         if (form[k] !== undefined) payload[k] = form[k]
@@ -165,7 +168,10 @@ const SchoolProgramPage = () => {
                       <ImagePicker
                         value={value}
                         onChange={onChange}
+                        disabled={locked}
                         hint={locked ? "κοινό για όλες τις γλώσσες" : undefined}
+                        alt={s.altKey ? tval(s.altKey) : undefined}
+                        onAltChange={s.altKey ? (v) => tset(s.altKey!, v) : undefined}
                       />
                     ) : s.type === "textarea" ? (
                       <Textarea value={value} disabled={locked} onChange={(e) => onChange(e.target.value)} />
