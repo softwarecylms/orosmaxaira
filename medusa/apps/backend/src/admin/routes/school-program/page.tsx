@@ -1,10 +1,11 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
 import { AcademicCap } from "@medusajs/icons"
 import { Button, Container, Heading, Input, Label, Text, Textarea, toast } from "@medusajs/ui"
-import { useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { sdk } from "../../lib/sdk"
 import { Repeater } from "../../components/repeater"
 import { LangToggle } from "../../components/lang-toggle"
+import { ImagePicker } from "../../components/image-picker"
 import { ViewPageButton } from "../../components/view-page-button"
 
 const api = {
@@ -32,9 +33,14 @@ const TRANSLATABLE_SCALARS = new Set([
   "meta_description",
 ])
 
-const SCALARS: { key: string; label: string; type?: "text" | "number" | "textarea"; full?: boolean }[] = [
+const SCALARS: {
+  key: string
+  label: string
+  type?: "text" | "number" | "textarea" | "image"
+  full?: boolean
+}[] = [
   { key: "title", label: "Τίτλος" },
-  { key: "hero_image", label: "Κύρια εικόνα (URL)" },
+  { key: "hero_image", label: "Κύρια εικόνα", type: "image", full: true },
   { key: "hero_image_alt", label: "Alt κύριας εικόνας" },
   { key: "max_students", label: "Μέγιστος αριθμός παιδιών", type: "number" },
   { key: "intro", label: "Περιγραφή — 1η παράγραφος", type: "textarea", full: true },
@@ -149,38 +155,51 @@ const SchoolProgramPage = () => {
               const value = translatable ? tval(s.key) : form[s.key] ?? ""
               const onChange = (v: string) => (translatable ? tset(s.key, v) : set(s.key, v))
               return (
-                <div key={s.key} className={`flex flex-col gap-1 ${s.full ? "col-span-2" : ""}`}>
-                  <Label size="small" weight="plus">
-                    {s.label}
-                    {locked ? <span className="text-ui-fg-muted"> · κοινό</span> : null}
-                  </Label>
-                  {s.type === "textarea" ? (
-                    <Textarea value={value} disabled={locked} onChange={(e) => onChange(e.target.value)} />
-                  ) : (
-                    <Input
-                      type={s.type === "number" ? "number" : "text"}
-                      value={value}
-                      disabled={locked}
-                      onChange={(e) => onChange(e.target.value)}
-                    />
-                  )}
-                </div>
+                <Fragment key={s.key}>
+                  <div className={`flex flex-col gap-1 ${s.full ? "col-span-2" : ""}`}>
+                    <Label size="small" weight="plus">
+                      {s.label}
+                      {locked ? <span className="text-ui-fg-muted"> · κοινό</span> : null}
+                    </Label>
+                    {s.type === "image" ? (
+                      <ImagePicker
+                        value={value}
+                        onChange={onChange}
+                        hint={locked ? "κοινό για όλες τις γλώσσες" : undefined}
+                      />
+                    ) : s.type === "textarea" ? (
+                      <Textarea value={value} disabled={locked} onChange={(e) => onChange(e.target.value)} />
+                    ) : (
+                      <Input
+                        type={s.type === "number" ? "number" : "text"}
+                        value={value}
+                        disabled={locked}
+                        onChange={(e) => onChange(e.target.value)}
+                      />
+                    )}
+                  </div>
+
+                  {/* Status shares the first row with the title, so the hero
+                      image below it gets the full width of its own row. */}
+                  {s.key === "title" ? (
+                    <div className="flex flex-col gap-1">
+                      <Label size="small" weight="plus">
+                        Κατάσταση
+                      </Label>
+                      <select
+                        className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm disabled:opacity-50"
+                        value={form.status ?? "published"}
+                        disabled={en}
+                        onChange={(e) => set("status", e.target.value)}
+                      >
+                        <option value="draft">Πρόχειρο</option>
+                        <option value="published">Δημοσιευμένο</option>
+                      </select>
+                    </div>
+                  ) : null}
+                </Fragment>
               )
             })}
-            <div className="flex flex-col gap-1">
-              <Label size="small" weight="plus">
-                Κατάσταση
-              </Label>
-              <select
-                className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm disabled:opacity-50"
-                value={form.status ?? "published"}
-                disabled={en}
-                onChange={(e) => set("status", e.target.value)}
-              >
-                <option value="draft">Πρόχειρο</option>
-                <option value="published">Δημοσιευμένο</option>
-              </select>
-            </div>
           </div>
 
           <Repeater
