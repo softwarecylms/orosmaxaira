@@ -109,7 +109,7 @@ const EL_ACTIVITY = {
   ],
   benefits: {
     intro:
-      "Οι αρχαίοι Αιγύπτιοι ήταν από τους πρώτους που κάθισαν δίπλα στην κυψέλη για να αναπνεύσουν τον αέρα της. Σήμερα, στο δικό μας μελισσοκομείο, η εμπειρία παραμένει το ίδιο απλή: κάθεστε αναπαυτικά, φοράτε την ειδική μάσκα και αφήνετε τον θερμό, αρωματικό αέρα της κυψέλης και τον ήχο του μελισσιού να σας συνοδεύσουν για είκοσι λεπτά. Να τι περιλαμβάνει κάθε συνεδρία:",
+      "Παραδοσιακά χρησιμοποιείται για την υποστήριξη της αναπνευστικής άνεσης και της χαλάρωσης. Οι αρχαίοι Αιγύπτιοι ήταν από τους πρώτους που κάθισαν δίπλα στην κυψέλη για να αναπνεύσουν τον αέρα της. Σήμερα, στο δικό μας μελισσοκομείο, η εμπειρία παραμένει το ίδιο απλή: κάθεστε αναπαυτικά, φοράτε την ειδική μάσκα και αφήνετε τον θερμό, αρωματικό αέρα της κυψέλης και τον ήχο του μελισσιού να σας συνοδεύσουν για είκοσι λεπτά. Να τι περιλαμβάνει κάθε συνεδρία:",
     items: [
       "Ο θερμός αέρας της κυψέλης, μέσω ειδικής αναπνευστικής μάσκας",
       "Τα φυσικά αρώματα του κεριού, της πρόπολης και του μελιού",
@@ -135,7 +135,7 @@ const EN_ACTIVITY = {
   ],
   benefits: {
     intro:
-      "The ancient Egyptians were among the first to sit beside a hive and breathe its air. At our apiary the experience remains just as simple: you settle into a comfortable seat, put on the special mask, and let the warm, aromatic air of the hive and the sound of the colony keep you company for twenty minutes. Each session includes:",
+      "Traditionally used to support respiratory comfort and relaxation. The ancient Egyptians were among the first to sit beside a hive and breathe its air. At our apiary the experience remains just as simple: you settle into a comfortable seat, put on the special mask, and let the warm, aromatic air of the hive and the sound of the colony keep you company for twenty minutes. Each session includes:",
     items: [
       "The warm air of the hive, through a dedicated breathing mask",
       "The natural aromas of beeswax, propolis and honey",

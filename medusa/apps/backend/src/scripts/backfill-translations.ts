@@ -89,37 +89,36 @@ const ACTIVITY_EN: Record<string, any> = {
 
   melissotherapeia: {
     title: "Apitherapy (Bee Therapy)",
-    subtitle: "A complementary therapy using the precious products of the hive.",
+    subtitle: "A traditional practice using the precious products of the hive.",
     hero_image_alt: "Bee therapy — inhaling the air of the hive",
     description:
-      "Apitherapy has been practised since antiquity — the ancient Egyptians are among the earliest known users. It is a wide-ranging complementary therapy that uses the products of the hive (honey, royal jelly, pollen, bee venom, propolis) in a variety of applications.\n\nApitherapy is used as a natural complement to conventional care and is suitable for children, athletes and older adults alike.",
+      "Apitherapy has been practised since antiquity — the ancient Egyptians are among the earliest known users. It is a traditional practice that draws on the products of the hive (honey, royal jelly, pollen, propolis) and on its warm air, in a relaxing experience inside the apiary.\n\nAt Oros Machaira it is offered as a calm, sensory experience in nature, suitable for adults and children alike.",
     details: "Every other day for three weeks, 20 minutes per session.",
-    note: "The bee products and the inhalation of hive air are not medicines, nor do they replace prescribed medication. They work alongside and complement conventional treatment — never as a substitute for it.",
+    note: "Apitherapy is not a medical treatment. The products of the hive and the inhalation of hive air are not medicines: they do not prevent, treat or cure any disease, and they are not a substitute for medical advice or prescribed medication. If you have a health condition or a known allergy to bee products or bee stings, please consult your doctor first.",
     duration_label: "20 min / session",
     age_label: "For all ages",
     meta_title: "Apitherapy (Bee Therapy) in Cyprus — Oros Machaira",
     meta_description:
-      "Apitherapy at Oros Machaira: a complementary therapy using the products of the hive and the inhalation of its air. Appointments April–October.",
+      "Apitherapy at Oros Machaira: a traditional practice with the products of the hive and the inhalation of its air. Appointments April–October.",
     // Bug fix: EN counterpart of the Greek "Ανά συνεδρία" tier.
     price_tiers: [{ key: "session", label: "Per session", price: 7 }],
     features: [
-      { title: "Inhaling hive air", text: "Through a special breathing mask you inhale the warm air of the hive, with its beneficial substances." },
-      { title: "Products of the hive", text: "Honey, propolis, pollen, royal jelly and bee venom are used for their beneficial properties." },
-      { title: "Season & duration", text: "Applied April–October: for noticeable results, three weeks, every second day for 20 minutes." },
+      { title: "Inhaling hive air", text: "Through a special breathing mask you inhale the warm, aromatic air of the hive." },
+      { title: "Products of the hive", text: "Honey, propolis, pollen and royal jelly accompany the experience." },
+      { title: "Season & duration", text: "Available April–October: three weeks, every second day for 20 minutes." },
     ],
+    // Reg. (EC) 1924/2006: no condition list, no unauthorised health claims —
+    // this describes what a session involves, not what it treats.
     benefits: {
       intro:
-        "The ancient Egyptians, among others, used the inhalation of air from inside the hive to treat various respiratory problems. When you inhale the warm hive air through a special mask, you take in compounds that are beneficial for overall physical and mental wellbeing. The air inside the hive, rich in natural aromatic compounds, helps people deal with the following issues:",
+        "Traditionally used to support respiratory comfort and relaxation. The ancient Egyptians were among the first to sit beside a hive and breathe its air. At our apiary the experience remains just as simple: you settle into a comfortable seat, put on the special mask, and let the warm, aromatic air of the hive and the sound of the colony keep you company for twenty minutes. Each session includes:",
       items: [
-        "Bronchitis",
-        "Asthma",
-        "Chronic diseases of the lungs",
-        "Susceptibility to infections",
-        "Weak immune system",
-        "Respiratory infections",
-        "Chronic headaches, migraines",
-        "Stress",
-        "Depression",
+        "The warm air of the hive, through a dedicated breathing mask",
+        "The natural aromas of beeswax, propolis and honey",
+        "The distinctive sound and pulse of the colony",
+        "Twenty minutes of quiet in the nature of Machairas",
+        "A safe, controlled space — with no direct contact with the bees",
+        "The guidance of an experienced beekeeper throughout",
       ],
     },
   },

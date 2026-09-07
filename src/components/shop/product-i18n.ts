@@ -8,7 +8,7 @@ import { canonicalHandle } from './product-slugs'
 
 /** Greek Medusa handle -> English product title. */
 export const PRODUCT_TITLE_EN: Record<string, string> = {
-  "avrasto-meli-antheon-oros-machaira": "Oros Machaira Raw (Unheated) Blossom Honey",
+  "avrasto-meli-antheon-oros-machaira": "Oros Machaira Raw Blossom Honey",
   "balance-care-gift-set": "Balance Care Gift Set",
   "enydatiki-krema-prosopoy": "Natural Moisturising Face Cream",
   "everyday-care-duo-gift-set": "Everyday Care Duo Gift Set",

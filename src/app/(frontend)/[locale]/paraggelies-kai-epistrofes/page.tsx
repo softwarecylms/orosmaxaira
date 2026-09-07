@@ -10,8 +10,8 @@ const SECTIONS: LegalSection[] = [
   {
     heading: 'Επιστροφές προϊόντων',
     body: [
-      'Είμαστε σίγουροι ότι οι αγορές που κάνετε από αυτή την ιστοσελίδα θα σας ικανοποιήσουν απόλυτα. Εάν όμως δεν είστε απόλυτα ικανοποιημένοι με την αγορά σας, μπορείτε να ακυρώσετε την παραγγελία σας απλώς ειδοποιώντας μας μέσω email εντός 3 ημερών από την ημερομηνία που λάβατε τα προϊόντα, και να τα επιστρέψετε εντός 14 ημερών από την ημερομηνία ακύρωσης. Θα γίνει επιστροφή χρημάτων ή έκδοση κουπονιού για να πάρετε άλλα προϊόντα από την εταιρεία μας.',
-      'Λάβετε υπόψη ότι θα είστε υπεύθυνοι για τα έξοδα επιστροφής των αγαθών σε εμάς, εκτός εάν σας παραδώσαμε το προϊόν κατά λάθος ή εάν το προϊόν είναι ελαττωματικό. Συσκευάστε το σχετικό προϊόν με ασφάλεια, τουλάχιστον στη συσκευασία που παραλήφθηκε, και στείλτε το σε εμάς μαζί με ένα αντίγραφο του τιμολογίου σας, ώστε να το παραλάβουμε εντός επτά εργάσιμων ημερών από την ημέρα που το προϊόν παραδόθηκε σε εσάς.',
+      'Είμαστε σίγουροι ότι οι αγορές που κάνετε από αυτή την ιστοσελίδα θα σας ικανοποιήσουν απόλυτα. Εάν όμως δεν είστε απόλυτα ικανοποιημένοι με την αγορά σας, μπορείτε να ακυρώσετε την παραγγελία σας απλώς ειδοποιώντας μας μέσω email εντός 14 ημερών από την ημερομηνία που λάβατε τα προϊόντα, και να τα επιστρέψετε εντός 14 ημερών από την ημερομηνία ακύρωσης. Θα γίνει επιστροφή χρημάτων ή έκδοση κουπονιού για να πάρετε άλλα προϊόντα από την εταιρεία μας.',
+      'Λάβετε υπόψη ότι θα είστε υπεύθυνοι για τα έξοδα επιστροφής των αγαθών σε εμάς, εκτός εάν σας παραδώσαμε το προϊόν κατά λάθος ή εάν το προϊόν είναι ελαττωματικό. Συσκευάστε το σχετικό προϊόν με ασφάλεια, τουλάχιστον στη συσκευασία που παραλήφθηκε, και στείλτε το σε εμάς μαζί με ένα αντίγραφο του τιμολογίου σας, ώστε να το παραλάβουμε εντός 14 ημερών από την ημέρα που μας δηλώσατε την ακύρωση.',
     ],
   },
   {
@@ -46,8 +46,8 @@ const SECTIONS_EN: LegalSection[] = [
   {
     heading: 'Product returns',
     body: [
-      'We hope you’ll love every purchase you make from our website, but if you are not completely satisfied with your purchase, you can cancel your order by simply notifying us by email within 3 days from the date you received the items and return them to us within 14 days from the cancellation date. We will issue a full refund or credit note for the price you paid for the item.',
-      'Please note that you will be responsible for the costs of returning the goods to us unless we delivered the item to you in error, or if the item is faulty. Please package the relevant item securely in at least the packaging it was received and send it to us with a copy of your invoice so that we receive it within seven working days of the day after the date that the item was delivered to you.',
+      'We hope you’ll love every purchase you make from our website, but if you are not completely satisfied with your purchase, you can cancel your order by simply notifying us by email within 14 days from the date you received the items and return them to us within 14 days from the cancellation date. We will issue a full refund or credit note for the price you paid for the item.',
+      'Please note that you will be responsible for the costs of returning the goods to us unless we delivered the item to you in error, or if the item is faulty. Please package the relevant item securely in at least the packaging it was received and send it to us with a copy of your invoice so that we receive it within 14 days of the day you told us you were cancelling.',
     ],
   },
   {

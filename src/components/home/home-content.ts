@@ -499,7 +499,7 @@ const HOME_EN: HomeContent = {
       href: '/proionta/meli',
       links: [
         { label: 'Blossom Honey', href: '/product/meli-antheon-oros-machaira' },
-        { label: 'Raw (Unheated) Blossom Honey', href: '/product/avrasto-meli-antheon-oros-machaira' },
+        { label: 'Raw Blossom Honey', href: '/product/avrasto-meli-antheon-oros-machaira' },
         { label: 'Thyme Honey', href: '/product/thymarisio-meli-oros-machaira' },
       ],
     },
@@ -563,7 +563,7 @@ const HOME_EN: HomeContent = {
     featured: { ...DEAL.featured, title: 'The Elixir of the Gods', imageAlt: 'Melite Mead — Oros Machaira' },
     products: [
       { ...DEAL.products[0], category: 'Honey', title: 'Oros Machaira Blossom Honey' },
-      { ...DEAL.products[1], category: 'Honey', title: 'Oros Machaira Raw (Unheated) Blossom Honey' },
+      { ...DEAL.products[1], category: 'Honey', title: 'Oros Machaira Raw Blossom Honey' },
       { ...DEAL.products[2], category: 'Bee Products', title: 'Oros Machaira Royal Jelly' },
       { ...DEAL.products[3], category: 'Bee Products', title: 'Mead' },
       { ...DEAL.products[4], category: 'Honey', title: 'Oros Machaira Thyme Honey' },
