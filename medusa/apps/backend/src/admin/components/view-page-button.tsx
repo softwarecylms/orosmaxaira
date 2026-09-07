@@ -1,6 +1,6 @@
 import { IconButton } from "@medusajs/ui"
 import { Eye } from "@medusajs/icons"
-import { publicPath, useStorefrontOrigin } from "../lib/storefront"
+import { publicPath, useStorefrontOrigin, type PageKind } from "../lib/storefront"
 
 /**
  * Opens the public page for the record being edited, in a new tab.
@@ -14,7 +14,7 @@ export function ViewPageButton({
   kind,
   slug,
 }: {
-  kind: "activity" | "workshop" | "school"
+  kind: PageKind
   slug?: string | null
 }) {
   const origin = useStorefrontOrigin()

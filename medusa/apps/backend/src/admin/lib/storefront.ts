@@ -49,10 +49,15 @@ export function useStorefrontOrigin(): string {
   return useLibrary()?.origin ?? ""
 }
 
-/** Public path for a piece of content, matching the storefront's routes. */
-export function publicPath(kind: "activity" | "workshop" | "school", slug?: string | null): string {
+export type PageKind = "activity" | "workshop" | "school" | "product"
+
+/** Public path for a piece of content, matching the storefront's routes. The
+ *  Greek (default-locale) path — the admin UI is Greek, and /en redirects to the
+ *  English slug on its own. */
+export function publicPath(kind: PageKind, slug?: string | null): string {
   if (kind === "school") return "/drastiriotites/scholeia/"
   if (!slug) return ""
+  if (kind === "product") return `/product/${slug}/`
   return kind === "workshop"
     ? `/drastiriotites/ergastiria/${slug}/`
     : `/drastiriotites/${slug}/`

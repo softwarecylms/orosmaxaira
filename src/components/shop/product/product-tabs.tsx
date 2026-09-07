@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useLocale } from 'next-intl'
 import type { ShopSection, ShopNutritionRow } from '../shop-content'
+import { RichBody } from '@/components/content/rich-body'
 import { getProductUi } from './product-ui'
 import { cn } from '@/lib/utils'
 
@@ -86,6 +87,11 @@ export function ProductTabs({
   // render-scoped budget: bold at most MAX_BOLD terms across the whole description
   const bold = { left: MAX_BOLD, seen: new Set<string>() }
 
+  // Has an editor formatted the description by hand in the admin? Markdown
+  // markup (**bold**, *italic*, - lists, links) switches the whole tab over to
+  // <RichBody>, so the automatic term-bolding stops competing with it.
+  const authored = sections.some((s) => /\*\*.+?\*\*|^[-*]\s|\[[^\]]+\]\([^)]+\)/m.test(s.body ?? ''))
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex gap-8 border-b border-border">
@@ -108,7 +114,14 @@ export function ProductTabs({
               {s.heading ? (
                 <h3 className="text-[17px] font-semibold text-foreground">{s.heading}</h3>
               ) : null}
-              <p>{highlightImportant(s.body, bold)}</p>
+              {/* Once an editor formats anything by hand, their markup is the
+                  whole story — the automatic term-bolding would otherwise pile
+                  more bold on top of a paragraph they already shaped. */}
+              {authored ? (
+                <RichBody text={s.body} className="flex flex-col gap-3" />
+              ) : (
+                <p>{highlightImportant(s.body, bold)}</p>
+              )}
             </div>
           ))}
         </div>

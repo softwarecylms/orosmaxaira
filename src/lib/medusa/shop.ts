@@ -22,6 +22,29 @@ function pick(locale: string, meta: unknown, key: string, fallback: string): str
   return fallback
 }
 
+/** Parse a JSON blob stored in Medusa `metadata` (the product-tab content is
+ *  kept as a JSON string so the dashboard's flat metadata editor cannot mangle
+ *  it). Returns undefined for anything unreadable — bad JSON in the admin must
+ *  fall back to the editorial snapshot, never blank the tab. */
+function parseMeta<T>(meta: unknown, key: string): T | undefined {
+  const raw = (meta as Record<string, unknown> | null | undefined)?.[key]
+  if (typeof raw !== 'string' || !raw.trim()) return undefined
+  try {
+    const parsed = JSON.parse(raw) as T
+    return parsed && (!Array.isArray(parsed) || parsed.length) ? parsed : undefined
+  } catch {
+    return undefined
+  }
+}
+
+/** Tab content for a locale: the admin's value for that language, then the
+ *  editorial snapshot, then the Greek value the admin entered. */
+function pickTab<T>(locale: string, meta: unknown, key: string, editorial: T | undefined): T | undefined {
+  const greek = parseMeta<T>(meta, `${key}_json`)
+  if (locale !== 'en') return greek ?? editorial
+  return parseMeta<T>(meta, `${key}_en_json`) ?? editorial ?? greek
+}
+
 /**
  * Medusa → storefront adapter for the shop grid. Maps Store API products into
  * the `ShopProduct` shape the (client) <ShopBrowser> already renders, so the
@@ -225,6 +248,9 @@ export async function getShopProduct(
   const detail: ShopProductDetail = {
     ...staticDetail,
     description: enDesc || staticDetail.description || m.description || '',
+    // «Περιγραφή» / «Διατροφική Αξία» tabs — editable in the Medusa admin.
+    sections: pickTab(locale, m.metadata, 'sections', staticDetail.sections),
+    nutrition: pickTab(locale, m.metadata, 'nutrition', staticDetail.nutrition),
     variations: sizes ? { sizes } : undefined,
   }
   return { product, detail }
