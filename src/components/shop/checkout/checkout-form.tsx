@@ -827,31 +827,6 @@ function CheckoutFormInner() {
           ) : null}
         </fieldset>
 
-        {/* Payment method */}
-        <fieldset className="flex flex-col gap-2.5 border-t border-border pt-4">
-          <legend className="mb-1 text-[15px] font-semibold text-foreground">{t.paymentLegend}</legend>
-          <RadioRow
-            name="payment"
-            checked={c.payment === 'card'}
-            onChange={() => setC((p) => ({ ...p, payment: 'card' }))}
-            label={t.cardPayment}
-          />
-          {stripeConfigured ? (
-            <div className="flex flex-col gap-2 rounded-[4px] border border-border p-3">
-              <span className="text-[14px] font-medium text-foreground">{t.cardDetails}</span>
-              <PaymentElement
-                options={{
-                  layout: 'tabs',
-                  // Medusa creates the intent with automatic payment methods;
-                  // wallets are switched off so the test flow stays card-only.
-                  wallets: { applePay: 'never', googlePay: 'never' },
-                }}
-              />
-              <span className="text-[12px] leading-[16px] text-muted">{t.securePaymentNote}</span>
-            </div>
-          ) : null}
-        </fieldset>
-
         {/* Coupon */}
         <div className="flex flex-col gap-2 border-t border-border pt-4">
           {coupon ? (
@@ -938,6 +913,33 @@ function CheckoutFormInner() {
           <span>{t.total}</span>
           <span>{formatCents(total)}</span>
         </div>
+
+        {/* Payment method */}
+        <fieldset className="flex flex-col gap-2.5 border-t border-border pt-4">
+          <legend className="mb-1 text-[15px] font-semibold text-foreground">{t.paymentLegend}</legend>
+          <RadioRow
+            name="payment"
+            checked={c.payment === 'card'}
+            onChange={() => setC((p) => ({ ...p, payment: 'card' }))}
+            label={t.cardPayment}
+          />
+          {stripeConfigured ? (
+            <div className="flex flex-col gap-2 rounded-[4px] border border-border p-3">
+              <span className="text-[14px] font-medium text-foreground">{t.cardDetails}</span>
+              <PaymentElement
+                options={{
+                  layout: 'tabs',
+                  // Apple/Google Pay ride on the card type rather than being
+                  // methods of their own, so restricting the method list never
+                  // removes them — they switch off here or not at all. Link stays:
+                  // it is a faster path to the same card payment.
+                  wallets: { applePay: 'never', googlePay: 'never' },
+                }}
+              />
+              <span className="text-[12px] leading-[16px] text-muted">{t.securePaymentNote}</span>
+            </div>
+          ) : null}
+        </fieldset>
 
         <div className="flex flex-col gap-3">
           <p className="text-[13px] leading-[19px] text-muted">

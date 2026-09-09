@@ -60,6 +60,25 @@ export function StripeCheckoutProvider({ children }: { children: React.ReactNode
         mode: 'payment',
         currency: 'eur',
         amount: seedAmount,
+        // Deliberately NOT setting `paymentMethodTypes`. Naming a type switches
+        // Elements into manual mode, and Medusa always creates the intent with
+        // automatic payment methods (it cannot be told to do otherwise from
+        // config — see medusa-config.ts), so confirmation is then refused:
+        // "collected through Stripe Elements using payment_method_types and
+        // cannot be confirmed through the API configured with automatic payment
+        // methods".
+        //
+        // `automaticPaymentMethods: false` on the backend provider does not help:
+        // it only stops Medusa from asking for them, and Stripe then turns them
+        // on itself because the intent names no `payment_method_types`. Checked
+        // against a real intent — it still came back
+        // `automatic_payment_methods: {enabled: true}` with the full method list.
+        //
+        // To show cards only, disable the other methods in the Stripe Dashboard
+        // → Settings → Payment methods; that list is what Elements renders.
+        // Scalapay and the rest are already inactive there, which is why Stripe
+        // logs "will be displayed in test mode, but hidden" — they do not reach
+        // a live customer.
         // Matches `capture: true` on the backend provider, which creates the
         // PaymentIntent with capture_method 'automatic'.
         captureMethod: 'automatic',
@@ -70,6 +89,10 @@ export function StripeCheckoutProvider({ children }: { children: React.ReactNode
             colorDanger: '#b91c1c',
             borderRadius: '4px',
             fontSizeBase: '15px',
+            // Shrinks the Link banner ("Ασφαλής, γρήγορη ολοκλήρωση…") and the
+            // field labels together — Stripe gives the banner no selector of its
+            // own. 13px is as small as the labels take before they look starved.
+            fontSizeSm: '13px',
           },
         },
       }}

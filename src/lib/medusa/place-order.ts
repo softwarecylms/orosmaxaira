@@ -204,6 +204,9 @@ export async function prepareMedusaOrder(
       serverAmountCents: typeof data.amount === 'number' ? data.amount : serverTotalCents,
     }
   } catch (e) {
+    // Log it: this is the branch that turns a real Medusa failure into a vague
+    // sentence for the customer, so the detail has to land somewhere.
+    console.error('[order] prepare failed', e)
     return orderError('unknown', { message: e instanceof Error ? e.message : undefined })
   }
 }
@@ -235,6 +238,7 @@ export async function completeMedusaOrder(
 
     return { orderId: order.id }
   } catch (e) {
+    console.error('[order] complete failed', { cartId, e })
     return orderError('unknown', { message: e instanceof Error ? e.message : undefined })
   }
 }
