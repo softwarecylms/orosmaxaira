@@ -1,9 +1,11 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
-import { Sparkles } from "@medusajs/icons"
+import { Sparkles, Plus } from "@medusajs/icons"
 import { Badge, Button, Container, Heading, Table } from "@medusajs/ui"
 import { useEffect, useState } from "react"
 import { sdk } from "../../lib/sdk"
 import { WorkshopEditor } from "../../components/workshop-editor"
+import { NewRecordDialog } from "../../components/new-record-dialog"
+import { TrashSection } from "../../components/trash-section"
 
 type Workshop = {
   id: string
@@ -17,12 +19,16 @@ type Workshop = {
 const WorkshopsPage = () => {
   const [workshops, setWorkshops] = useState<Workshop[]>([])
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [creating, setCreating] = useState(false)
   const [loading, setLoading] = useState(true)
+  // Bumped on every list reload so the trash re-reads after a delete.
+  const [listToken, setListToken] = useState(0)
 
   const load = () =>
     sdk.client
       .fetch<{ workshops: Workshop[] }>("/admin/workshops", { method: "GET" })
       .then((r) => setWorkshops(r.workshops))
+      .then(() => setListToken((n) => n + 1))
       .catch(() => setWorkshops([]))
       .finally(() => setLoading(false))
 
@@ -34,6 +40,10 @@ const WorkshopsPage = () => {
     <Container className="divide-y p-0">
       <div className="flex items-center justify-between px-6 py-4">
         <Heading>Εργαστήρια</Heading>
+        <Button size="small" variant="secondary" onClick={() => setCreating(true)}>
+          <Plus />
+          Νέο εργαστήρι
+        </Button>
       </div>
 
       {loading ? (
@@ -79,6 +89,21 @@ const WorkshopsPage = () => {
           </Table.Body>
         </Table>
       )}
+
+      <TrashSection kind="workshop" reloadToken={listToken} onRestored={load} />
+
+      <NewRecordDialog
+        kind="workshop"
+        open={creating}
+        onClose={() => setCreating(false)}
+        onCreated={(id) => {
+          setCreating(false)
+          load()
+          // Straight into the full editor, so the new draft is filled in now
+          // rather than left as a title-only row.
+          setEditingId(id)
+        }}
+      />
 
       {editingId ? (
         <WorkshopEditor

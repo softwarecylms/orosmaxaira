@@ -1,9 +1,11 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
-import { Calendar } from "@medusajs/icons"
+import { Calendar, Plus } from "@medusajs/icons"
 import { Badge, Button, Container, Heading, Table } from "@medusajs/ui"
 import { useEffect, useState } from "react"
 import { sdk } from "../../lib/sdk"
 import { ActivityEditor } from "../../components/activity-editor"
+import { NewRecordDialog } from "../../components/new-record-dialog"
+import { TrashSection } from "../../components/trash-section"
 
 type Activity = {
   id: string
@@ -16,12 +18,16 @@ type Activity = {
 const ActivitiesPage = () => {
   const [activities, setActivities] = useState<Activity[]>([])
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [creating, setCreating] = useState(false)
   const [loading, setLoading] = useState(true)
+  // Bumped on every list reload so the trash re-reads after a delete.
+  const [listToken, setListToken] = useState(0)
 
   const load = () =>
     sdk.client
       .fetch<{ activities: Activity[] }>("/admin/activities", { method: "GET" })
       .then((r) => setActivities(r.activities))
+      .then(() => setListToken((n) => n + 1))
       .catch(() => setActivities([]))
       .finally(() => setLoading(false))
 
@@ -41,6 +47,10 @@ const ActivitiesPage = () => {
     <Container className="divide-y p-0">
       <div className="flex items-center justify-between px-6 py-4">
         <Heading>Δραστηριότητες</Heading>
+        <Button size="small" variant="secondary" onClick={() => setCreating(true)}>
+          <Plus />
+          Νέα δραστηριότητα
+        </Button>
       </div>
 
       {loading ? (
@@ -93,6 +103,21 @@ const ActivitiesPage = () => {
           </Table.Body>
         </Table>
       )}
+
+      <TrashSection kind="activity" reloadToken={listToken} onRestored={load} />
+
+      <NewRecordDialog
+        kind="activity"
+        open={creating}
+        onClose={() => setCreating(false)}
+        onCreated={(id) => {
+          setCreating(false)
+          load()
+          // Straight into the full editor, so the new draft is filled in now
+          // rather than left as a title-only row.
+          setEditingId(id)
+        }}
+      />
 
       {editingId ? (
         <ActivityEditor

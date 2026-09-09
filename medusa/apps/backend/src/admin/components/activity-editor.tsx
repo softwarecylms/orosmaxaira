@@ -20,6 +20,7 @@ import { ImagePicker } from "./image-picker"
 import { ImageGallery } from "./image-gallery"
 import { RichTextarea } from "./rich-textarea"
 import { ViewPageButton } from "./view-page-button"
+import { DeleteRecordButton } from "./delete-record-button"
 import { LangToggle } from "./lang-toggle"
 import { VisualEditor, type EditorSection } from "./visual-editor"
 
@@ -493,6 +494,17 @@ export function ActivityEditor({
               {form.title ? `Επεξεργασία: ${form.title}` : "Δραστηριότητα"}
             </Text>
             <div className="flex items-center gap-2">
+              <DeleteRecordButton
+                kind="activity"
+                id={activityId}
+                title={form.title as string | undefined}
+                bookingCount={bookings.length}
+                disabled={saving}
+                onDeleted={() => {
+                  onSaved()
+                  onClose()
+                }}
+              />
               <ViewPageButton kind="activity" slug={form.slug as string | undefined} />
               <Button size="small" onClick={save} isLoading={saving}>
                 Αποθήκευση

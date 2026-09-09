@@ -19,6 +19,7 @@ import { ImagePicker } from "./image-picker"
 import { ImageGallery } from "./image-gallery"
 import { RichTextarea } from "./rich-textarea"
 import { ViewPageButton } from "./view-page-button"
+import { DeleteRecordButton } from "./delete-record-button"
 import { LangToggle } from "./lang-toggle"
 import { VisualEditor, type EditorSection } from "./visual-editor"
 
@@ -539,6 +540,17 @@ export function WorkshopEditor({
               {form.title ? `Επεξεργασία: ${form.title}` : "Εργαστήρι"}
             </Text>
             <div className="flex items-center gap-2">
+              <DeleteRecordButton
+                kind="workshop"
+                id={workshopId}
+                title={form.title as string | undefined}
+                bookingCount={bookings.length}
+                disabled={saving}
+                onDeleted={() => {
+                  onSaved()
+                  onClose()
+                }}
+              />
               <ViewPageButton kind="workshop" slug={form.slug as string | undefined} />
               <Button size="small" onClick={save} isLoading={saving}>
                 Αποθήκευση
