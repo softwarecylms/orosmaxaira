@@ -1,7 +1,8 @@
+import type { ReactNode } from 'react'
 import { Link } from '@/i18n/navigation'
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
-import { Phone, User, Heart, Truck } from 'lucide-react'
+import { Phone, User, Heart } from 'lucide-react'
 import { CartBadge } from '@/components/commerce/cart-badge'
 import { getHomeContent } from '@/components/home/home-content'
 import type { Locale } from '@/i18n/routing'
@@ -10,6 +11,7 @@ import { HeaderMobile } from './header-mobile'
 import { HeaderNav } from './header-nav'
 import { HeaderScrollShadow } from './header-scroll-shadow'
 import { HeaderReveal } from './header-reveal'
+import { AnnouncementRotator } from './announcement-rotator'
 import { LanguageSwitcher } from './language-switcher'
 
 type SiteHeaderProps = {
@@ -25,6 +27,9 @@ type SiteHeaderProps = {
  * wishlist are visual stubs; the cart pill (<CartBadge>) reads the client-side
  * honey cart. Content is locale-aware via getHomeContent(locale).
  */
+/** `<b>` inside an announcement string — the threshold or the discount code. */
+const emphasis = (chunks: ReactNode) => <strong className="font-bold">{chunks}</strong>
+
 export async function SiteHeader({ locale }: SiteHeaderProps) {
   const t = await getTranslations('header')
   const { NAV, ADOPT_LINK, CONTACT, MEGA_MENU } = getHomeContent(locale)
@@ -32,14 +37,28 @@ export async function SiteHeader({ locale }: SiteHeaderProps) {
   return (
     <>
       {/* Announcement bar — scrolls away with the page; it is intentionally
-          NOT part of the sticky header below. */}
-      <HeaderReveal className="flex min-h-[46px] items-center justify-center gap-2 bg-accent px-4 py-2 text-white md:h-[46px] md:min-h-0 md:py-0">
-        <Truck className="size-4 shrink-0" aria-hidden="true" />
-        <p className="text-center text-[13px] leading-[21px] md:text-[14px]">
-          <span className="font-display text-[15px] font-bold">{t('freeShippingBold')} </span>
-          <span className="md:hidden">{t('freeShippingRestShort')}</span>
-          <span className="hidden md:inline">{t('freeShippingRest')}</span>
-        </p>
+          NOT part of the sticky header below. The offers rotate client-side;
+          the strings are resolved here so the first one is in the HTML.
+          `<b>` in the message marks the part that carries the offer — the
+          threshold, the code — so translators keep the emphasis with the words
+          it belongs to rather than us slicing sentences up by position. */}
+      <HeaderReveal className="bg-accent text-white">
+        <AnnouncementRotator
+          messages={[
+            {
+              bold: t('freeShippingBold'),
+              rest: t.rich('freeShippingRest', { b: emphasis }),
+              restShort: t.rich('freeShippingRestShort', { b: emphasis }),
+              icon: 'truck',
+            },
+            {
+              bold: t('couponBold'),
+              rest: t.rich('couponRest', { b: emphasis }),
+              restShort: t.rich('couponRestShort', { b: emphasis }),
+              icon: 'tag',
+            },
+          ]}
+        />
       </HeaderReveal>
 
       <header

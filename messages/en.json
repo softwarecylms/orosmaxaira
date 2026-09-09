@@ -17,8 +17,11 @@
     "closeMenu": "Close menu",
     "mobileNav": "Mobile navigation",
     "freeShippingBold": "FREE",
-    "freeShippingRest": "shipping in Cyprus for orders over €70",
-    "freeShippingRestShort": "shipping in Cyprus over €70"
+    "freeShippingRest": "shipping in Cyprus for orders <b>over €70</b>",
+    "freeShippingRestShort": "shipping in Cyprus <b>over €70</b>",
+    "couponBold": "10% OFF",
+    "couponRest": "on orders over €150 with code <b>BEE10</b>",
+    "couponRestShort": "over €150 with code <b>BEE10</b>"
   },
   "nav": {
     "mainNav": "Main navigation",

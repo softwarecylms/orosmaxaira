@@ -40,6 +40,20 @@ export type CheckoutUi = {
   // errors / notices (dynamic)
   variantError: string
   couponError: string
+  // order failures, keyed by OrderErrorCode (src/lib/medusa/order-errors.ts)
+  noRegionError: string
+  emptyCartError: string
+  freeShippingLostError: string
+  noShippingError: string
+  noPaymentError: string
+  couponRejectedError: string
+  totalMismatchError: string
+  cardDeclinedError: string
+  /** @param ref the Stripe payment reference, for support to trace the charge. */
+  orderFinalisationError: (ref: string) => string
+  orderFailedError: string
+  /** @param min the minimum order value, already formatted (e.g. "€150,00"). */
+  couponMinimum: (min: string) => string
   refrigeratedNotice: (items: RefItem[]) => string
   refrigeratedBlockedError: (opts: BlockedOpts) => string
   refrigeratedBlockedNotice: (opts: BlockedOpts) => string
@@ -79,6 +93,13 @@ export type CheckoutUi = {
   // payment
   paymentLegend: string
   cardPayment: string
+  cardDetails: string
+  securePaymentNote: string
+  /** @param amount the order total, already formatted (e.g. "€52,40"). */
+  payAmount: (amount: string) => string
+  processingPayment: string
+  finalisingOrder: string
+  stripeTestModeNote: string
   // coupon
   couponActive: (code: string) => string
   remove: string
@@ -118,6 +139,23 @@ const EL: CheckoutUi = {
   variantError:
     'Κάποια προϊόντα στο καλάθι σας χρειάζονται ανανέωση — αφαιρέστε τα και προσθέστε τα ξανά.',
   couponError: 'Μη έγκυρος κωδικός κουπονιού.',
+  noRegionError: 'Δεν βρέθηκε διαθέσιμη περιοχή αποστολής.',
+  emptyCartError: 'Το καλάθι σας είναι άδειο ή μη έγκυρο.',
+  freeShippingLostError:
+    'Η παραγγελία σας δεν πληροί πλέον το όριο για δωρεάν μεταφορικά. Ανανεώστε τη σελίδα και δοκιμάστε ξανά.',
+  noShippingError: 'Δεν υπάρχει διαθέσιμος τρόπος αποστολής.',
+  noPaymentError: 'Δεν υπάρχει διαθέσιμος τρόπος πληρωμής.',
+  couponRejectedError:
+    'Ο κωδικός κουπονιού δεν έγινε δεκτός για αυτή την παραγγελία. Αφαιρέστε τον και δοκιμάστε ξανά.',
+  totalMismatchError:
+    'Το σύνολο της παραγγελίας άλλαξε. Ανανεώστε τη σελίδα και δοκιμάστε ξανά.',
+  cardDeclinedError:
+    'Η πληρωμή δεν ολοκληρώθηκε. Ελέγξτε τα στοιχεία της κάρτας ή δοκιμάστε άλλη κάρτα.',
+  orderFinalisationError: (ref) =>
+    `Η πληρωμή σας ολοκληρώθηκε, αλλά η καταχώρηση της παραγγελίας δεν ολοκληρώθηκε. Έχουμε ειδοποιηθεί και θα επικοινωνήσουμε μαζί σας. Κωδικός πληρωμής: ${ref}`,
+  orderFailedError:
+    'Η ολοκλήρωση της παραγγελίας απέτυχε. Ελέγξτε τα στοιχεία σας και δοκιμάστε ξανά.',
+  couponMinimum: (min) => `Ο κωδικός ισχύει για παραγγελίες από ${min} και άνω.`,
   refrigeratedNotice: (items) => {
     const subject = items
       .map((it, idx) => {
@@ -170,6 +208,14 @@ const EL: CheckoutUi = {
   selectAcsPointPlaceholder: 'Επιλέξτε σημείο παραλαβής…',
   paymentLegend: 'Τρόπος πληρωμής',
   cardPayment: 'Πιστωτική / Χρεωστική κάρτα',
+  cardDetails: 'Στοιχεία κάρτας',
+  securePaymentNote:
+    'Ασφαλής πληρωμή μέσω Stripe. Δεν αποθηκεύουμε τα στοιχεία της κάρτας σας.',
+  payAmount: (amount) => `Πληρωμή ${amount}`,
+  processingPayment: 'Επεξεργασία πληρωμής…',
+  finalisingOrder: 'Ολοκλήρωση παραγγελίας…',
+  stripeTestModeNote:
+    'Δοκιμαστική λειτουργία — χρησιμοποιήστε την κάρτα 4242 4242 4242 4242.',
   couponActive: (code) => `Κουπόνι «${code}» ενεργό`,
   remove: 'Αφαίρεση',
   couponCode: 'Κωδικός κουπονιού',
@@ -210,6 +256,21 @@ const EN: CheckoutUi = {
   variantError:
     'Some products in your cart need refreshing — remove them and add them again.',
   couponError: 'Invalid coupon code.',
+  noRegionError: 'No shipping region is available.',
+  emptyCartError: 'Your cart is empty or invalid.',
+  freeShippingLostError:
+    'Your order no longer qualifies for free shipping. Refresh the page and try again.',
+  noShippingError: 'No shipping method is available.',
+  noPaymentError: 'No payment method is available.',
+  couponRejectedError:
+    'The coupon code was not accepted for this order. Remove it and try again.',
+  totalMismatchError: 'Your order total changed. Refresh the page and try again.',
+  cardDeclinedError:
+    'Payment was not completed. Check your card details or try another card.',
+  orderFinalisationError: (ref) =>
+    `Your payment went through, but we could not finalise the order. We have been notified and will contact you. Payment reference: ${ref}`,
+  orderFailedError: 'Could not place your order. Check your details and try again.',
+  couponMinimum: (min) => `This code applies to orders of ${min} or more.`,
   refrigeratedNotice: (items) => {
     const subject = items.map((it) => it.title).join(' and ')
     return items.length === 1
@@ -256,6 +317,12 @@ const EN: CheckoutUi = {
   selectAcsPointPlaceholder: 'Select a pickup point…',
   paymentLegend: 'Payment method',
   cardPayment: 'Credit / Debit card',
+  cardDetails: 'Card details',
+  securePaymentNote: 'Secure payment via Stripe. We never store your card details.',
+  payAmount: (amount) => `Pay ${amount}`,
+  processingPayment: 'Processing payment…',
+  finalisingOrder: 'Finalising your order…',
+  stripeTestModeNote: 'Test mode — use card 4242 4242 4242 4242.',
   couponActive: (code) => `Coupon “${code}” applied`,
   remove: 'Remove',
   couponCode: 'Coupon code',

@@ -9,11 +9,14 @@ import {
  * Seed the checkout scaffolding the custom Greek checkout maps onto so a real
  * Medusa order can be created with matching totals:
  *   - Shipping options: Cyprus (€4,50), Greece (€7,00), Free (€0).
- *   - Promotions: MELI10 (10% off), WELCOME5 (€5 off) — the demo coupon codes.
+ *   - Promotion: BEE10 — 10% off, on orders of €150 or more.
  *
  * Idempotent (skips by name / code). Run AFTER seed-oros-products.ts:
  *   npx medusa exec ./src/scripts/seed-oros-checkout.ts
  */
+
+/** BEE10 applies from this goods subtotal up (mirrors `src/lib/coupons.ts`). */
+const MIN_ORDER_EUR = 150
 
 const SHIPPING = [
   { name: "ACS Κύπρος", code: "cy-acs", amount: 2.5 }, // pickup point
@@ -100,7 +103,7 @@ export default async function seedOrosCheckout({ container }: ExecArgs) {
   const havePromo = new Set(existingPromos.map((p: { code: string }) => p.code))
   const promos = [
     {
-      code: "MELI10",
+      code: "BEE10",
       type: "standard" as const,
       status: "active" as const,
       application_method: {
@@ -110,18 +113,17 @@ export default async function seedOrosCheckout({ container }: ExecArgs) {
         value: 10,
         currency_code: "eur",
       },
-    },
-    {
-      code: "WELCOME5",
-      type: "standard" as const,
-      status: "active" as const,
-      application_method: {
-        type: "fixed" as const,
-        target_type: "order" as const,
-        allocation: "across" as const,
-        value: 5,
-        currency_code: "eur",
-      },
+      // Minimum order value. `item_subtotal` is the line-item total before any
+      // discount and excluding shipping — the same figure the storefront checks
+      // in `src/lib/coupons.ts`, so the two never disagree about eligibility.
+      // Medusa v2 totals are decimal euros, and rule values are strings.
+      rules: [
+        {
+          attribute: "item_subtotal",
+          operator: "gte" as const,
+          values: [String(MIN_ORDER_EUR)],
+        },
+      ],
     },
   ].filter((p) => !havePromo.has(p.code))
 

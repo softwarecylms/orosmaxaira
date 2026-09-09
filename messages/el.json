@@ -17,8 +17,11 @@
     "closeMenu": "Κλείσιμο μενού",
     "mobileNav": "Κινητή πλοήγηση",
     "freeShippingBold": "ΔΩΡΕΑΝ",
-    "freeShippingRest": "αποστολή στην Κύπρο για παραγγελίες άνω των €70",
-    "freeShippingRestShort": "αποστολή στην Κύπρο άνω των €70"
+    "freeShippingRest": "αποστολή στην Κύπρο για παραγγελίες <b>άνω των €70</b>",
+    "freeShippingRestShort": "αποστολή στην Κύπρο <b>άνω των €70</b>",
+    "couponBold": "10%",
+    "couponRest": "έκπτωση σε παραγγελίες άνω των €150 με τον κωδικό <b>BEE10</b>",
+    "couponRestShort": "έκπτωση άνω των €150 με τον κωδικό <b>BEE10</b>"
   },
   "nav": {
     "mainNav": "Κύρια πλοήγηση",
