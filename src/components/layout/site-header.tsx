@@ -38,7 +38,8 @@ export async function SiteHeader({ locale }: SiteHeaderProps) {
     <>
       {/* Announcement bar — scrolls away with the page; it is intentionally
           NOT part of the sticky header below. The offers rotate client-side;
-          the strings are resolved here so the first one is in the HTML.
+          the strings are resolved here so the first one — the discount — is
+          in the server-rendered HTML.
           `<b>` in the message marks the part that carries the offer — the
           threshold, the code — so translators keep the emphasis with the words
           it belongs to rather than us slicing sentences up by position. */}
@@ -46,16 +47,16 @@ export async function SiteHeader({ locale }: SiteHeaderProps) {
         <AnnouncementRotator
           messages={[
             {
-              bold: t('freeShippingBold'),
-              rest: t.rich('freeShippingRest', { b: emphasis }),
-              restShort: t.rich('freeShippingRestShort', { b: emphasis }),
-              icon: 'truck',
-            },
-            {
               bold: t('couponBold'),
               rest: t.rich('couponRest', { b: emphasis }),
               restShort: t.rich('couponRestShort', { b: emphasis }),
               icon: 'tag',
+            },
+            {
+              bold: t('freeShippingBold'),
+              rest: t.rich('freeShippingRest', { b: emphasis }),
+              restShort: t.rich('freeShippingRestShort', { b: emphasis }),
+              icon: 'truck',
             },
           ]}
         />
