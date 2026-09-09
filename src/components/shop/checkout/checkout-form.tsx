@@ -1,12 +1,24 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { useLocale } from 'next-intl'
 import { Link, useRouter } from '@/i18n/navigation'
 import { Check, Minus, Plus, Tag, Truck } from 'lucide-react'
 import { useCart, formatCents, type CartItem } from '@/components/commerce/cart-store'
-import { placeMedusaOrder } from '@/lib/medusa/place-order'
+import {
+  placeMedusaOrder,
+  prepareMedusaOrder,
+  completeMedusaOrder,
+} from '@/lib/medusa/place-order'
+import type { OrderError } from '@/lib/medusa/order-errors'
+import {
+  StripeCheckoutProvider,
+  stripeConfigured,
+  stripeTestMode,
+  MIN_STRIPE_AMOUNT,
+} from './stripe-elements'
+import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { REFRIGERATED_HANDLES, isRefrigerated } from '@/components/shop/shop-content'
 import { localizedProductTitle, localizedContainer } from '@/components/shop/product-i18n'
 import { getCheckoutUi } from './checkout-ui'
@@ -16,6 +28,7 @@ import {
   FREE_SHIPPING_THRESHOLD,
   earnsFreeShipping,
 } from '@/lib/shipping'
+import { checkCoupon, couponDiscount } from '@/lib/coupons'
 
 const HOME_SHIPPING = 500 // €5,00 home delivery (Cyprus, below threshold)
 const ACS_SHIPPING = 250 // €2,50 ACS pickup (Cyprus)
@@ -29,12 +42,6 @@ type Country = 'Κύπρος' | 'Ελλάδα'
 // refrigerated-area restriction.
 const CY_CITIES = ['Λευκωσία', 'Λεμεσός', 'Λάρνακα', 'Πάφος', 'Αμμόχωστος'] as const
 const REFRIGERATED_BLOCKED_DISTRICTS: string[] = ['Πάφος', 'Αμμόχωστος']
-
-/** Demo discount codes (client-side only — swap for a real promotions engine later). */
-const COUPONS: Record<string, { kind: 'pct' | 'fixed'; value: number }> = {
-  MELI10: { kind: 'pct', value: 10 }, // 10% έκπτωση στο υποσύνολο
-  WELCOME5: { kind: 'fixed', value: 500 }, // €5,00 έκπτωση
-}
 
 /**
  * ACS pickup points per country, divided by town (shown when ACS delivery is
@@ -190,17 +197,16 @@ const EMPTY: Contact = {
 /** Checkout: billing address + notes on the left; order summary with delivery,
  *  payment, totals and submit on the right. Mirrors the reference checkout's
  *  field set (in Greek). No real payment — places a local order snapshot. */
+/**
+ * Checkout shell. Owns the two early returns (cart still loading, cart empty) so
+ * that `CheckoutFormInner` has none above its hooks — `useStripe()` and
+ * `useElements()` must run unconditionally, and the inner form's derived totals
+ * sit below where those returns used to be.
+ */
 export function CheckoutForm() {
-  const router = useRouter()
   const locale = useLocale()
   const t = getCheckoutUi(locale)
-  const { items, subtotal, ready, clear, setQty } = useCart()
-  const [c, setC] = useState<Contact>(EMPTY)
-  const [submitting, setSubmitting] = useState(false)
-  const [orderError, setOrderError] = useState('')
-  const [couponInput, setCouponInput] = useState('')
-  const [coupon, setCoupon] = useState<string | null>(null)
-  const [couponError, setCouponError] = useState('')
+  const { items, ready } = useCart()
 
   if (!ready) return <div className="container-wide py-20" aria-hidden="true" />
 
@@ -217,6 +223,40 @@ export function CheckoutForm() {
       </div>
     )
   }
+
+  return (
+    <StripeCheckoutProvider>
+      <CheckoutFormInner />
+    </StripeCheckoutProvider>
+  )
+}
+
+function CheckoutFormInner() {
+  const router = useRouter()
+  const locale = useLocale()
+  const t = getCheckoutUi(locale)
+  const { items, subtotal, ready, clear, setQty } = useCart()
+  const stripe = useStripe()
+  const elements = useElements()
+  const [c, setC] = useState<Contact>(EMPTY)
+  const [submitting, setSubmitting] = useState(false)
+  const [phase, setPhase] = useState<'idle' | 'paying' | 'finalising'>('idle')
+  const [orderError, setOrderError] = useState('')
+  const [couponInput, setCouponInput] = useState('')
+  const [coupon, setCoupon] = useState<string | null>(null)
+  const [couponError, setCouponError] = useState('')
+
+  // A prepared Medusa cart + its Stripe client secret, kept across retries so a
+  // declined card is re-confirmed against the SAME PaymentIntent instead of
+  // stacking up a new cart and intent per attempt. `fingerprint` is what the
+  // cart was prepared for; when it changes, the cart is re-priced.
+  const prepared = useRef<{ cartId: string; clientSecret?: string; fingerprint: string } | null>(
+    null,
+  )
+  /** Set once the card is charged — from then on, never re-enter the pay phase. */
+  const paid = useRef(false)
+  /** Elements forbids `update()` between submit() and confirmPayment(). */
+  const submittingRef = useRef(false)
 
   // Refrigerated products (royal jelly / bee pollen) can only ship to a Cyprus
   // home address — never ACS pickup, never Paphos/Famagusta, never Greece.
@@ -238,13 +278,9 @@ export function CheckoutForm() {
   const refrigeratedBlocked =
     hasRefrigerated && (inGreece || REFRIGERATED_BLOCKED_DISTRICTS.includes(deliveryCity))
 
-  const appliedCoupon = coupon ? COUPONS[coupon] : null
-  const discount = appliedCoupon
-    ? Math.min(
-        subtotal,
-        appliedCoupon.kind === 'pct' ? Math.round((subtotal * appliedCoupon.value) / 100) : appliedCoupon.value,
-      )
-    : 0
+  // Recomputed from the live subtotal, so editing the cart down past the code's
+  // minimum drops the discount instead of leaving a stale one on the total.
+  const discount = couponDiscount(coupon, subtotal)
 
   // Free shipping is earned on what the customer actually pays for the goods —
   // the subtotal AFTER any discount code, excluding shipping itself. A €72 cart
@@ -277,12 +313,17 @@ export function CheckoutForm() {
   function applyCoupon() {
     const code = couponInput.trim().toUpperCase()
     if (!code) return
-    if (COUPONS[code]) {
+    const check = checkCoupon(code, subtotal)
+    if (check.ok) {
       setCoupon(code)
       setCouponError('')
     } else {
       setCoupon(null)
-      setCouponError(t.couponError)
+      setCouponError(
+        check.reason === 'below-minimum'
+          ? t.couponMinimum(formatCents(check.minSubtotal!))
+          : t.couponError,
+      )
     }
   }
   function removeCoupon() {
@@ -299,6 +340,29 @@ export function CheckoutForm() {
   const onCountry = (e: React.ChangeEvent<HTMLSelectElement>) =>
     // City is a select for Cyprus but free text for Greece — reset on switch.
     setC((prev) => ({ ...prev, country: e.target.value as Country, city: '', shipCity: '', acsPoint: '' }))
+
+  /** Server order failures arrive as codes so they can be translated here. */
+  const errorMessage = (e: OrderError): string => {
+    switch (e.code) {
+      case 'no_region': return t.noRegionError
+      case 'empty_cart': return t.emptyCartError
+      case 'free_shipping_lost': return t.freeShippingLostError
+      case 'no_shipping': return t.noShippingError
+      case 'no_payment_provider':
+      case 'no_client_secret': return t.noPaymentError
+      case 'coupon_rejected': return t.couponRejectedError
+      case 'total_mismatch': return t.totalMismatchError
+      default: return e.message || t.orderFailedError
+    }
+  }
+
+  // Elements was seeded with the bare subtotal; the real charge includes
+  // shipping and any discount, and changes as the customer edits the order.
+  // Never while a submit is in flight — update() after submit() is illegal.
+  useEffect(() => {
+    if (!elements || submittingRef.current) return
+    elements.update({ amount: Math.max(total, MIN_STRIPE_AMOUNT) })
+  }, [elements, total])
 
   async function placeOrder(e: React.FormEvent) {
     e.preventDefault()
@@ -341,13 +405,15 @@ export function CheckoutForm() {
       company: c.company,
     }
 
-    const res = await placeMedusaOrder({
+    const orderInput = {
       items: items.map((i) => ({ variantId: i.variantId!, quantity: i.quantity })),
       email: c.email,
       shipping: shippingAddr,
       billing: billingAddr,
       shippingOptionName,
       coupon,
+      expectedTotalCents: total,
+      locale,
       metadata: {
         customer_name: `${c.firstName} ${c.lastName}`,
         phone: c.phone,
@@ -358,23 +424,131 @@ export function CheckoutForm() {
         company: c.company,
         notes: c.notes,
       },
-    })
+    }
 
-    if ('error' in res) {
+    /** Store the snapshot the confirmation page reads, then leave checkout. */
+    const finish = (id: string) => {
+      const snapshot: OrderSnapshot = { id, date: new Date().toISOString(), items, subtotal, shipping, discount, coupon, total, contact: c }
+      try {
+        localStorage.setItem(`oros_order_${id}`, JSON.stringify(snapshot))
+        localStorage.removeItem(`oros_pending_order_${prepared.current?.cartId}`)
+      } catch {
+        // ignore storage errors — confirmation page falls back gracefully
+      }
+      clear()
+      router.push(`/order/${id}`)
+    }
+
+    const fail = (message: string) => {
       setSubmitting(false)
-      setOrderError(res.error)
+      submittingRef.current = false
+      setPhase('idle')
+      setOrderError(message)
+    }
+
+    // ── No card configured: the manual provider auto-authorizes, so prepare and
+    //    complete run back to back exactly as they did before Stripe. ─────────
+    if (!stripeConfigured) {
+      const res = await placeMedusaOrder(orderInput)
+      if ('error' in res) return fail(errorMessage(res.error))
+      finish(res.orderId)
       return
     }
 
-    const id = res.orderId
-    const snapshot: OrderSnapshot = { id, date: new Date().toISOString(), items, subtotal, shipping, discount, coupon, total, contact: c }
-    try {
-      localStorage.setItem(`oros_order_${id}`, JSON.stringify(snapshot))
-    } catch {
-      // ignore storage errors — confirmation page falls back gracefully
+    if (!stripe || !elements) return fail(t.cardDeclinedError)
+    submittingRef.current = true
+
+    // Already charged on a previous attempt that failed to finalise — never
+    // re-open a payment session, only retry the completion.
+    if (paid.current && prepared.current) {
+      setPhase('finalising')
+      const done = await completeMedusaOrder(prepared.current.cartId, locale)
+      if ('error' in done) return fail(t.orderFinalisationError(prepared.current.cartId))
+      finish(done.orderId)
+      return
     }
-    clear()
-    router.push(`/order/${id}`)
+
+    // 1. Validate the card fields before creating anything server-side.
+    setPhase('paying')
+    const submitRes = await elements.submit()
+    if (submitRes.error) return fail(submitRes.error.message ?? t.cardDeclinedError)
+
+    // 2. Price the cart and open the payment session — reusing the prepared
+    //    cart when nothing that affects the total has changed.
+    const fingerprint = JSON.stringify({
+      items: items.map((i) => [i.variantId, i.quantity]),
+      email: c.email,
+      shippingOptionName,
+      coupon,
+      total,
+      addr: shippingAddr,
+    })
+    let clientSecret = prepared.current?.clientSecret
+    let cartId = prepared.current?.cartId
+
+    if (!clientSecret || prepared.current?.fingerprint !== fingerprint) {
+      // Reuse the cart id (re-prices it, cancels the superseded intent) unless
+      // the line items themselves changed, which needs a fresh cart.
+      const sameItems =
+        prepared.current &&
+        JSON.parse(prepared.current.fingerprint).items?.toString() ===
+          items.map((i) => [i.variantId, i.quantity]).toString()
+
+      const res = await prepareMedusaOrder({
+        ...orderInput,
+        cartId: sameItems ? prepared.current?.cartId : undefined,
+      })
+      if ('error' in res) return fail(errorMessage(res.error))
+      if (!res.clientSecret) return fail(t.noPaymentError)
+
+      // Stripe's own figure is authoritative — if it ever disagrees with the
+      // summary the customer read, stop before charging.
+      if (res.serverAmountCents !== total) return fail(t.totalMismatchError)
+
+      clientSecret = res.clientSecret
+      cartId = res.cartId
+      prepared.current = { cartId: res.cartId, clientSecret: res.clientSecret, fingerprint }
+    }
+
+    // 3. Keep enough to reconstruct the confirmation page if the tab dies
+    //    between the charge and the order being created.
+    try {
+      const pending: OrderSnapshot = { id: cartId!, date: new Date().toISOString(), items, subtotal, shipping, discount, coupon, total, contact: c }
+      localStorage.setItem(`oros_pending_order_${cartId}`, JSON.stringify(pending))
+    } catch {
+      // non-fatal
+    }
+
+    // 4. Charge. `redirect: 'if_required'` keeps card payments on this page, so
+    //    the snapshot above survives and no return_url round trip is needed.
+    const { error: payError, paymentIntent } = await stripe.confirmPayment({
+      elements,
+      clientSecret: clientSecret!,
+      confirmParams: { return_url: `${window.location.origin}/checkout` },
+      redirect: 'if_required',
+    })
+
+    if (payError) {
+      // Keep `prepared` — the same intent can be re-confirmed with another card.
+      return fail(payError.message ?? t.cardDeclinedError)
+    }
+    if (paymentIntent && !['succeeded', 'requires_capture', 'processing'].includes(paymentIntent.status)) {
+      return fail(t.cardDeclinedError)
+    }
+    paid.current = true
+
+    // 5. Turn the paid cart into an order. Medusa's complete-cart workflow is
+    //    idempotent, so a retry here returns the same order rather than charging
+    //    again — but only retry when the request never landed.
+    setPhase('finalising')
+    let done = await completeMedusaOrder(cartId!, locale)
+    if ('error' in done && done.error.code === 'unknown') {
+      done = await completeMedusaOrder(cartId!, locale)
+    }
+    if ('error' in done) {
+      return fail(t.orderFinalisationError(paymentIntent?.id ?? cartId!))
+    }
+    finish(done.orderId)
   }
 
   return (
@@ -662,6 +836,20 @@ export function CheckoutForm() {
             onChange={() => setC((p) => ({ ...p, payment: 'card' }))}
             label={t.cardPayment}
           />
+          {stripeConfigured ? (
+            <div className="flex flex-col gap-2 rounded-[4px] border border-border p-3">
+              <span className="text-[14px] font-medium text-foreground">{t.cardDetails}</span>
+              <PaymentElement
+                options={{
+                  layout: 'tabs',
+                  // Medusa creates the intent with automatic payment methods;
+                  // wallets are switched off so the test flow stays card-only.
+                  wallets: { applePay: 'never', googlePay: 'never' },
+                }}
+              />
+              <span className="text-[12px] leading-[16px] text-muted">{t.securePaymentNote}</span>
+            </div>
+          ) : null}
         </fieldset>
 
         {/* Coupon */}
@@ -787,14 +975,26 @@ export function CheckoutForm() {
 
         <button
           type="submit"
-          disabled={submitting || refrigeratedBlocked}
+          disabled={submitting || refrigeratedBlocked || (stripeConfigured && !stripe)}
           className="flex w-full items-center justify-center rounded-[4px] bg-accent p-[15px] text-[17px] text-white transition-colors hover:bg-foreground disabled:cursor-not-allowed disabled:opacity-75"
         >
-          {submitting ? t.submitting : t.submit}
+          {phase === 'paying'
+            ? t.processingPayment
+            : phase === 'finalising'
+              ? t.finalisingOrder
+              : submitting
+                ? t.submitting
+                : stripeConfigured
+                  ? t.payAmount(formatCents(total))
+                  : t.submit}
         </button>
-        <p className="text-center text-[13px] leading-[18px] text-muted">
-          {t.testOrderNote}
-        </p>
+        {/* The "no charge is taken" note is only true on the manual provider.
+            With live keys there is no note at all — a real charge needs none. */}
+        {!stripeConfigured || stripeTestMode ? (
+          <p className="text-center text-[13px] leading-[18px] text-muted">
+            {stripeConfigured ? t.stripeTestModeNote : t.testOrderNote}
+          </p>
+        ) : null}
       </aside>
     </form>
   )

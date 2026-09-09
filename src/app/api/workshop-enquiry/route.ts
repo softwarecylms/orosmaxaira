@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
+import { sendMail } from '@/lib/email'
 import { z } from 'zod'
 import { WORKSHOP_EXPERIENCE_KEYS, experienceLabel } from '@/lib/data/workshop-enquiry'
 
@@ -72,33 +72,8 @@ export async function POST(req: Request) {
 
   const experienceText = experienceLabel(experience) ?? experience
 
-  const host = process.env.SMTP_HOST
-  const port = Number(process.env.SMTP_PORT ?? 465)
-  const user = process.env.SMTP_USER
-  const password = process.env.SMTP_PASSWORD
-  const to = process.env.CONTACT_TO_EMAIL ?? user
-  const from = process.env.CONTACT_FROM_EMAIL ?? user
-
-  if (!host || !user || !password || !to) {
-    console.warn('[workshop-enquiry] SMTP not configured; submission discarded', {
-      name,
-      email,
-      experience,
-    })
-    return NextResponse.json({ ok: true, note: 'logged' })
-  }
-
-  const transporter = nodemailer.createTransport({
-    host,
-    port,
-    secure: port === 465 || process.env.SMTP_SECURE === 'true',
-    auth: { user, pass: password },
-  })
-
   try {
-    await transporter.sendMail({
-      from,
-      to,
+    const sent = await sendMail('workshop-enquiry', {
       replyTo: email,
       subject: `Νέο αίτημα εργαστηρίου — ${name}`,
       text: [
@@ -111,6 +86,10 @@ export async function POST(req: Request) {
         `Ώρα έναρξης: ${time || '—'}`,
       ].join('\n'),
     })
+    // SMTP not configured in this environment (e.g. Vercel today): sendMail
+    // logged it and returned false. Answering ok keeps the form's success UI —
+    // the long-standing behaviour, unchanged by the extraction.
+    if (!sent) return NextResponse.json({ ok: true, note: 'logged' })
   } catch (err) {
     console.error('[workshop-enquiry] sendMail failed', err)
     return NextResponse.json({ error: 'Δεν ήταν δυνατή η αποστολή. Δοκιμάστε ξανά.' }, { status: 502 })
