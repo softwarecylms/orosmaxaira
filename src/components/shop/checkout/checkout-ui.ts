@@ -62,6 +62,9 @@ export type CheckoutUi = {
   firstName: string
   lastName: string
   phone: string
+  phoneCountry: string
+  phoneSuggested: string
+  phoneAllCountries: string
   email: string
   countryRegion: string
   countryLabel: (value: string) => string
@@ -179,6 +182,9 @@ const EL: CheckoutUi = {
   firstName: 'Όνομα',
   lastName: 'Επώνυμο',
   phone: 'Τηλέφωνο',
+  phoneCountry: 'Κωδικός χώρας',
+  phoneSuggested: 'Προτεινόμενες',
+  phoneAllCountries: 'Όλες οι χώρες',
   email: 'Διεύθυνση Email',
   countryRegion: 'Χώρα / Περιοχή',
   countryLabel: (value) => value,
@@ -289,6 +295,9 @@ const EN: CheckoutUi = {
   firstName: 'First name',
   lastName: 'Last name',
   phone: 'Phone',
+  phoneCountry: 'Country code',
+  phoneSuggested: 'Suggested',
+  phoneAllCountries: 'All countries',
   email: 'Email address',
   countryRegion: 'Country / Region',
   countryLabel: (value) => (value === 'Κύπρος' ? 'Cyprus' : value === 'Ελλάδα' ? 'Greece' : value),

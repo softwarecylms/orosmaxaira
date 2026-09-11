@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import Image from 'next/image'
 import { useLocale } from 'next-intl'
 import { Link, useRouter } from '@/i18n/navigation'
-import { Check, Minus, Plus, Tag, Truck } from 'lucide-react'
+import { Check, ChevronDown, Minus, Plus, Tag, Truck } from 'lucide-react'
 import { useCart, formatCents, type CartItem } from '@/components/commerce/cart-store'
 import {
   placeMedusaOrder,
@@ -23,6 +23,14 @@ import { REFRIGERATED_HANDLES, isRefrigerated } from '@/components/shop/shop-con
 import { localizedProductTitle, localizedContainer } from '@/components/shop/product-i18n'
 import { getCheckoutUi } from './checkout-ui'
 import { cn } from '@/lib/utils'
+import {
+  DEFAULT_DIAL_COUNTRY,
+  dialCodeOf,
+  dialCountryGroups,
+  flagOf,
+  internationalPhone,
+  type DialCountry,
+} from '@/lib/dial-codes'
 import {
   FREE_SHIPPING_OPTION_NAME,
   FREE_SHIPPING_THRESHOLD,
@@ -134,6 +142,8 @@ export type Contact = {
   firstName: string
   lastName: string
   phone: string
+  /** ISO code of the phone's country, e.g. "CY" → +357. */
+  phoneCountry: string
   email: string
   address: string
   address2: string
@@ -173,6 +183,7 @@ const EMPTY: Contact = {
   firstName: '',
   lastName: '',
   phone: '',
+  phoneCountry: DEFAULT_DIAL_COUNTRY,
   email: '',
   address: '',
   address2: '',
@@ -382,6 +393,7 @@ function CheckoutFormInner() {
 
     setSubmitting(true)
     const countryCode = c.country === 'Κύπρος' ? ('cy' as const) : ('gr' as const)
+    const phone = internationalPhone(c.phoneCountry, c.phone)
     const shippingAddr = {
       first_name: c.shipDifferent ? c.shipFirstName : c.firstName,
       last_name: c.shipDifferent ? c.shipLastName : c.lastName,
@@ -390,7 +402,7 @@ function CheckoutFormInner() {
       city: c.shipDifferent ? c.shipCity : c.city,
       postal_code: c.shipDifferent ? c.shipPostal : c.postal,
       country_code: countryCode,
-      phone: c.phone,
+      phone,
       company: c.company,
     }
     const billingAddr = {
@@ -401,7 +413,7 @@ function CheckoutFormInner() {
       city: c.city,
       postal_code: c.postal,
       country_code: countryCode,
-      phone: c.phone,
+      phone,
       company: c.company,
     }
 
@@ -416,7 +428,7 @@ function CheckoutFormInner() {
       locale,
       metadata: {
         customer_name: `${c.firstName} ${c.lastName}`,
-        phone: c.phone,
+        phone,
         delivery,
         acs_point: c.acsPoint,
         payment_method: c.payment,
@@ -428,7 +440,7 @@ function CheckoutFormInner() {
 
     /** Store the snapshot the confirmation page reads, then leave checkout. */
     const finish = (id: string) => {
-      const snapshot: OrderSnapshot = { id, date: new Date().toISOString(), items, subtotal, shipping, discount, coupon, total, contact: c }
+      const snapshot: OrderSnapshot = { id, date: new Date().toISOString(), items, subtotal, shipping, discount, coupon, total, contact: { ...c, phone } }
       try {
         localStorage.setItem(`oros_order_${id}`, JSON.stringify(snapshot))
         localStorage.removeItem(`oros_pending_order_${prepared.current?.cartId}`)
@@ -513,7 +525,7 @@ function CheckoutFormInner() {
     // 3. Keep enough to reconstruct the confirmation page if the tab dies
     //    between the charge and the order being created.
     try {
-      const pending: OrderSnapshot = { id: cartId!, date: new Date().toISOString(), items, subtotal, shipping, discount, coupon, total, contact: c }
+      const pending: OrderSnapshot = { id: cartId!, date: new Date().toISOString(), items, subtotal, shipping, discount, coupon, total, contact: { ...c, phone } }
       localStorage.setItem(`oros_pending_order_${cartId}`, JSON.stringify(pending))
     } catch {
       // non-fatal
@@ -561,7 +573,12 @@ function CheckoutFormInner() {
           <Field label={t.lastName} value={c.lastName} onChange={set('lastName')} required autoComplete="family-name" />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label={t.phone} type="tel" value={c.phone} onChange={set('phone')} required autoComplete="tel" />
+          <PhoneField
+            country={c.phoneCountry}
+            onCountry={set('phoneCountry')}
+            value={c.phone}
+            onChange={set('phone')}
+          />
           <Field label={t.email} type="email" value={c.email} onChange={set('email')} required autoComplete="email" />
         </div>
 
@@ -830,9 +847,9 @@ function CheckoutFormInner() {
         {/* Coupon */}
         <div className="flex flex-col gap-2 border-t border-border pt-4">
           {coupon ? (
-            <div className="flex items-center justify-between rounded-[4px] bg-accent-soft px-3 py-2.5">
-              <span className="flex items-center gap-2 text-[14px] text-foreground">
-                <Tag className="size-4 text-accent" aria-hidden="true" />
+            <div className="flex items-center justify-between rounded-[4px] bg-success-soft px-3 py-2.5">
+              <span className="flex items-center gap-2 text-[14px] text-success">
+                <Tag className="size-4 text-success" aria-hidden="true" />
                 {t.couponActive(coupon)}
               </span>
               <button
@@ -1008,6 +1025,68 @@ function Req() {
     <span className="ml-0.5 text-accent" aria-hidden="true">
       *
     </span>
+  )
+}
+
+/**
+ * The phone number with its country calling code in front. The code is a native
+ * <select> laid invisibly over the flag and "+357" it shows, so phones keep their
+ * own picker and a keyboard can jump to a country by typing its name. The order
+ * records the two together (internationalPhone).
+ */
+function PhoneField({
+  country,
+  onCountry,
+  value,
+  onChange,
+}: {
+  country: string
+  onCountry: React.ChangeEventHandler<HTMLSelectElement>
+  value: string
+  onChange: React.ChangeEventHandler<HTMLInputElement>
+}) {
+  const locale = useLocale()
+  const t = getCheckoutUi(locale)
+  const id = useId()
+  const { suggested, others } = dialCountryGroups(locale)
+  const option = (x: DialCountry) => (
+    <option key={x.iso} value={x.iso}>
+      {`${x.name} (+${x.dial})`}
+    </option>
+  )
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className="text-[14px] text-muted">
+        {t.phone}
+        <Req />
+      </label>
+      <div className="flex min-w-0 rounded-[4px] border border-border bg-white transition-colors focus-within:border-accent">
+        <div className="relative flex shrink-0 items-center gap-1.5 border-r border-border pl-3 pr-2 text-[16px] text-foreground">
+          <span aria-hidden="true">{flagOf(country)}</span>
+          <span aria-hidden="true">+{dialCodeOf(country)}</span>
+          <ChevronDown className="size-4 text-muted" aria-hidden="true" />
+          <select
+            aria-label={t.phoneCountry}
+            value={country}
+            onChange={onCountry}
+            className="absolute inset-0 size-full cursor-pointer opacity-0"
+          >
+            <optgroup label={t.phoneSuggested}>{suggested.map(option)}</optgroup>
+            <optgroup label={t.phoneAllCountries}>{others.map(option)}</optgroup>
+          </select>
+        </div>
+        <input
+          id={id}
+          type="tel"
+          value={value}
+          onChange={onChange}
+          required
+          autoComplete="tel"
+          className="w-full min-w-0 bg-transparent px-4 py-3 text-[16px] text-foreground outline-none"
+        />
+      </div>
+    </div>
   )
 }
 

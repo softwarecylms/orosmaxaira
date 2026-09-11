@@ -186,6 +186,10 @@ export async function prepareMedusaOrder(
 
     const session = await sdk.store.payment.initiatePaymentSession(fresh.cart, {
       provider_id: provider.id,
+      // Cards only — must match `paymentMethodTypes` on the Elements group in
+      // stripe-elements.tsx, or Stripe refuses to confirm. Medusa forwards
+      // `data` to the PaymentIntent as-is.
+      ...(provider.isStripe ? { data: { payment_method_types: ['card'] } } : {}),
     })
 
     if (!provider.isStripe) return { cartId, serverAmountCents: serverTotalCents }

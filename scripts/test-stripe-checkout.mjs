@@ -67,6 +67,10 @@ try {
   const zip = frame.locator('[name="postalCode"]')
   if (await zip.count()) await zip.first().fill('7716').catch(() => {})
   log('card filled:', card)
+  // PAYSHOT=path saves the payment section — e.g. to check which methods are offered.
+  if (process.env.PAYSHOT) {
+    await page.locator('fieldset', { hasText: 'Τρόπος πληρωμής' }).screenshot({ path: process.env.PAYSHOT })
+  }
 
   const btn = page.getByRole('button', { name: /Πληρωμή|Ολοκλήρωση παραγγελίας/ })
   log('submit label:', (await btn.first().textContent())?.trim())

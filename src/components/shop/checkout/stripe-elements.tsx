@@ -1,7 +1,7 @@
 'use client'
 
 import { Elements } from '@stripe/react-stripe-js'
-import { loadStripe, type Stripe } from '@stripe/stripe-js'
+import { loadStripe, type Appearance, type Stripe } from '@stripe/stripe-js'
 import { useLocale } from 'next-intl'
 import { useState } from 'react'
 import { useCart } from '@/components/commerce/cart-store'
@@ -21,9 +21,10 @@ import { useCart } from '@/components/commerce/cart-store'
 
 const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.trim()
 
-/** Module-scope so the Stripe script is fetched once, not per mount.
- *  Guarded: `loadStripe('')` throws. */
-const stripePromise: Promise<Stripe | null> | null = PUBLISHABLE_KEY
+/** Module-scope so the Stripe script is fetched once, not per mount — shared
+ *  by the shop checkout and the booking payment step. Guarded:
+ *  `loadStripe('')` throws. */
+export const stripePromise: Promise<Stripe | null> | null = PUBLISHABLE_KEY
   ? loadStripe(PUBLISHABLE_KEY)
   : null
 
@@ -35,6 +36,20 @@ export const stripeTestMode = !!PUBLISHABLE_KEY?.startsWith('pk_test_')
 
 /** Stripe rejects EUR amounts under €0.50; Elements needs a positive seed. */
 export const MIN_STRIPE_AMOUNT = 50
+
+/** The site's look for Stripe's card fields — shop checkout and bookings alike. */
+export const STRIPE_APPEARANCE: Appearance = {
+  variables: {
+    colorPrimary: '#b7791f',
+    colorDanger: '#b91c1c',
+    borderRadius: '4px',
+    fontSizeBase: '15px',
+    // Shrinks the Link banner ("Ασφαλής, γρήγορη ολοκλήρωση…") and the
+    // field labels together — Stripe gives the banner no selector of its
+    // own. 13px is as small as the labels take before they look starved.
+    fontSizeSm: '13px',
+  },
+}
 
 export function StripeCheckoutProvider({ children }: { children: React.ReactNode }) {
   const locale = useLocale()
@@ -60,41 +75,20 @@ export function StripeCheckoutProvider({ children }: { children: React.ReactNode
         mode: 'payment',
         currency: 'eur',
         amount: seedAmount,
-        // Deliberately NOT setting `paymentMethodTypes`. Naming a type switches
-        // Elements into manual mode, and Medusa always creates the intent with
-        // automatic payment methods (it cannot be told to do otherwise from
-        // config — see medusa-config.ts), so confirmation is then refused:
-        // "collected through Stripe Elements using payment_method_types and
-        // cannot be confirmed through the API configured with automatic payment
-        // methods".
-        //
-        // `automaticPaymentMethods: false` on the backend provider does not help:
-        // it only stops Medusa from asking for them, and Stripe then turns them
-        // on itself because the intent names no `payment_method_types`. Checked
-        // against a real intent — it still came back
-        // `automatic_payment_methods: {enabled: true}` with the full method list.
-        //
-        // To show cards only, disable the other methods in the Stripe Dashboard
-        // → Settings → Payment methods; that list is what Elements renders.
-        // Scalapay and the rest are already inactive there, which is why Stripe
-        // logs "will be displayed in test mode, but hidden" — they do not reach
-        // a live customer.
+        // Cards only. place-order.ts opens the PaymentIntent with
+        // `payment_method_types: ['card']`, and a deferred Elements group must
+        // declare the same list or Stripe refuses to confirm — the two sides
+        // have to agree:
+        //   intent automatic ⇄ Elements without paymentMethodTypes
+        //   intent ['card']  ⇄ Elements paymentMethodTypes ['card']   ← this
+        // The backend provider runs with `automaticPaymentMethods: false`,
+        // because Stripe rejects an intent that names both.
+        paymentMethodTypes: ['card'],
         // Matches `capture: true` on the backend provider, which creates the
         // PaymentIntent with capture_method 'automatic'.
         captureMethod: 'automatic',
         locale: locale === 'en' ? 'en' : 'el',
-        appearance: {
-          variables: {
-            colorPrimary: '#b7791f',
-            colorDanger: '#b91c1c',
-            borderRadius: '4px',
-            fontSizeBase: '15px',
-            // Shrinks the Link banner ("Ασφαλής, γρήγορη ολοκλήρωση…") and the
-            // field labels together — Stripe gives the banner no selector of its
-            // own. 13px is as small as the labels take before they look starved.
-            fontSizeSm: '13px',
-          },
-        },
+        appearance: STRIPE_APPEARANCE,
       }}
     >
       {children}
