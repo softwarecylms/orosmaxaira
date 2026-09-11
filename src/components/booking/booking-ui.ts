@@ -62,8 +62,21 @@ export type BookingUi = {
   person: string
   people: string
   processing: string
-  payAndBook: string
   completeBooking: string
+  // Payment step (card bookings)
+  continueToPayment: string
+  paymentTitle: string
+  /** @param amount the total, already formatted (e.g. "€8"). */
+  payAmount: (amount: string) => string
+  back: string
+  holdNote: (minutes: number) => string
+  securePayment: string
+  testModeNote: string
+  paymentFailed: string
+  confirmingBooking: string
+  cardUnavailable: string
+  /** Card charged but the confirmation call failed — the server settles it. */
+  paidPendingConfirmation: (reference: string) => string
   bookingFailed: string
   decrease: string
   increase: string
@@ -126,8 +139,22 @@ const EL: BookingUi = {
   person: 'άτομο',
   people: 'άτομα',
   processing: 'Επεξεργασία…',
-  payAndBook: 'Πληρωμή & Κράτηση',
   completeBooking: 'Ολοκλήρωση κράτησης',
+  continueToPayment: 'Συνέχεια στην πληρωμή',
+  paymentTitle: 'Πληρωμή',
+  payAmount: (a) => `Πληρωμή ${a}`,
+  back: 'Πίσω',
+  holdNote: (m) =>
+    `Οι θέσεις σας κρατούνται για ${m} λεπτά, όσο ολοκληρώνετε την πληρωμή.`,
+  securePayment: 'Ασφαλής πληρωμή μέσω Stripe. Δεν αποθηκεύουμε τα στοιχεία της κάρτας σας.',
+  testModeNote: 'Δοκιμαστική λειτουργία — χρησιμοποιήστε την κάρτα 4242 4242 4242 4242.',
+  paymentFailed:
+    'Η πληρωμή δεν ολοκληρώθηκε. Ελέγξτε τα στοιχεία της κάρτας ή δοκιμάστε άλλη κάρτα.',
+  confirmingBooking: 'Επιβεβαίωση κράτησης…',
+  cardUnavailable:
+    'Η πληρωμή με κάρτα δεν είναι διαθέσιμη αυτή τη στιγμή. Καλέστε μας για να ολοκληρώσετε την κράτηση.',
+  paidPendingConfirmation: (r) =>
+    `Η πληρωμή σας ολοκληρώθηκε. Η κράτηση ${r} θα επιβεβαιωθεί αυτόματα σε λίγο — μην πληρώσετε ξανά.`,
   bookingFailed: 'Η κράτηση δεν ολοκληρώθηκε. Δοκιμάστε ξανά.',
   decrease: 'Μείωση',
   increase: 'Αύξηση',
@@ -189,8 +216,20 @@ const EN: BookingUi = {
   person: 'person',
   people: 'people',
   processing: 'Processing…',
-  payAndBook: 'Pay & Book',
   completeBooking: 'Complete booking',
+  continueToPayment: 'Continue to payment',
+  paymentTitle: 'Payment',
+  payAmount: (a) => `Pay ${a}`,
+  back: 'Back',
+  holdNote: (m) => `Your seats are held for ${m} minutes while you complete the payment.`,
+  securePayment: 'Secure payment via Stripe. We never store your card details.',
+  testModeNote: 'Test mode — use card 4242 4242 4242 4242.',
+  paymentFailed: 'Payment was not completed. Check your card details or try another card.',
+  confirmingBooking: 'Confirming your booking…',
+  cardUnavailable:
+    'Card payment is not available right now. Please call us to complete your booking.',
+  paidPendingConfirmation: (r) =>
+    `Your payment went through. Booking ${r} will be confirmed automatically shortly — please do not pay again.`,
   bookingFailed: 'The booking could not be completed. Please try again.',
   decrease: 'Decrease',
   increase: 'Increase',

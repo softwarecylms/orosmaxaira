@@ -1,8 +1,13 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
-import { Modules } from "@medusajs/framework/utils"
 import { randomBytes } from "crypto"
 import { BOOKINGS_MODULE } from "../../../../../modules/bookings"
 import type BookingsModuleService from "../../../../../modules/bookings/service"
+import {
+  HOLD_MINUTES,
+  announceBooking,
+  openBookingPayment,
+  pendingClientSecret,
+} from "../../../../../lib/booking-payment"
 
 /**
  * A workshop combo (experience combination) is a price tier. Each combo carries
@@ -63,8 +68,8 @@ function publicBooking(b: any, workshopTitle?: string, slot?: any) {
 
 /**
  * POST /store/workshops/:slug/bookings
- * Reserve → pay (system default in dev) → confirm → email — the same flow as
- * /store/bookings. A workshop is priced by the chosen experience combo (Half /
+ * Reserve → open payment → (card) → confirm → email — the same flow as
+ * /store/bookings, including the pending card step (src/lib/booking-payment.ts). A workshop is priced by the chosen experience combo (Half /
  * Full); the combo is fixed by the slot (`combo_key`), and the total is the sum
  * of each age group × that combo's per-age price. Atomic reservation prevents
  * oversell; a €0 total skips payment; idempotent on `idempotency_key`.
@@ -90,7 +95,11 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
         .retrieveAvailabilitySlot((existing as any).slot_id)
         .catch(() => null)
       const [w] = await bookings.listWorkshops({ slug })
-      return res.json({ booking: publicBooking(existing, w?.title, slot) })
+      const secret = await pendingClientSecret(req.scope, existing as any)
+      return res.json({
+        booking: publicBooking(existing, w?.title, slot),
+        ...(secret ? { payment: { client_secret: secret, hold_minutes: HOLD_MINUTES } } : {}),
+      })
     }
   }
 
@@ -141,8 +150,9 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
       .json({ message: "Δεν υπάρχει διαθεσιμότητα για αυτή την ώρα." })
   }
 
-  // 4) Create the booking (pending), then pay + confirm.
+  // 4) Create the booking (pending), then open the payment.
   let booking: any
+  let clientSecret: string | undefined
   try {
     const created = await bookings.createBookings({
       reference: makeReference(),
@@ -163,30 +173,17 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     })
     booking = Array.isArray(created) ? created[0] : created
 
-    // 5) Payment — skip entirely when free.
+    // 5) Payment — skip entirely when free. With Stripe the booking stays
+    //    PENDING here: the seats are held and the browser now takes the card;
+    //    /store/bookings/confirm finishes it once Stripe says it is paid.
+    //    Without Stripe the manual provider confirms on the spot, as before.
     if (total > 0) {
-      const payment = req.scope.resolve<any>(Modules.PAYMENT)
-      const pc = await payment.createPaymentCollections({
-        amount: total,
-        currency_code: currency,
-      })
-      const session = await payment.createPaymentSession(pc.id, {
-        provider_id: "pp_system_default",
-        amount: total,
-        currency_code: currency,
-        data: {},
-      })
-      const authorized = await payment.authorizePaymentSession(session.id, {})
-      await bookings.updateBookings({
-        id: booking.id,
-        status: "confirmed",
-        payment_collection_id: pc.id,
-        payment_id: authorized?.id ?? null,
-      })
+      const opened = await openBookingPayment(req.scope, booking, total, currency)
+      if (!opened.confirmed) clientSecret = opened.clientSecret
     } else {
       await bookings.updateBookings({ id: booking.id, status: "confirmed" })
+      booking.status = "confirmed"
     }
-    booking.status = "confirmed"
   } catch (e: any) {
     // Roll back the reservation + free the idempotency key so retries work.
     await bookings.releaseSeats(body.slot_id, seats).catch(() => {})
@@ -221,56 +218,12 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     })
   }
 
-  // 6) Confirmation email (inline; log-only via notification-local in dev).
-  try {
-    const notification = req.scope.resolve<any>(Modules.NOTIFICATION)
-    const adminEmail = process.env.BOOKING_ADMIN_EMAIL || "info@orosmaxaira.com"
-    const when = `${slot.date} στις ${slot.start_time}`
-    const money = `${total.toFixed(2)} ${currency.toUpperCase()}`
-    const people = `${adults} ενήλικες, ${children} παιδιά, ${infants} βρέφη`
-    const combos = combo.long_label ?? combo.label ?? combo.key
-    const data = {
-      reference: booking.reference,
-      workshop: workshop.title,
-      combo: combos,
-      when,
-      people,
-      total: money,
-      customer_name: booking.customer_name,
-    }
-    await notification.createNotifications([
-      {
-        to: booking.email,
-        channel: "email",
-        template: "workshop-booking-confirmation",
-        content: {
-          subject: `Επιβεβαίωση κράτησης ${booking.reference} — ${workshop.title}`,
-          text: `Ευχαριστούμε ${booking.customer_name}! Η κράτησή σας για το εργαστήρι «${workshop.title}» (${combos}) στις ${when} επιβεβαιώθηκε. Άτομα: ${people}. Σύνολο: ${money}. Κωδικός κράτησης: ${booking.reference}.`,
-        },
-        data,
-      },
-      {
-        to: adminEmail,
-        channel: "email",
-        template: "workshop-booking-notification",
-        content: {
-          subject: `Νέα κράτηση εργαστηρίου ${booking.reference} — ${workshop.title}`,
-          text: `Νέα κράτηση εργαστηρίου: ${workshop.title} (${combos}), ${when}. Άτομα: ${people}. Σύνολο ${money}. Πελάτης: ${booking.customer_name} (${booking.email}${booking.phone ? ", " + booking.phone : ""}).`,
-        },
-        data,
-      },
-    ])
-  } catch (e: any) {
-    logger.warn(`Workshop booking email not sent: ${e?.message ?? e}`)
-  }
+  // 6) A card booking is announced once it is paid (/store/bookings/confirm);
+  //    anything already confirmed is announced now.
+  if (booking.status === "confirmed") await announceBooking(req.scope, booking)
 
-  try {
-    await req.scope
-      .resolve<any>(Modules.EVENT_BUS)
-      .emit({ name: "booking.confirmed", data: { id: booking.id } })
-  } catch {
-    /* non-fatal */
-  }
-
-  res.json({ booking: publicBooking(booking, workshop.title, slot) })
+  res.json({
+    booking: publicBooking(booking, workshop.title, slot),
+    ...(clientSecret ? { payment: { client_secret: clientSecret, hold_minutes: HOLD_MINUTES } } : {}),
+  })
 }

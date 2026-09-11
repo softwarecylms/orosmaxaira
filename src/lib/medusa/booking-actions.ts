@@ -47,20 +47,25 @@ export type ConfirmedBooking = {
   start_time?: string
 }
 
+/**
+ * A card payment still to be taken. Present when the backend has Stripe and the
+ * total is above €0: the seats are already held and the booking is `pending`
+ * until the browser confirms the card against `client_secret`.
+ */
+export type BookingPayment = { client_secret: string; hold_minutes: number }
+
 export type BookingResult =
-  | { ok: true; booking: ConfirmedBooking }
+  | { ok: true; booking: ConfirmedBooking; payment?: BookingPayment }
   | { ok: false; error: string }
 
-/** Create a booking (reserve → pay → confirm) via the Medusa store API. */
-export async function createBooking(
-  input: CreateBookingInput,
-): Promise<BookingResult> {
+/** Create a booking (reserve → open payment → confirm) via the Medusa store API. */
+export async function createBooking(input: CreateBookingInput): Promise<BookingResult> {
   try {
-    const r = await sdk.client.fetch<{ booking: ConfirmedBooking }>(
+    const r = await sdk.client.fetch<{ booking: ConfirmedBooking; payment?: BookingPayment }>(
       '/store/bookings',
       { method: 'POST', body: input },
     )
-    return { ok: true, booking: r.booking }
+    return { ok: true, booking: r.booking, payment: r.payment }
   } catch (e: unknown) {
     return { ok: false, error: extractMessage(e) }
   }
@@ -94,7 +99,7 @@ export type ConfirmedWorkshopBooking = {
 }
 
 export type WorkshopBookingResult =
-  | { ok: true; booking: ConfirmedWorkshopBooking }
+  | { ok: true; booking: ConfirmedWorkshopBooking; payment?: BookingPayment }
   | { ok: false; error: string }
 
 /** Create a workshop booking (combo × people-by-age) via the Medusa store API. */
@@ -103,13 +108,50 @@ export async function createWorkshopBooking(
 ): Promise<WorkshopBookingResult> {
   const { slug, ...body } = input
   try {
-    const r = await sdk.client.fetch<{ booking: ConfirmedWorkshopBooking }>(
-      `/store/workshops/${slug}/bookings`,
-      { method: 'POST', body },
+    const r = await sdk.client.fetch<{
+      booking: ConfirmedWorkshopBooking
+      payment?: BookingPayment
+    }>(`/store/workshops/${slug}/bookings`, { method: 'POST', body })
+    return { ok: true, booking: r.booking, payment: r.payment }
+  } catch (e: unknown) {
+    return { ok: false, error: extractMessage(e) }
+  }
+}
+
+/** Identifies a held booking to the server: its reference plus the idempotency
+ *  key, whose random part only the browser that created the booking knows. */
+export type BookingHold = { reference: string; idempotency_key: string }
+
+/**
+ * Finish a card booking once Stripe has taken the payment. The server confirms
+ * only if Stripe agrees the intent succeeded. Works for activity and workshop
+ * bookings; the result carries whichever title applies.
+ */
+export async function confirmBookingPayment(
+  hold: BookingHold,
+): Promise<
+  { ok: true; booking: ConfirmedBooking & ConfirmedWorkshopBooking } | { ok: false; error: string }
+> {
+  try {
+    const r = await sdk.client.fetch<{ booking: ConfirmedBooking & ConfirmedWorkshopBooking }>(
+      '/store/bookings/confirm',
+      { method: 'POST', body: hold },
     )
     return { ok: true, booking: r.booking }
   } catch (e: unknown) {
     return { ok: false, error: extractMessage(e) }
+  }
+}
+
+/**
+ * Give the held seats back — Back or close during the payment step. Fire and
+ * forget: if this never arrives, the server's hold sweep releases them anyway.
+ */
+export async function releaseBookingHold(hold: BookingHold): Promise<void> {
+  try {
+    await sdk.client.fetch('/store/bookings/release', { method: 'POST', body: hold })
+  } catch {
+    // ignore — expired holds are settled server-side (release-stale-bookings)
   }
 }
 

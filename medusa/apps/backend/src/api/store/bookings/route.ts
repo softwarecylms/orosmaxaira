@@ -1,8 +1,13 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
-import { Modules } from "@medusajs/framework/utils"
 import { randomBytes } from "crypto"
 import { BOOKINGS_MODULE } from "../../../modules/bookings"
 import type BookingsModuleService from "../../../modules/bookings/service"
+import {
+  HOLD_MINUTES,
+  announceBooking,
+  openBookingPayment,
+  pendingClientSecret,
+} from "../../../lib/booking-payment"
 
 type PriceTier = {
   key: string
@@ -57,8 +62,10 @@ function publicBooking(b: any, activityTitle?: string, slot?: any) {
 
 /**
  * POST /store/bookings
- * Reserve → pay (system default in dev) → confirm → email. Atomic seat
- * reservation prevents oversell; a €0 total skips payment. Idempotent on
+ * Reserve → open payment → (card) → confirm → email. Atomic seat reservation
+ * prevents oversell; a €0 total skips payment. With Stripe the response carries
+ * `payment.client_secret` and the booking stays pending until
+ * /store/bookings/confirm — see src/lib/booking-payment.ts. Idempotent on
  * `idempotency_key` so a double-submit/refresh never double-books.
  */
 export async function POST(req: MedusaRequest, res: MedusaResponse) {
@@ -83,7 +90,13 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
         .retrieveAvailabilitySlot((existing as any).slot_id)
         .catch(() => null)
       const [act] = await bookings.listActivities({ slug: body.slug })
-      return res.json({ booking: publicBooking(existing, act?.title, slot) })
+      // A replayed card booking gets its client secret back, so the browser
+      // keeps paying against the same PaymentIntent.
+      const secret = await pendingClientSecret(req.scope, existing as any)
+      return res.json({
+        booking: publicBooking(existing, act?.title, slot),
+        ...(secret ? { payment: { client_secret: secret, hold_minutes: HOLD_MINUTES } } : {}),
+      })
     }
   }
 
@@ -134,8 +147,9 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
       .json({ message: "Δεν υπάρχει διαθεσιμότητα για αυτή την ώρα." })
   }
 
-  // 4) Create the booking (pending), then pay + confirm.
+  // 4) Create the booking (pending), then open the payment.
   let booking: any
+  let clientSecret: string | undefined
   try {
     const created = await bookings.createBookings({
       reference: makeReference(),
@@ -155,30 +169,17 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     })
     booking = Array.isArray(created) ? created[0] : created
 
-    // 5) Payment — skip entirely when free.
+    // 5) Payment — skip entirely when free. With Stripe the booking stays
+    //    PENDING here: the seats are held and the browser now takes the card;
+    //    /store/bookings/confirm finishes it once Stripe says it is paid.
+    //    Without Stripe the manual provider confirms on the spot, as before.
     if (total > 0) {
-      const payment = req.scope.resolve<any>(Modules.PAYMENT)
-      const pc = await payment.createPaymentCollections({
-        amount: total,
-        currency_code: currency,
-      })
-      const session = await payment.createPaymentSession(pc.id, {
-        provider_id: "pp_system_default",
-        amount: total,
-        currency_code: currency,
-        data: {},
-      })
-      const authorized = await payment.authorizePaymentSession(session.id, {})
-      await bookings.updateBookings({
-        id: booking.id,
-        status: "confirmed",
-        payment_collection_id: pc.id,
-        payment_id: authorized?.id ?? null,
-      })
+      const opened = await openBookingPayment(req.scope, booking, total, currency)
+      if (!opened.confirmed) clientSecret = opened.clientSecret
     } else {
       await bookings.updateBookings({ id: booking.id, status: "confirmed" })
+      booking.status = "confirmed"
     }
-    booking.status = "confirmed"
   } catch (e: any) {
     // Roll back the reservation + free the idempotency key so the customer can
     // retry (a cancelled row keeps the unique key otherwise and blocks retries).
@@ -216,55 +217,12 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     })
   }
 
-  // 6) Confirmation email (inline; log-only via notification-local in dev).
-  try {
-    const notification = req.scope.resolve<any>(Modules.NOTIFICATION)
-    const adminEmail = process.env.BOOKING_ADMIN_EMAIL || "info@orosmaxaira.com"
-    const when = `${slot.date} στις ${slot.start_time}`
-    const people = `${adults} ενήλικες, ${children} παιδιά, ${infants} βρέφη`
-    const money = `${total.toFixed(2)} ${currency.toUpperCase()}`
-    const data = {
-      reference: booking.reference,
-      activity: activity.title,
-      when,
-      people,
-      total: money,
-      customer_name: booking.customer_name,
-    }
-    await notification.createNotifications([
-      {
-        to: booking.email,
-        channel: "email",
-        template: "booking-confirmation",
-        content: {
-          subject: `Επιβεβαίωση κράτησης ${booking.reference} — ${activity.title}`,
-          text: `Ευχαριστούμε ${booking.customer_name}! Η κράτησή σας για «${activity.title}» στις ${when} επιβεβαιώθηκε. Άτομα: ${people}. Σύνολο: ${money}. Κωδικός κράτησης: ${booking.reference}.`,
-        },
-        data,
-      },
-      {
-        to: adminEmail,
-        channel: "email",
-        template: "booking-notification",
-        content: {
-          subject: `Νέα κράτηση ${booking.reference} — ${activity.title}`,
-          text: `Νέα κράτηση: ${activity.title}, ${when}. ${people}. Σύνολο ${money}. Πελάτης: ${booking.customer_name} (${booking.email}${booking.phone ? ", " + booking.phone : ""}).`,
-        },
-        data,
-      },
-    ])
-  } catch (e: any) {
-    logger.warn(`Booking email not sent: ${e?.message ?? e}`)
-  }
+  // 6) A card booking is announced once it is paid (/store/bookings/confirm);
+  //    anything already confirmed is announced now.
+  if (booking.status === "confirmed") await announceBooking(req.scope, booking)
 
-  // Emit an event for any future hooks (durability note: in-memory bus in dev).
-  try {
-    await req.scope
-      .resolve<any>(Modules.EVENT_BUS)
-      .emit({ name: "booking.confirmed", data: { id: booking.id } })
-  } catch {
-    /* non-fatal */
-  }
-
-  res.json({ booking: publicBooking(booking, activity.title, slot) })
+  res.json({
+    booking: publicBooking(booking, activity.title, slot),
+    ...(clientSecret ? { payment: { client_secret: clientSecret, hold_minutes: HOLD_MINUTES } } : {}),
+  })
 }

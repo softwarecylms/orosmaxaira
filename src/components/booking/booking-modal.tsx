@@ -8,12 +8,16 @@ import { Minus, Plus, X, Check, Loader2, CalendarDays, Mail } from 'lucide-react
 import type { Activity, AvailabilitySlot, PriceTier } from '@/lib/medusa/activities'
 import { tierPrice } from '@/lib/pricing'
 import {
+  confirmBookingPayment,
   createBooking,
   getMonthAvailability,
+  releaseBookingHold,
   type ConfirmedBooking,
 } from '@/lib/medusa/booking-actions'
+import { stripeConfigured } from '@/components/shop/checkout/stripe-elements'
 import { EASE, DURATION } from '@/lib/motion'
 import { BookingCalendar } from './booking-calendar'
+import { BookingPaymentStep, type PendingPayment } from './booking-payment'
 import { getBookingUi } from './booking-ui'
 
 const isoOf = (d: Date) =>
@@ -78,6 +82,14 @@ export function BookingModal({
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [result, setResult] = useState<ConfirmedBooking | null>(null)
 
+  // A card payment in progress — the server holds the seats until it is paid,
+  // released (Back / close), or swept once the hold expires.
+  const [pending, setPending] = useState<PendingPayment | null>(null)
+  // The Esc listener calls whatever `close` is current; keeping it in a ref
+  // means the scroll-lock effect never re-runs (re-running would record
+  // 'hidden' as the "previous" overflow and leave the page unscrollable).
+  const closeRef = useRef<() => void>(onClose)
+
   // Refs to auto-scroll each newly-revealed step into view.
   const timeRef = useRef<HTMLDivElement>(null)
   const peopleRef = useRef<HTMLDivElement>(null)
@@ -94,6 +106,7 @@ export function BookingModal({
     setPhone('')
     setSubmitError(null)
     setResult(null)
+    setPending(null)
     setSubmitting(false)
     setNonce(
       typeof crypto !== 'undefined' && crypto.randomUUID
@@ -114,7 +127,7 @@ export function BookingModal({
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') closeRef.current()
     }
     document.addEventListener('keydown', onKey)
     const prev = document.body.style.overflow
@@ -183,10 +196,22 @@ export function BookingModal({
     emailOk(email) &&
     !submitting
 
+  const reloadAvailability = () => {
+    const today = new Date()
+    getMonthAvailability(
+      activity.slug,
+      isoOf(today),
+      isoOf(new Date(today.getFullYear(), today.getMonth() + 6, today.getDate())),
+    )
+      .then(({ slots }) => setSlots(slots))
+      .catch(() => {})
+  }
+
   const submit = async () => {
     if (!canSubmit || !selectedSlotId) return
     setSubmitting(true)
     setSubmitError(null)
+    const key = `${nonce}-${selectedSlotId}-${counts['adult'] ?? 0}-${counts['child'] ?? 0}-${counts['infant'] ?? 0}`
     const res = await createBooking({
       slug: activity.slug,
       slot_id: selectedSlotId,
@@ -194,27 +219,77 @@ export function BookingModal({
       adults: counts['adult'] ?? 0,
       children: counts['child'] ?? 0,
       infants: counts['infant'] ?? 0,
-      idempotency_key: `${nonce}-${selectedSlotId}-${counts['adult'] ?? 0}-${counts['child'] ?? 0}-${counts['infant'] ?? 0}`,
+      idempotency_key: key,
     })
-    if (res.ok && res.booking.status === "confirmed") {
+    if (res.ok && res.booking.status === 'confirmed') {
+      // Free (€0), or no card provider on the backend: done in one step.
       setResult(res.booking)
+    } else if (res.ok && res.booking.status === 'pending' && res.payment) {
+      // The seats are now held — on to the payment step.
+      if (stripeConfigured) {
+        setPending({
+          clientSecret: res.payment.client_secret,
+          reference: res.booking.reference,
+          key,
+          holdMinutes: res.payment.hold_minutes,
+          total: res.booking.total_amount,
+        })
+      } else {
+        // The server wants a card but this build has no publishable key to
+        // render one — give the seats straight back instead of holding them.
+        void releaseBookingHold({ reference: res.booking.reference, idempotency_key: key })
+        setSubmitError(ui.cardUnavailable)
+      }
     } else {
       setSubmitError(res.ok ? ui.bookingFailed : res.error)
       // Availability may have changed (e.g. sold out) — refresh it and clear the
       // time/people selection so the UI can't show a slot that's now gone.
-      const today = new Date()
-      getMonthAvailability(
-        activity.slug,
-        isoOf(today),
-        isoOf(new Date(today.getFullYear(), today.getMonth() + 6, today.getDate())),
-      )
-        .then(({ slots }) => setSlots(slots))
-        .catch(() => {})
+      reloadAvailability()
       setSelectedSlotId(null)
       setCounts({})
     }
     setSubmitting(false)
   }
+
+  /** Stripe reports the card paid — let the server confirm it. Resolves to an
+   *  error to show, or null once the booking is confirmed. */
+  const onPaid = async (): Promise<string | null> => {
+    if (!pending) return null
+    const r = await confirmBookingPayment({
+      reference: pending.reference,
+      idempotency_key: pending.key,
+    })
+    if (r.ok) {
+      setPending(null)
+      setResult(r.booking)
+      return null
+    }
+    // The card went through; only the confirmation call failed. The server
+    // settles paid holds by itself, so the customer must not pay twice.
+    return ui.paidPendingConfirmation(pending.reference)
+  }
+
+  /** Give held seats back now rather than making others wait out the hold. */
+  const releasePending = () => {
+    if (!pending) return
+    void releaseBookingHold({ reference: pending.reference, idempotency_key: pending.key })
+    setPending(null)
+  }
+
+  const backToDetails = () => {
+    releasePending()
+    reloadAvailability()
+  }
+
+  // Every way out — Esc, the backdrop, ✕ — releases the hold. If the card had in
+  // fact been paid, the server cannot cancel the intent and confirms instead.
+  const close = () => {
+    releasePending()
+    onClose()
+  }
+  useEffect(() => {
+    closeRef.current = close
+  })
 
   const overlay = (
     <AnimatePresence>
@@ -228,7 +303,7 @@ export function BookingModal({
           <motion.button
             type="button"
             aria-label={ui.close}
-            onClick={onClose}
+            onClick={close}
             className="absolute inset-0 bg-foreground/50"
             variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
             transition={{ duration: DURATION.ui, ease: EASE.snap }}
@@ -250,11 +325,11 @@ export function BookingModal({
             <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
               <h2 className="flex items-center gap-2 text-[17px] font-semibold text-foreground">
                 <CalendarDays className="size-5 text-accent" aria-hidden="true" />
-                {result ? ui.confirmTitle : ui.bookingTitle}
+                {result ? ui.confirmTitle : pending ? ui.paymentTitle : ui.bookingTitle}
               </h2>
               <button
                 type="button"
-                onClick={onClose}
+                onClick={close}
                 aria-label={ui.close}
                 className="flex size-9 items-center justify-center rounded-full text-foreground transition-colors hover:bg-offwhite hover:text-accent"
               >
@@ -266,6 +341,13 @@ export function BookingModal({
             <div className="flex-1 overflow-y-auto px-5 py-5">
               {result ? (
                 <Confirmation booking={result} currency={currency} onClose={onClose} />
+              ) : pending ? (
+                <BookingPaymentStep
+                  payment={pending}
+                  amountLabel={money(pending.total, currency, ui.priceLocale)}
+                  onPaid={onPaid}
+                  onBack={backToDetails}
+                />
               ) : loading ? (
                 <div className="flex items-center justify-center gap-2 py-16 text-muted">
                   <Loader2 className="size-5 animate-spin" aria-hidden="true" />
@@ -393,7 +475,7 @@ export function BookingModal({
             </div>
 
             {/* Footer */}
-            {!result && !loading && availableDates.size > 0 ? (
+            {!result && !pending && !loading && availableDates.size > 0 ? (
               <div className="flex items-center justify-between gap-4 border-t border-border px-5 py-4">
                 <div className="flex flex-col">
                   <span className="text-[12px] text-muted">{ui.totalLabel}</span>
@@ -417,8 +499,8 @@ export function BookingModal({
                       <Loader2 className="size-5 animate-spin" aria-hidden="true" />
                       {ui.processing}
                     </>
-                  ) : total > 0 ? (
-                    ui.payAndBook
+                  ) : total > 0 && stripeConfigured ? (
+                    ui.continueToPayment
                   ) : (
                     ui.completeBooking
                   )}

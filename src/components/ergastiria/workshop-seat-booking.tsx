@@ -21,12 +21,16 @@ import {
 import type { PriceTier } from '@/lib/medusa/activities'
 import { comboAgeTiers, type AgeTier } from '@/lib/pricing'
 import {
+  confirmBookingPayment,
   createWorkshopBooking,
   getWorkshopMonthAvailability,
+  releaseBookingHold,
   type ConfirmedWorkshopBooking,
 } from '@/lib/medusa/booking-actions'
+import { stripeConfigured } from '@/components/shop/checkout/stripe-elements'
 import { EASE, DURATION } from '@/lib/motion'
 import { BookingCalendar } from '../booking/booking-calendar'
+import { BookingPaymentStep, type PendingPayment } from '../booking/booking-payment'
 import { getBookingUi } from '../booking/booking-ui'
 import { getErgastiriaUi } from './ergastiria-ui'
 
@@ -107,8 +111,11 @@ export function WorkshopSeatBooking({
           {eui.bookOnline}
         </button>
 
-        <p className="flex items-center gap-2 text-[12.5px] text-muted">
-          <ShieldCheck className="size-4 shrink-0 text-gold-strong" aria-hidden="true" />
+        {/* items-start: the note wraps to several lines, and the shield belongs
+            beside the first. An explicit 18px line height + 1px nudge centres
+            the 16px icon on that first line exactly. */}
+        <p className="flex items-start gap-2 text-[12.5px] leading-[18px] text-muted">
+          <ShieldCheck className="mt-px size-4 shrink-0 text-gold-strong" aria-hidden="true" />
           {eui.instantConfirm}
         </p>
 
@@ -194,6 +201,14 @@ function WorkshopBookingModal({
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [result, setResult] = useState<ConfirmedWorkshopBooking | null>(null)
 
+  // A card payment in progress — the server holds the seats until it is paid,
+  // released (Back / close), or swept once the hold expires.
+  const [pending, setPending] = useState<PendingPayment | null>(null)
+  // The Esc listener calls whatever `close` is current; keeping it in a ref
+  // means the scroll-lock effect never re-runs (re-running would record
+  // 'hidden' as the "previous" overflow and leave the page unscrollable).
+  const closeRef = useRef<() => void>(onClose)
+
   const dateRef = useRef<HTMLDivElement>(null)
   const timeRef = useRef<HTMLDivElement>(null)
   const peopleRef = useRef<HTMLDivElement>(null)
@@ -211,6 +226,7 @@ function WorkshopBookingModal({
     setPhone('')
     setSubmitError(null)
     setResult(null)
+    setPending(null)
     setSubmitting(false)
     setNonce(
       typeof crypto !== 'undefined' && crypto.randomUUID
@@ -231,7 +247,7 @@ function WorkshopBookingModal({
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') closeRef.current()
     }
     document.addEventListener('keydown', onKey)
     const prev = document.body.style.overflow
@@ -336,6 +352,7 @@ function WorkshopBookingModal({
     if (!canSubmit || !selectedSlotId) return
     setSubmitting(true)
     setSubmitError(null)
+    const key = `${nonce}-${selectedSlotId}-${counts['adult'] ?? 0}-${counts['child'] ?? 0}-${counts['infant'] ?? 0}`
     const res = await createWorkshopBooking({
       slug,
       slot_id: selectedSlotId,
@@ -344,10 +361,27 @@ function WorkshopBookingModal({
       adults: counts['adult'] ?? 0,
       children: counts['child'] ?? 0,
       infants: counts['infant'] ?? 0,
-      idempotency_key: `${nonce}-${selectedSlotId}-${counts['adult'] ?? 0}-${counts['child'] ?? 0}-${counts['infant'] ?? 0}`,
+      idempotency_key: key,
     })
     if (res.ok && res.booking.status === 'confirmed') {
+      // Free (€0), or no card provider on the backend: done in one step.
       setResult(res.booking)
+    } else if (res.ok && res.booking.status === 'pending' && res.payment) {
+      // The seats are now held — on to the payment step.
+      if (stripeConfigured) {
+        setPending({
+          clientSecret: res.payment.client_secret,
+          reference: res.booking.reference,
+          key,
+          holdMinutes: res.payment.hold_minutes,
+          total: res.booking.total_amount,
+        })
+      } else {
+        // The server wants a card but this build has no publishable key to
+        // render one — give the seats straight back instead of holding them.
+        void releaseBookingHold({ reference: res.booking.reference, idempotency_key: key })
+        setSubmitError(bui.cardUnavailable)
+      }
     } else {
       setSubmitError(res.ok ? bui.bookingFailed : res.error)
       reloadAvailability()
@@ -356,6 +390,46 @@ function WorkshopBookingModal({
     }
     setSubmitting(false)
   }
+
+  /** Stripe reports the card paid — let the server confirm it. Resolves to an
+   *  error to show, or null once the booking is confirmed. */
+  const onPaid = async (): Promise<string | null> => {
+    if (!pending) return null
+    const r = await confirmBookingPayment({
+      reference: pending.reference,
+      idempotency_key: pending.key,
+    })
+    if (r.ok) {
+      setPending(null)
+      setResult(r.booking)
+      return null
+    }
+    // The card went through; only the confirmation call failed. The server
+    // settles paid holds by itself, so the customer must not pay twice.
+    return bui.paidPendingConfirmation(pending.reference)
+  }
+
+  /** Give held seats back now rather than making others wait out the hold. */
+  const releasePending = () => {
+    if (!pending) return
+    void releaseBookingHold({ reference: pending.reference, idempotency_key: pending.key })
+    setPending(null)
+  }
+
+  const backToDetails = () => {
+    releasePending()
+    reloadAvailability()
+  }
+
+  // Every way out — Esc, the backdrop, ✕ — releases the hold. If the card had in
+  // fact been paid, the server cannot cancel the intent and confirms instead.
+  const close = () => {
+    releasePending()
+    onClose()
+  }
+  useEffect(() => {
+    closeRef.current = close
+  })
 
   const overlay = (
     <AnimatePresence>
@@ -369,7 +443,7 @@ function WorkshopBookingModal({
           <motion.button
             type="button"
             aria-label={bui.close}
-            onClick={onClose}
+            onClick={close}
             className="absolute inset-0 bg-foreground/50"
             variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
             transition={{ duration: DURATION.ui, ease: EASE.snap }}
@@ -390,11 +464,11 @@ function WorkshopBookingModal({
             <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
               <h2 className="flex items-center gap-2 text-[17px] font-semibold text-foreground">
                 <CalendarDays className="size-5 text-accent" aria-hidden="true" />
-                {result ? eui.confirmTitle : eui.workshopBookingTitle}
+                {result ? eui.confirmTitle : pending ? bui.paymentTitle : eui.workshopBookingTitle}
               </h2>
               <button
                 type="button"
-                onClick={onClose}
+                onClick={close}
                 aria-label={bui.close}
                 className="flex size-9 items-center justify-center rounded-full text-foreground transition-colors hover:bg-offwhite hover:text-accent"
               >
@@ -405,6 +479,13 @@ function WorkshopBookingModal({
             <div className="flex-1 overflow-y-auto px-5 py-5">
               {result ? (
                 <Confirmation booking={result} currency={currency} onClose={onClose} />
+              ) : pending ? (
+                <BookingPaymentStep
+                  payment={pending}
+                  amountLabel={money(pending.total, currency, bui.priceLocale)}
+                  onPaid={onPaid}
+                  onBack={backToDetails}
+                />
               ) : loading ? (
                 <div className="flex items-center justify-center gap-2 py-16 text-muted">
                   <Loader2 className="size-5 animate-spin" aria-hidden="true" />
@@ -544,7 +625,7 @@ function WorkshopBookingModal({
               )}
             </div>
 
-            {!result && !loading && slots.filter((s) => s.remaining > 0).length > 0 ? (
+            {!result && !pending && !loading && slots.filter((s) => s.remaining > 0).length > 0 ? (
               <div className="flex items-center justify-between gap-4 border-t border-border px-5 py-4">
                 <div className="flex flex-col">
                   <span className="text-[12px] text-muted">{bui.totalLabel}</span>
@@ -568,8 +649,8 @@ function WorkshopBookingModal({
                       <Loader2 className="size-5 animate-spin" aria-hidden="true" />
                       {bui.processing}
                     </>
-                  ) : total > 0 ? (
-                    bui.payAndBook
+                  ) : total > 0 && stripeConfigured ? (
+                    bui.continueToPayment
                   ) : (
                     bui.completeBooking
                   )}
