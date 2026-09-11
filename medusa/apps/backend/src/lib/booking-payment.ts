@@ -60,10 +60,17 @@ export type BookingRow = {
 const bookingsOf = (c: MedusaContainer) => c.resolve<BookingsModuleService>(BOOKINGS_MODULE)
 const paymentOf = (c: MedusaContainer) => c.resolve<IPaymentModuleService>(Modules.PAYMENT)
 
-/** The registered Stripe provider, or null when the backend has no key. */
+/**
+ * The Stripe CARD provider, or null when the backend has no key.
+ *
+ * The Stripe module registers one provider per payment method — pp_stripe_stripe
+ * for cards, pp_stripe-bancontact_stripe, pp_stripe-blik_stripe and so on — so
+ * matching "pp_stripe" alone takes whichever the database lists first (on
+ * production, Bancontact). Only the card provider has "_" right after it.
+ */
 export async function stripeProviderId(container: MedusaContainer): Promise<string | null> {
   const providers = await paymentOf(container).listPaymentProviders({}, { take: 50 })
-  return providers.find((p) => p.id.startsWith("pp_stripe") && p.is_enabled !== false)?.id ?? null
+  return providers.find((p) => p.id.startsWith("pp_stripe_") && p.is_enabled !== false)?.id ?? null
 }
 
 export type OpenedPayment = { confirmed: true } | { confirmed: false; clientSecret: string }
