@@ -1,20 +1,18 @@
 'use client'
 
 import Image from 'next/image'
-import { useLocale } from 'next-intl'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { RevealMountStagger, RevealMountItem } from '@/components/motion/reveal'
 import { useMotionReady } from '@/components/motion/motion-ready'
 import { CtaLink } from '@/components/home/cta-link'
 import { floatY } from '@/lib/motion'
-import { getAdoptContent } from './adopt-content'
+import type { AdoptContent } from './adopt-content'
 
 /** Full-bleed programme hero — parallax photo, dark overlay, wordmark + tagline
  *  (Bee-come a Hero in accent) and the primary CTA. Parallax is driven off the
  *  page scroll (the hero sits at the top), avoiding element-target scroll
  *  measurement; both parallax and mount-stagger disable under reduced motion. */
-export function AdoptHero() {
-  const h = getAdoptContent(useLocale()).hero
+export function AdoptHero({ hero: h }: { hero: AdoptContent['hero'] }) {
   const reduce = useReducedMotion()
   const ready = useMotionReady()
   const { scrollY } = useScroll()

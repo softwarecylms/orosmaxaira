@@ -1,19 +1,17 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { useLocale } from 'next-intl'
 import { useReducedMotion } from 'framer-motion'
 import { Counter } from '@/components/motion/counter'
 import { CtaLink } from '@/components/home/cta-link'
-import { getAdoptContent } from './adopt-content'
+import type { AdoptContent } from './adopt-content'
 
 /** §8 "Ο Στόχος μας" — a gold band with the honeybee footage bleeding in on the
  *  right (same video + accent colour as the home "Υιοθετώ μια κυψέλη" banner). A
  *  gold gradient sits solid on the left (behind the copy) and fades to
  *  transparent on the right so the video reads there. Video plays via effect
  *  (no autoPlay attr) so server/client markup match; paused under reduced motion. */
-export function GoalBand() {
-  const g = getAdoptContent(useLocale()).goal
+export function GoalBand({ goal: g }: { goal: AdoptContent['goal'] }) {
   const reduce = useReducedMotion()
   const videoRef = useRef<HTMLVideoElement>(null)
 

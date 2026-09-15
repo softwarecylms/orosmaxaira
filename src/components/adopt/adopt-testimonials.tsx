@@ -4,14 +4,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocale } from 'next-intl'
 import { useReducedMotion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { getAdoptContent } from './adopt-content'
+import type { AdoptContent } from './adopt-content'
 
 /** Testimonials carousel — 2 cards per view (1 on mobile), seamless looped
  *  autoplay (the set is duplicated so it wraps invisibly), prev/next arrows.
  *  Pauses on hover, autoplay off under reduced motion. */
-export function AdoptTestimonials() {
+export function AdoptTestimonials({ items: raw }: { items: AdoptContent['testimonials']['items'] }) {
   const locale = useLocale()
-  const raw = getAdoptContent(locale).testimonials.items
   const items = [...raw, ...raw] // duplicate for a seamless loop
   const trackRef = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()

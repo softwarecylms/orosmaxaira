@@ -15,9 +15,6 @@ import { AnnouncementRotator } from './announcement-rotator'
 import { LanguageSwitcher } from './language-switcher'
 
 type SiteHeaderProps = {
-  header?: unknown
-  settings?: unknown
-  variant?: 'default' | 'dark'
   locale: Locale
 }
 
@@ -32,7 +29,7 @@ const emphasis = (chunks: ReactNode) => <strong className="font-bold">{chunks}</
 
 export async function SiteHeader({ locale }: SiteHeaderProps) {
   const t = await getTranslations('header')
-  const { NAV, ADOPT_LINK, CONTACT, MEGA_MENU } = getHomeContent(locale)
+  const { NAV, ADOPT_LINK, CONTACT, MEGA_MENU, SEARCH_PLACEHOLDERS } = getHomeContent(locale)
 
   return (
     <>
@@ -93,7 +90,7 @@ export async function SiteHeader({ locale }: SiteHeaderProps) {
 
           {/* Desktop utilities */}
           <div className="hidden items-center gap-5 lg:flex">
-            <HeaderSearch className="w-[300px] xl:w-[463px]" />
+            <HeaderSearch placeholders={SEARCH_PLACEHOLDERS} className="w-[300px] xl:w-[463px]" />
 
             <a
               href={CONTACT.phoneHref}
@@ -137,6 +134,7 @@ export async function SiteHeader({ locale }: SiteHeaderProps) {
               nav={NAV}
               adopt={ADOPT_LINK}
               phone={{ label: CONTACT.phone, href: CONTACT.phoneHref }}
+              searchPlaceholders={SEARCH_PLACEHOLDERS}
             />
           </div>
         </HeaderReveal>

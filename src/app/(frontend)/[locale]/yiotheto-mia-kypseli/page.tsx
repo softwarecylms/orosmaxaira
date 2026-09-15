@@ -75,7 +75,7 @@ export default async function AdoptAHivePage() {
   return (
     <>
       {/* 1 · Hero */}
-      <AdoptHero />
+      <AdoptHero hero={a.hero} />
 
       {/* 2 · Intro + Why adopt */}
       <section className="container-wide py-12 md:py-[70px]">
@@ -163,7 +163,7 @@ export default async function AdoptAHivePage() {
       </section>
 
       {/* 5 · Goal + why it matters */}
-      <GoalBand />
+      <GoalBand goal={a.goal} />
 
       {/* 6 · The two visits */}
       <VisitsShowcase />
@@ -177,13 +177,13 @@ export default async function AdoptAHivePage() {
       </section>
 
       {/* 8 · Adoption progress toward the goal */}
-      <AdoptProgress />
+      <AdoptProgress progress={a.progress} />
 
       {/* 9 · Testimonials */}
       <section className="bg-offwhite py-12 md:py-[70px]">
         <div className="container-wide flex flex-col gap-10">
           <SectionHead eyebrow={a.testimonials.eyebrow} heading={a.testimonials.heading} />
-          <AdoptTestimonials />
+          <AdoptTestimonials items={a.testimonials.items} />
         </div>
       </section>
 
@@ -224,7 +224,7 @@ export default async function AdoptAHivePage() {
                 <p className="max-w-[520px] text-[16px] leading-[1.6] text-white/85">{a.cta.body}</p>
               </div>
 
-              <AdoptCtaForm />
+              <AdoptCtaForm form={a.form} />
             </div>
           </Reveal>
         </div>

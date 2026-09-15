@@ -3,8 +3,7 @@
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
-import { useLocale } from 'next-intl'
-import { getHomeContent } from './home-content'
+import type { HomeContent } from './home-content'
 import { FlatlayHotspot } from './flatlay-hotspot'
 import type { VariantPick } from '@/lib/medusa/shop'
 
@@ -14,8 +13,13 @@ import type { VariantPick } from '@/lib/medusa/shop'
  *  image carries a vertical buffer so no edges show. Off on mobile / reduced
  *  motion so the carefully-placed pills stay aligned.
  *  `variants` (live Medusa variant + price per handle) powers the add buttons. */
-export function FlatlayBand({ variants = {} }: { variants?: Record<string, VariantPick> }) {
-  const { FLATLAY } = getHomeContent(useLocale())
+export function FlatlayBand({
+  flatlay: FLATLAY,
+  variants = {},
+}: {
+  flatlay: HomeContent['FLATLAY']
+  variants?: Record<string, VariantPick>
+}) {
   const ref = useRef<HTMLElement | null>(null)
   const reduce = useReducedMotion()
   const [lg, setLg] = useState(false)

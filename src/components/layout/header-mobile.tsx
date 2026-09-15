@@ -20,8 +20,10 @@ export function HeaderMobile({
   nav,
   adopt,
   phone,
+  searchPlaceholders,
 }: {
   nav: NavItem[]
+  searchPlaceholders: string[]
   adopt: { label: string; href: string }
   phone: { label: string; href: string }
 }) {
@@ -57,7 +59,7 @@ export function HeaderMobile({
               </button>
             </div>
 
-            <HeaderSearch />
+            <HeaderSearch placeholders={searchPlaceholders} />
 
             <nav className="flex flex-col" aria-label={t('mobileNav')}>
               {nav.map((item) => {

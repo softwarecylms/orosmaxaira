@@ -9,7 +9,6 @@ import { OrganizationSchema } from '@/components/seo/organization-schema'
 import { MotionReady } from '@/components/motion/motion-ready'
 import { CartProvider } from '@/components/commerce/cart-store'
 import { CartDrawer } from '@/components/commerce/cart-drawer'
-import { getSiteSettings, getHeader, getFooter } from '@/lib/cms'
 import { siteUrl } from '@/lib/seo'
 import { routing, type Locale } from '@/i18n/routing'
 
@@ -87,31 +86,15 @@ export default async function FrontendLayout({
   if (!hasLocale(routing.locales, locale)) notFound()
   setRequestLocale(locale)
 
-  const [settings, header, footer] = await Promise.all([
-    getSiteSettings(),
-    getHeader(),
-    getFooter(),
-  ])
-
   return (
     <html lang={locale} className={`${sans.variable} ${display.variable}`}>
       <body className="bg-background text-foreground antialiased" suppressHydrationWarning>
         <NextIntlClientProvider>
           <MotionReady>
             <CartProvider>
-              <SiteHeader
-                header={header}
-                settings={settings}
-                variant="default"
-                locale={locale as Locale}
-              />
+              <SiteHeader locale={locale as Locale} />
               <main id="main">{children}</main>
-              <SiteFooter
-                footer={footer}
-                settings={settings}
-                variant="default"
-                locale={locale as Locale}
-              />
+              <SiteFooter locale={locale as Locale} />
               <CartDrawer />
               <OrganizationSchema locale={locale} />
             </CartProvider>

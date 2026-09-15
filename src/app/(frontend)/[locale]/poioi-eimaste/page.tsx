@@ -188,7 +188,7 @@ export default async function AboutPage() {
             </h2>
           </RevealUp>
           <RevealUp>
-            <OutdoorCarousel slides={a.outdoor.slides} cta={a.outdoor.cta} />
+            <OutdoorCarousel slides={a.outdoor.slides} cta={a.outdoor.cta} arrows={a.outdoor.arrows} />
           </RevealUp>
         </div>
       </section>

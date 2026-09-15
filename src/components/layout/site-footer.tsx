@@ -15,9 +15,6 @@ import {
 import { FooterFunding } from './footer-funding'
 
 type SiteFooterProps = {
-  footer?: unknown
-  settings?: unknown
-  variant?: 'default' | 'dark'
   locale: Locale
 }
 

@@ -148,7 +148,7 @@ export default async function ContactPage() {
           </div>
 
           {/* Message form */}
-          <ContactMessageForm />
+          <ContactMessageForm form={c.form} />
         </div>
       </section>
 

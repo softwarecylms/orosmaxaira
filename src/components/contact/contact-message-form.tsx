@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useLocale } from 'next-intl'
-import { getContactContent } from './contact-content'
+import type { ContactContent } from './contact-content'
 import { Link } from '@/i18n/navigation'
 import { RevealUp } from '@/components/home/reveal-up'
 
@@ -14,8 +13,7 @@ const inputCls =
  * submitting shows a thank-you state. A /api/contact (nodemailer) endpoint
  * exists and can be wired in later.
  */
-export function ContactMessageForm() {
-  const f = getContactContent(useLocale()).form
+export function ContactMessageForm({ form: f }: { form: ContactContent['form'] }) {
   const [sent, setSent] = useState(false)
 
   return (

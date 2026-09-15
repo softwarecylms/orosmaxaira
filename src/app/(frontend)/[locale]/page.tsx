@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { seoMetadata } from '@/lib/seo'
 import { HeroPair } from '@/components/home/hero-pair'
 import { TrustBadges } from '@/components/home/trust-badges'
@@ -10,7 +10,7 @@ import { AdoptHiveBanner } from '@/components/home/adopt-hive-banner'
 import { Heritage } from '@/components/home/heritage'
 import { FlatlayBand } from '@/components/home/flatlay-band'
 import { BlogTeaser } from '@/components/home/blog-teaser'
-import { FLATLAY } from '@/components/home/home-content'
+import { FLATLAY, getHomeContent } from '@/components/home/home-content'
 import { getAddonVariants } from '@/lib/medusa/shop'
 
 export async function generateMetadata({
@@ -29,6 +29,7 @@ export async function generateMetadata({
  * from `home-content.ts`, with live Medusa/Payload data passed in where wired.
  */
 export default async function HomePage() {
+  const home = getHomeContent(await getLocale())
   // The flatlay hotspots add the exact jar in the photo, at its live price.
   const flatlayVariants = await getAddonVariants(
     FLATLAY.prices.map((p) => p.handle),
@@ -44,7 +45,7 @@ export default async function HomePage() {
       <ProductCategories />
       <AdoptHiveBanner />
       <Heritage />
-      <FlatlayBand variants={flatlayVariants} />
+      <FlatlayBand flatlay={home.FLATLAY} variants={flatlayVariants} />
       <BlogTeaser />
     </>
   )

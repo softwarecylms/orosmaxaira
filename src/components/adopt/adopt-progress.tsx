@@ -1,13 +1,12 @@
 'use client'
 
-import { useLocale } from 'next-intl'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Hexagon } from 'lucide-react'
 import { Counter } from '@/components/motion/counter'
 import { CtaLink } from '@/components/home/cta-link'
 import { Reveal } from '@/components/motion/reveal'
 import { EASE } from '@/lib/motion'
-import { getAdoptContent } from './adopt-content'
+import type { AdoptContent } from './adopt-content'
 
 const ADOPTED = 40
 const TARGET = 200
@@ -15,9 +14,8 @@ const PCT = Math.round((ADOPTED / TARGET) * 100) // 20
 
 /** Adoption-progress toward the 200-hive goal — an animated gradient bar that
  *  fills on scroll-in, with a honeycomb marker on the leading edge. */
-export function AdoptProgress() {
+export function AdoptProgress({ progress: p }: { progress: AdoptContent['progress'] }) {
   const reduce = useReducedMotion()
-  const p = getAdoptContent(useLocale()).progress
 
   return (
     <section className="bg-white py-12 md:py-[70px]">

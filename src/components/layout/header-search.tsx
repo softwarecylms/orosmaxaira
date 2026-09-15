@@ -6,7 +6,6 @@ import { useLocale, useTranslations } from 'next-intl'
 import { Link, usePathname, useRouter } from '@/i18n/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Search } from 'lucide-react'
-import { getHomeContent } from '@/components/home/home-content'
 import { SHOP_PRODUCTS, handleOf, categoryLabel } from '@/components/shop/shop-content'
 import { PRODUCT_TITLE_EN, localizedProductTitle } from '@/components/shop/product-i18n'
 import { EASE } from '@/lib/motion'
@@ -39,11 +38,17 @@ function score(title: string, category: string, nq: string): number {
  * catalogue (`SHOP_PRODUCTS`) by title/category as you type and links each hit
  * to its product page. While empty it shows the rotating placeholder hint.
  */
-export function HeaderSearch({ className }: { className?: string }) {
+export function HeaderSearch({
+  placeholders: SEARCH_PLACEHOLDERS,
+  className,
+}: {
+  /** Rotating search-box hints (content key `site`). */
+  placeholders: string[]
+  className?: string
+}) {
   const router = useRouter()
   const locale = useLocale()
   const t = useTranslations('search')
-  const { SEARCH_PLACEHOLDERS } = getHomeContent(locale)
   const [hint, setHint] = useState(0)
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)

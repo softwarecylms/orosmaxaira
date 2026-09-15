@@ -107,7 +107,7 @@ export default async function ActivitiesPage() {
       </section>
 
       {/* 3 · "Ήξερες ότι…" — goal-band style with the honeybee video */}
-      <FactBand />
+      <FactBand fact={a.fact} />
 
       {/* 4 · Educational programs */}
       <section id="programs" className="scroll-mt-24 bg-offwhite py-12 md:py-[70px]">

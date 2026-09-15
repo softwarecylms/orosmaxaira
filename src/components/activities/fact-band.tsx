@@ -2,9 +2,8 @@
 
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'framer-motion'
-import { useLocale } from 'next-intl'
 import { CtaLink } from '@/components/home/cta-link'
-import { getActivitiesContent } from './activities-content'
+import type { ActivitiesContent } from './activities-content'
 
 /**
  * "Ήξερες ότι…" — the adopt "Ο Στόχος μας" goal-band design: a gold band with
@@ -12,8 +11,7 @@ import { getActivitiesContent } from './activities-content'
  * right). Video plays via effect (no autoPlay attr) so server/client markup
  * match; paused under reduced motion.
  */
-export function FactBand() {
-  const f = getActivitiesContent(useLocale()).fact
+export function FactBand({ fact: f }: { fact: ActivitiesContent['fact'] }) {
   const reduce = useReducedMotion()
   const videoRef = useRef<HTMLVideoElement>(null)
 

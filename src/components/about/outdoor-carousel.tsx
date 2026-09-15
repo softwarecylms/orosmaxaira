@@ -2,12 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { useLocale } from 'next-intl'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { EASE, DURATION } from '@/lib/motion'
-import { getAboutContent } from './about-content'
+import type { AboutContent } from './about-content'
 
 export type OutdoorSlide = {
   title: string
@@ -27,12 +26,13 @@ const AUTOPLAY_MS = 8000
 export function OutdoorCarousel({
   slides,
   cta,
+  arrows,
 }: {
   slides: OutdoorSlide[]
   cta: { label: string; href: string }
+  arrows: AboutContent['outdoor']['arrows']
 }) {
   const reduce = useReducedMotion()
-  const arrows = getAboutContent(useLocale()).outdoor.arrows
   const [index, setIndex] = useState(0)
   const [dir, setDir] = useState(1)
   const paused = useRef(false)
