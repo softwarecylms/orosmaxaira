@@ -211,9 +211,9 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
     "description": "Perhaps, in the end, love does not need much. Only the right moment and the right company. Two people. Mead is one of the oldest drinks in the world. Since antiquity, it has been associated with love and marriage. From this connection was born the tradition of the “honeymoon”, when newlywed couples drank mead during the first month of their marriage as a symbol of happiness, luck and a shared journey. With this story as our starting point, we created the Valentine’s Gift Box. A package that draws its meaning from a tradition deeply connected with love and union. For Valentine’s Day, the mead is presented in a box paired with chocolates. A sweet occasion to give a moment of substance. To be opened in the evening and to honour love, romance and the shared path within a relationship or a marriage.",
     "gallery": [
       "https://orosmaxaira.com/wp-content/uploads/2026/02/melite.jpg",
-      "https://orosmaxaira.com/wp-content/uploads/2026/02/0–02–0b-76f3229bebf9ee427714e3ce12612c940e15f3be2d85c07584d89f5fe5974790_a38491a361aca865.jpg",
-      "https://orosmaxaira.com/wp-content/uploads/2026/02/0–02–0b-e5d63ca7361a0273f41fb1baa160c209fb7f72eb211c18db8052a93d1722e9a9_5270ba0fc5a55e73.jpg",
-      "https://orosmaxaira.com/wp-content/uploads/2026/02/viber_image_2026–02–02_18–28–20–709.jpg",
+      "https://orosmaxaira.com/wp-content/uploads/2026/02/0-02-0b-76f3229bebf9ee427714e3ce12612c940e15f3be2d85c07584d89f5fe5974790_a38491a361aca865.jpg",
+      "https://orosmaxaira.com/wp-content/uploads/2026/02/0-02-0b-e5d63ca7361a0273f41fb1baa160c209fb7f72eb211c18db8052a93d1722e9a9_5270ba0fc5a55e73.jpg",
+      "https://orosmaxaira.com/wp-content/uploads/2026/02/viber_image_2026-02-02_18-28-20-709.jpg",
       "https://orosmaxaira.com/wp-content/uploads/2026/02/melite.jpg"
     ],
     "addons": [
