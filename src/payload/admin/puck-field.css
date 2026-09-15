@@ -109,73 +109,12 @@
 .puck-overlay {
   position: fixed;
   inset: 0;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  background: var(--theme-bg, #ffffff);
+  z-index: 10000;
+  background: #fff;
 }
 
-.puck-overlay__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.625rem 1.25rem;
-  border-bottom: 1px solid var(--theme-elevation-100, #e5e5e5);
-  background: var(--theme-elevation-0, #fff);
-  flex-shrink: 0;
-  height: 56px;
-}
-
-.puck-overlay__title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--theme-elevation-1000, #1d1d1f);
-}
-
-.puck-overlay__actions {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-}
-
-.puck-overlay__hint {
-  font-size: 0.78rem;
-  color: var(--theme-elevation-500, #737373);
-}
-
-.puck-overlay__close {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.875rem;
-  border-radius: 0.5rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  background: var(--theme-elevation-1000, #1d1d1f);
-  color: #fff;
-  border: 0;
-  cursor: pointer;
-}
-
-.puck-overlay__close:hover {
-  opacity: 0.9;
-}
-
-.puck-overlay__canvas {
-  flex: 1 1 auto;
-  min-height: 0;
-  position: relative;
-  background: var(--theme-elevation-50, #f7f7f7);
-}
-
-.puck-overlay__canvas > div,
-.puck-overlay__canvas [class^='_Puck_'],
-.puck-overlay__canvas [class*=' _Puck_'] {
-  height: 100%;
-}
-
-.puck-overlay__canvas iframe {
+.puck-overlay__frame {
+  display: block;
   width: 100%;
   height: 100%;
   border: 0;

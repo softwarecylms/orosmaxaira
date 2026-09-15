@@ -4,6 +4,8 @@ export const seoField: Field = {
   name: 'seo',
   type: 'group',
   label: 'SEO',
+  // A Greek and an English title/description per document.
+  localized: true,
   admin: { position: 'sidebar' },
   fields: [
     {

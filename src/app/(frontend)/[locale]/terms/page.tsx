@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { LegalPage } from '@/components/legal/legal-page'
-import { seoMetadata } from '@/lib/seo'
 import { loadLegalContent } from '@/lib/content/load'
+import { ManagedPage, managedMetadata } from '@/lib/cms/pages'
 
 export async function generateMetadata({
   params,
@@ -10,7 +10,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const m = (await loadLegalContent('terms', locale)).seo
-  return seoMetadata({
+  return managedMetadata('terms', {
     locale,
     path: '/terms',
     title: m.title,
@@ -18,7 +18,7 @@ export async function generateMetadata({
   })
 }
 
-export default async function TermsPage({
+async function TermsPageStatic({
   params,
 }: {
   params: Promise<{ locale: string }>
@@ -34,4 +34,10 @@ export default async function TermsPage({
       sections={c.sections}
     />
   )
+}
+
+/** The page as edited in Payload's visual editor; its built-in copy until then. */
+export default async function TermsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  return <ManagedPage slug="terms" locale={locale} fallback={<TermsPageStatic params={params} />} />
 }

@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { motion } from 'framer-motion'
 import { EASE, DURATION, fadeUp, staggerContainer } from '@/lib/motion'
+import { useEditorMode } from '@/components/motion/editor-mode'
 
 /**
  * Minimal scroll-entrance helpers for the home page.
@@ -26,6 +27,7 @@ type RevealProps = {
 
 /** Single element, soft fade-up on scroll-in. */
 export function RevealUp({ children, className, delay = 0, style }: RevealProps) {
+  if (useEditorMode()) return <div className={className} style={style}>{children}</div>
   return (
     <motion.div
       className={className}
@@ -44,6 +46,7 @@ export function RevealUp({ children, className, delay = 0, style }: RevealProps)
 /** Opacity-only reveal — for absolutely-positioned elements whose CSS
  *  transform (e.g. centering translate) must be preserved. */
 export function RevealFade({ children, className, delay = 0, style }: RevealProps) {
+  if (useEditorMode()) return <div className={className} style={style}>{children}</div>
   return (
     <motion.div
       className={className}
@@ -70,6 +73,7 @@ export function RevealGroup({
   stagger?: number
   delay?: number
 }) {
+  if (useEditorMode()) return <div className={className}>{children}</div>
   return (
     <motion.div
       className={className}
@@ -93,6 +97,7 @@ export function RevealItem({
   className?: string
   'data-testid'?: string
 }) {
+  if (useEditorMode()) return <div className={className} data-testid={testId}>{children}</div>
   return (
     <motion.div
       className={className}

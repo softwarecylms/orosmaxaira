@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { getLocale } from 'next-intl/server'
-import { seoMetadata } from '@/lib/seo'
 import { AdoptHero } from '@/components/adopt/adopt-hero'
 import { GoalBand } from '@/components/adopt/goal-band'
 import { AdoptProgress } from '@/components/adopt/adopt-progress'
@@ -15,6 +14,7 @@ import {
   AdoptVisits,
 } from '@/components/sections/adopt'
 import { loadAdoptContent } from '@/lib/content/load'
+import { ManagedPage, managedMetadata } from '@/lib/cms/pages'
 
 export async function generateMetadata({
   params,
@@ -23,7 +23,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const { meta } = await loadAdoptContent(locale)
-  return seoMetadata({
+  return managedMetadata('yiotheto-mia-kypseli', {
     locale,
     path: '/yiotheto-mia-kypseli',
     title: meta.title,
@@ -31,7 +31,7 @@ export async function generateMetadata({
   })
 }
 
-export default async function AdoptAHivePage() {
+async function AdoptAHivePageStatic() {
   const a = await loadAdoptContent(await getLocale())
 
   return (
@@ -57,4 +57,9 @@ export default async function AdoptAHivePage() {
       <AdoptCta content={{ cta: a.cta, form: a.form }} />
     </>
   )
+}
+
+/** The page as edited in Payload's visual editor; its built-in composition until then. */
+export default async function AdoptAHivePage() {
+  return <ManagedPage slug="yiotheto-mia-kypseli" locale={await getLocale()} fallback={<AdoptAHivePageStatic />} />
 }

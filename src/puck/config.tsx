@@ -1,11 +1,5 @@
-import type { Config } from '@measured/puck'
-
 /**
- * Puck configuration for the visual page editor. The generic template blocks
- * are gone; the site's own sections are registered here as blocks next
- * (see the Payload + Puck plan).
+ * Puck configuration for the visual page editor — the site's own sections as
+ * blocks, per language. See blocks.tsx.
  */
-export const puckConfig: Config = {
-  components: {},
-  categories: {},
-}
+export { buildPuckConfig, BLOCKS } from './blocks'

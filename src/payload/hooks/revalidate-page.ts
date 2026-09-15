@@ -1,28 +1,37 @@
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
-const pathFor = (slug?: string | null) =>
-  !slug || slug === 'home' ? '/' : `/${slug}`
+/** The public paths a page slug is served at, in both languages. */
+export const pagePaths = (slug?: string | null): string[] => {
+  const path = !slug || slug === 'home' ? '/' : `/${slug}/`
+  return [path, path === '/' ? '/en' : `/en${path}`]
+}
+
+/** Drop the cached copy of a page (tag `page:<slug>`) and its rendered paths. */
+function revalidateSlug(slug: string | undefined, log: (msg: string) => void) {
+  if (!slug) return
+  // Outside a Next.js request (seed scripts under tsx) there is no cache to clear.
+  try {
+    revalidateTag(`page:${slug}`)
+    revalidateTag('pages')
+    for (const p of pagePaths(slug)) revalidatePath(p)
+    log(`Revalidated page ${slug}`)
+  } catch {
+    // not running inside Next.js
+  }
+}
 
 export const revalidatePage: CollectionAfterChangeHook = ({ doc, previousDoc, req }) => {
+  // Draft autosaves do not change the live site; publishing (or unpublishing) does.
   if (doc?._status !== 'published' && previousDoc?._status !== 'published') return doc
-  try {
-    const slug = doc?.slug as string | undefined
-    revalidatePath(pathFor(slug))
-    revalidateTag('pages')
-    req.payload.logger.info(`Revalidated page ${pathFor(slug)}`)
-  } catch (err) {
-    req.payload.logger.error({ err }, 'Failed to revalidate page')
+  revalidateSlug(doc?.slug, (m) => req.payload.logger.info(m))
+  if (previousDoc?.slug && previousDoc.slug !== doc?.slug) {
+    revalidateSlug(previousDoc.slug, (m) => req.payload.logger.info(m))
   }
   return doc
 }
 
 export const revalidateDeletedPage: CollectionAfterDeleteHook = ({ doc, req }) => {
-  try {
-    revalidatePath(pathFor(doc?.slug as string | undefined))
-    revalidateTag('pages')
-  } catch (err) {
-    req.payload.logger.error({ err }, 'Failed to revalidate deleted page')
-  }
+  revalidateSlug(doc?.slug, (m) => req.payload.logger.info(m))
   return doc
 }

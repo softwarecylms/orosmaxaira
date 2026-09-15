@@ -92,14 +92,14 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('el' | 'en') | ('el' | 'en')[];
   globals: {
     'site-settings': SiteSetting;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
   };
-  locale: null;
+  locale: 'el' | 'en';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -128,6 +128,8 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * All the site’s pages. Open one to change its title, link and SEO, and use the Visual Editor to edit what the page shows.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
@@ -135,13 +137,13 @@ export interface Page {
   id: number;
   title: string;
   /**
-   * URL slug. Use "home" for the homepage.
+   * The page’s address: orosmaxaira.com/<link>/ (and /en/<link>/). The home page is “home”.
    */
   slug: string;
   /**
-   * Drag-and-drop visual editor powered by Puck.
+   * What the page shows — edit it in the Visual Editor.
    */
-  content:
+  content?:
     | {
         [k: string]: unknown;
       }
@@ -227,7 +229,7 @@ export interface Media {
   };
 }
 /**
- * Blog posts. URL: /{slug} (root, matches the WordPress permalink structure).
+ * Blog articles. URL: /{slug} (root, matches the old WordPress permalinks).
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
@@ -255,7 +257,7 @@ export interface Post {
     [k: string]: unknown;
   } | null;
   /**
-   * Original WordPress HTML body, preserved verbatim from the migration. Used as a fallback when richText is empty.
+   * Original WordPress HTML body, preserved verbatim from the migration. Used as a fallback when the rich text is empty.
    */
   legacyContent?: string | null;
   publishedAt?: string | null;
@@ -314,7 +316,10 @@ export interface Category {
 export interface User {
   id: number;
   name?: string | null;
-  role?: ('admin' | 'editor') | null;
+  /**
+   * Admin: everything, including user accounts. Editor: pages, posts, media and settings.
+   */
+  role: 'admin' | 'editor';
   updatedAt: string;
   createdAt: string;
   email: string;

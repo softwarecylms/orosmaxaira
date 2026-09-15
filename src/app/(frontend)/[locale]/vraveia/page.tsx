@@ -2,13 +2,13 @@ import type { Metadata } from 'next'
 import { getLocale } from 'next-intl/server'
 import { AwardsHero } from '@/components/awards/awards-hero'
 import { AwardsList } from '@/components/sections/awards'
-import { seoMetadata } from '@/lib/seo'
 import { loadAwardsContent } from '@/lib/content/load'
+import { ManagedPage, managedMetadata } from '@/lib/cms/pages'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   const { meta } = await loadAwardsContent(locale)
-  return seoMetadata({
+  return managedMetadata('vraveia', {
     locale,
     path: '/vraveia',
     title: meta.title,
@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /** Awards / Διακρίσεις showcase — title banner + one full-width section per award. */
-export default async function AwardsPage() {
+async function AwardsPageStatic() {
   const { hero, awards } = await loadAwardsContent(await getLocale())
   return (
     <>
@@ -32,4 +32,9 @@ export default async function AwardsPage() {
       <AwardsList content={awards} />
     </>
   )
+}
+
+/** The page as edited in Payload's visual editor; its built-in composition until then. */
+export default async function AwardsPage() {
+  return <ManagedPage slug="vraveia" locale={await getLocale()} fallback={<AwardsPageStatic />} />
 }

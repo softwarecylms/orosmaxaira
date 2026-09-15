@@ -2,265 +2,100 @@
 
 import * as React from 'react'
 import { createPortal } from 'react-dom'
-import { Puck, type Data } from '@measured/puck'
-import { useField } from '@payloadcms/ui'
+import { useField, useLocale } from '@payloadcms/ui'
+import { BLOCK_LABELS } from '@/puck/block-labels'
 
-import { puckConfig } from '@/puck/config'
-
-import '@measured/puck/puck.css'
 import './puck-field.css'
 
-const EMPTY_DATA: Data = { root: { props: {} }, content: [], zones: {} }
+type PuckData = { root?: unknown; content?: { type: string }[]; zones?: unknown }
 
-function isPuckData(v: unknown): v is Data {
-  return Boolean(v && typeof v === 'object' && Array.isArray((v as Data).content))
-}
-
-function countBlocks(data: Data | null | undefined): number {
-  if (!data) return 0
-  let total = Array.isArray(data.content) ? data.content.length : 0
-  if (data.zones && typeof data.zones === 'object') {
-    for (const arr of Object.values(data.zones)) {
-      if (Array.isArray(arr)) total += arr.length
-    }
-  }
-  return total
-}
+const EMPTY: PuckData = { root: { props: {} }, content: [], zones: {} }
 
 /**
- * Pull the stylesheet hrefs the frontend uses (Tailwind + globals) so we can
- * inject them into Puck's iframe and the editor preview looks like the real
- * site, not naked HTML.
+ * The page's content field in the Payload admin: a summary of its sections and
+ * a "Visual Editor" button. The editor opens full screen (its own page,
+ * /editor/<language>, so the sections render with the site's real styles) and
+ * talks to this field over postMessage: it receives the content for the
+ * language being edited, and every change comes back into the form — Payload
+ * then saves the draft, publishes and keeps versions as for any field.
  */
-async function fetchFrontendStyleHrefs(): Promise<string[]> {
-  try {
-    const res = await fetch('/?puckPreview=1', { credentials: 'include' })
-    if (!res.ok) return []
-    const html = await res.text()
-    const hrefs = new Set<string>()
-    const linkRe = /<link[^>]+rel=["']stylesheet["'][^>]*>/gi
-    const hrefRe = /href=["']([^"']+)["']/i
-    for (const tag of html.match(linkRe) ?? []) {
-      const m = tag.match(hrefRe)
-      if (m && m[1]) hrefs.add(m[1])
-    }
-    return Array.from(hrefs)
-  } catch {
-    return []
-  }
-}
-
-/**
- * Render override that runs INSIDE the Puck iframe. We use it to imperatively
- * style html/body so the preview matches the live site (peach background, no
- * default white margins, correct font), since `root.render` only wraps the
- * page body — not html/body themselves.
- */
-type IframeOverrideProps = {
-  children: React.ReactNode
-  document?: Document
-}
-
-function PuckIframeStyles({ children, document: iframeDoc }: IframeOverrideProps) {
-  React.useEffect(() => {
-    if (!iframeDoc) return
-    const html = iframeDoc.documentElement
-    const body = iframeDoc.body
-    const styleEl = iframeDoc.createElement('style')
-    styleEl.setAttribute('data-puck-preview-reset', 'true')
-    styleEl.textContent = `
-      html, body {
-        margin: 0 !important;
-        padding: 0 !important;
-        background-color: #fcf2f0 !important;
-        color: #1d1d1f !important;
-        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
-      }
-      body { min-height: 100vh; }
-    `
-    iframeDoc.head.appendChild(styleEl)
-    html.style.backgroundColor = '#fcf2f0'
-    body.style.backgroundColor = '#fcf2f0'
-    return () => {
-      styleEl.remove()
-    }
-  }, [iframeDoc])
-
-  return <>{children}</>
-}
-
-type EditorOverlayProps = {
-  initialData: Data
-  onChange: (next: Data) => void
-  onClose: () => void
-}
-
-function EditorOverlay({ initialData, onChange, onClose }: EditorOverlayProps) {
-  const [mounted, setMounted] = React.useState(false)
-  const [styleHrefs, setStyleHrefs] = React.useState<string[]>([])
+const PuckField: React.FC = () => {
+  const { value, setValue } = useField<PuckData>({})
+  const locale = useLocale()
+  const [open, setOpen] = React.useState(false)
+  const frame = React.useRef<HTMLIFrameElement>(null)
+  const valueRef = React.useRef<PuckData>(value ?? EMPTY)
+  valueRef.current = value && Array.isArray(value.content) ? value : EMPTY
 
   React.useEffect(() => {
-    setMounted(true)
-    const previousOverflow = document.body.style.overflow
+    if (!open) return
+    const previous = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
+    const onMessage = (e: MessageEvent) => {
+      if (e.origin !== window.location.origin || e.data?.source !== 'oros-puck') return
+      if (e.data.type === 'ready') {
+        frame.current?.contentWindow?.postMessage(
+          { source: 'oros-admin', type: 'init', data: valueRef.current },
+          window.location.origin,
+        )
+      } else if (e.data.type === 'change') {
+        setValue(e.data.data)
+      } else if (e.data.type === 'close') {
+        setOpen(false)
+      }
     }
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    window.addEventListener('message', onMessage)
     window.addEventListener('keydown', onKey)
-
     return () => {
-      document.body.style.overflow = previousOverflow
+      document.body.style.overflow = previous
+      window.removeEventListener('message', onMessage)
       window.removeEventListener('keydown', onKey)
     }
-  }, [onClose])
+  }, [open, setValue])
 
-  // Pull the frontend stylesheets so we can inject them into the Puck iframe.
-  React.useEffect(() => {
-    let cancelled = false
-    fetchFrontendStyleHrefs().then((hrefs) => {
-      if (!cancelled) setStyleHrefs(hrefs)
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  // Mount the frontend stylesheets into the admin DOM. Puck's iframe will copy
-  // them into its document via waitForStyles.
-  React.useEffect(() => {
-    if (styleHrefs.length === 0) return
-    const created: HTMLLinkElement[] = []
-    for (const href of styleHrefs) {
-      const existing = document.querySelector(
-        `link[data-puck-preview-style][href="${href}"]`,
-      )
-      if (existing) continue
-      const link = document.createElement('link')
-      link.rel = 'stylesheet'
-      link.href = href
-      link.setAttribute('data-puck-preview-style', 'true')
-      document.head.appendChild(link)
-      created.push(link)
-    }
-    return () => {
-      for (const link of created) link.remove()
-    }
-  }, [styleHrefs])
-
-  if (!mounted) return null
-
-  return createPortal(
-    <div className="puck-overlay" role="dialog" aria-modal="true" aria-label="Visual page editor">
-      <header className="puck-overlay__header">
-        <div className="puck-overlay__title">Visual editor</div>
-        <div className="puck-overlay__actions">
-          <span className="puck-overlay__hint">Changes auto-save as you edit</span>
-          <button type="button" onClick={onClose} className="puck-overlay__close">
-            Close editor
-          </button>
-        </div>
-      </header>
-      <div className="puck-overlay__canvas">
-        <Puck
-          config={puckConfig}
-          data={initialData}
-          onChange={onChange}
-          iframe={{ enabled: false }}
-        />
-      </div>
-    </div>,
-    document.body,
-  )
-}
-
-const PuckField: React.FC = () => {
-  const { value, setValue, formInitializing } = useField<Data>({})
-  const [isOpen, setIsOpen] = React.useState(false)
-  const editorKeyRef = React.useRef(0)
-
-  const safeValue = React.useMemo<Data>(() => {
-    if (isPuckData(value)) return value
-    return EMPTY_DATA
-  }, [value])
-
-  const ready = !formInitializing
-
-  const handleChange = React.useCallback(
-    (next: Data) => {
-      setValue(next)
-    },
-    [setValue],
-  )
-
-  const open = React.useCallback(() => {
-    editorKeyRef.current += 1
-    setIsOpen(true)
-  }, [])
-
-  const close = React.useCallback(() => setIsOpen(false), [])
-
-  const blockCount = countBlocks(safeValue)
-  const blockNames = React.useMemo(() => {
-    const list: string[] = []
-    if (Array.isArray(safeValue.content)) {
-      for (const item of safeValue.content) {
-        if (item && typeof item === 'object' && typeof item.type === 'string') {
-          list.push(item.type)
-        }
-      }
-    }
-    return list
-  }, [safeValue])
+  const blocks = valueRef.current.content ?? []
+  const code = locale?.code ?? 'el'
 
   return (
     <div className="puck-field">
-      <div className="puck-field__label">Visual editor</div>
+      <div className="puck-field__label">Page content</div>
       <p className="puck-field__hint">
-        Click the button below to open the full-screen drag-and-drop editor.
+        Edit what this page shows — texts, images, links, and the order of its sections — in the
+        Visual Editor. You are editing the <strong>{locale?.label ? String(locale.label) : code}</strong> version;
+        switch language at the top of this page to edit the other one.
       </p>
 
       <div className="puck-field__summary">
         <div className="puck-field__summary-meta">
-          <span className="puck-field__summary-count">{blockCount}</span>
-          <span className="puck-field__summary-label">
-            {blockCount === 1 ? 'block on this page' : 'blocks on this page'}
-          </span>
+          <span className="puck-field__summary-count">{blocks.length}</span>
+          <span className="puck-field__summary-label">{blocks.length === 1 ? 'section' : 'sections'}</span>
         </div>
-        {blockNames.length > 0 ? (
+        {blocks.length ? (
           <ul className="puck-field__summary-list">
-            {blockNames.slice(0, 12).map((name, i) => (
-              <li key={`${name}-${i}`} className="puck-field__chip">
-                {name}
+            {blocks.slice(0, 16).map((b, i) => (
+              <li key={`${b.type}-${i}`} className="puck-field__chip">
+                {BLOCK_LABELS[b.type] ?? b.type}
               </li>
             ))}
-            {blockNames.length > 12 ? (
-              <li className="puck-field__chip puck-field__chip--more">
-                +{blockNames.length - 12}
-              </li>
-            ) : null}
+            {blocks.length > 16 ? <li className="puck-field__chip puck-field__chip--more">+{blocks.length - 16}</li> : null}
           </ul>
         ) : (
-          <p className="puck-field__empty">No blocks yet. Open the editor to add some.</p>
+          <p className="puck-field__empty">No sections yet — open the Visual Editor to add some.</p>
         )}
-        <button
-          type="button"
-          onClick={open}
-          disabled={!ready}
-          className="puck-field__open"
-        >
-          {ready ? 'Open visual editor' : 'Loading editor…'}
+        <button type="button" onClick={() => setOpen(true)} className="puck-field__open">
+          Visual Editor
         </button>
       </div>
 
-      {isOpen ? (
-        <EditorOverlay
-          key={editorKeyRef.current}
-          initialData={safeValue}
-          onChange={handleChange}
-          onClose={close}
-        />
-      ) : null}
+      {open
+        ? createPortal(
+            <div className="puck-overlay" role="dialog" aria-modal="true" aria-label="Visual Editor">
+              <iframe ref={frame} src={`/editor/${code}`} title="Visual Editor" className="puck-overlay__frame" />
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   )
 }

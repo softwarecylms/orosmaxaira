@@ -3,13 +3,13 @@ import { getLocale } from 'next-intl/server'
 import { PageHero } from '@/components/shared/page-hero'
 import { AdoptHiveBanner } from '@/components/home/adopt-hive-banner'
 import { NatureMatters, NatureStats, NatureStory } from '@/components/sections/nature'
-import { seoMetadata } from '@/lib/seo'
 import { loadNatureContent } from '@/lib/content/load'
+import { ManagedPage, managedMetadata } from '@/lib/cms/pages'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   const { meta } = await loadNatureContent(locale)
-  return seoMetadata({
+  return managedMetadata('afaneis-iroes-tis-fysis', {
     locale,
     path: '/afaneis-iroes-tis-fysis',
     title: meta.title,
@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default async function NatureHeroesPage() {
+async function NatureHeroesPageStatic() {
   const n = await loadNatureContent(await getLocale())
 
   return (
@@ -51,4 +51,9 @@ export default async function NatureHeroesPage() {
       <NatureMatters content={n.matters} />
     </>
   )
+}
+
+/** The page as edited in Payload's visual editor; its built-in composition until then. */
+export default async function NatureHeroesPage() {
+  return <ManagedPage slug="afaneis-iroes-tis-fysis" locale={await getLocale()} fallback={<NatureHeroesPageStatic />} />
 }

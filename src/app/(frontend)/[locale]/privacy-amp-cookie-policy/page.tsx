@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { LegalPage } from '@/components/legal/legal-page'
-import { seoMetadata } from '@/lib/seo'
 import { loadLegalContent } from '@/lib/content/load'
+import { ManagedPage, managedMetadata } from '@/lib/cms/pages'
 
 export async function generateMetadata({
   params,
@@ -10,7 +10,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const m = (await loadLegalContent('privacy', locale)).seo
-  return seoMetadata({
+  return managedMetadata('privacy-amp-cookie-policy', {
     locale,
     path: '/privacy-amp-cookie-policy',
     title: m.title,
@@ -18,7 +18,7 @@ export async function generateMetadata({
   })
 }
 
-export default async function PrivacyPage({
+async function PrivacyPageStatic({
   params,
 }: {
   params: Promise<{ locale: string }>
@@ -34,4 +34,10 @@ export default async function PrivacyPage({
       sections={c.sections}
     />
   )
+}
+
+/** The page as edited in Payload's visual editor; its built-in copy until then. */
+export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  return <ManagedPage slug="privacy-amp-cookie-policy" locale={locale} fallback={<PrivacyPageStatic params={params} />} />
 }

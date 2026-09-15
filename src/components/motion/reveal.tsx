@@ -4,6 +4,7 @@ import * as React from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { useMotionReady } from '@/components/motion/motion-ready'
+import { useEditorMode } from '@/components/motion/editor-mode'
 import { EASE, fadeUp } from '@/lib/motion'
 
 // HTMLAttributes minus the handlers framer-motion redefines with its own
@@ -36,10 +37,11 @@ export function Reveal({
 }: RevealProps) {
   const ready = useMotionReady()
   const reduceMotion = useReducedMotion()
+  const editing = useEditorMode()
   const MotionTag = motion[as] as typeof motion.div
   const Tag = as
 
-  if (!ready || reduceMotion) {
+  if (!ready || reduceMotion || editing) {
     return <Tag className={className}>{children}</Tag>
   }
 
@@ -84,8 +86,9 @@ export function RevealStagger({
 }) {
   const ready = useMotionReady()
   const reduceMotion = useReducedMotion()
+  const editing = useEditorMode()
 
-  if (!ready || reduceMotion) {
+  if (!ready || reduceMotion || editing) {
     return <div className={className}>{children}</div>
   }
 
@@ -113,8 +116,9 @@ export function RevealStaggerItem({
 }: MotionDivProps & { hoverLift?: boolean }) {
   const ready = useMotionReady()
   const reduceMotion = useReducedMotion()
+  const editing = useEditorMode()
 
-  if (!ready || reduceMotion) {
+  if (!ready || reduceMotion || editing) {
     return (
       <div className={className} {...rest}>
         {children}
@@ -150,8 +154,9 @@ export function RevealMountStagger({
 }) {
   const ready = useMotionReady()
   const reduceMotion = useReducedMotion()
+  const editing = useEditorMode()
 
-  if (!ready || reduceMotion) {
+  if (!ready || reduceMotion || editing) {
     return <div className={className}>{children}</div>
   }
 
@@ -177,8 +182,9 @@ export function RevealMountItem({
 }: MotionDivProps) {
   const ready = useMotionReady()
   const reduceMotion = useReducedMotion()
+  const editing = useEditorMode()
 
-  if (!ready || reduceMotion) {
+  if (!ready || reduceMotion || editing) {
     return (
       <div className={className} {...rest}>
         {children}

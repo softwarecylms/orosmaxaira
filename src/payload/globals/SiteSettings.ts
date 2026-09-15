@@ -1,9 +1,10 @@
 import type { GlobalConfig } from 'payload'
+import { isLoggedIn } from '@/payload/access'
 import { linkField } from '@/payload/fields/link'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
-  access: { read: () => true },
+  access: { read: () => true, update: isLoggedIn },
   fields: [
     { name: 'siteName', type: 'text', defaultValue: 'Your Brand' },
     { name: 'tagline', type: 'text' },

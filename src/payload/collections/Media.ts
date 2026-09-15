@@ -1,8 +1,9 @@
 import type { CollectionConfig } from 'payload'
+import { isLoggedIn } from '@/payload/access'
 
 export const Media: CollectionConfig = {
   slug: 'media',
-  access: { read: () => true },
+  access: { read: () => true, create: isLoggedIn, update: isLoggedIn, delete: isLoggedIn },
   admin: { useAsTitle: 'filename' },
   upload: {
     staticDir: 'public/media',
@@ -24,6 +25,7 @@ export const Media: CollectionConfig = {
       name: 'alt',
       type: 'text',
       required: true,
+      localized: true,
       admin: { description: 'Describe the image for screen readers and SEO.' },
     },
     { name: 'caption', type: 'text' },

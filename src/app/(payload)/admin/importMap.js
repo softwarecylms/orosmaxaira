@@ -26,6 +26,7 @@ import { default as default_fcba87d952044d186c88ce09c9fc0456 } from '../../../pa
 import { default as default_f7b6eaef7d3bf2699b76b607afe23f9f } from '../../../payload/admin/Logo.tsx'
 import { default as default_50e7073268ebc91ecc0ab0901e3001e7 } from '../../../payload/admin/SoftwareCyCredit.tsx'
 import { default as default_11b87406bfa0012f6a8103153b8b4c93 } from '../../../payload/admin/MedusaLinks.tsx'
+import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -58,5 +59,6 @@ export const importMap = {
   "/payload/admin/Logo.tsx#default": default_f7b6eaef7d3bf2699b76b607afe23f9f,
   "/payload/admin/SoftwareCyCredit.tsx#default": default_50e7073268ebc91ecc0ab0901e3001e7,
   "/payload/admin/MedusaLinks.tsx#default": default_11b87406bfa0012f6a8103153b8b4c93,
+  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

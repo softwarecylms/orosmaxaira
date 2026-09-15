@@ -6,16 +6,16 @@ import {
   ActivitiesHero,
   ActivitiesPrograms,
 } from '@/components/sections/activities'
-import { seoMetadata } from '@/lib/seo'
 import { loadActivitiesContent } from '@/lib/content/load'
+import { ManagedPage, managedMetadata } from '@/lib/cms/pages'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   const { meta } = await loadActivitiesContent(locale)
-  return seoMetadata({ ...meta, locale, path: '/drastiriotites' })
+  return managedMetadata('drastiriotites', { ...meta, locale, path: '/drastiriotites' })
 }
 
-export default async function ActivitiesPage() {
+async function ActivitiesPageStatic() {
   const a = await loadActivitiesContent(await getLocale())
 
   return (
@@ -30,4 +30,9 @@ export default async function ActivitiesPage() {
       <ActivitiesPrograms content={a.programs} />
     </>
   )
+}
+
+/** The page as edited in Payload's visual editor; its built-in composition until then. */
+export default async function ActivitiesPage() {
+  return <ManagedPage slug="drastiriotites" locale={await getLocale()} fallback={<ActivitiesPageStatic />} />
 }

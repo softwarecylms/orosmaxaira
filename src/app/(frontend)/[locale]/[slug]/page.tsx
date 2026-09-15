@@ -1,15 +1,8 @@
 import { notFound } from 'next/navigation'
 import { getLocale } from 'next-intl/server'
-import { Render } from '@measured/puck/rsc'
-import {
-  getAllPageSlugs,
-  getAllPostSlugs,
-  getPageBySlug,
-  getPostBySlug,
-  getRelatedPosts,
-} from '@/lib/cms'
-import { hreflangAlternates, pageMetadata, postMetadata, seoMetadata } from '@/lib/seo'
-import { puckConfig } from '@/puck/config'
+import { getAllPageSlugs, getAllPostSlugs, getPostBySlug, getRelatedPosts } from '@/lib/cms'
+import { getPayloadPage, ManagedPage, managedMetadata } from '@/lib/cms/pages'
+import { hreflangAlternates, postMetadata, seoMetadata } from '@/lib/seo'
 import { BlogPostRender } from '@/blocks/blog-post'
 import { getBlogPosts } from '@/components/blog/blog-data'
 import { ArticleView } from '@/components/blog/article-view'
@@ -17,7 +10,6 @@ import { articlePath } from '@/components/blog/article-url'
 import { getBlogUi } from '@/components/blog/blog-ui'
 import { articleSeoTitle, canonicalArticleSlug } from '@/components/blog/article-seo'
 import { JsonLd, articleJsonLd, breadcrumbJsonLd } from '@/components/seo/json-ld'
-import type { Data } from '@measured/puck'
 
 export const revalidate = 60
 export const dynamicParams = true
@@ -53,12 +45,14 @@ type RouteProps = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: RouteProps) {
   const { slug } = await params
-  const page = await getPageBySlug(slug)
-  if (page) return pageMetadata(page)
+  const locale = await getLocale()
+  const page = await getPayloadPage(slug, locale)
+  if (page?.content?.content?.length) {
+    return managedMetadata(slug, { locale, path: `/${slug}`, title: page.title }, { always: true })
+  }
   const post = await getPostBySlug(slug)
   if (post) return postMetadata(post)
 
-  const locale = await getLocale()
   const article = findArticle(slug, locale)
   const alternates = hreflangAlternates(locale, articlePath(canonicalArticleSlug(slug)))
   if (article) {
@@ -81,9 +75,10 @@ export default async function CatchAllRoute({ params }: RouteProps) {
   if (slug === 'home') notFound()
   if (RESERVED_TOP_LEVEL_SLUGS.has(slug)) notFound()
 
-  const page = await getPageBySlug(slug)
-  if (page) {
-    return <Render config={puckConfig} data={page.content as unknown as Data} />
+  const locale = await getLocale()
+  const page = await getPayloadPage(slug, locale)
+  if (page?.content?.content?.length) {
+    return <ManagedPage slug={slug} locale={locale} fallback={null} always />
   }
 
   const post = await getPostBySlug(slug)
@@ -98,7 +93,6 @@ export default async function CatchAllRoute({ params }: RouteProps) {
     return <BlogPostRender post={post} relatedPosts={relatedPosts} />
   }
 
-  const locale = await getLocale()
   const article = findArticle(slug, locale)
   if (article) {
     const related = getBlogPosts(locale)

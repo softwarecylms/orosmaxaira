@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { getLocale } from 'next-intl/server'
 import { ContactHero } from '@/components/contact/contact-hero'
 import { ContactConnect, ContactMapSection, ContactValues } from '@/components/sections/contact'
-import { seoMetadata } from '@/lib/seo'
 import { loadContactContent, loadSiteContent } from '@/lib/content/load'
+import { ManagedPage, managedMetadata } from '@/lib/cms/pages'
 
 export async function generateMetadata({
   params,
@@ -12,11 +12,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const { meta } = await loadContactContent(locale)
-  return seoMetadata({ locale, path: '/epikoinonia', title: meta.title, description: meta.description })
+  return managedMetadata('epikoinonia', { locale, path: '/epikoinonia', title: meta.title, description: meta.description })
 }
 
 /** Contact page (Figma 146:957) — header/footer come from the shared layout. */
-export default async function ContactPage() {
+async function ContactPageStatic() {
   const locale = await getLocale()
   const c = await loadContactContent(locale)
   const { FOOTER } = await loadSiteContent(locale)
@@ -33,4 +33,9 @@ export default async function ContactPage() {
       <ContactValues content={c.values} />
     </>
   )
+}
+
+/** The page as edited in Payload's visual editor; its built-in composition until then. */
+export default async function ContactPage() {
+  return <ManagedPage slug="epikoinonia" locale={await getLocale()} fallback={<ContactPageStatic />} />
 }

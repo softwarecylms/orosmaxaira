@@ -71,16 +71,24 @@ storefront for both — it renders CMS pages *and* talks to Medusa's Store API.
   Add Stripe (or another provider) before going live.
 
 ## Where content is edited
-**Payload** (`/admin`) = pages, blog articles, site settings, with **Puck** as the visual page editor.
-**Medusa** (`/app`) = products, categories, coupons, orders, activities, workshops, school visits.
-Both admins are noindex (headers + robots). Payload's sidebar links to the Medusa sections.
-- **In transition** (plan: `~/.claude/plans/giggly-prancing-volcano.md`): until the Payload
-  phases ship, page copy is the built-in `src/components/*/…-content.ts` files, read through
-  `src/lib/content/load.ts` — editing them changes the live site.
-- The Medusa "content" module (`medusa/apps/backend/src/modules/content`, `api/*/content`) was a
-  wrong turn and is being removed; keep its `media_asset` (activity image picker uses it).
-- A Payload/CMS change revalidates the storefront cache (`/api/revalidate/`,
-  `REVALIDATION_SECRET` shared by both apps).
+**Payload** (`/admin`) = pages, blog articles, site settings. **Medusa** (`/app`) = products,
+categories, coupons, orders, activities, workshops, school visits. Both admins are noindex; Payload's
+sidebar links to the Medusa sections. Content is bilingual (Payload localization el/en).
+- **Pages** (Payload → Pages): title, link (slug), SEO, and the **Visual Editor** (Puck). Every content
+  route renders its Payload page through `<ManagedPage>` (`src/lib/cms/pages.tsx`) when
+  `PAGES_SOURCE=payload`; otherwise (or if the page has no content) its built-in composition. New
+  pages created in Payload render at `/<slug>` via the catch-all.
+- **Blocks** = the site's real sections (`src/puck/blocks.tsx`); fields are generated from each
+  section's default copy (`src/puck/fields/derive.ts`, Greek labels in `labels.ts`). A new section:
+  make it take `content` props, add it to `BLOCKS`, and to `src/puck/block-labels.ts`.
+- **Editor**: `/editor/<locale>` (`src/app/(editor)`, `src/puck/editor.tsx`) runs inside the admin
+  overlay (`src/payload/admin/PuckField.tsx`) and syncs by postMessage; Payload saves drafts,
+  publishes and keeps versions. Live data (prices, newest articles) comes from `src/puck/live.server.ts`.
+- **Seed/re-seed** pages from the built-in copy: `npx tsx scripts/seed-payload-pages.mts`
+  (skips existing pages; `FORCE=1`, `ONLY=<slug>`). The `*-content.ts` files are the defaults for new
+  blocks and the fallback — editing them does not change pages already in Payload.
+- The Medusa "content" module (`medusa/apps/backend/src/modules/content`) is retired (to remove; keep
+  its `media_asset`). Uploads in Payload go to Vercel Blob (`BLOB_READ_WRITE_TOKEN`).
 
 ## Conventions
 - Tokens > arbitrary values. Add to the `@theme` block; never inline a hex/px that should be a token.

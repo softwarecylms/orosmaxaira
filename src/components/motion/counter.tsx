@@ -10,6 +10,7 @@ import {
   useTransform,
 } from 'framer-motion'
 import { EASE } from '@/lib/motion'
+import { useEditorMode } from '@/components/motion/editor-mode'
 
 type CounterProps = {
   value: string
@@ -25,6 +26,7 @@ export function Counter({ value, duration = 1.6, className }: CounterProps) {
   const ref = React.useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, margin: '-40px' })
   const reduceMotion = useReducedMotion()
+  const editing = useEditorMode()
 
   const match = value.match(/^([^0-9]*)(\d[\d.,]*)(.*)$/)
   const prefix = match?.[1] ?? ''
@@ -51,7 +53,7 @@ export function Counter({ value, duration = 1.6, className }: CounterProps) {
     return () => controls.stop()
   }, [inView, target, duration, motionValue, reduceMotion])
 
-  if (!Number.isFinite(target)) {
+  if (!Number.isFinite(target) || editing) {
     return <span className={className}>{value}</span>
   }
 
