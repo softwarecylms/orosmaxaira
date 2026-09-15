@@ -90,7 +90,7 @@ export async function SiteHeader({ locale }: SiteHeaderProps) {
 
           {/* Desktop utilities */}
           <div className="hidden items-center gap-5 lg:flex">
-            <HeaderSearch placeholders={SEARCH_PLACEHOLDERS} className="w-[300px] xl:w-[463px]" />
+            <HeaderSearch placeholders={SEARCH_PLACEHOLDERS} className="w-[280px] xl:w-[463px]" />
 
             <a
               href={CONTACT.phoneHref}
