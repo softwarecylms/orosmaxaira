@@ -121,5 +121,16 @@ export default defineMiddlewares({
       method: "POST",
       middlewares: [validateAndTransformBody(PostWorkshopBookingSchema)],
     },
+    // Invoice settings and previews carry the logo as a data URL.
+    {
+      matcher: "/admin/invoices/settings",
+      method: "POST",
+      bodyParser: { sizeLimit: "5mb" },
+    },
+    {
+      matcher: "/admin/invoices/preview",
+      method: "POST",
+      bodyParser: { sizeLimit: "5mb" },
+    },
   ],
 })

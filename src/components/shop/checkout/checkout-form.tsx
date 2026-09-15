@@ -435,6 +435,8 @@ function CheckoutFormInner() {
         vat: c.vat,
         company: c.company,
         notes: c.notes,
+        // The invoice email (Medusa, src/lib/invoice) is written in this language.
+        locale,
       },
     }
 

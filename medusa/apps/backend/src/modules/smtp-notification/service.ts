@@ -79,6 +79,14 @@ class SmtpNotificationService extends AbstractNotificationProviderService {
       subject,
       text: text ?? undefined,
       html: html ?? undefined,
+      // Attachment content arrives base64-encoded (the invoice PDF, src/lib/invoice).
+      attachments: (notification.attachments ?? []).map((a) => ({
+        filename: a.filename,
+        content: Buffer.from(a.content, "base64"),
+        contentType: a.content_type,
+        contentDisposition: a.disposition === "inline" ? "inline" : "attachment",
+        cid: a.id,
+      })),
     })
     this.logger_.info(`[smtp] sent "${notification.template}" to ${notification.to} (${info.messageId})`)
     return { id: info.messageId }

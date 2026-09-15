@@ -33,6 +33,9 @@ module.exports = defineConfig({
     // (media_asset). Its page-copy tables are being retired — site pages, articles
     // and settings are edited in Payload.
     { resolve: "./src/modules/content" },
+    // Custom module: sales invoices (OMW001584, …) — numbering, settings and the
+    // snapshot each PDF is rendered from (see src/lib/invoice).
+    { resolve: "./src/modules/invoices" },
     // File module — images uploaded from the admin. With S3_BUCKET set they go
     // to S3-compatible storage (Cloudflare R2: S3_ENDPOINT = the account's R2
     // endpoint, S3_REGION = "auto", S3_FILE_URL = the bucket's public URL).
