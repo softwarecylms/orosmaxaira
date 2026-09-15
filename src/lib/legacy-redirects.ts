@@ -68,6 +68,10 @@ export const LEGACY_REDIRECTS: Record<string, string> = {
   '/article-delicious-sweet-potatoes-with-honey-oros-maxaira-final-2/': '/gemistes-glykopatates-me-meli-gia-mia-glykia-dosi-agapis-sto-deipno-ton-eroteymenon/',
   '/avrasto-antheon-100g-2/': '/proionta/meli/',
   '/bee-lavender-photo-2/': '/spania-eidi-meliou/',
+  // next.config.ts moves /blog/<slug>/ to /<slug>/ before middleware runs, so
+  // these two header-photo pages arrive here without their /blog/ prefix.
+  '/blog-header-2/': '/blog/',
+  '/blog-header/': '/blog/',
   '/blog/blog-header-2/': '/blog/',
   '/blog/blog-header/': '/blog/',
   '/chaste-varos-me-meli-kai-kanela/6454c044aefa001d/': '/chaste-varos-me-meli-kai-kanela/',
