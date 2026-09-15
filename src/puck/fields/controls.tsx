@@ -171,7 +171,14 @@ export function ParagraphsControl({ field, value, onChange, readOnly }: ControlP
 
 // --- Images --------------------------------------------------------------------
 
-type LibraryItem = { src: string; name: string; folder: string }
+type LibraryItem = { src: string; name: string; folder: string; width?: number; height?: number; bytes?: number }
+
+/** «1920×1080 · 245 KB» — whatever of the two is known. */
+function imageInfo(i: Pick<LibraryItem, 'width' | 'height' | 'bytes'>) {
+  const size = i.width && i.height ? `${i.width}×${i.height}` : ''
+  const kb = i.bytes ? (i.bytes >= 1024 * 1024 ? `${(i.bytes / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(i.bytes / 1024))} KB`) : ''
+  return [size, kb].filter(Boolean).join(' · ')
+}
 
 async function loadLibrary(): Promise<LibraryItem[]> {
   const [manifest, uploads] = await Promise.all([
@@ -182,17 +189,25 @@ async function loadLibrary(): Promise<LibraryItem[]> {
       .then((r) => (r.ok ? r.json() : { docs: [] }))
       .catch(() => ({ docs: [] })),
   ])
-  const site: LibraryItem[] = (manifest.items ?? []).map((i: { path: string; name: string; folder: string }) => ({
-    src: i.path,
-    name: i.name,
-    folder: i.folder || 'images',
-  }))
+  const site: LibraryItem[] = (manifest.items ?? []).map(
+    (i: { path: string; name: string; folder: string; width?: number; height?: number; bytes?: number }) => ({
+      src: i.path,
+      name: i.name,
+      folder: i.folder || 'images',
+      width: i.width,
+      height: i.height,
+      bytes: i.bytes,
+    }),
+  )
   const uploaded: LibraryItem[] = (uploads.docs ?? [])
     .filter((d: { url?: string }) => d.url)
-    .map((d: { url: string; filename?: string; alt?: string }) => ({
+    .map((d: { url: string; filename?: string; alt?: string; width?: number; height?: number; filesize?: number }) => ({
       src: d.url,
       name: d.alt || d.filename || d.url,
       folder: 'Μεταφορτώσεις',
+      width: d.width ?? undefined,
+      height: d.height ?? undefined,
+      bytes: d.filesize ?? undefined,
     }))
   return [...uploaded, ...site]
 }
@@ -312,6 +327,7 @@ export function ImageControl({ field, value, onChange, readOnly }: ControlProps<
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={i.src} alt="" loading="lazy" className="aspect-square w-full rounded object-cover" />
                     <span className="truncate text-[11px] text-[#555]">{i.name}</span>
+                    {imageInfo(i) ? <span className="truncate text-[10px] text-[#8a8a8a]">{imageInfo(i)}</span> : null}
                   </button>
                 ))
               )}

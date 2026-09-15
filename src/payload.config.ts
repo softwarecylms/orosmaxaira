@@ -40,6 +40,8 @@ export default buildConfig({
       // Dashboard: shop & bookings boxes (Medusa) above Collections, the
       // editors' training video below.
       beforeDashboard: ['/payload/admin/ShopDashboard.tsx'],
+      // Header, left of the language switcher: open the public site.
+      actions: ['/payload/admin/ViewSiteButton.tsx'],
       afterDashboard: ['/payload/admin/TrainingVideo.tsx'],
     },
   },

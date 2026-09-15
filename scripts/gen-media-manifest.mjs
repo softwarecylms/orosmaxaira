@@ -15,6 +15,7 @@
 import { readdirSync, statSync, writeFileSync } from 'node:fs'
 import { join, dirname, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import sharp from 'sharp'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
@@ -49,10 +50,22 @@ try {
         name: path.split('/').pop(),
         folder,
         bytes: statSync(full).size,
+        full,
       }
     })
     .filter((f) => !SKIP_DIR.test(f.path))
     .sort((a, b) => a.folder.localeCompare(b.folder) || a.name.localeCompare(b.name))
+  // Pixel dimensions, shown in the image pickers. An unreadable file just has none.
+  items = await Promise.all(
+    items.map(async ({ full, ...item }) => {
+      try {
+        const { width, height } = await sharp(full).metadata()
+        return width && height ? { ...item, width, height } : item
+      } catch {
+        return item
+      }
+    }),
+  )
 } catch (err) {
   if (err?.code !== 'ENOENT') throw err
   // No public/images yet — emit an empty manifest rather than failing the build.

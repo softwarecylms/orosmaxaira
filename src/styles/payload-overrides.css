@@ -192,3 +192,32 @@
   width: 100%;
   height: 100%;
 }
+
+/* Dashboard — Collections shows only Pages and Posts; Categories, Media and
+   Users stay reachable from the sidebar. */
+.collections__card-list li:has(#card-categories),
+.collections__card-list li:has(#card-media),
+.collections__card-list li:has(#card-users) {
+  display: none;
+}
+
+/* Header — the language switcher without its "Locale:" label, and «View site». */
+.localizer-button__label {
+  display: none;
+}
+.view-site-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--style-radius-s, 4px);
+  background: var(--theme-elevation-100);
+  color: var(--theme-text);
+  font-size: 13px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.view-site-button:hover {
+  background: var(--theme-elevation-150);
+}
