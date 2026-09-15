@@ -21,6 +21,7 @@ export type NatureSection = {
 }
 
 export type NatureContent = {
+  meta: { title: string; description: string }
   hero: { eyebrow: string; title: string; description: string; image: string; imageAlt: string }
   sections: NatureSection[]
   stats: { value: string; label: string }[]
@@ -37,6 +38,11 @@ export type NatureContent = {
 }
 
 const NATURE_EL: NatureContent = {
+  meta: {
+    title: 'Μέλισσες, οι Αφανείς Ήρωες της Φύσης',
+    description:
+      'Οι μέλισσες είναι απαραίτητες για την ισορροπία του περιβάλλοντος και τη βιοποικιλότητα. Μάθετε γιατί κάθε μέλισσα μετράει και πώς μπορείτε να βοηθήσετε.',
+  },
   hero: {
     eyebrow: 'Γνωρίστε τη μέλισσα',
     title: 'Μέλισσες, οι Αφανείς Ήρωες της Φύσης',
@@ -101,6 +107,11 @@ const NATURE_EL: NatureContent = {
 }
 
 const NATURE_EN: NatureContent = {
+  meta: {
+    title: 'Bees, Nature’s Unsung Heroes',
+    description:
+      'Bees are essential to the balance of the environment and to biodiversity. Learn why every single bee matters and how you can help.',
+  },
   hero: {
     eyebrow: 'Get to know the bee',
     title: 'Bees, Nature’s Unsung Heroes',

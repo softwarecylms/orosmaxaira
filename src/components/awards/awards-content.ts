@@ -21,6 +21,8 @@ export type Award = {
   year?: string
   /** product or person the distinction is for */
   subject?: string
+  /** Section on the soft offwhite band (alternating with white). */
+  shaded?: boolean
   badges: AwardBadge[]
   lead: RichLine
   body?: RichLine[]
@@ -35,6 +37,11 @@ const AVRASTO = '/shop/avrasto-meli-antheon-oros-machaira'
 const YDROMELO = '/shop/ydromelo'
 
 const AWARDS_EL = {
+  meta: {
+    title: 'Βραβεία',
+    description:
+      'Οι διακρίσεις και τα βραβεία του Όρος Μαχαιρά — Cyprus Tourism Awards, Excellent Taste Awards, Cyprus Hospitality Awards, Specialist Awards και άλλα.',
+  },
   breadcrumb: [
     { label: 'Αρχική', href: '/' },
     { label: 'Βραβεία' },
@@ -70,6 +77,7 @@ const AWARDS_EL = {
     },
     {
       slug: 'cyprus-tourism-2025',
+      shaded: true,
       event: 'Cyprus Tourism Awards 2025',
       org: 'Boussias Cyprus',
       year: '2025',
@@ -116,6 +124,7 @@ const AWARDS_EL = {
     },
     {
       slug: 'ge-neo-epicheirein-2025',
+      shaded: true,
       event: 'Βραβεία «Γε’ Νέο Επιχειρείν» 2025',
       org: 'ΚΕΒΕ',
       year: '2025',
@@ -171,6 +180,7 @@ const AWARDS_EL = {
     },
     {
       slug: 'cyprus-hospitality',
+      shaded: true,
       event: 'Cyprus Hospitality Awards',
       org: 'Υφυπουργείο Τουρισμού',
       subject: 'Μαρία Σολομωνίδου — «Γνωρίζω τη Μέλισσα»',
@@ -199,6 +209,11 @@ export type AwardsContent = typeof AWARDS_EL
 // hrefs and medal tiers are locale-invariant and reused via pics()/constants.
 
 const AWARDS_EN: AwardsContent = {
+  meta: {
+    title: 'Awards',
+    description:
+      'The distinctions and awards of Oros Machaira — Cyprus Tourism Awards, Excellent Taste Awards, Cyprus Hospitality Awards, Specialist Awards and more.',
+  },
   breadcrumb: [
     { label: 'Home', href: '/' },
     { label: 'Awards' },
@@ -234,6 +249,7 @@ const AWARDS_EN: AwardsContent = {
     },
     {
       slug: 'cyprus-tourism-2025',
+      shaded: true,
       event: 'Cyprus Tourism Awards 2025',
       org: 'Boussias Cyprus',
       year: '2025',
@@ -280,6 +296,7 @@ const AWARDS_EN: AwardsContent = {
     },
     {
       slug: 'ge-neo-epicheirein-2025',
+      shaded: true,
       event: 'Young Entrepreneurship Awards 2025 (CCCI)',
       org: 'CCCI',
       year: '2025',
@@ -333,6 +350,7 @@ const AWARDS_EN: AwardsContent = {
     },
     {
       slug: 'cyprus-hospitality',
+      shaded: true,
       event: 'Cyprus Hospitality Awards',
       org: 'Deputy Ministry of Tourism',
       subject: 'Maria Solomonidou — “Getting to Know the Bee”',

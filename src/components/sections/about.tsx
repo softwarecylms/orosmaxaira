@@ -1,0 +1,299 @@
+import Image from 'next/image'
+import { User, Building2 } from 'lucide-react'
+import type { AboutContent, AboutValueIcon } from '@/components/about/about-content'
+import { OutdoorCarousel } from '@/components/about/outdoor-carousel'
+import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
+import { RichText } from '@/components/activities/detail/rich-text'
+import { CtaLink } from '@/components/home/cta-link'
+import { Counter } from '@/components/motion/counter'
+
+/**
+ * «Ποιοι είμαστε» sections. Each takes its slice of the page copy as `content`
+ * and fetches nothing, so the same component renders the live page and the
+ * visual editor.
+ */
+
+/** Brand value icons (white cut-outs from Figma) shown on the gold discs. */
+const VALUE_ICONS: Record<AboutValueIcon, string> = {
+  purity: '/images/about/value-purity.png',
+  eco: '/images/about/value-eco.png',
+  family: '/images/about/value-family.png',
+}
+
+/** Hero — photo + intro. Centered single column on mobile; original
+ *  image-left / text-right 2-column layout on desktop (lg+). */
+export function AboutHero({ content }: { content: AboutContent['hero'] }) {
+  return (
+    <section data-edit="hero" className="container-wide py-8 md:py-12">
+      <div className="mx-auto grid max-w-[720px] grid-cols-1 gap-10 text-center lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-center lg:gap-[60px] lg:text-left">
+        <RevealUp>
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-offwhite">
+            <Image
+              src={content.image}
+              alt={content.imageAlt}
+              fill
+              priority
+              sizes="(min-width:1024px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+        </RevealUp>
+
+        <RevealGroup className="flex flex-col items-center gap-5 text-center lg:items-stretch lg:text-left" stagger={0.08}>
+          <RevealItem>
+            <p className="text-[14px] font-semibold uppercase tracking-[0.12em] text-accent">
+              {content.eyebrow}
+            </p>
+          </RevealItem>
+          <RevealItem>
+            <h1 className="font-display text-[32px] font-bold leading-[1.08] text-foreground md:text-[45px]">
+              {content.title}
+            </h1>
+          </RevealItem>
+          {content.body.map((p, i) => (
+            <RevealItem key={i}>
+              <p className="text-[17px] leading-[26px] text-muted">{p}</p>
+            </RevealItem>
+          ))}
+          <RevealItem>
+            <div className="mt-1 flex items-center justify-center gap-3 lg:justify-start">
+              <span className="relative size-12 shrink-0 overflow-hidden rounded-full bg-offwhite">
+                <Image src={content.author.avatar} alt={content.author.name} fill sizes="48px" className="object-cover" />
+              </span>
+              <span className="flex flex-col text-left">
+                <span className="text-[17px] font-medium text-foreground">{content.author.name}</span>
+                <span className="text-[14px] text-muted">{content.author.role}</span>
+              </span>
+            </div>
+          </RevealItem>
+          <RevealItem>
+            <CtaLink href="/vraveia" variant="gold" className="mt-2 lg:self-start">
+              {content.awardsCta}
+            </CtaLink>
+          </RevealItem>
+        </RevealGroup>
+      </div>
+    </section>
+  )
+}
+
+export function AboutStats({ content }: { content: AboutContent['stats'] }) {
+  return (
+    <section data-edit="stats" className="container-wide pb-12 md:pb-[60px]">
+      <RevealGroup
+        className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-5 lg:divide-x lg:divide-accent"
+        stagger={0.08}
+      >
+        {content.map((s, i) => (
+          <RevealItem
+            key={s.label}
+            className={`flex flex-col items-center gap-1.5 px-2 text-center${
+              // On the 2-col mobile grid, a lone last stat (odd count) spans
+              // both columns so it's centered instead of stuck in the left cell.
+              i === content.length - 1 && content.length % 2 === 1 ? ' max-sm:col-span-2' : ''
+            }`}
+          >
+            <Counter
+              value={s.value}
+              className="font-display text-[34px] font-bold leading-none text-accent md:text-[41px]"
+            />
+            <span className="text-[15px] leading-[20px] text-foreground">{s.label}</span>
+          </RevealItem>
+        ))}
+      </RevealGroup>
+    </section>
+  )
+}
+
+export function AboutValues({ content }: { content: AboutContent['values'] }) {
+  return (
+    <section data-edit="values" className="bg-offwhite py-12 md:py-[70px]">
+      <RevealGroup
+        className="container-wide grid grid-cols-1 gap-12 sm:grid-cols-3 sm:gap-10"
+        stagger={0.1}
+      >
+        {content.map((v) => (
+            <RevealItem
+              key={v.title}
+              className="mx-auto flex max-w-[360px] flex-col items-center gap-[15px] text-center"
+            >
+              <span className="flex size-[50px] items-center justify-center rounded-full bg-accent">
+                <Image
+                  src={VALUE_ICONS[v.icon]}
+                  alt=""
+                  width={28}
+                  height={28}
+                  className="size-[27px] object-contain"
+                />
+              </span>
+              <h3 className="text-[20px] font-medium leading-[26.4px] text-foreground md:text-[22px]">
+                {v.title}
+              </h3>
+              <p className="text-[17px] leading-[24px] text-muted">
+                <RichText text={v.text} />
+              </p>
+            </RevealItem>
+          ),
+        )}
+      </RevealGroup>
+    </section>
+  )
+}
+
+export function AboutIndoor({ content }: { content: AboutContent['indoor'] }) {
+  return (
+    <section data-edit="indoor" className="container-wide py-12 md:py-[70px]">
+      <RevealUp>
+        <h2 className="text-center font-display text-[26px] font-semibold leading-[1.1] text-foreground md:text-[41px]">
+          {content.heading}
+        </h2>
+      </RevealUp>
+      <RevealGroup
+        className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3 md:mt-12 md:gap-8"
+        stagger={0.1}
+      >
+        {content.cards.map((c) => (
+          <RevealItem
+            key={c.title}
+            className="flex flex-col items-center gap-[27px] rounded-[4px] bg-offwhite px-[15px] pb-[30px] pt-[15px] text-center"
+          >
+            <div className="relative aspect-[3/2] w-full overflow-hidden rounded-[4px] bg-white">
+              {c.image ? (
+                <Image src={c.image} alt={c.title} fill sizes="(min-width:640px) 33vw, 100vw" className="object-cover" />
+              ) : (
+                <span className="flex size-full items-center justify-center text-muted/40">
+                  <Building2 className="size-12" strokeWidth={1.2} aria-hidden="true" />
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col gap-[15px]">
+              <h3 className="text-[20px] font-medium leading-[26.4px] text-foreground md:text-[22px]">
+                {c.title}
+              </h3>
+              <p className="text-[17px] leading-[24px] text-muted">{c.text}</p>
+            </div>
+          </RevealItem>
+        ))}
+      </RevealGroup>
+    </section>
+  )
+}
+
+/** Outdoor spaces — carousel. */
+export function AboutOutdoor({ content }: { content: AboutContent['outdoor'] }) {
+  return (
+    <section data-edit="outdoor" className="bg-offwhite py-12 md:py-[70px]">
+      <div className="container-wide">
+        <RevealUp>
+          <h2 className="mb-8 text-center font-display text-[26px] font-semibold leading-[1.1] text-foreground md:mb-12 md:text-[41px]">
+            {content.heading}
+          </h2>
+        </RevealUp>
+        <RevealUp>
+          <OutdoorCarousel slides={content.slides} cta={content.cta} arrows={content.arrows} />
+        </RevealUp>
+      </div>
+    </section>
+  )
+}
+
+/** Sustainability band. */
+export function AboutBand({ content }: { content: AboutContent['band'] }) {
+  return (
+    <section data-edit="band" className="bg-accent py-10 text-white md:py-12">
+      <div className="container-page">
+        <RevealUp>
+          <p className="text-center text-[15px] leading-[24px] md:text-[17px]">
+            <RichText text={content} />
+          </p>
+        </RevealUp>
+      </div>
+    </section>
+  )
+}
+
+export function AboutFamily({ content }: { content: AboutContent['family'] }) {
+  return (
+    <section data-edit="family" className="container-wide pb-6 pt-12 md:pb-8 md:pt-[70px]">
+      <RevealUp>
+        <h2 className="text-center font-display text-[26px] font-semibold leading-[1.1] text-foreground md:text-[41px]">
+          {content.heading}
+        </h2>
+      </RevealUp>
+      <RevealGroup
+        className="mt-8 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 md:mt-12 lg:grid-cols-5"
+        stagger={0.07}
+      >
+        {content.members.map((m) => (
+          <RevealItem key={m.name} className="flex flex-col overflow-hidden rounded-[4px]">
+            <div className="relative aspect-[302/256] w-full overflow-hidden bg-offwhite">
+              {m.photo ? (
+                <Image
+                  src={m.photo}
+                  alt={m.name}
+                  fill
+                  sizes="(min-width:1024px) 20vw, 45vw"
+                  className="object-cover object-top"
+                />
+              ) : (
+                <span className="flex size-full items-center justify-center text-muted/40">
+                  <User className="size-12" strokeWidth={1.2} aria-hidden="true" />
+                </span>
+              )}
+            </div>
+            <div className="flex flex-1 flex-col items-center gap-[7px] bg-offwhite px-3 py-[26px] text-center md:py-[30px]">
+              <span className="text-[18px] font-medium leading-[24px] text-foreground md:text-[22px] md:leading-[26.4px]">
+                {m.name}
+              </span>
+              <span className="text-[15px] leading-[22px] text-muted md:text-[17px] md:leading-[24px]">
+                {m.role}
+              </span>
+            </div>
+          </RevealItem>
+        ))}
+      </RevealGroup>
+    </section>
+  )
+}
+
+/** Goal — full-width gold banner, beeswax image bleeding on the left (Figma 156:1211). */
+export function AboutGoal({ content }: { content: AboutContent['goal'] }) {
+  return (
+    <section data-edit="goal" className="container-wide pb-14 pt-6 md:pb-24 md:pt-10">
+      <div className="relative overflow-hidden rounded-[4px] bg-accent">
+        {/* Desktop: exact Figma banner background, rendered proportionally so the
+            blocks stay in the left ~40% and never collide with the copy */}
+        <Image
+          src={content.image}
+          alt={content.imageAlt}
+          width={1680}
+          height={300}
+          sizes="100vw"
+          className="hidden w-full xl:block"
+        />
+
+        {/* Mobile + small desktop: top band, text below */}
+        <div className="relative h-[150px] w-full sm:h-[190px] xl:hidden">
+          <Image
+            src={content.image}
+            alt={content.imageAlt}
+            fill
+            sizes="100vw"
+            className="object-cover object-left"
+          />
+        </div>
+
+        {/* Text */}
+        <RevealUp className="relative flex flex-col gap-2.5 px-7 pb-9 text-white md:px-12 xl:absolute xl:inset-0 xl:ml-[49%] xl:max-w-[560px] xl:justify-center xl:py-5 xl:pb-5 xl:pl-2 xl:pr-[56px]">
+          <p className="text-[14px] uppercase leading-[21px] tracking-[0.02em] text-cream">
+            {content.eyebrow}
+          </p>
+          <h2 className="font-display text-[28px] font-semibold leading-[1.1] md:text-[41px] md:leading-[44px]">
+            {content.title}
+          </h2>
+          <p className="text-[17px] leading-[24px] text-cream">{content.body}</p>
+        </RevealUp>
+      </div>
+    </section>
+  )
+}

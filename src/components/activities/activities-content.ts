@@ -31,8 +31,19 @@ export type ProgramCard = {
 }
 
 export type ActivitiesContent = {
-  hero: { eyebrow: string; title: string; description: string; image: string; imageAlt: string }
-  experiences: { eyebrow: string; heading: string; sub: string; items: ExperienceCard[] }
+  meta: { title: string; description: string }
+  hero: {
+    eyebrow: string
+    title: string
+    description: string
+    image: string
+    imageAlt: string
+    logo: string
+    logoAlt: string
+    /** In-page jump buttons under the hero text. */
+    buttons: { label: string; href: string }[]
+  }
+  experiences: { eyebrow: string; heading: string; sub: string; items: ExperienceCard[]; more: string }
   programs: { eyebrow: string; heading: string; sub: string; items: ProgramCard[] }
   fact: {
     eyebrow: string
@@ -54,6 +65,12 @@ export type ActivitiesContent = {
 }
 
 const ACTIVITIES_PAGE_EL: ActivitiesContent = {
+  meta: {
+    title: 'Δραστηριότητες — Όρος Μαχαιρά Academy',
+    description:
+      'Βιωματικές δραστηριότητες στο μελισσοκομείο του Όρους Μαχαιρά: ξεναγήσεις, εργαστήρια, επίσκεψη στις κυψέλες, μελισσοθεραπεία και εκπαιδευτικά προγράμματα για σχολεία & οργανισμούς.',
+  },
+
   hero: {
     eyebrow: 'Όρος Μαχαιρά Academy',
     title: 'Μάθε, εξερεύνησε, δημιούργησε',
@@ -61,12 +78,19 @@ const ACTIVITIES_PAGE_EL: ActivitiesContent = {
       'Ο κόσμος της μέλισσας σε περιμένει — βιωματικές ξεναγήσεις, εργαστήρια και εκπαιδευτικά προγράμματα για μικρούς και μεγάλους.',
     image: '/images/activities/hero.webp',
     imageAlt: 'Βιωματική εμπειρία στο μελισσοκομείο του Όρους Μαχαιρά',
+    logo: '/images/activities/bee-academy-white.svg',
+    logoAlt: 'Bee Academy',
+    buttons: [
+      { label: 'Εμπειρίες', href: '#experiences' },
+      { label: 'Προγράμματα', href: '#programs' },
+    ],
   },
 
   experiences: {
     eyebrow: 'Οι Εμπειρίες μας',
     heading: 'Ανακαλύψτε τις Εμπειρίες μας',
     sub: 'Βιωματικές ξεναγήσεις, εργαστήρια και εκπαιδευτικά προγράμματα.',
+    more: 'Περισσότερα',
     items: [
       {
         image: '/images/activities/gnorizw.webp',
@@ -154,6 +178,12 @@ const ACTIVITIES_PAGE_EL: ActivitiesContent = {
 const p = ACTIVITIES_PAGE_EL
 
 const ACTIVITIES_PAGE_EN: ActivitiesContent = {
+  meta: {
+    title: 'Activities — Oros Machaira Academy',
+    description:
+      'Hands-on activities at the Oros Machaira apiary: tours, workshops, a visit to the beehives, bee therapy and educational programmes for schools & organisations.',
+  },
+
   hero: {
     eyebrow: 'Oros Machaira Academy',
     title: 'Learn, explore, create',
@@ -161,12 +191,19 @@ const ACTIVITIES_PAGE_EN: ActivitiesContent = {
       'The world of the bee is waiting for you — hands-on tours, workshops and educational programmes whatever your age.',
     image: p.hero.image,
     imageAlt: 'A hands-on experience at the Oros Machaira apiary',
+    logo: p.hero.logo,
+    logoAlt: p.hero.logoAlt,
+    buttons: [
+      { label: 'Experiences', href: '#experiences' },
+      { label: 'Programmes', href: '#programs' },
+    ],
   },
 
   experiences: {
     eyebrow: 'Our Experiences',
     heading: 'Discover Our Experiences',
     sub: 'Hands-on tours, workshops and educational programmes.',
+    more: 'Learn more',
     items: [
       {
         ...p.experiences.items[0],

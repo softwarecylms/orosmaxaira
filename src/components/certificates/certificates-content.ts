@@ -23,12 +23,21 @@ export type Certificate = {
 }
 
 export type CertificatesContent = {
+  meta: { title: string; description: string }
+  /** Label of each certificate's download link. */
+  downloadLabel: string
   hero: { eyebrow: string; title: string; description: string; image: string; imageAlt: string }
   intro: string[]
   certificates: Certificate[]
 }
 
 const CERTIFICATES_EL: CertificatesContent = {
+  meta: {
+    title: 'Πιστοποιήσεις',
+    description:
+      'Οι πιστοποιήσεις του Όρος Μαχαιρά — ISO 22000 (Ασφάλεια Τροφίμων) και ISO 14001 (Περιβαλλοντική Διαχείριση). Δείτε και κατεβάστε τα επίσημα πιστοποιητικά.',
+  },
+  downloadLabel: 'Λήψη πιστοποιητικού',
   hero: {
     eyebrow: 'Ποιότητα & Ασφάλεια',
     title: 'Πιστοποιήσεις',
@@ -82,6 +91,12 @@ const CERTIFICATES_EL: CertificatesContent = {
 }
 
 const CERTIFICATES_EN: CertificatesContent = {
+  meta: {
+    title: 'Certifications',
+    description:
+      'The certifications of Oros Machaira — ISO 22000 (Food Safety) and ISO 14001 (Environmental Management). View and download the official certificates.',
+  },
+  downloadLabel: 'Download certificate',
   hero: {
     eyebrow: 'Quality & Safety',
     title: 'Certifications',
