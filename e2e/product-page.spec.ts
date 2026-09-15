@@ -61,3 +61,29 @@ test.describe('Product detail page', () => {
     await expect(page.getByText('Θυμαρίσιο Μέλι «Όρος Μαχαιρά»')).toBeVisible()
   })
 })
+
+test.describe('Product detail page on a phone', () => {
+  test.use({ hasTouch: true, isMobile: true, viewport: { width: 360, height: 800 } })
+
+  // A no-wrap delivery note once made the page wider than the screen: the page
+  // scrolled sideways and the cart drawer hung off the right edge.
+  test('fits the screen, and the cart drawer is fully visible', async ({ page }) => {
+    await page.goto(SIMPLE)
+    const vw = await page.evaluate(() => document.documentElement.clientWidth)
+
+    const note = page.getByText('Δωρεάν μεταφορικά στην Κύπρο άνω των €70')
+    await note.scrollIntoViewIfNeeded()
+    const noteBox = await note.boundingBox()
+    expect(noteBox!.x + noteBox!.width).toBeLessThanOrEqual(vw)
+
+    await page.getByRole('button', { name: 'Προσθήκη', exact: true }).first().tap()
+    const drawer = page.getByTestId('cart-drawer')
+    await expect(drawer).toBeVisible()
+    await expect
+      .poll(async () => {
+        const b = await drawer.boundingBox()
+        return b ? b.x >= 0 && b.x + b.width <= vw : false
+      })
+      .toBe(true)
+  })
+})

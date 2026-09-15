@@ -322,21 +322,24 @@ export function ProductPurchase({
 
       {/* Delivery keypoints — animated icons */}
       <RevealItem className="flex flex-col gap-4 border-y border-border-strong py-[15px] sm:flex-row sm:items-center sm:gap-5">
-        <div className="flex items-center gap-[15px]">
+        {/* The notes wrap: the free-shipping line is wider than a phone, and a
+            no-wrap line pushed the whole page sideways (and the cart drawer off
+            the right edge with it). */}
+        <div className="flex min-w-0 items-center gap-[15px]">
           <motion.span className="block shrink-0" initial={false} {...(loop({ x: [0, 4, 0] }) ?? {})}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/images/icons/delivery-truck.svg" alt="" className="h-[15px] w-[26px]" />
           </motion.span>
-          <span className="whitespace-nowrap text-[13px] leading-[19px] text-muted">
+          <span className="min-w-0 text-[13px] leading-[19px] text-muted">
             {ui.delivery.reach}
           </span>
         </div>
-        <div className="flex items-center gap-[15px]">
+        <div className="flex min-w-0 items-center gap-[15px]">
           <motion.span className="block shrink-0" initial={false} {...(loop({ y: [0, -3, 0] }) ?? {})}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/images/icons/free-shipping.svg" alt="" className="h-[24px] w-[26px]" />
           </motion.span>
-          <span className="whitespace-nowrap text-[13px] leading-[19px] text-muted">
+          <span className="min-w-0 text-[13px] leading-[19px] text-muted">
             {ui.delivery.free}
           </span>
         </div>

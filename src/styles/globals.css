@@ -84,6 +84,15 @@
     font-feature-settings: 'ss01', 'cv11';
   }
 
+  /* Safety net: nothing may widen the page past the screen. On phones a single
+     overflowing element makes the whole page scroll sideways and pushes fixed
+     panels (the cart drawer) off the right edge. `clip`, unlike `hidden`,
+     creates no scroll container, so the sticky header keeps working. */
+  html,
+  body {
+    overflow-x: clip;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
