@@ -45,6 +45,26 @@
   flex-shrink: 0;
   color: var(--theme-elevation-400);
 }
+.medusa-links__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+/* New-orders count on «Orders» — the honey-gold of the storefront. */
+.medusa-links__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #f1ac10;
+  color: #231f20;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+}
 
 /* Sidebar foot — SoftwareCy credit, directly above the logout button. */
 .softwarecy-credit {

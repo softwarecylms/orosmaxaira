@@ -1,4 +1,5 @@
 import { loadEnv, defineConfig } from '@medusajs/framework/utils'
+import { ADMIN_ICON_PNG, ADMIN_ICON_SVG, ADMIN_TITLE } from './src/lib/admin-branding'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
@@ -12,6 +13,21 @@ module.exports = defineConfig({
           name: "oros-admin-noindex",
           transformIndexHtml: (html: string) =>
             html.replace("<head>", '<head>\n    <meta name="robots" content="noindex, nofollow" />'),
+        },
+        {
+          // The browser tab: "Oros Machaira Shop" and the storefront's favicon,
+          // in place of the admin's empty placeholder icon (src/lib/admin-branding.ts).
+          name: "oros-admin-branding",
+          transformIndexHtml: (html: string) =>
+            html
+              .replace(/\s*<link rel="icon"[^>]*>/g, "")
+              .replace(/\s*<title>[^<]*<\/title>/g, "")
+              .replace(
+                "</head>",
+                `    <title>${ADMIN_TITLE}</title>\n` +
+                  `    <link rel="icon" type="image/svg+xml" href="${ADMIN_ICON_SVG}" />\n` +
+                  `    <link rel="apple-touch-icon" href="${ADMIN_ICON_PNG}" />\n  </head>`
+              ),
         },
       ],
     }),
