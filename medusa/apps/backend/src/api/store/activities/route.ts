@@ -11,7 +11,8 @@ import type BookingsModuleService from "../../../modules/bookings/service"
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const bookings = req.scope.resolve<BookingsModuleService>(BOOKINGS_MODULE)
   const activities = await bookings.listActivities(
-    { status: "published" },
+    // Hidden activities (e.g. the €1 test activity) stay out of the sitemap.
+    { status: "published", hidden: false },
     { take: 100, select: ["slug", "updated_at"] }
   )
   res.json({ activities })

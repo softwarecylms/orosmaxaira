@@ -25,13 +25,15 @@ export async function generateMetadata({
 
   const activity = await getActivity(slug, locale)
   if (activity) {
-    return seoMetadata({
+    const meta = seoMetadata({
       locale,
       path: `/drastiriotites/${slug}`,
       title: activity.meta_title ?? activity.title,
       description: activity.meta_description ?? activity.subtitle,
       image: activity.hero_image,
     })
+    // Hidden activities (e.g. the €1 test activity) work by link but stay out of search.
+    return activity.hidden ? { ...meta, robots: { index: false, follow: false } } : meta
   }
 
   const data = getExperiences(locale)[slug]

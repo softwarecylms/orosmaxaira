@@ -56,6 +56,8 @@ export type Activity = {
   season_end_month?: number | null
   currency?: string
   status?: string
+  /** Bookable by link only (e.g. the €1 test activity): served noindex, left out of the sitemap. */
+  hidden?: boolean
   meta_title?: string | null
   meta_description?: string | null
   /** 'seats' = real slot/seat checkout; 'enquiry' = appointment request (e.g. Μελισσοθεραπεία). */

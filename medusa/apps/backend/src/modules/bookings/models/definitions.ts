@@ -37,6 +37,9 @@ export const Activity = model.define("activity", {
   // How the storefront books this activity: the real seat/slot checkout, or an
   // enquiry (appointment) request — e.g. Μελισσοθεραπεία, which has no slots.
   booking_type: model.enum(["seats", "enquiry"]).default("seats"),
+  // Bookable by direct link only (e.g. the €1 test activity): left out of the
+  // sitemap list (GET /store/activities) and served noindex by the storefront.
+  hidden: model.boolean().default(false),
   meta_title: model.text().nullable(),
   meta_description: model.text().nullable(),
   // Structured content — small arrays edited via repeater sub-forms in admin.
