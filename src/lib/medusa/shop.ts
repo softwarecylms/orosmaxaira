@@ -189,6 +189,11 @@ type MedusaVariant = {
   calculated_price?: HttpTypes.StoreCalculatedPrice
 }
 
+/** Multi-variant honeys have a single "Μέγεθος" option → its value is the size
+ *  label (e.g. "330g"). Fall back to the first option value, then the title. */
+const sizeLabel = (v: MedusaVariant) =>
+  v.options?.find((o) => o.option?.title === 'Μέγεθος')?.value ?? v.options?.[0]?.value ?? v.title
+
 /**
  * A single product for the detail page: catalogue/price/stock/variant-ids from
  * Medusa, merged with the static editorial content (descriptions, nutrition,
@@ -229,12 +234,7 @@ export async function getShopProduct(
     const staticSizes = staticDetail.variations?.sizes ?? []
     sizes = variants
       .map((v) => {
-        // Multi-variant honeys have a single "Μέγεθος" option → its value is the
-        // size label (e.g. "330g"). Fall back to the first option value, then title.
-        const label =
-          v.options?.find((o) => o.option?.title === 'Μέγεθος')?.value ??
-          v.options?.[0]?.value ??
-          v.title
+        const label = sizeLabel(v)
         const st = staticSizes.find((s) => s.label === label)
         const amount = v.calculated_price?.calculated_amount ?? 0
         return {
@@ -269,10 +269,19 @@ export async function getShopProduct(
   return { product, detail }
 }
 
-/** Default variant id + formatted price per handle — for the cross-sell "add" buttons. */
+export type VariantPick = { variantId: string; sortPrice: number }
+
+/**
+ * A variant id + price (cents) per handle, for one-click "add" buttons outside
+ * the product page (cross-sell rows, the home flatlay hotspots). Picks the size
+ * named in `sizes` (e.g. `{ 'thymarisio-meli-oros-machaira': '790g' }`), else
+ * the cheapest variant. A handle whose named size no longer exists is left out,
+ * so the caller never adds a different jar from the one it advertises.
+ */
 export async function getAddonVariants(
   handles: string[],
-): Promise<Record<string, { variantId: string; sortPrice: number }>> {
+  sizes: Record<string, string> = {},
+): Promise<Record<string, VariantPick>> {
   if (!handles.length) return {}
   const region = await getDefaultRegion()
   if (!region) return {}
@@ -284,7 +293,7 @@ export async function getAddonVariants(
       query: {
         handle: handles,
         region_id: region.id,
-        fields: 'handle,*variants.calculated_price',
+        fields: 'handle,*variants.options,*variants.calculated_price',
         limit: handles.length,
       },
       cache: 'force-cache',
@@ -292,18 +301,21 @@ export async function getAddonVariants(
     },
   )
 
-  const out: Record<string, { variantId: string; sortPrice: number }> = {}
+  const out: Record<string, VariantPick> = {}
   for (const p of products ?? []) {
     const variants = (p.variants ?? []) as unknown as MedusaVariant[]
-    const cheapest = [...variants].sort(
-      (a, b) =>
-        (a.calculated_price?.calculated_amount ?? 0) -
-        (b.calculated_price?.calculated_amount ?? 0),
-    )[0]
-    if (p.handle && cheapest) {
+    const size = p.handle ? sizes[p.handle] : undefined
+    const pick = size
+      ? variants.find((v) => sizeLabel(v) === size)
+      : [...variants].sort(
+          (a, b) =>
+            (a.calculated_price?.calculated_amount ?? 0) -
+            (b.calculated_price?.calculated_amount ?? 0),
+        )[0]
+    if (p.handle && pick) {
       out[p.handle] = {
-        variantId: cheapest.id,
-        sortPrice: Math.round((cheapest.calculated_price?.calculated_amount ?? 0) * 100),
+        variantId: pick.id,
+        sortPrice: Math.round((pick.calculated_price?.calculated_amount ?? 0) * 100),
       }
     }
   }

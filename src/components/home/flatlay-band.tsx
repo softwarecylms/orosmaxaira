@@ -6,13 +6,15 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { useLocale } from 'next-intl'
 import { getHomeContent } from './home-content'
 import { FlatlayHotspot } from './flatlay-hotspot'
+import type { VariantPick } from '@/lib/medusa/shop'
 
 /** Section 9 — full-bleed marble flatlay with floating price pills that reveal
  *  a product quick-view card on hover (Figma 118:617 + 358:1793). On lg the
  *  image + pills drift together as the section scrolls (subtle parallax); the
  *  image carries a vertical buffer so no edges show. Off on mobile / reduced
- *  motion so the carefully-placed pills stay aligned. */
-export function FlatlayBand() {
+ *  motion so the carefully-placed pills stay aligned.
+ *  `variants` (live Medusa variant + price per handle) powers the add buttons. */
+export function FlatlayBand({ variants = {} }: { variants?: Record<string, VariantPick> }) {
   const { FLATLAY } = getHomeContent(useLocale())
   const ref = useRef<HTMLElement | null>(null)
   const reduce = useReducedMotion()
@@ -49,7 +51,7 @@ export function FlatlayBand() {
         </div>
         <motion.div style={{ y }} className="absolute inset-0 will-change-transform">
           {FLATLAY.prices.map((p, i) => (
-            <FlatlayHotspot key={p.value} item={p} index={i} />
+            <FlatlayHotspot key={p.handle} item={p} live={variants[p.handle]} index={i} />
           ))}
         </motion.div>
       </div>

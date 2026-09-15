@@ -3,10 +3,16 @@
 import * as React from 'react'
 import Image from 'next/image'
 import { useLocale } from 'next-intl'
-import { ShoppingCart } from 'lucide-react'
+import { Check, ShoppingCart } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { Link } from '@/i18n/navigation'
 import { cn, displayPrice } from '@/lib/utils'
 import { EASE, DURATION } from '@/lib/motion'
+import { useCart, formatCents } from '@/components/commerce/cart-store'
+import { displaySizeLabel, getProductDetail } from '@/components/shop/shop-content'
+import { productSlug } from '@/components/shop/product-slugs'
+import { getProductUi } from '@/components/shop/product/product-ui'
+import type { VariantPick } from '@/lib/medusa/shop'
 import type { FlatlayPrice } from './home-content'
 
 /**
@@ -14,14 +20,82 @@ import type { FlatlayPrice } from './home-content'
  * hover / keyboard focus (Figma 358:1793): image, category, title, price and
  * an add-to-cart button. The card opens up or down per `placement` so it stays
  * over the band, and raises its stacking order while open.
+ *
+ * `live` is the Medusa variant for the jar in the photo: it sets the price and
+ * lets the button add straight to the cart. Without it (Medusa unreachable) the
+ * button links to the product page instead — an item with no variant id would
+ * be dropped at checkout.
+ *
+ * Touch screens: Tailwind v4 only applies `hover:` where the device can hover,
+ * so on a phone the card used to stay open through focus alone — and tapping
+ * the button moved focus off the pill, hid the card mid-tap and swallowed the
+ * click. A tap on the pill now opens the card in state, and it stays open until
+ * a tap outside it or Escape.
  */
-export function FlatlayHotspot({ item, index }: { item: FlatlayPrice; index: number }) {
+export function FlatlayHotspot({
+  item,
+  live,
+  index,
+}: {
+  item: FlatlayPrice
+  live?: VariantPick
+  index: number
+}) {
   const openUp = item.placement === 'top'
   const locale = useLocale()
+  const ui = getProductUi(locale)
+  const { addItem, flashDrawer } = useCart()
+  const [added, setAdded] = React.useState(false)
+  const [open, setOpen] = React.useState(false)
+  const rootRef = React.useRef<HTMLDivElement>(null)
+
+  // While opened by a tap/click, close on a press outside the hotspot or Escape.
+  React.useEffect(() => {
+    if (!open) return
+    const onPointerDown = (e: PointerEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false)
+    }
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open])
+
+  const price = live ? formatCents(live.sortPrice) : displayPrice(item.product.price, locale)
+
+  function add() {
+    if (!live) return
+    addItem({
+      handle: item.handle,
+      title: item.product.title,
+      image: item.product.image,
+      size: item.size,
+      container: getProductDetail(item.handle).variations?.sizes.find((s) => s.label === item.size)
+        ?.container,
+      priceLabel: price,
+      unitPrice: live.sortPrice,
+      variantId: live.variantId,
+    })
+    flashDrawer()
+    setAdded(true)
+    window.setTimeout(() => setAdded(false), 2500)
+  }
+
+  const ctaClass =
+    'flex items-center justify-center gap-3 rounded-[4px] bg-accent p-[15px] text-[17px] leading-[24px] text-white transition-colors hover:bg-foreground'
 
   return (
     <motion.div
-      className="group absolute z-20 block -translate-x-1/2 -translate-y-1/2 left-[var(--fh-l)] top-[var(--fh-t)] hover:z-40 focus-within:z-40 lg:left-[var(--fh-dl)] lg:top-[var(--fh-dt)]"
+      ref={rootRef}
+      className={cn(
+        'group absolute block -translate-x-1/2 -translate-y-1/2 left-[var(--fh-l)] top-[var(--fh-t)] hover:z-40 focus-within:z-40 lg:left-[var(--fh-dl)] lg:top-[var(--fh-dt)]',
+        open ? 'z-40' : 'z-20',
+      )}
       style={
         {
           '--fh-l': item.mLeft,
@@ -39,25 +113,39 @@ export function FlatlayHotspot({ item, index }: { item: FlatlayPrice; index: num
       <span
         tabIndex={0}
         role="button"
-        aria-label={`${item.product.title} — ${displayPrice(item.product.price, locale)}`}
+        aria-label={`${item.product.title} — ${price}`}
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            setOpen((o) => !o)
+          }
+        }}
         className="flex cursor-pointer items-center justify-center rounded-full bg-white px-3.5 py-1.5 text-[14px] leading-[20px] text-foreground shadow-[0_6px_20px_-8px_rgba(0,0,0,0.35)] outline-none transition-transform focus-visible:ring-2 focus-visible:ring-accent group-hover:scale-105 lg:px-5 lg:py-2.5 lg:text-[17px] lg:leading-[24px]"
       >
-        {/* `value` is stored as a bare amount ("7,50") and shared by both
-            locale bundles — the currency is added here so it can never drift.
-            Built as one string so React does not split it into two text nodes. */}
-        {`€${item.value}`}
+        {/* Live price when Medusa answered; else `value`, a bare amount ("7,50")
+            shared by both locale bundles — the currency is added here so it can
+            never drift. Built as one string so React does not split it into two
+            text nodes. */}
+        {live ? price : `€${item.value}`}
       </span>
 
       {/* Quick-view card */}
       <div
         className={cn(
-          'absolute left-1/2 w-[240px] -translate-x-1/2 opacity-0 transition-all duration-300 ease-out',
-          'pointer-events-none invisible',
+          'absolute left-1/2 w-[240px] -translate-x-1/2 transition-all duration-300 ease-out',
           // Bridge the 12px gap with padding (not a margin offset) so moving the
           // pointer from the pill onto the card stays inside the hover area.
-          openUp ? 'bottom-full pb-3 translate-y-2' : 'top-full pt-3 -translate-y-2',
-          'group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto',
-          'group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-focus-within:pointer-events-auto',
+          openUp ? 'bottom-full pb-3' : 'top-full pt-3',
+          open
+            ? 'visible pointer-events-auto translate-y-0 opacity-100'
+            : cn(
+                'pointer-events-none invisible opacity-0',
+                openUp ? 'translate-y-2' : '-translate-y-2',
+                'group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto',
+                'group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-focus-within:pointer-events-auto',
+              ),
         )}
       >
         <div className="flex flex-col gap-3 rounded-[4px] bg-white p-[15px] text-left shadow-[0_24px_60px_-20px_rgba(35,31,32,0.5)]">
@@ -75,15 +163,26 @@ export function FlatlayHotspot({ item, index }: { item: FlatlayPrice; index: num
             {item.product.title}
           </p>
           <p className="text-[16px] leading-[24px] text-accent">
-            {displayPrice(item.product.price, locale)}
+            {item.size ? (
+              <span className="text-muted">{`${displaySizeLabel(item.size)} / `}</span>
+            ) : null}
+            {price}
           </p>
-          <button
-            type="button"
-            className="flex items-center justify-center gap-3 rounded-[4px] bg-accent p-[15px] text-[17px] leading-[24px] text-white transition-colors hover:bg-foreground"
-          >
-            <ShoppingCart className="size-[15px] shrink-0" aria-hidden="true" />
-            {locale === 'en' ? 'Add' : 'Προσθήκη'}
-          </button>
+          {live ? (
+            <button type="button" onClick={add} className={ctaClass}>
+              {added ? (
+                <Check className="size-[15px] shrink-0" strokeWidth={2} aria-hidden="true" />
+              ) : (
+                <ShoppingCart className="size-[15px] shrink-0" aria-hidden="true" />
+              )}
+              {added ? ui.added : ui.addToCartShort}
+            </button>
+          ) : (
+            <Link href={`/product/${productSlug(item.handle, locale)}`} className={ctaClass}>
+              <ShoppingCart className="size-[15px] shrink-0" aria-hidden="true" />
+              {ui.addToCartShort}
+            </Link>
+          )}
         </div>
       </div>
     </motion.div>

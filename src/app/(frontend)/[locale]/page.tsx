@@ -10,6 +10,8 @@ import { AdoptHiveBanner } from '@/components/home/adopt-hive-banner'
 import { Heritage } from '@/components/home/heritage'
 import { FlatlayBand } from '@/components/home/flatlay-band'
 import { BlogTeaser } from '@/components/home/blog-teaser'
+import { FLATLAY } from '@/components/home/home-content'
+import { getAddonVariants } from '@/lib/medusa/shop'
 
 export async function generateMetadata({
   params,
@@ -27,6 +29,12 @@ export async function generateMetadata({
  * from `home-content.ts`, with live Medusa/Payload data passed in where wired.
  */
 export default async function HomePage() {
+  // The flatlay hotspots add the exact jar in the photo, at its live price.
+  const flatlayVariants = await getAddonVariants(
+    FLATLAY.prices.map((p) => p.handle),
+    Object.fromEntries(FLATLAY.prices.flatMap((p) => (p.size ? [[p.handle, p.size]] : []))),
+  ).catch(() => ({}))
+
   return (
     <>
       <HeroPair />
@@ -36,7 +44,7 @@ export default async function HomePage() {
       <ProductCategories />
       <AdoptHiveBanner />
       <Heritage />
-      <FlatlayBand />
+      <FlatlayBand variants={flatlayVariants} />
       <BlogTeaser />
     </>
   )

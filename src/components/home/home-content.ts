@@ -246,7 +246,11 @@ export type FlatlayPrice = {
   /** Position over the full square image shown on mobile/tablet (< lg). */
   mLeft: string
   mTop: string
-  href: string
+  /** Medusa handle of the product in the photo. */
+  handle: string
+  /** The jar in the photo, for multi-size products — must equal the Medusa
+   *  "Μέγεθος" option value. The hotspot adds exactly this variant. */
+  size?: string
   /** Which way the hover quick-view card opens. */
   placement: 'top' | 'bottom'
   product: { category: string; title: string; price: string; image: string }
@@ -266,27 +270,29 @@ export const FLATLAY: {
       top: '31%',
       mLeft: '28%',
       mTop: '28%',
-      href: '/',
+      handle: 'avrasto-meli-antheon-oros-machaira',
+      size: '500g',
       placement: 'bottom',
       product: {
         category: 'Μέλι',
-        title: 'Μέλι Ανθέων «Όρος Μαχαιρά»',
-        price: '€3,00 – €27,50',
+        title: 'Άβραστο Μέλι Ανθέων «Όρος Μαχαιρά»',
+        price: '€7,50',
         image: '/images/home/products/unheated-honey.webp',
       },
     },
     {
-      value: '12,50',
+      value: '12,00',
       left: '80%',
       top: '31%',
       mLeft: '75%',
       mTop: '33%',
-      href: '/product/thymarisio-meli-oros-machaira',
+      handle: 'thymarisio-meli-oros-machaira',
+      size: '790g',
       placement: 'bottom',
       product: {
         category: 'Μέλι',
         title: 'Θυμαρίσιο Μέλι «Όρος Μαχαιρά»',
-        price: '€3,50 – €31,00',
+        price: '€12,00',
         image: '/images/home/products/thyme-honey.webp',
       },
     },
@@ -296,7 +302,7 @@ export const FLATLAY: {
       top: '59%',
       mLeft: '50%',
       mTop: '53%',
-      href: '/',
+      handle: 'ydromelo',
       placement: 'top',
       product: {
         category: 'Προϊόντα Μέλισσας',
@@ -311,7 +317,7 @@ export const FLATLAY: {
       top: '71%',
       mLeft: '71%',
       mTop: '62%',
-      href: '/',
+      handle: 'vasilikos-poltos-oros-machaira',
       placement: 'top',
       product: {
         category: 'Προϊόντα Μέλισσας',
@@ -326,7 +332,7 @@ export const FLATLAY: {
       top: '83%',
       mLeft: '32%',
       mTop: '74%',
-      href: '/',
+      handle: 'krema-cherion-milk-amp-honey',
       placement: 'top',
       product: {
         category: 'Φυσικά Καλλυντικά',
@@ -562,7 +568,7 @@ const HOME_EN: HomeContent = {
     cta: { label: 'Learn more', href: DEAL.cta.href },
     featured: { ...DEAL.featured, title: 'The Elixir of the Gods', imageAlt: 'Melite Mead — Oros Machaira' },
     products: [
-      { ...DEAL.products[0], category: 'Honey', title: 'Oros Machaira Blossom Honey' },
+      { ...DEAL.products[0], category: 'Honey', title: 'Oros Machaira Raw Blossom Honey' },
       { ...DEAL.products[1], category: 'Honey', title: 'Oros Machaira Raw Blossom Honey' },
       { ...DEAL.products[2], category: 'Bee Products', title: 'Oros Machaira Royal Jelly' },
       { ...DEAL.products[3], category: 'Bee Products', title: 'Mead' },
