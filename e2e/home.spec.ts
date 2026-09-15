@@ -71,6 +71,29 @@ test.describe('OROS MACHAIRA home page', () => {
       .toEqual(expect.objectContaining({ size: '500g', quantity: 1, variantId: expect.any(String) }))
   })
 
+  test('a flatlay card title opens the product page', async ({ page }) => {
+    await page.goto('/')
+    const band = page.getByTestId('flatlay-band')
+    await band.scrollIntoViewIfNeeded()
+
+    const mead = band.getByRole('button', { name: /Υδρόμελο/ }).locator('..')
+    await mead.hover()
+    await mead.getByRole('link', { name: /Υδρόμελο/ }).click()
+    await expect(page).toHaveURL(/\/product\/ydromelo\/?$/)
+  })
+
+  test('a flatlay card image opens the English product page under /en', async ({ page }) => {
+    await page.goto('/en/')
+    const band = page.getByTestId('flatlay-band')
+    await band.scrollIntoViewIfNeeded()
+
+    const thyme = band.getByRole('button', { name: /Thyme Honey/ }).locator('..')
+    await thyme.hover()
+    // The image link is aria-hidden (the title announces the product), so find it by href.
+    await thyme.locator('a[href*="/product/"]').first().click()
+    await expect(page).toHaveURL(/\/en\/product\/oros-machaira-thyme-honey\/?$/)
+  })
+
   test('ticker holds still under reduced motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await page.goto('/')

@@ -67,6 +67,7 @@ export function FlatlayHotspot({
   }, [open])
 
   const price = live ? formatCents(live.sortPrice) : displayPrice(item.product.price, locale)
+  const productHref = `/product/${productSlug(item.handle, locale)}`
 
   function add() {
     if (!live) return
@@ -149,19 +150,29 @@ export function FlatlayHotspot({
         )}
       >
         <div className="flex flex-col gap-3 rounded-[4px] bg-white p-[15px] text-left shadow-[0_24px_60px_-20px_rgba(35,31,32,0.5)]">
-          <div className="relative aspect-square w-full overflow-hidden rounded-[4px] bg-offwhite">
+          {/* Image and title lead to the product page. The image link is hidden
+              from assistive tech so the product is announced once, by the title. */}
+          <Link
+            href={productHref}
+            tabIndex={-1}
+            aria-hidden="true"
+            className="relative block aspect-square w-full overflow-hidden rounded-[4px] bg-offwhite"
+          >
             <Image
               src={item.product.image}
-              alt={item.product.title}
+              alt=""
               fill
               sizes="240px"
-              className="object-cover"
+              className="object-cover transition-transform duration-300 ease-out hover:scale-[1.03]"
             />
-          </div>
+          </Link>
           <p className="text-[14px] leading-[21px] text-[#555]">{item.product.category}</p>
-          <p className="text-[17px] font-medium leading-[24px] text-foreground">
+          <Link
+            href={productHref}
+            className="text-[17px] font-medium leading-[24px] text-foreground transition-colors hover:text-accent"
+          >
             {item.product.title}
-          </p>
+          </Link>
           <p className="text-[16px] leading-[24px] text-accent">
             {item.size ? (
               <span className="text-muted">{`${displaySizeLabel(item.size)} / `}</span>
@@ -178,7 +189,7 @@ export function FlatlayHotspot({
               {added ? ui.added : ui.addToCartShort}
             </button>
           ) : (
-            <Link href={`/product/${productSlug(item.handle, locale)}`} className={ctaClass}>
+            <Link href={productHref} className={ctaClass}>
               <ShoppingCart className="size-[15px] shrink-0" aria-hidden="true" />
               {ui.addToCartShort}
             </Link>
