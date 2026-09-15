@@ -70,6 +70,20 @@ storefront for both — it renders CMS pages *and* talks to Medusa's Store API.
 - Payment in dev uses Medusa's **system default provider** (`pp_system_default`) — no real charge.
   Add Stripe (or another provider) before going live.
 
+## Page copy (Medusa content module)
+Header/footer, home, about, contact, adopt, activities index, certificates, awards, nature and
+the legal pages are edited in the **Medusa admin → «Περιεχόμενο σελίδων»** and read by
+`src/lib/content/load.ts` (with `CONTENT_SOURCE=medusa`, on in production).
+- The `*-content.ts` files are only the **fallback** (Medusa down) and fill fields added in code
+  later. Editing an existing string there does **not** change the live site — edit it in the
+  admin, or re-export and force-seed: `npx tsx scripts/export-content.mts`, then
+  `ONLY=<key> FORCE=1 npx medusa exec ./src/scripts/seed-content.ts` (local and prod).
+- Backend: `medusa/apps/backend/src/modules/content` (+ `api/admin/content`, `api/store/content`).
+  Editor: `src/admin/routes/content`, form built from the stored tree (`components/content-form.tsx`,
+  labels in `lib/content-pages.ts`). Mark a new page section with `data-edit="<top-level key>"`.
+- A publish revalidates the storefront cache (`/api/revalidate/`, `REVALIDATION_SECRET` shared by
+  both apps). New editable page: add it to `src/lib/content/registry.ts` and `content-pages.ts`.
+
 ## Conventions
 - Tokens > arbitrary values. Add to the `@theme` block; never inline a hex/px that should be a token.
 - Motion: import easings/variants from `src/lib/motion.ts` — never inline a cubic-bezier or duration.
