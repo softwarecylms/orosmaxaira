@@ -1,4 +1,5 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import { storefrontUrl } from "../../../lib/storefront"
 
 /**
  * GET /admin/media — the image library the admin's picker browses.
@@ -10,21 +11,11 @@ import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
  * ever talks to this origin — no CORS setup, and the picker keeps working if the
  * storefront URL changes.
  *
- * `STOREFRONT_URL` sets the origin. It falls back to the first entry in
- * `STORE_CORS` (the storefront is by definition an allowed origin) and then to
- * the local dev port, so this works with no extra configuration in development.
+ * The origin comes from `storefrontUrl()` (src/lib/storefront.ts).
  */
 
 type MediaItem = { path: string; name: string; folder: string; bytes: number }
 type Manifest = { generatedAt?: string; folders: string[]; items: MediaItem[] }
-
-function storefrontUrl(): string {
-  const explicit = process.env.STOREFRONT_URL?.trim()
-  if (explicit) return explicit.replace(/\/$/, "")
-  const firstCors = process.env.STORE_CORS?.split(",")[0]?.trim()
-  if (firstCors) return firstCors.replace(/\/$/, "")
-  return "http://localhost:3002"
-}
 
 /** Small in-process cache — the manifest only changes on a storefront deploy. */
 let cache: { at: number; origin: string; data: Manifest } | null = null

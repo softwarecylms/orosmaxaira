@@ -16,6 +16,38 @@ module.exports = defineConfig({
   modules: [
     // Custom module: activities + availability + bookings (see src/modules/bookings).
     { resolve: "./src/modules/bookings" },
+    // Custom module: editable site copy — pages, header/footer, blog, media
+    // library (see src/modules/content).
+    { resolve: "./src/modules/content" },
+    // File module — images uploaded from the admin. With S3_BUCKET set they go
+    // to S3-compatible storage (Cloudflare R2: S3_ENDPOINT = the account's R2
+    // endpoint, S3_REGION = "auto", S3_FILE_URL = the bucket's public URL).
+    // Without it Medusa's local provider keeps them in ./static, which is fine
+    // in dev but is wiped by every Railway redeploy.
+    ...(process.env.S3_BUCKET
+      ? [
+          {
+            resolve: "@medusajs/file",
+            options: {
+              providers: [
+                {
+                  resolve: "@medusajs/file-s3",
+                  id: "s3",
+                  options: {
+                    file_url: process.env.S3_FILE_URL,
+                    access_key_id: process.env.S3_ACCESS_KEY_ID,
+                    secret_access_key: process.env.S3_SECRET_ACCESS_KEY,
+                    region: process.env.S3_REGION ?? "auto",
+                    bucket: process.env.S3_BUCKET,
+                    endpoint: process.env.S3_ENDPOINT,
+                    prefix: "uploads/",
+                  },
+                },
+              ],
+            },
+          },
+        ]
+      : []),
     // Notification module — booking confirmation emails (src/lib/booking-payment.ts).
     {
       resolve: "@medusajs/notification",
