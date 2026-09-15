@@ -8,7 +8,8 @@
 import { countNewOrders } from '@/lib/medusa/new-orders'
 import NewOrdersBadge from './NewOrdersBadge'
 
-const MEDUSA_ADMIN = `${(process.env.MEDUSA_BACKEND_URL || 'http://localhost:9009').replace(/\/$/, '')}/app`
+// MEDUSA_ADMIN_URL is the admin's public address (https://shop.orosmaxaira.com).
+const MEDUSA_ADMIN = `${(process.env.MEDUSA_ADMIN_URL || process.env.MEDUSA_BACKEND_URL || 'http://localhost:9009').replace(/\/$/, '')}/app`
 
 const LINKS = [
   { label: 'Orders', path: '/orders', badge: true },

@@ -230,7 +230,7 @@ export function renderOrderEmailHtml(
         </td>`
       : ''
 
-  const adminBase = process.env.MEDUSA_BACKEND_URL?.replace(/\/$/, '')
+  const adminBase = (process.env.MEDUSA_ADMIN_URL || process.env.MEDUSA_BACKEND_URL)?.replace(/\/$/, '')
   const adminLink =
     audience === 'shop' && adminBase?.startsWith('https://')
       ? button(`${adminBase}/app/orders/${order.id}`, t.viewInAdmin)

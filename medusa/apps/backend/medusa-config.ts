@@ -26,7 +26,10 @@ module.exports = defineConfig({
                 "</head>",
                 `    <title>${ADMIN_TITLE}</title>\n` +
                   `    <link rel="icon" type="image/svg+xml" href="${ADMIN_ICON_SVG}" />\n` +
-                  `    <link rel="apple-touch-icon" href="${ADMIN_ICON_PNG}" />\n  </head>`
+                  `    <link rel="apple-touch-icon" href="${ADMIN_ICON_PNG}" />\n` +
+                  // The store badge top-left of the sidebar: the site's icon instead of the name's initial.
+                  `    <style>.grid-cols-\\[24px_1fr_15px\\]>span:first-child{background:#fff url("${ADMIN_ICON_PNG}") center/cover no-repeat}` +
+                  `.grid-cols-\\[24px_1fr_15px\\]>span:first-child>*{opacity:0}</style>\n  </head>`
               ),
         },
       ],
