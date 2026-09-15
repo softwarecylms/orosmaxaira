@@ -3,13 +3,14 @@ import { getLocale } from 'next-intl/server'
 import { OrderConfirmation } from '@/components/shop/checkout/order-confirmation'
 import { getCheckoutUi } from '@/components/shop/checkout/checkout-ui'
 import { CheckoutSteps } from '@/components/shop/checkout-steps'
-import { hreflangAlternates } from '@/lib/seo'
+import { NOINDEX, hreflangAlternates } from '@/lib/seo'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   return {
     title: getCheckoutUi(locale).orderTitle,
     alternates: hreflangAlternates(locale, '/order'),
+    robots: NOINDEX,
   }
 }
 

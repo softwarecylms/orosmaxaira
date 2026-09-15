@@ -30,7 +30,7 @@ import {
 const EN_SCHOOL = getSchoolVisit('en')
 import { getSchoolProgram } from '@/lib/medusa/school-program'
 import { getActivitiesUi } from '@/components/activities/activities-content'
-import { hreflangAlternates } from '@/lib/seo'
+import { seoMetadata } from '@/lib/seo'
 
 /** Page-level chrome copy (labels not part of the shared UI or the Medusa data). */
 function pageCopy(locale: string) {
@@ -241,11 +241,12 @@ async function loadProgram(locale: string): Promise<PView> {
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   const v = await loadProgram(locale)
-  return {
+  return seoMetadata({
+    locale,
+    path: '/drastiriotites/scholeia',
     title: v.metaTitle,
     description: v.metaDescription,
-    alternates: hreflangAlternates(locale, '/drastiriotites/scholeia'),
-  }
+  })
 }
 
 function SectionHeading({ children }: { children: React.ReactNode }) {

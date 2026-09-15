@@ -12,7 +12,7 @@ import { MelissotherapeiaBooking } from '@/components/melissotherapeia/melissoth
 import { getActivity } from '@/lib/medusa/activities'
 import { getExperiences } from '@/components/activities/experiences'
 import { getActivitiesUi } from '@/components/activities/activities-content'
-import { hreflangAlternates } from '@/lib/seo'
+import { seoMetadata } from '@/lib/seo'
 
 /** Page-level copy that isn't part of the shared UI chrome or the experiences bundle. */
 function pageCopy(locale: string) {
@@ -125,11 +125,12 @@ async function loadView(locale: string): Promise<MelissoView> {
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   const v = await loadView(locale)
-  return {
+  return seoMetadata({
+    locale,
+    path: '/drastiriotites/melissotherapeia',
     title: v.metaTitle,
     description: v.metaDescription,
-    alternates: hreflangAlternates(locale, '/drastiriotites/melissotherapeia'),
-  }
+  })
 }
 
 export default async function MelissotherapeiaPage() {

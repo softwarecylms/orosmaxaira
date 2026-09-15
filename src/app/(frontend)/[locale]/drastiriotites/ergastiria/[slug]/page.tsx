@@ -21,12 +21,13 @@ import { WorkshopBooking } from '@/components/ergastiria/workshop-booking'
 import { WorkshopSeatBooking } from '@/components/ergastiria/workshop-seat-booking'
 import { WorkshopClosedNotice } from '@/components/ergastiria/workshop-closed-notice'
 import { CertificationsNote } from '@/components/certificates/certifications-note'
+import { seoMetadata } from '@/lib/seo'
+import { breadcrumbJsonLd } from '@/components/seo/json-ld'
 
 // Live so admin edits reflect immediately; falls back to static data if Medusa
 // is unavailable.
 export const dynamic = 'force-dynamic'
 
-const SITE = 'https://orosmaxaira.vercel.app'
 
 /** Page-level chrome copy not part of the shared UI or the workshops data. */
 function pageCopy(locale: string) {
@@ -158,19 +159,13 @@ export async function generateMetadata({
   const locale = await getLocale()
   const w = await loadWorkshop(slug, locale)
   if (!w) return { title: pageCopy(locale).workshopWord }
-  const url = `${SITE}/drastiriotites/ergastiria/${w.slug}`
-  return {
+  return seoMetadata({
+    locale,
+    path: `/drastiriotites/ergastiria/${w.slug}`,
     title: w.metaTitle,
     description: w.metaDescription,
-    alternates: { canonical: url },
-    openGraph: {
-      title: `${w.title} — Όρος Μαχαιρά`,
-      description: w.metaDescription,
-      url,
-      images: w.image ? [{ url: `${SITE}${w.image}` }] : undefined,
-      type: 'article',
-    },
-  }
+    image: w.image,
+  })
 }
 
 export default async function WorkshopDetailPage({
@@ -191,16 +186,12 @@ export default async function WorkshopDetailPage({
     w.ageLabel ? { icon: Users, label: w.ageLabel } : null,
   ].filter(Boolean) as { icon: typeof Clock; label: string }[]
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: ui.breadcrumbHome, item: SITE },
-      { '@type': 'ListItem', position: 2, name: ui.breadcrumbActivities, item: `${SITE}/drastiriotites` },
-      { '@type': 'ListItem', position: 3, name: ui.breadcrumbWorkshops, item: `${SITE}/drastiriotites/ergastiria` },
-      { '@type': 'ListItem', position: 4, name: w.title },
-    ],
-  }
+  const jsonLd = breadcrumbJsonLd(locale, [
+    [ui.breadcrumbHome, '/'],
+    [ui.breadcrumbActivities, '/drastiriotites/'],
+    [ui.breadcrumbWorkshops, '/drastiriotites/ergastiria/'],
+    [w.title],
+  ])
 
   const paragraphs = w.description.split(/\n{2,}/).map((s) => s.trim()).filter(Boolean)
 

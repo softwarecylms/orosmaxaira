@@ -8,19 +8,20 @@ import { AdoptHiveBanner } from '@/components/home/adopt-hive-banner'
 import { Reveal, RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
 import { Counter } from '@/components/motion/counter'
 import { BoldText } from '@/components/shared/bold-text'
-import { hreflangAlternates } from '@/lib/seo'
+import { seoMetadata } from '@/lib/seo'
 import { cn } from '@/lib/utils'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   const en = locale === 'en'
-  return {
+  return seoMetadata({
+    locale,
+    path: '/afaneis-iroes-tis-fysis',
     title: en ? 'Bees, Nature’s Unsung Heroes' : 'Μέλισσες, οι Αφανείς Ήρωες της Φύσης',
     description: en
       ? 'Bees are essential to the balance of the environment and to biodiversity. Learn why every single bee matters and how you can help.'
       : 'Οι μέλισσες είναι απαραίτητες για την ισορροπία του περιβάλλοντος και τη βιοποικιλότητα. Μάθετε γιατί κάθε μέλισσα μετράει και πώς μπορείτε να βοηθήσετε.',
-    alternates: hreflangAlternates(locale, '/afaneis-iroes-tis-fysis'),
-  }
+  })
 }
 
 /** One alternating image/text story block. */

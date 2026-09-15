@@ -8,16 +8,17 @@ import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
 import { RichText } from '@/components/activities/detail/rich-text'
 import { CtaLink } from '@/components/home/cta-link'
 import { Counter } from '@/components/motion/counter'
-import { hreflangAlternates } from '@/lib/seo'
+import { seoMetadata } from '@/lib/seo'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   const { meta } = getAboutContent(locale)
-  return {
+  return seoMetadata({
+    locale,
+    path: '/poioi-eimaste',
     title: meta.title,
     description: meta.description,
-    alternates: hreflangAlternates(locale, '/poioi-eimaste'),
-  }
+  })
 }
 
 /** Brand value icons (white cut-outs from Figma) shown on the gold discs. */

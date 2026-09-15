@@ -201,6 +201,11 @@ export type ShopProductDetail = {
   variations?: ShopVariations
   /** cross-sell product handles for “Συνδυάστε το με” */
   addons?: string[]
+  /** Search-result title / description, when they should differ from the
+   *  product name / description — Medusa Metadata `meta_title`,
+   *  `meta_description` (+ `_en`). */
+  metaTitle?: string
+  metaDescription?: string
 }
 
 const THYM_IMG = {

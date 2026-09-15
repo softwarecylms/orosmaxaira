@@ -4,19 +4,20 @@ import { RevealUp } from '@/components/home/reveal-up'
 import { getAwardsContent } from '@/components/awards/awards-content'
 import { AwardsHero } from '@/components/awards/awards-hero'
 import { AwardSection } from '@/components/awards/award-section'
-import { hreflangAlternates } from '@/lib/seo'
+import { seoMetadata } from '@/lib/seo'
 import { cn } from '@/lib/utils'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   const en = locale === 'en'
-  return {
+  return seoMetadata({
+    locale,
+    path: '/vraveia',
     title: en ? 'Awards' : 'Βραβεία',
     description: en
       ? 'The distinctions and awards of Oros Machaira — Cyprus Tourism Awards, Excellent Taste Awards, Cyprus Hospitality Awards, Specialist Awards and more.'
       : 'Οι διακρίσεις και τα βραβεία του Όρος Μαχαιρά — Cyprus Tourism Awards, Excellent Taste Awards, Cyprus Hospitality Awards, Specialist Awards και άλλα.',
-    alternates: hreflangAlternates(locale, '/vraveia'),
-  }
+  })
 }
 
 /** Awards whose section gets the soft offwhite band (alternating with white). */

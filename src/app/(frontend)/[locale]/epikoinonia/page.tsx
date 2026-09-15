@@ -13,7 +13,7 @@ import { ContactMap } from '@/components/contact/contact-map'
 import { ContactMessageForm } from '@/components/contact/contact-message-form'
 import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
 import { getHomeContent } from '@/components/home/home-content'
-import { hreflangAlternates } from '@/lib/seo'
+import { seoMetadata } from '@/lib/seo'
 import {
   FacebookSolid,
   InstagramSolid,
@@ -28,10 +28,8 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  return {
-    title: getContactContent(locale).meta.title,
-    alternates: hreflangAlternates(locale, '/epikoinonia'),
-  }
+  const { meta } = getContactContent(locale)
+  return seoMetadata({ locale, path: '/epikoinonia', title: meta.title, description: meta.description })
 }
 
 const CONTACT_ICONS: Record<ContactIcon, typeof Clock> = {

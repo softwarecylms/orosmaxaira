@@ -8,13 +8,16 @@ import {
   getPostBySlug,
   getRelatedPosts,
 } from '@/lib/cms'
-import { hreflangAlternates, pageMetadata, postMetadata } from '@/lib/seo'
+import { hreflangAlternates, pageMetadata, postMetadata, seoMetadata } from '@/lib/seo'
 import { puckConfig } from '@/puck/config'
 import { populatePuckData } from '@/puck/hydrate'
 import { BlogPostRender } from '@/blocks/blog-post'
 import { getBlogPosts } from '@/components/blog/blog-data'
 import { ArticleView } from '@/components/blog/article-view'
 import { articlePath } from '@/components/blog/article-url'
+import { getBlogUi } from '@/components/blog/blog-ui'
+import { articleSeoTitle, canonicalArticleSlug } from '@/components/blog/article-seo'
+import { JsonLd, articleJsonLd, breadcrumbJsonLd } from '@/components/seo/json-ld'
 import type { Data } from '@measured/puck'
 
 export const revalidate = 60
@@ -67,18 +70,18 @@ export async function generateMetadata({ params }: RouteProps) {
 
   const locale = await getLocale()
   const article = findArticle(slug, locale)
-  const alternates = hreflangAlternates(locale, articlePath(slug))
+  const alternates = hreflangAlternates(locale, articlePath(canonicalArticleSlug(slug)))
   if (article) {
-    return {
-      title: article.title,
-      description: article.excerpt,
+    return seoMetadata({
+      locale,
       alternates,
-      openGraph: {
-        title: article.title,
-        description: article.excerpt,
-        images: article.image ? [article.image] : undefined,
-      },
-    }
+      title: articleSeoTitle(slug, locale, article.title),
+      // 15 articles have no excerpt; their opening paragraph stands in.
+      description: article.excerpt || article.content,
+      image: article.image,
+      type: 'article',
+      publishedTime: article.date,
+    })
   }
   return { title: 'Not found' }
 }
@@ -112,7 +115,22 @@ export default async function CatchAllRoute({ params }: RouteProps) {
     const related = getBlogPosts(locale)
       .filter((p) => p.slug !== slug)
       .slice(0, 3)
-    return <ArticleView post={article} related={related} locale={locale} />
+    const blogUi = getBlogUi(locale)
+    return (
+      <>
+        <JsonLd
+          data={[
+            articleJsonLd(locale, { ...article, slug: canonicalArticleSlug(slug) }),
+            breadcrumbJsonLd(locale, [
+              [locale === 'en' ? 'Home' : 'Αρχική', '/'],
+              [blogUi.breadcrumbBlog, '/blog/'],
+              [article.title],
+            ]),
+          ]}
+        />
+        <ArticleView post={article} related={related} locale={locale} />
+      </>
+    )
   }
 
   notFound()

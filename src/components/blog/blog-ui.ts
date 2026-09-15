@@ -59,7 +59,7 @@ const EL: BlogUi = {
   articleFallback: 'Άρθρο',
   heroTitle: 'Blog',
   heroImageAlt: 'Μελισσοκόμος κρατά πλαίσιο με μέλισσες σε χωράφι',
-  metaTitle: 'Blog',
+  metaTitle: 'Blog — Συνταγές, Συμβουλές & Νέα για το Μέλι',
   metaDescription:
     'Νέα, άρθρα και συνταγές από το Όρος Μαχαιρά — για το μέλι, τις μέλισσες, τη διατροφή και τη μελισσοκομία.',
 }
@@ -84,7 +84,7 @@ const EN: BlogUi = {
   articleFallback: 'Article',
   heroTitle: 'Blog',
   heroImageAlt: 'A beekeeper holding a frame of bees in a field',
-  metaTitle: 'Blog',
+  metaTitle: 'Blog — Honey Recipes, Tips & News',
   metaDescription:
     'News, articles and recipes from Oros Machaira — about honey, bees, food and beekeeping.',
 }

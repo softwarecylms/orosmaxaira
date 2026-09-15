@@ -5,13 +5,14 @@ import { Link } from '@/i18n/navigation'
 import { getCustomer, getCustomerOrders } from '@/lib/medusa/customer'
 import { formatPrice } from '@/lib/medusa/prices'
 import { getAccountUi, accountIntlLocale } from '@/components/account/account-ui'
-import { hreflangAlternates } from '@/lib/seo'
+import { NOINDEX, hreflangAlternates } from '@/lib/seo'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   return {
     title: getAccountUi(locale).myAccount,
     alternates: hreflangAlternates(locale, '/account'),
+    robots: NOINDEX,
   }
 }
 export const dynamic = 'force-dynamic'

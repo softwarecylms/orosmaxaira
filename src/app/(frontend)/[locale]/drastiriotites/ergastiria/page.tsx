@@ -9,7 +9,7 @@ import { RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
 import { publishedWorkshops } from '@/lib/data/workshops'
 import { getWorkshops } from '@/lib/medusa/workshops'
 import { getActivitiesUi } from '@/components/activities/activities-content'
-import { hreflangAlternates } from '@/lib/seo'
+import { seoMetadata } from '@/lib/seo'
 
 // Live so admin edits reflect; falls back to the static workshops if Medusa is down.
 export const dynamic = 'force-dynamic'
@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
           description:
             'Βιωματικά εργαστήρια στο μελισσοκομείο του Όρους Μαχαιρά. Τα υλικά περιλαμβάνονται και παίρνετε τη δημιουργία σας δωρεάν μαζί σας. Κάθε εποχή το δικό της εργαστήρι.',
         }
-  return { ...meta, alternates: hreflangAlternates(locale, '/drastiriotites/ergastiria') }
+  return seoMetadata({ ...meta, locale, path: '/drastiriotites/ergastiria' })
 }
 
 /** Page-level copy for the workshops list. */

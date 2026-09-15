@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { LegalPage, type LegalSection } from '@/components/legal/legal-page'
-import { hreflangAlternates } from '@/lib/seo'
+import { seoMetadata } from '@/lib/seo'
 
 const TITLE = 'Παραγγελίες & Επιστροφές'
 const LAST_UPDATED = 'Τελευταία ενημέρωση: Ιούλιος 2026'
@@ -94,11 +94,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const m = locale === 'en' ? META.en : META.el
-  return {
+  return seoMetadata({
+    locale,
+    path: '/paraggelies-kai-epistrofes',
     title: m.title,
     description: m.description,
-    alternates: hreflangAlternates(locale, '/paraggelies-kai-epistrofes'),
-  }
+  })
 }
 
 export default async function OrdersReturnsPage({

@@ -5,6 +5,8 @@ import { listShopProducts } from '@/lib/medusa/shop'
 import { ShopBrowser } from './shop-browser'
 import { categoryLabel, type ShopCategory } from './shop-content'
 import { getShopUi } from './shop-ui'
+import { CATEGORY_SLUGS } from './shop-content'
+import { JsonLd, breadcrumbJsonLd } from '@/components/seo/json-ld'
 
 /**
  * Products page body — shared by /proionta (all) and /proionta/<slug> (a single
@@ -24,8 +26,25 @@ export async function ProductsPage({ category }: { category?: ShopCategory }) {
       ]
     : [{ label: ui.breadcrumb.home, href: '/' }, { label: ui.breadcrumb.products }]
 
+  const heading = category ? categoryLabel(category, locale) : ui.breadcrumb.products
+
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd(
+          locale,
+          category
+            ? [
+                [ui.breadcrumb.home, '/'],
+                [ui.breadcrumb.products, '/proionta/'],
+                [heading, `/proionta/${CATEGORY_SLUGS[category]}/`],
+              ]
+            : [[ui.breadcrumb.home, '/'], [ui.breadcrumb.products, '/proionta/']],
+        )}
+      />
+      {/* The design shows no page heading here; search engines and screen
+          readers still get one. */}
+      <h1 className="sr-only">{heading}</h1>
       <div className="container-wide pb-6 pt-4">
         <nav
           aria-label="breadcrumb"

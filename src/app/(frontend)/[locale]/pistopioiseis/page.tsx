@@ -5,21 +5,22 @@ import { getCertificatesContent, type Certificate } from '@/components/certifica
 import { PageHero } from '@/components/shared/page-hero'
 import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
 import { RichText } from '@/components/activities/detail/rich-text'
-import { hreflangAlternates } from '@/lib/seo'
+import { seoMetadata } from '@/lib/seo'
+import { breadcrumbJsonLd } from '@/components/seo/json-ld'
 import { cn } from '@/lib/utils'
 
-const SITE = 'https://orosmaxaira.vercel.app'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   const en = locale === 'en'
-  return {
+  return seoMetadata({
+    locale,
+    path: '/pistopioiseis',
     title: en ? 'Certifications' : 'Πιστοποιήσεις',
     description: en
       ? 'The certifications of Oros Machaira — ISO 22000 (Food Safety) and ISO 14001 (Environmental Management). View and download the official certificates.'
       : 'Οι πιστοποιήσεις του Όρος Μαχαιρά — ISO 22000 (Ασφάλεια Τροφίμων) και ISO 14001 (Περιβαλλοντική Διαχείριση). Δείτε και κατεβάστε τα επίσημα πιστοποιητικά.',
-    alternates: hreflangAlternates(locale, '/pistopioiseis'),
-  }
+  })
 }
 
 /** Πιστοποιήσεις showcase — title banner + one full-width section per certificate
@@ -30,21 +31,10 @@ export default async function CertificatesPage() {
   const en = locale === 'en'
   const { hero, certificates } = getCertificatesContent(locale)
 
-  const homeUrl = en ? `${SITE}/en` : SITE
-  const pageUrl = en ? `${SITE}/en/pistopioiseis` : `${SITE}/pistopioiseis`
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: en ? 'Home' : 'Αρχική', item: homeUrl },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: en ? 'Certifications' : 'Πιστοποιήσεις',
-        item: pageUrl,
-      },
-    ],
-  }
+  const jsonLd = breadcrumbJsonLd(locale, [
+    [en ? 'Home' : 'Αρχική', '/'],
+    [en ? 'Certifications' : 'Πιστοποιήσεις', '/pistopioiseis/'],
+  ])
 
   return (
     <>

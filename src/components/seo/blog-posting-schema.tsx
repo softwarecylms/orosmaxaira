@@ -26,10 +26,10 @@ export function BlogPostingSchema({ post, author, primaryCategory }: Props) {
     image: image ? [image.startsWith('http') ? image : `${base}${image}`] : undefined,
     author: author?.name
       ? { '@type': 'Person', name: author.name, url: `${base}/author/${author.slug}` }
-      : { '@type': 'Organization', name: 'Your Brand' },
+      : { '@type': 'Organization', name: 'Όρος Μαχαιρά' },
     publisher: {
       '@type': 'Organization',
-      name: 'Your Brand',
+      name: 'Όρος Μαχαιρά',
       url: base,
     },
     ...(primaryCategory?.name

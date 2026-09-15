@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { LegalPage, type LegalSection } from '@/components/legal/legal-page'
-import { hreflangAlternates } from '@/lib/seo'
+import { seoMetadata } from '@/lib/seo'
 
 const TITLE = 'Όροι & Προϋποθέσεις'
 const LAST_UPDATED = 'Τελευταία ενημέρωση: Ιούνιος 2026'
@@ -160,11 +160,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const m = locale === 'en' ? META.en : META.el
-  return {
+  return seoMetadata({
+    locale,
+    path: '/terms',
     title: m.title,
     description: m.description,
-    alternates: hreflangAlternates(locale, '/terms'),
-  }
+  })
 }
 
 export default async function TermsPage({

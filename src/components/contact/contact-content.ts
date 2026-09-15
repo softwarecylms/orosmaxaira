@@ -15,6 +15,8 @@ export type ValueIcon = 'purity' | 'eco' | 'family'
 export const CONTACT_PAGE = {
   meta: {
     title: 'Επικοινωνία',
+    description:
+      'Επικοινωνήστε με το Όρος Μαχαιρά για παραγγελίες, επισκέψεις και εργαστήρια στο μελισσοκομείο μας στη Μελίνη Λάρνακας. Τηλέφωνο, email και οδηγίες.',
   },
 
   breadcrumb: [
@@ -123,6 +125,8 @@ export type ContactContent = typeof CONTACT_PAGE
 const CONTACT_PAGE_EN: ContactContent = {
   meta: {
     title: 'Contact',
+    description:
+      'Contact Oros Machaira about orders, visits and workshops at our apiary in Melini, Larnaca. Phone, email, opening hours and directions to find us.',
   },
 
   breadcrumb: [

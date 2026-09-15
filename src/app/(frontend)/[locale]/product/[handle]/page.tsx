@@ -22,6 +22,9 @@ import { RelatedCarousel } from '@/components/shop/product/related-carousel'
 import { RevealUp } from '@/components/home/reveal-up'
 import { canonicalHandle, productHreflang } from '@/components/shop/product-slugs'
 import { localizedProductTitle } from '@/components/shop/product-i18n'
+import { seoMetadata, siteUrl } from '@/lib/seo'
+import { JsonLd, breadcrumbJsonLd, productJsonLd } from '@/components/seo/json-ld'
+import { CATEGORY_SLUGS, type ShopCategory } from '@/components/shop/shop-content'
 
 type Params = { params: Promise<{ handle: string }> }
 
@@ -32,13 +35,18 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const alternates = productHreflang(handle, locale)
   const product = getProductByHandle(greek)
   if (!product) return { title: getProductUi(locale).metaTitleFallback, alternates }
-  const detail = getProductDetail(greek, locale)
-  const title = localizedProductTitle(greek, product.title ?? '', locale)
-  return {
-    title,
-    description: detail.description ?? title,
+  // The same (cached) Medusa read the page makes, so an admin edit to the
+  // description reaches search results too; the repo copy if Medusa is down.
+  const live = await getShopProduct(handle).catch(() => null)
+  const detail = live?.detail ?? getProductDetail(greek, locale)
+  const title = localizedProductTitle(greek, (live?.product ?? product).title ?? '', locale)
+  return seoMetadata({
+    locale,
     alternates,
-  }
+    title: detail.metaTitle ?? title,
+    description: detail.metaDescription ?? detail.description ?? title,
+    image: (live?.product ?? product).image,
+  })
 }
 
 export default async function ProductPage({ params }: Params) {
@@ -84,8 +92,24 @@ export default async function ProductPage({ params }: Params) {
     .filter((s) => s.heading && /[?;]\s*$/.test(s.heading) && s.body)
     .map((s) => ({ question: s.heading as string, answer: s.body as string }))
 
+  const title = localizedProductTitle(greek, product.title ?? '', locale)
+  const url = `${siteUrl()}${productHreflang(handle, locale).canonical}`
+  const categoryName = categoryLabel(product.category, locale)
+  const categoryPath = `/proionta/${CATEGORY_SLUGS[product.category as ShopCategory]}/`
+
   return (
     <>
+      <JsonLd
+        data={[
+          productJsonLd({ locale, url, title, product, detail }),
+          breadcrumbJsonLd(locale, [
+            [getShopUi(locale).breadcrumb.home, '/'],
+            [ui.breadcrumbProducts, '/proionta/'],
+            [categoryName, categoryPath],
+            [title],
+          ]),
+        ]}
+      />
       {/* Breadcrumb */}
       <div className="container-wide pb-2.5 pt-4">
         <RevealUp>
@@ -97,9 +121,11 @@ export default async function ProductPage({ params }: Params) {
               {ui.breadcrumbProducts}
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
-            <span>{categoryLabel(product.category, locale)}</span>
+            <Link href={categoryPath} className="transition-colors hover:text-accent">
+              {categoryName}
+            </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
-            <span className="text-foreground">{product.title}</span>
+            <span className="text-foreground">{title}</span>
           </nav>
         </RevealUp>
       </div>

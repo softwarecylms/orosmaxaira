@@ -62,9 +62,9 @@ export async function HeroPair() {
                 <p className="text-[14px] uppercase leading-[21px] tracking-[0.01em] text-cream">
                   {HERO.right.eyebrow}
                 </p>
-                <h1 className="font-display text-[32px] font-bold leading-[1.14] text-white md:text-[45px] md:leading-[55px]">
+                <h2 className="font-display text-[32px] font-bold leading-[1.14] text-white md:text-[45px] md:leading-[55px]">
                   {HERO.right.heading}
-                </h1>
+                </h2>
               </div>
               <p className="max-w-[465px] text-[17px] leading-[24px] text-cream">{HERO.right.body}</p>
               <CtaLink href={HERO.right.cta.href} variant="white" className="mt-1">

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { getLocale } from 'next-intl/server'
 import { Sprout, Users, GraduationCap } from 'lucide-react'
 import { getAdoptContent, type AdoptBenefitIcon } from '@/components/adopt/adopt-content'
-import { hreflangAlternates } from '@/lib/seo'
+import { seoMetadata } from '@/lib/seo'
 import { AdoptHero } from '@/components/adopt/adopt-hero'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
 import { LogoCarousel } from '@/components/adopt/logo-carousel'
@@ -30,11 +30,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const { meta } = getAdoptContent(locale)
-  return {
+  return seoMetadata({
+    locale,
+    path: '/yiotheto-mia-kypseli',
     title: meta.title,
     description: meta.description,
-    alternates: hreflangAlternates(locale, '/yiotheto-mia-kypseli'),
-  }
+  })
 }
 
 const BENEFIT_ICONS: Record<AdoptBenefitIcon, typeof Sprout> = {

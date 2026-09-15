@@ -22,6 +22,11 @@ const nextConfig: NextConfig = {
   compress: true,
   // Match the live site's URL scheme (Greek permalinks with trailing slashes).
   trailingSlash: true,
+  // Title, description, canonical and hreflang in <head> for every visitor.
+  // Next 15 otherwise streams them in at the end of <body> for anyone it does
+  // not list as a limited bot — Googlebot included — which link previews and
+  // most other crawlers never read.
+  htmlLimitedBots: /.*/,
   async redirects() {
     // Old storefront paths → new Greek permalinks (safety net for bookmarks).
     return [

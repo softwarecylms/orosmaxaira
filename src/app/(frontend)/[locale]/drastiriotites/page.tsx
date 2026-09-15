@@ -8,7 +8,7 @@ import { PageHero } from '@/components/shared/page-hero'
 import { SectionHead } from '@/components/shared/section-head'
 import { FactBand } from '@/components/activities/fact-band'
 import { RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
-import { hreflangAlternates } from '@/lib/seo'
+import { seoMetadata } from '@/lib/seo'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
           description:
             'Βιωματικές δραστηριότητες στο μελισσοκομείο του Όρους Μαχαιρά: ξεναγήσεις, εργαστήρια, επίσκεψη στις κυψέλες, μελισσοθεραπεία και εκπαιδευτικά προγράμματα για σχολεία & οργανισμούς.',
         }
-  return { ...meta, alternates: hreflangAlternates(locale, '/drastiriotites') }
+  return seoMetadata({ ...meta, locale, path: '/drastiriotites' })
 }
 
 export default async function ActivitiesPage() {

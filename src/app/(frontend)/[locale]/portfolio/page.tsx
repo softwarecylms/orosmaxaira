@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { CaseStudy } from '@/payload-types'
@@ -33,6 +34,9 @@ export default async function PortfolioIndex() {
     getAllCaseStudies(),
     getAllPortfolioCategories(),
   ])
+  // A starter-template section this site has no content for: a 404, not an
+  // empty page for search engines to find.
+  if (!items.length) notFound()
   return (
     <PortfolioArchive
       heading="Our Portfolio"

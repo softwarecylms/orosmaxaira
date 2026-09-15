@@ -4,13 +4,14 @@ import { redirect } from '@/i18n/navigation'
 import { getCustomer } from '@/lib/medusa/customer'
 import { AddressManager } from '@/components/account/address-manager'
 import { getAccountUi } from '@/components/account/account-ui'
-import { hreflangAlternates } from '@/lib/seo'
+import { NOINDEX, hreflangAlternates } from '@/lib/seo'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   return {
     title: getAccountUi(locale).addressesTitle,
     alternates: hreflangAlternates(locale, '/account/addresses'),
+    robots: NOINDEX,
   }
 }
 export const dynamic = 'force-dynamic'

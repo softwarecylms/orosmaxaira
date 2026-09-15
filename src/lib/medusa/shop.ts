@@ -22,6 +22,17 @@ function pick(locale: string, meta: unknown, key: string, fallback: string): str
   return fallback
 }
 
+/**
+ * An SEO override from Medusa `metadata`, like the categories' (see
+ * category-seo.ts): `meta_title` / `meta_description` for Greek, the `_en`
+ * keys for English. No cross-language fallback — Greek copy must never become
+ * an English page's title.
+ */
+function seoField(locale: string, meta: unknown, key: 'meta_title' | 'meta_description'): string | undefined {
+  const v = (meta as Record<string, unknown> | null | undefined)?.[locale === 'en' ? `${key}_en` : key]
+  return typeof v === 'string' && v.trim() ? v.trim() : undefined
+}
+
 /** Parse a JSON blob stored in Medusa `metadata` (the product-tab content is
  *  kept as a JSON string so the dashboard's flat metadata editor cannot mangle
  *  it). Returns undefined for anything unreadable — bad JSON in the admin must
@@ -252,6 +263,8 @@ export async function getShopProduct(
     sections: pickTab(locale, m.metadata, 'sections', staticDetail.sections),
     nutrition: pickTab(locale, m.metadata, 'nutrition', staticDetail.nutrition),
     variations: sizes ? { sizes } : undefined,
+    metaTitle: seoField(locale, m.metadata, 'meta_title'),
+    metaDescription: seoField(locale, m.metadata, 'meta_description'),
   }
   return { product, detail }
 }

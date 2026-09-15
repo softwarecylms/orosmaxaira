@@ -5,16 +5,17 @@ import { getBlogCategories, POST_CATEGORIES } from '@/components/blog/blog-categ
 import { getBlogUi } from '@/components/blog/blog-ui'
 import { PageHero } from '@/components/shared/page-hero'
 import { BlogFilterGrid } from '@/components/blog/blog-filter-grid'
-import { hreflangAlternates } from '@/lib/seo'
+import { seoMetadata } from '@/lib/seo'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   const ui = getBlogUi(locale)
-  return {
+  return seoMetadata({
+    locale,
+    path: '/blog',
     title: ui.metaTitle,
     description: ui.metaDescription,
-    alternates: hreflangAlternates(locale, '/blog'),
-  }
+  })
 }
 
 export default async function BlogPage() {

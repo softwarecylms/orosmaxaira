@@ -73,8 +73,6 @@ export async function generateMetadata({
       alternateLocale: locale === 'en' ? 'el_GR' : 'en_US',
     },
     twitter: { card: 'summary_large_image' },
-    // Pre-launch: keep the site out of search results. Flip to true at launch.
-    robots: { index: false, follow: false },
   }
 }
 
@@ -115,7 +113,7 @@ export default async function FrontendLayout({
                 locale={locale as Locale}
               />
               <CartDrawer />
-              <OrganizationSchema settings={settings} />
+              <OrganizationSchema locale={locale} />
             </CartProvider>
           </MotionReady>
         </NextIntlClientProvider>

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import { hreflangAlternates } from '@/lib/seo'
+import { getTranslations } from 'next-intl/server'
+import { seoMetadata } from '@/lib/seo'
 import { HeroPair } from '@/components/home/hero-pair'
 import { TrustBadges } from '@/components/home/trust-badges'
 import { DealOfMonth } from '@/components/home/deal-of-month'
@@ -16,8 +17,8 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  // Title/description inherit from the locale-aware root layout; add hreflang.
-  return { alternates: hreflangAlternates(locale, '/') }
+  const t = await getTranslations({ locale, namespace: 'layout' })
+  return seoMetadata({ locale, path: '/', title: t('defaultTitle'), description: t('description') })
 }
 
 /**
