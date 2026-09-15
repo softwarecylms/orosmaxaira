@@ -33,20 +33,22 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const locale = await getLocale()
   const greek = canonicalHandle(handle)
   const alternates = productHreflang(handle, locale)
-  const product = getProductByHandle(greek)
-  if (!product) return { title: getProductUi(locale).metaTitleFallback, alternates }
   // The same (cached) Medusa read the page makes, so an admin edit to the
   // description reaches search results too; the repo copy if Medusa is down.
   const live = await getShopProduct(handle).catch(() => null)
+  const product = live?.product ?? getProductByHandle(greek)
+  if (!product) return { title: getProductUi(locale).metaTitleFallback, alternates }
   const detail = live?.detail ?? getProductDetail(greek, locale)
-  const title = localizedProductTitle(greek, (live?.product ?? product).title ?? '', locale)
-  return seoMetadata({
+  const title = localizedProductTitle(greek, product.title ?? '', locale)
+  const meta = seoMetadata({
     locale,
     alternates,
     title: detail.metaTitle ?? title,
     description: detail.metaDescription ?? detail.description ?? title,
-    image: (live?.product ?? product).image,
+    image: product.image,
   })
+  // Hidden products (e.g. the €1 test product) work by link but stay out of search.
+  return product.hidden ? { ...meta, robots: { index: false, follow: false } } : meta
 }
 
 export default async function ProductPage({ params }: Params) {

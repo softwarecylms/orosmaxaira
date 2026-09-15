@@ -26,6 +26,9 @@ export type ShopProduct = {
   priceRange?: [number, number]
   /** Medusa variant id for a single-variant product (add-to-cart / order). */
   variantId?: string
+  /** Medusa `metadata.hidden` — buyable by direct link only (e.g. the €1 test
+   *  product): left out of the shop grid, categories, search and sitemap. */
+  hidden?: boolean
 }
 
 /**

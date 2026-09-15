@@ -128,7 +128,15 @@ function mapProduct(p: HttpTypes.StoreProduct, locale: string): ShopProduct | nu
     imageAlt: title,
     // EN uses the live site's English product slug; EL uses the Greek handle.
     href: `/product/${productSlug(p.handle!, locale)}`,
+    hidden: isHiddenProduct(p.metadata),
   }
+}
+
+/** A product flagged `metadata.hidden` in Medusa is reachable by its link but
+ *  never listed (see ShopProduct.hidden). */
+export function isHiddenProduct(metadata: Record<string, unknown> | null | undefined): boolean {
+  const v = metadata?.hidden
+  return v === true || v === 'true'
 }
 
 export type ShopCatalogue = {
@@ -155,7 +163,7 @@ export async function listShopProducts(): Promise<ShopCatalogue | null> {
 
   const mapped = products
     .map((p) => mapProduct(p, locale))
-    .filter((p): p is ShopProduct => p != null)
+    .filter((p): p is ShopProduct => p != null && !p.hidden)
   if (!mapped.length) return null
 
   const priceMin = Math.floor(Math.min(...mapped.map((p) => p.priceRange![0])) / 100)

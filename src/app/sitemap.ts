@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { siteUrl } from '@/lib/seo'
 import { sdk } from '@/lib/medusa/client'
+import { isHiddenProduct } from '@/lib/medusa/shop'
 import { getBlogPosts } from '@/components/blog/blog-data'
 import { ARTICLE_DUPLICATE_OF } from '@/components/blog/article-seo'
 import { CATEGORY_SLUGS, SHOP_PRODUCTS, handleOf } from '@/components/shop/shop-content'
@@ -66,12 +67,17 @@ async function medusaList<T>(path: string, key: string, fields: string): Promise
   }
 }
 
-type Dated = { handle?: string; slug?: string; updated_at?: string | null }
+type Dated = {
+  handle?: string
+  slug?: string
+  updated_at?: string | null
+  metadata?: Record<string, unknown> | null
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteUrl()
   const [products, activities, workshops] = await Promise.all([
-    medusaList<Dated>('/store/products', 'products', 'handle,updated_at'),
+    medusaList<Dated>('/store/products', 'products', 'handle,updated_at,metadata'),
     medusaList<Dated>('/store/activities', 'activities', 'slug,updated_at'),
     medusaList<Dated>('/store/workshops', 'workshops', 'slug,updated_at'),
   ])
@@ -84,7 +90,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const productRows: Dated[] = products ?? SHOP_PRODUCTS.map((p) => ({ handle: handleOf(p) }))
   for (const p of productRows) {
-    if (!p.handle) continue
+    // Hidden products (e.g. the €1 test product) stay out of the sitemap.
+    if (!p.handle || isHiddenProduct(p.metadata)) continue
     entries.push({
       el: `/product/${p.handle}/`,
       en: `/en/product/${enHandle(p.handle)}/`,
