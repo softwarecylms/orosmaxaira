@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { sendMail } from '@/lib/email'
+import { renderEnquiryEmail } from '@/lib/enquiry-email'
 import { z } from 'zod'
 
 export const runtime = 'nodejs'
@@ -67,10 +68,23 @@ export async function POST(req: Request) {
     message ??
     `New contact form submission from ${fullName}.\nPhone: ${phone}\nEmail: ${email}`
 
+  const subject = `New website enquiry — ${fullName}`
   try {
     const sent = await sendMail('contact', {
       replyTo: email,
-      subject: `New website enquiry — ${fullName}`,
+      subject,
+      html: renderEnquiryEmail({
+        heading: 'Νέο μήνυμα από τη φόρμα επικοινωνίας',
+        intro: `Λάβατε νέο μήνυμα από ${fullName} μέσω του orosmaxaira.com.`,
+        rows: [
+          ['Όνομα', fullName],
+          ['Email', email, 'email'],
+          ['Τηλέφωνο', phone, 'phone'],
+        ],
+        message,
+        replyTo: { name: fullName, email },
+        subject,
+      }),
       text: [
         `Name: ${fullName}`,
         `Email: ${email}`,

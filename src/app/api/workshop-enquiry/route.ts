@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { sendMail } from '@/lib/email'
+import { renderEnquiryEmail } from '@/lib/enquiry-email'
 import { z } from 'zod'
 import { WORKSHOP_EXPERIENCE_KEYS, experienceLabel } from '@/lib/data/workshop-enquiry'
 
@@ -72,10 +73,26 @@ export async function POST(req: Request) {
 
   const experienceText = experienceLabel(experience) ?? experience
 
+  const subject = `Νέο αίτημα εργαστηρίου — ${name}`
   try {
     const sent = await sendMail('workshop-enquiry', {
       replyTo: email,
-      subject: `Νέο αίτημα εργαστηρίου — ${name}`,
+      subject,
+      html: renderEnquiryEmail({
+        heading: 'Νέο αίτημα εργαστηρίου',
+        intro: `Λάβατε νέο αίτημα εργαστηρίου από ${name}.`,
+        rows: [
+          ['Όνομα', name],
+          ['Email', email, 'email'],
+          ['Τηλέφωνο', phone, 'phone'],
+          ['Εμπειρία', experienceText],
+          ['Εργαστήρι περιόδου', workshop],
+          ['Προτιμώμενη ημέρα', date],
+          ['Ώρα έναρξης', time],
+        ],
+        replyTo: { name, email },
+        subject,
+      }),
       text: [
         `Όνομα: ${name}`,
         `Email: ${email}`,

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { sendMail } from '@/lib/email'
+import { renderEnquiryEmail } from '@/lib/enquiry-email'
 import { z } from 'zod'
 import { MAX_STUDENTS, SCHOOL_WORKSHOP_KEYS, schoolWorkshopLabel } from '@/lib/data/school-visit'
 
@@ -73,10 +74,29 @@ export async function POST(req: Request) {
   const workshopText = schoolWorkshopLabel(workshop) ?? workshop
   const perChild = students <= 25 ? 8 : 7
 
+  const subject = `Νέο αίτημα σχολικής επίσκεψης — ${school}`
   try {
     const sent = await sendMail('school-visit-enquiry', {
       replyTo: email,
-      subject: `Νέο αίτημα σχολικής επίσκεψης — ${school}`,
+      subject,
+      html: renderEnquiryEmail({
+        heading: 'Νέο αίτημα σχολικής επίσκεψης',
+        intro: `Λάβατε νέο αίτημα σχολικής επίσκεψης από ${school} (${name}).`,
+        rows: [
+          ['Σχολείο', school],
+          ['Υπεύθυνος/η', name],
+          ['Email', email, 'email'],
+          ['Τηλέφωνο', phone, 'phone'],
+          ['Αριθμός μαθητών', students],
+          ['Τάξη/Τάξεις', grade],
+          ['Εργαστήριο (Δραστηριότητα 2)', workshopText],
+          ['Προτιμώμενη ημερομηνία', date],
+          ['Εκτιμώμενο κόστος παιδιών', `€${students * perChild} (${students} × €${perChild})`],
+        ],
+        message: notes ? `Σημειώσεις / Αλλεργίες:\n${notes}` : null,
+        replyTo: { name, email },
+        subject,
+      }),
       text: [
         `Σχολείο: ${school}`,
         `Υπεύθυνος/η: ${name}`,

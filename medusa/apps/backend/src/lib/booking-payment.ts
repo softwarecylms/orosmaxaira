@@ -6,6 +6,11 @@ import type {
 import { Modules } from "@medusajs/framework/utils"
 import { BOOKINGS_MODULE } from "../modules/bookings"
 import type BookingsModuleService from "../modules/bookings/service"
+import {
+  renderBookingConfirmationEmail,
+  renderBookingNoticeEmail,
+  type BookingEmailData,
+} from "./booking-email"
 
 /**
  * Card payments for activity and workshop bookings.
@@ -269,7 +274,7 @@ type EmailMessage = {
   to: string
   channel: "email"
   template: string
-  content: { subject: string; text: string }
+  content: { subject: string; text: string; html?: string }
   data: Record<string, unknown>
 }
 
@@ -305,6 +310,26 @@ export async function announceBooking(
     const people = `${booking.adults} ενήλικες, ${booking.children} παιδιά, ${booking.infants} βρέφη`
     const money = `${Number(booking.total_amount).toFixed(2)} ${String(booking.currency ?? "eur").toUpperCase()}`
     const contact = `${booking.customer_name} (${booking.email}${booking.phone ? ", " + booking.phone : ""})`
+    // Branded HTML parts (src/lib/booking-email.ts); the text above stays as the plain part.
+    const emailData = (kind: BookingEmailData["kind"], title: string, combo?: string | null): BookingEmailData => ({
+      reference: booking.reference,
+      title,
+      kind,
+      combo,
+      date: slot?.date,
+      startTime: slot?.start_time,
+      adults: booking.adults ?? 0,
+      children: booking.children ?? 0,
+      infants: booking.infants ?? 0,
+      // "€45,00", the way the storefront and the order emails show prices.
+      total:
+        String(booking.currency ?? "eur").toLowerCase() === "eur"
+          ? `€${Number(booking.total_amount).toFixed(2).replace(".", ",")}`
+          : money,
+      customerName: booking.customer_name,
+      email: booking.email,
+      phone: booking.phone,
+    })
 
     if (booking.workshop_id) {
       const [workshop] = await bookings.listWorkshops({ id: booking.workshop_id })
@@ -327,6 +352,7 @@ export async function announceBooking(
           content: {
             subject: `Επιβεβαίωση κράτησης ${booking.reference} — ${title}`,
             text: `Ευχαριστούμε ${booking.customer_name}! Η κράτησή σας για το εργαστήρι «${title}» (${combos}) στις ${when} επιβεβαιώθηκε. Άτομα: ${people}. Σύνολο: ${money}. Κωδικός κράτησης: ${booking.reference}.`,
+            html: renderBookingConfirmationEmail(emailData("workshop", title, combos)),
           },
           data,
         },
@@ -337,6 +363,7 @@ export async function announceBooking(
           content: {
             subject: `Νέα κράτηση εργαστηρίου ${booking.reference} — ${title}`,
             text: `Νέα κράτηση εργαστηρίου: ${title} (${combos}), ${when}. Άτομα: ${people}. Σύνολο ${money}. Πελάτης: ${contact}.`,
+            html: renderBookingNoticeEmail(emailData("workshop", title, combos)),
           },
           data,
         },
@@ -360,6 +387,7 @@ export async function announceBooking(
           content: {
             subject: `Επιβεβαίωση κράτησης ${booking.reference} — ${title}`,
             text: `Ευχαριστούμε ${booking.customer_name}! Η κράτησή σας για «${title}» στις ${when} επιβεβαιώθηκε. Άτομα: ${people}. Σύνολο: ${money}. Κωδικός κράτησης: ${booking.reference}.`,
+            html: renderBookingConfirmationEmail(emailData("activity", title)),
           },
           data,
         },
@@ -370,6 +398,7 @@ export async function announceBooking(
           content: {
             subject: `Νέα κράτηση ${booking.reference} — ${title}`,
             text: `Νέα κράτηση: ${title}, ${when}. ${people}. Σύνολο ${money}. Πελάτης: ${contact}.`,
+            html: renderBookingNoticeEmail(emailData("activity", title)),
           },
           data,
         },
