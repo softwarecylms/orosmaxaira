@@ -289,7 +289,11 @@ export async function announceBooking(
 ): Promise<void> {
   const logger = container.resolve("logger")
   const bookings = bookingsOf(container)
-  const adminEmail = process.env.BOOKING_ADMIN_EMAIL || "info@orosmaxaira.com"
+  // Comma-separated: everyone at the farm who takes bookings.
+  const adminEmails = (process.env.BOOKING_ADMIN_EMAIL || "info@orosmaxaira.com")
+    .split(",")
+    .map((address) => address.trim())
+    .filter(Boolean)
   const messages: EmailMessage[] = []
 
   try {
@@ -327,7 +331,7 @@ export async function announceBooking(
           data,
         },
         {
-          to: adminEmail,
+          to: adminEmails[0], // one copy per address — see `outgoing` below
           channel: "email",
           template: "workshop-booking-notification",
           content: {
@@ -360,7 +364,7 @@ export async function announceBooking(
           data,
         },
         {
-          to: adminEmail,
+          to: adminEmails[0], // one copy per address — see `outgoing` below
           channel: "email",
           template: "booking-notification",
           content: {
@@ -375,12 +379,16 @@ export async function announceBooking(
     logger.warn(`Booking email for ${booking.reference} not prepared: ${(e as Error)?.message ?? e}`)
   }
 
-  // One send per recipient: if the customer's address is refused — e.g. while
-  // the sending domain is still unverified — the farm must still get its copy,
-  // and the other way round.
-  if (messages.length) {
+  // One send per recipient — the farm's copy once for each BOOKING_ADMIN_EMAIL
+  // address — so a refused address never stops the others, customer included.
+  const outgoing = messages.flatMap((message) =>
+    message.template.endsWith("-notification")
+      ? adminEmails.map((to) => ({ ...message, to }))
+      : [message],
+  )
+  if (outgoing.length) {
     const notification = container.resolve<any>(Modules.NOTIFICATION)
-    for (const message of messages) {
+    for (const message of outgoing) {
       try {
         await notification.createNotifications(message)
       } catch (e: unknown) {

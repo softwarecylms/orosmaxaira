@@ -17,8 +17,22 @@ export type Mailer = {
   transporter: nodemailer.Transporter
   /** Envelope sender — CONTACT_FROM_EMAIL, else the SMTP user. */
   from: string
-  /** Where site notifications go — CONTACT_TO_EMAIL, else the SMTP user. */
-  to: string
+  /** Where enquiry-form notifications go — CONTACT_TO_EMAIL, else the SMTP user. */
+  to: string[]
+}
+
+/** A comma-separated list of addresses from the environment, or [] when unset. */
+export function addressList(value: string | undefined): string[] {
+  return (value ?? '').split(',').map((a) => a.trim()).filter(Boolean)
+}
+
+/**
+ * Who hears about a new shop order — ORDER_NOTIFICATION_EMAILS, which can name
+ * more people than the enquiry forms reach; the form recipients otherwise.
+ */
+export function orderNotificationRecipients(): string[] | undefined {
+  const list = addressList(process.env.ORDER_NOTIFICATION_EMAILS)
+  return list.length ? list : undefined
 }
 
 /** The configured transport, or null when SMTP is not set up in this env. */
@@ -27,10 +41,10 @@ export function getMailer(): Mailer | null {
   const port = Number(process.env.SMTP_PORT ?? 465)
   const user = process.env.SMTP_USER
   const password = process.env.SMTP_PASSWORD
-  const to = process.env.CONTACT_TO_EMAIL ?? user
+  const to = addressList(process.env.CONTACT_TO_EMAIL ?? user)
   const from = process.env.CONTACT_FROM_EMAIL ?? user
 
-  if (!host || !user || !password || !to || !from) return null
+  if (!host || !user || !password || !to.length || !from) return null
 
   return {
     transporter: nodemailer.createTransport({

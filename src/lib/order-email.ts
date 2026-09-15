@@ -1,6 +1,6 @@
 import 'server-only'
 import type { HttpTypes } from '@medusajs/types'
-import { sendMail } from './email'
+import { orderNotificationRecipients, sendMail } from './email'
 
 /**
  * Order confirmation — one mail to the customer, one to the shop.
@@ -125,7 +125,8 @@ export async function sendOrderEmails(order: Order, locale: string): Promise<voi
 
   try {
     await sendMail('order', {
-      // `to` omitted → the shop address (CONTACT_TO_EMAIL) from getMailer().
+      // ORDER_NOTIFICATION_EMAILS, else the enquiry recipients (CONTACT_TO_EMAIL).
+      to: orderNotificationRecipients(),
       replyTo: order.email ?? undefined,
       subject: t.opsSubject(ref),
       text: [
