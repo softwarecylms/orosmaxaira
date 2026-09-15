@@ -14,7 +14,7 @@ import { loadHomeContent } from '@/lib/content/load'
 export async function HeroPair() {
   const { HERO } = await loadHomeContent(await getLocale())
   return (
-    <section data-testid="hero-pair" className="bg-white pt-6 md:pt-9">
+    <section data-testid="hero-pair" data-edit="HERO" className="bg-white pt-6 md:pt-9">
       <div className="container-wide">
         <div className="grid gap-[30px] lg:grid-cols-2">
           {/* Left — off-white card */}

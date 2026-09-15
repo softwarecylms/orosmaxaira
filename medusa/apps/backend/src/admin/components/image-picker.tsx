@@ -69,7 +69,9 @@ export function ImagePicker({
           title="Επιλογή από τη βιβλιοθήκη"
           className="group relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-ui-border-base bg-ui-bg-field transition-colors hover:border-ui-border-interactive"
         >
-          {current ? (
+          {/* A site path needs the storefront origin — wait for it, or the
+              browser asks the admin's own origin and gets a 404. */}
+          {current && (origin || /^https?:\/\//i.test(current)) ? (
             <img
               src={srcFor(current, origin)}
               alt=""

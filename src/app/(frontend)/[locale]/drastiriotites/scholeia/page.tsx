@@ -18,7 +18,6 @@ import {
   Video,
 } from 'lucide-react'
 import { RevealUp } from '@/components/home/reveal-up'
-import { PreviewBridge } from '@/components/preview/preview-bridge'
 import { SchoolBookingCard } from '@/components/scholeia/school-booking-card'
 import {
   MAX_STUDENTS,
@@ -299,10 +298,6 @@ export default async function SchoolVisitsPage() {
 
   return (
     <>
-      {/* Click-to-edit for the admin preview. Inert unless the page is loaded
-          with `?preview=1` inside an iframe. */}
-      <PreviewBridge />
-
       {/* Breadcrumb */}
       <div className="container-page pb-2.5 pt-4">
         <RevealUp>

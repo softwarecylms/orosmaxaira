@@ -14,6 +14,9 @@ import { publicPath, useStorefrontOrigin } from "../lib/storefront"
  * posts back so the preview scrolls to it.
  */
 
+/** Width the desktop preview is rendered at before scaling to fit. */
+const DESKTOP_WIDTH = 1440
+
 export type EditorSection = {
   key: string
   label: string
@@ -24,16 +27,19 @@ export type EditorSection = {
 export function VisualEditor({
   kind,
   slug,
+  path: pathProp,
   sections,
   reloadToken = 0,
 }: {
-  kind: "activity" | "workshop" | "school"
+  kind?: "activity" | "workshop" | "school"
   slug?: string | null
+  /** The page to preview, when it is not an activity/workshop/school page. */
+  path?: string
   sections: EditorSection[]
   reloadToken?: number
 }) {
   const origin = useStorefrontOrigin()
-  const path = publicPath(kind, slug)
+  const path = pathProp ?? (kind ? publicPath(kind, slug) : "")
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop")
   const [nonce, setNonce] = useState(0)
   const [active, setActive] = useState(sections[0]?.key ?? "")
@@ -45,6 +51,21 @@ export function VisualEditor({
    */
   const [present, setPresent] = useState<string[] | null>(null)
   const frame = useRef<HTMLIFrameElement>(null)
+  /**
+   * Desktop preview renders the page at a real desktop width and scales it down
+   * to the column, so editors see the desktop design rather than the tablet
+   * layout a ~700px-wide frame would trigger.
+   */
+  const stage = useRef<HTMLDivElement>(null)
+  const [stageSize, setStageSize] = useState({ w: 0, h: 0 })
+  useEffect(() => {
+    const el = stage.current
+    if (!el) return
+    const ro = new ResizeObserver(([e]) => setStageSize({ w: e.contentRect.width, h: e.contentRect.height }))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  const scale = device === "desktop" && stageSize.w ? Math.min(1, stageSize.w / DESKTOP_WIDTH) : 1
 
   useEffect(() => {
     if (reloadToken) setNonce((n) => n + 1)
@@ -150,17 +171,30 @@ export function VisualEditor({
             </IconButton>
           </div>
         </div>
-        <div className="flex flex-1 justify-center overflow-hidden bg-ui-bg-base p-2">
+        <div ref={stage} className="relative flex flex-1 justify-center overflow-hidden bg-ui-bg-base">
           {src ? (
-            <iframe
-              ref={frame}
-              key={src}
-              src={src}
-              title="Οπτικός επεξεργαστής"
-              className={`h-full rounded border border-ui-border-base bg-white ${
-                device === "mobile" ? "w-[390px]" : "w-full"
-              }`}
-            />
+            device === "mobile" ? (
+              <iframe
+                ref={frame}
+                key={src}
+                src={src}
+                title="Οπτικός επεξεργαστής"
+                className="my-2 h-[calc(100%-1rem)] w-[390px] rounded border border-ui-border-base bg-white"
+              />
+            ) : (
+              <iframe
+                ref={frame}
+                key={src}
+                src={src}
+                title="Οπτικός επεξεργαστής"
+                className="absolute left-0 top-0 origin-top-left border-0 bg-white"
+                style={{
+                  width: DESKTOP_WIDTH,
+                  height: stageSize.h / scale,
+                  transform: `scale(${scale})`,
+                }}
+              />
+            )
           ) : (
             <div className="flex items-center justify-center">
               <Text size="small" className="text-ui-fg-muted">

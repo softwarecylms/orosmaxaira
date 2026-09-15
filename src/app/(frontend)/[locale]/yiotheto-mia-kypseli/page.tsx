@@ -76,10 +76,12 @@ export default async function AdoptAHivePage() {
   return (
     <>
       {/* 1 · Hero */}
-      <AdoptHero hero={a.hero} />
+      <div data-edit="hero">
+        <AdoptHero hero={a.hero} />
+      </div>
 
       {/* 2 · Intro + Why adopt */}
-      <section className="container-wide py-12 md:py-[70px]">
+      <section data-edit="intro" className="container-wide py-12 md:py-[70px]">
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
           <Reveal className="flex flex-col gap-5">
             <span className="text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">
@@ -125,7 +127,7 @@ export default async function AdoptAHivePage() {
       </section>
 
       {/* 3 · Partner logos — early trust bar */}
-      <section className="bg-offwhite py-10 md:py-12">
+      <section data-edit="partners" className="bg-offwhite py-10 md:py-12">
         <div className="container-wide flex flex-col gap-8">
           <SectionHead eyebrow={a.partners.eyebrow} heading={a.partners.heading} />
           <LogoCarousel logos={a.partners.logos} />
@@ -133,7 +135,7 @@ export default async function AdoptAHivePage() {
       </section>
 
       {/* 4 · The package — 3 steps */}
-      <section id="package" className="scroll-mt-24 bg-white pb-6 pt-12 md:pb-10 md:pt-[70px]">
+      <section id="package" data-edit="package" className="scroll-mt-24 bg-white pb-6 pt-12 md:pb-10 md:pt-[70px]">
         <div className="container-wide flex flex-col gap-10">
           <SectionHead eyebrow={a.package.eyebrow} heading={a.package.heading} />
           <RevealStagger className="grid gap-5 md:grid-cols-3">
@@ -164,13 +166,17 @@ export default async function AdoptAHivePage() {
       </section>
 
       {/* 5 · Goal + why it matters */}
-      <GoalBand goal={a.goal} />
+      <div data-edit="goal">
+        <GoalBand goal={a.goal} />
+      </div>
 
       {/* 6 · The two visits */}
-      <VisitsShowcase />
+      <div data-edit="visits">
+        <VisitsShowcase />
+      </div>
 
       {/* 7 · Gallery */}
-      <section className="bg-offwhite py-10 md:py-12">
+      <section data-edit="gallery" className="bg-offwhite py-10 md:py-12">
         <div className="container-wide flex flex-col gap-8">
           <SectionHead eyebrow={a.gallery.eyebrow} heading={a.gallery.heading} />
           <GalleryCarousel images={a.gallery.images} />
@@ -178,10 +184,12 @@ export default async function AdoptAHivePage() {
       </section>
 
       {/* 8 · Adoption progress toward the goal */}
-      <AdoptProgress progress={a.progress} />
+      <div data-edit="progress">
+        <AdoptProgress progress={a.progress} />
+      </div>
 
       {/* 9 · Testimonials */}
-      <section className="bg-offwhite py-12 md:py-[70px]">
+      <section data-edit="testimonials" className="bg-offwhite py-12 md:py-[70px]">
         <div className="container-wide flex flex-col gap-10">
           <SectionHead eyebrow={a.testimonials.eyebrow} heading={a.testimonials.heading} />
           <AdoptTestimonials items={a.testimonials.items} />
@@ -189,7 +197,7 @@ export default async function AdoptAHivePage() {
       </section>
 
       {/* 10 · FAQ */}
-      <section className="container-wide pb-6 pt-12 md:pb-10 md:pt-[70px]">
+      <section data-edit="faq" className="container-wide pb-6 pt-12 md:pb-10 md:pt-[70px]">
         <FaqSchema faqs={a.faq.items.map((f) => ({ question: f.q, answer: f.a }))} />
         <div className="flex flex-col gap-8">
           <SectionHead eyebrow={a.faq.eyebrow} heading={a.faq.heading} sub={a.faq.intro} />
@@ -209,7 +217,7 @@ export default async function AdoptAHivePage() {
       </section>
 
       {/* 11 · CTA + contact */}
-      <section id="cta" className="scroll-mt-24 pb-12 pt-4 md:pb-[70px] md:pt-6">
+      <section id="cta" data-edit="cta" className="scroll-mt-24 pb-12 pt-4 md:pb-[70px] md:pt-6">
         <div className="container-wide">
           <Reveal className="relative isolate overflow-hidden rounded-[30px] bg-accent p-8 text-white md:p-14">
             {/* form-bg video (poster falls back to form-bg.webp) + accent overlay */}
@@ -225,7 +233,9 @@ export default async function AdoptAHivePage() {
                 <p className="max-w-[520px] text-[16px] leading-[1.6] text-white/85">{a.cta.body}</p>
               </div>
 
-              <AdoptCtaForm form={a.form} />
+              <div data-edit="form">
+                <AdoptCtaForm form={a.form} />
+              </div>
             </div>
           </Reveal>
         </div>

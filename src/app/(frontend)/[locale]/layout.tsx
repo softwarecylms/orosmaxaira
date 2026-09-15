@@ -9,6 +9,7 @@ import { OrganizationSchema } from '@/components/seo/organization-schema'
 import { MotionReady } from '@/components/motion/motion-ready'
 import { CartProvider } from '@/components/commerce/cart-store'
 import { CartDrawer } from '@/components/commerce/cart-drawer'
+import { PreviewBridge } from '@/components/preview/preview-bridge'
 import { siteUrl } from '@/lib/seo'
 import { routing, type Locale } from '@/i18n/routing'
 
@@ -96,6 +97,7 @@ export default async function FrontendLayout({
               <main id="main">{children}</main>
               <SiteFooter locale={locale as Locale} />
               <CartDrawer />
+              <PreviewBridge />
               <OrganizationSchema locale={locale} />
             </CartProvider>
           </MotionReady>

@@ -78,19 +78,23 @@ export default async function NatureHeroesPage() {
   return (
     <>
       {/* 1 · Hero */}
-      <PageHero
-        image={n.hero.image}
-        imageAlt={n.hero.imageAlt}
-        eyebrow={n.hero.eyebrow}
-        title={n.hero.title}
-        description={n.hero.description}
-      />
+      <div data-edit="hero">
+        <PageHero
+          image={n.hero.image}
+          imageAlt={n.hero.imageAlt}
+          eyebrow={n.hero.eyebrow}
+          title={n.hero.title}
+          description={n.hero.description}
+        />
+      </div>
 
       {/* 2 · First story section */}
-      <StorySection s={n.sections[0]} />
+      <div data-edit="sections">
+        <StorySection s={n.sections[0]} />
+      </div>
 
       {/* 3 · Stats band */}
-      <section className="bg-cream py-10 md:py-12">
+      <section data-edit="stats" className="bg-cream py-10 md:py-12">
         <RevealStagger className="container-wide grid grid-cols-1 gap-y-8 sm:grid-cols-3 lg:divide-x lg:divide-accent/40">
           {n.stats.map((s) => (
             <RevealStaggerItem
@@ -109,14 +113,18 @@ export default async function NatureHeroesPage() {
 
       {/* 4 · Remaining story sections */}
       {n.sections.slice(1).map((s) => (
-        <StorySection key={s.heading} s={s} />
+        <div data-edit="sections" key={s.heading}>
+          <StorySection s={s} />
+        </div>
       ))}
 
       {/* 5 · Adopt-a-hive banner (homepage section, tailored copy) */}
-      <AdoptHiveBanner body={n.adoptBody} />
+      <div data-edit="adoptBody">
+        <AdoptHiveBanner body={n.adoptBody} />
+      </div>
 
       {/* 6 · Why every bee matters — image left, content right */}
-      <section className="container-wide py-12 md:py-[70px]">
+      <section data-edit="matters" className="container-wide py-12 md:py-[70px]">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <Reveal>
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[16px] bg-offwhite shadow-card">

@@ -15,7 +15,7 @@ const ICONS: Record<TrustIcon, (props: { className?: string }) => React.ReactEle
 export async function TrustBadges() {
   const { TRUST } = await loadHomeContent(await getLocale())
   return (
-    <section data-testid="trust-badges" className="bg-white py-12 md:py-[72px]">
+    <section data-testid="trust-badges" data-edit="TRUST" className="bg-white py-12 md:py-[72px]">
       <div className="container-wide">
         <RevealGroup className="grid grid-cols-2 gap-x-4 gap-y-4 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-4">
           {TRUST.map((item) => {

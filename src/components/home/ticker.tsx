@@ -15,7 +15,7 @@ export async function Ticker() {
 
   return (
     <section
-      data-testid="home-ticker"
+      data-testid="home-ticker" data-edit="TICKER"
       aria-label="Οφέλη αγοράς"
       className="overflow-hidden bg-accent"
     >

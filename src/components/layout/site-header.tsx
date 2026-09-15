@@ -93,6 +93,7 @@ export async function SiteHeader({ locale }: SiteHeaderProps) {
             <HeaderSearch placeholders={SEARCH_PLACEHOLDERS} className="w-[280px] xl:w-[463px]" />
 
             <a
+              data-edit="CONTACT"
               href={CONTACT.phoneHref}
               className="flex h-[47px] items-center justify-center gap-2.5 whitespace-nowrap rounded-[8px] border border-paper px-4 text-[14px] text-foreground transition-colors hover:border-accent hover:text-accent"
             >
@@ -140,7 +141,7 @@ export async function SiteHeader({ locale }: SiteHeaderProps) {
         </HeaderReveal>
 
         {/* Nav row with the Προϊόντα mega menu */}
-        <HeaderReveal delay={0.16}>
+        <HeaderReveal delay={0.16} editKey="NAV">
           <HeaderNav nav={NAV} adopt={ADOPT_LINK} mega={MEGA_MENU} />
         </HeaderReveal>
         </div>

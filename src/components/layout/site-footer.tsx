@@ -36,7 +36,7 @@ export async function SiteFooter({ locale }: SiteFooterProps) {
   const t = await getTranslations('footer')
   const { FOOTER, CONTACT } = await loadSiteContent(locale)
   return (
-    <footer data-testid="site-footer" className="bg-white pt-12 md:pt-[50px]">
+    <footer data-testid="site-footer" data-edit="FOOTER" className="bg-white pt-12 md:pt-[50px]">
       <div className="container-wide">
         <RevealUp className="flex flex-col gap-12 lg:flex-row lg:gap-6 xl:gap-8 2xl:gap-10">
           {/* Logo block */}

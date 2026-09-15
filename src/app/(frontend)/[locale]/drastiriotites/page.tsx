@@ -46,20 +46,22 @@ export default async function ActivitiesPage() {
   return (
     <>
       {/* 1 · Hero */}
-      <PageHero
-        image={a.hero.image}
-        imageAlt={a.hero.imageAlt}
-        logo="/images/activities/bee-academy-white.svg"
-        logoAlt="Bee Academy"
-        title={a.hero.title}
-        description={a.hero.description}
-        overlayClassName="bg-black/45"
-        className="py-12 md:py-16"
-        buttons={heroButtons}
-      />
+      <div data-edit="hero">
+        <PageHero
+          image={a.hero.image}
+          imageAlt={a.hero.imageAlt}
+          logo="/images/activities/bee-academy-white.svg"
+          logoAlt="Bee Academy"
+          title={a.hero.title}
+          description={a.hero.description}
+          overlayClassName="bg-black/45"
+          className="py-12 md:py-16"
+          buttons={heroButtons}
+        />
+      </div>
 
       {/* 2 · Experiences */}
-      <section id="experiences" className="scroll-mt-24 pt-12 pb-6 md:pt-[70px] md:pb-8">
+      <section id="experiences" data-edit="experiences" className="scroll-mt-24 pt-12 pb-6 md:pt-[70px] md:pb-8">
         <div className="container-wide flex flex-col gap-10">
           <SectionHead
             eyebrow={a.experiences.eyebrow}
@@ -108,10 +110,12 @@ export default async function ActivitiesPage() {
       </section>
 
       {/* 3 · "Ήξερες ότι…" — goal-band style with the honeybee video */}
-      <FactBand fact={a.fact} />
+      <div data-edit="fact">
+        <FactBand fact={a.fact} />
+      </div>
 
       {/* 4 · Educational programs */}
-      <section id="programs" className="scroll-mt-24 bg-offwhite py-12 md:py-[70px]">
+      <section id="programs" data-edit="programs" className="scroll-mt-24 bg-offwhite py-12 md:py-[70px]">
         <div className="container-wide flex flex-col gap-10">
           <SectionHead
             eyebrow={a.programs.eyebrow}

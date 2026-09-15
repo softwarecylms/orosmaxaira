@@ -36,7 +36,7 @@ export default async function AboutPage() {
     <>
       {/* Hero — photo + intro. Centered single column on mobile; original
           image-left / text-right 2-column layout on desktop (lg+). */}
-      <section className="container-wide py-8 md:py-12">
+      <section data-edit="hero" className="container-wide py-8 md:py-12">
         <div className="mx-auto grid max-w-[720px] grid-cols-1 gap-10 text-center lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-center lg:gap-[60px] lg:text-left">
           <RevealUp>
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-offwhite">
@@ -88,7 +88,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Stats */}
-      <section className="container-wide pb-12 md:pb-[60px]">
+      <section data-edit="stats" className="container-wide pb-12 md:pb-[60px]">
         <RevealGroup
           className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-5 lg:divide-x lg:divide-accent"
           stagger={0.08}
@@ -113,7 +113,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Values */}
-      <section className="bg-offwhite py-12 md:py-[70px]">
+      <section data-edit="values" className="bg-offwhite py-12 md:py-[70px]">
         <RevealGroup
           className="container-wide grid grid-cols-1 gap-12 sm:grid-cols-3 sm:gap-10"
           stagger={0.1}
@@ -145,7 +145,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Indoor spaces */}
-      <section className="container-wide py-12 md:py-[70px]">
+      <section data-edit="indoor" className="container-wide py-12 md:py-[70px]">
         <RevealUp>
           <h2 className="text-center font-display text-[26px] font-semibold leading-[1.1] text-foreground md:text-[41px]">
             {a.indoor.heading}
@@ -181,7 +181,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Outdoor spaces — carousel */}
-      <section className="bg-offwhite py-12 md:py-[70px]">
+      <section data-edit="outdoor" className="bg-offwhite py-12 md:py-[70px]">
         <div className="container-wide">
           <RevealUp>
             <h2 className="mb-8 text-center font-display text-[26px] font-semibold leading-[1.1] text-foreground md:mb-12 md:text-[41px]">
@@ -195,7 +195,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Sustainability band */}
-      <section className="bg-accent py-10 text-white md:py-12">
+      <section data-edit="band" className="bg-accent py-10 text-white md:py-12">
         <div className="container-page">
           <RevealUp>
             <p className="text-center text-[15px] leading-[24px] md:text-[17px]">
@@ -206,7 +206,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Family */}
-      <section className="container-wide pb-6 pt-12 md:pb-8 md:pt-[70px]">
+      <section data-edit="family" className="container-wide pb-6 pt-12 md:pb-8 md:pt-[70px]">
         <RevealUp>
           <h2 className="text-center font-display text-[26px] font-semibold leading-[1.1] text-foreground md:text-[41px]">
             {a.family.heading}
@@ -247,7 +247,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Goal — full-width gold banner, beeswax image bleeding on the left (Figma 156:1211) */}
-      <section className="container-wide pb-14 pt-6 md:pb-24 md:pt-10">
+      <section data-edit="goal" className="container-wide pb-14 pt-6 md:pb-24 md:pt-10">
         <div className="relative overflow-hidden rounded-[4px] bg-accent">
           {/* Desktop: exact Figma banner background, rendered proportionally so the
               blocks stay in the left ~40% and never collide with the copy */}

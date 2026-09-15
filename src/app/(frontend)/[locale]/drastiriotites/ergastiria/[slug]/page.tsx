@@ -12,7 +12,6 @@ import type { PriceTier } from '@/lib/medusa/activities'
 import { getWorkshop as getStaticWorkshop } from '@/lib/data/workshops'
 import { getActivitiesUi } from '@/components/activities/activities-content'
 import { RevealUp } from '@/components/home/reveal-up'
-import { PreviewBridge } from '@/components/preview/preview-bridge'
 import { SectionHead } from '@/components/shared/section-head'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
 import { RichText } from '@/components/activities/detail/rich-text'
@@ -197,9 +196,6 @@ export default async function WorkshopDetailPage({
 
   return (
     <>
-      {/* Click-to-edit for the admin preview; inert without ?preview=1. */}
-      <PreviewBridge />
-
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}

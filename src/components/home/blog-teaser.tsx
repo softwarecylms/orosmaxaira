@@ -15,7 +15,7 @@ export async function BlogTeaser() {
   const recent = [...getBlogPosts(locale)].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)
   const [featured, ...items] = recent
   return (
-    <section data-testid="blog-teaser" className="bg-offwhite py-12 md:py-[70px]">
+    <section data-testid="blog-teaser" data-edit="BLOG" className="bg-offwhite py-12 md:py-[70px]">
       <div className="container-wide flex flex-col gap-7 md:gap-[30px]">
         <RevealUp className="flex items-center justify-center gap-4 sm:justify-between">
           <h2 className="text-center font-display text-[22px] font-semibold leading-[1.12] text-foreground sm:text-left md:text-[41px] md:leading-[40px]">

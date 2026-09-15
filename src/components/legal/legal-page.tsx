@@ -25,13 +25,13 @@ export function LegalPage({
     <>
       <article className="container-wide py-10 md:py-14">
         <div className="mx-auto max-w-[960px]">
-          <h1 className="font-display text-[34px] font-bold leading-tight text-foreground md:text-[46px]">
+          <h1 data-edit="title" className="font-display text-[34px] font-bold leading-tight text-foreground md:text-[46px]">
             {title}
           </h1>
-          <p className="mt-3 text-[14px] text-muted">{lastUpdated}</p>
-          <p className="mt-6 text-[17px] leading-[28px] text-foreground/90">{intro}</p>
+          <p data-edit="lastUpdated" className="mt-3 text-[14px] text-muted">{lastUpdated}</p>
+          <p data-edit="intro" className="mt-6 text-[17px] leading-[28px] text-foreground/90">{intro}</p>
 
-          <div className="mt-8 flex flex-col gap-8">
+          <div data-edit="sections" className="mt-8 flex flex-col gap-8">
             {sections.map((s, i) => (
               <section key={s.id ?? i} id={s.id} className="scroll-mt-28">
                 <h2 className="text-[22px] font-semibold text-foreground md:text-[24px]">

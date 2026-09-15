@@ -8,7 +8,7 @@ import { loadHomeContent } from '@/lib/content/load'
 export async function Heritage() {
   const { HERITAGE } = await loadHomeContent(await getLocale())
   return (
-    <section data-testid="heritage" className="bg-offwhite py-12 md:py-[70px]">
+    <section data-testid="heritage" data-edit="HERITAGE" className="bg-offwhite py-12 md:py-[70px]">
       <div className="container-wide">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-10 xl:gap-[80px] xl:pr-[60px]">
           <RevealUp className="relative aspect-[843/625] w-full shrink-0 overflow-hidden rounded-[4px] lg:w-1/2">

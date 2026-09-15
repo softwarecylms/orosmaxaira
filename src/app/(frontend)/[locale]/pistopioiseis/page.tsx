@@ -44,15 +44,18 @@ export default async function CertificatesPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
 
-      <PageHero
-        image={hero.image}
-        imageAlt={hero.imageAlt}
-        title={hero.title}
-        description={hero.description}
-      />
+      <div data-edit="hero">
+        <PageHero
+          image={hero.image}
+          imageAlt={hero.imageAlt}
+          title={hero.title}
+          description={hero.description}
+        />
+      </div>
 
       {certificates.map((cert, i) => (
         <section
+          data-edit="certificates"
           key={cert.code}
           id={cert.code.toLowerCase().replace(/\s+/g, '-')}
           className={cn('scroll-mt-28 py-14 md:py-20', i % 2 === 1 && 'bg-offwhite')}

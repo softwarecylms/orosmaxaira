@@ -33,15 +33,18 @@ export default async function AwardsPage() {
   const { hero, awards } = await loadAwardsContent(await getLocale())
   return (
     <>
-      <AwardsHero
-        image={hero.image}
-        imageAlt={hero.imageAlt}
-        title={hero.title}
-        description={hero.description}
-      />
+      <div data-edit="hero">
+        <AwardsHero
+          image={hero.image}
+          imageAlt={hero.imageAlt}
+          title={hero.title}
+          description={hero.description}
+        />
+      </div>
 
       {awards.map((a, i) => (
         <section
+          data-edit="awards"
           key={a.slug}
           className={cn('py-14 md:py-20', SHADED_SLUGS.has(a.slug) && 'bg-offwhite')}
         >

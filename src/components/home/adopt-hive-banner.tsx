@@ -11,7 +11,7 @@ export async function AdoptHiveBanner({ body }: { body?: string } = {}) {
   const { ADOPT } = await loadHomeContent(await getLocale())
   const text = body ?? ADOPT.body
   return (
-    <section data-testid="adopt-hive" className="bg-white pb-12 pt-6 md:pb-[70px] md:pt-[35px]">
+    <section data-testid="adopt-hive" data-edit="ADOPT" className="bg-white pb-12 pt-6 md:pb-[70px] md:pt-[35px]">
       <div className="container-wide">
         <div className="relative isolate flex flex-col overflow-hidden rounded-[4px] bg-accent lg:block">
           {/* Living honeycomb + flying bees: top banner on mobile, left bleed on lg */}

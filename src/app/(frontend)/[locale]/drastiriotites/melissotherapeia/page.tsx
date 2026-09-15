@@ -6,7 +6,6 @@ import { CalendarRange, Check, ChevronRight, Clock, Info, Repeat } from 'lucide-
 import { RevealUp } from '@/components/home/reveal-up'
 import { SectionHead } from '@/components/shared/section-head'
 import { RichText } from '@/components/activities/detail/rich-text'
-import { PreviewBridge } from '@/components/preview/preview-bridge'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
 import { MelissotherapeiaBooking } from '@/components/melissotherapeia/melissotherapeia-booking'
 import { getActivity } from '@/lib/medusa/activities'
@@ -145,7 +144,6 @@ export default async function MelissotherapeiaPage() {
 
   return (
     <>
-      <PreviewBridge />
 
       {/* Breadcrumb */}
       <div className="container-page pb-2.5 pt-4">

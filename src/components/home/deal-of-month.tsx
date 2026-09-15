@@ -33,7 +33,7 @@ export async function DealOfMonth({ products }: { products?: HoneyProduct[] }) {
     : curated
 
   return (
-    <section data-testid="deal-of-month" className="bg-offwhite py-12 md:py-[70px]">
+    <section data-testid="deal-of-month" data-edit="DEAL" className="bg-offwhite py-12 md:py-[70px]">
       <div className="container-wide">
         <div className="flex flex-col overflow-hidden rounded-[4px] lg:flex-row">
           {/* Featured photo card */}

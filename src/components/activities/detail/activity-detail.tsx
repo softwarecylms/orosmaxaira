@@ -3,7 +3,6 @@ import { Link } from '@/i18n/navigation'
 import { ChevronRight, Clock, Users, CalendarRange } from 'lucide-react'
 import type { Activity } from '@/lib/medusa/activities'
 import { RevealUp } from '@/components/home/reveal-up'
-import { PreviewBridge } from '@/components/preview/preview-bridge'
 import { SectionHead } from '@/components/shared/section-head'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
 import { getActivitiesUi } from '@/components/activities/activities-content'
@@ -45,9 +44,6 @@ export function ActivityDetail({
 
   return (
     <>
-      {/* Click-to-edit for the admin preview; inert without ?preview=1. */}
-      <PreviewBridge />
-
       {/* Breadcrumb */}
       <div className="container-page pb-2.5 pt-4">
         <RevealUp>

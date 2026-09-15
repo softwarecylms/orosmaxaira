@@ -10,7 +10,7 @@ import { loadHomeContent } from '@/lib/content/load'
 export async function ProductCategories() {
   const { CATEGORIES } = await loadHomeContent(await getLocale())
   return (
-    <section data-testid="product-categories" className="bg-white py-14 md:py-20">
+    <section data-testid="product-categories" data-edit="CATEGORIES" className="bg-white py-14 md:py-20">
       <div className="container-wide flex flex-col gap-7 md:gap-[30px]">
         <RevealUp className="flex items-center justify-center gap-4 sm:justify-between">
           <h2 className="text-center font-display text-[28px] font-semibold leading-[1.05] text-foreground sm:text-left md:text-[41px] md:leading-[40px]">

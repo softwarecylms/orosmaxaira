@@ -63,10 +63,12 @@ export default async function ContactPage() {
   return (
     <>
       {/* Hero */}
-      <ContactHero image={c.hero.image} imageAlt={c.hero.imageAlt} title={c.hero.title} />
+      <div data-edit="hero">
+        <ContactHero image={c.hero.image} imageAlt={c.hero.imageAlt} title={c.hero.title} />
+      </div>
 
       {/* Contact body — info + form */}
-      <section className="bg-white py-14 md:py-[80px]">
+      <section data-edit="connect" className="bg-white py-14 md:py-[80px]">
         <div className="container-wide flex flex-col items-start gap-12 lg:flex-row lg:justify-center lg:gap-[77px]">
           {/* Info column — centered on mobile, left-aligned on desktop */}
           <div className="flex w-full flex-col items-center gap-10 text-center lg:w-[651px] lg:items-start lg:text-left">
@@ -148,15 +150,20 @@ export default async function ContactPage() {
           </div>
 
           {/* Message form */}
-          <ContactMessageForm form={c.form} />
+          {/* Full width on mobile, the form’s own width beside the info column. */}
+          <div data-edit="form" className="w-full lg:w-auto">
+            <ContactMessageForm form={c.form} />
+          </div>
         </div>
       </section>
 
       {/* Full-width map */}
-      <ContactMap />
+      <div data-edit="map">
+        <ContactMap />
+      </div>
 
       {/* Values band */}
-      <section className="bg-offwhite py-14 md:py-[80px]">
+      <section data-edit="values" className="bg-offwhite py-14 md:py-[80px]">
         <RevealGroup
           className="container-wide grid grid-cols-1 gap-12 sm:grid-cols-3 sm:gap-10 lg:gap-[80px]"
           stagger={0.1}
