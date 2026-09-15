@@ -10,7 +10,6 @@ import {
 } from '@/lib/cms'
 import { hreflangAlternates, pageMetadata, postMetadata, seoMetadata } from '@/lib/seo'
 import { puckConfig } from '@/puck/config'
-import { populatePuckData } from '@/puck/hydrate'
 import { BlogPostRender } from '@/blocks/blog-post'
 import { getBlogPosts } from '@/components/blog/blog-data'
 import { ArticleView } from '@/components/blog/article-view'
@@ -23,16 +22,7 @@ import type { Data } from '@measured/puck'
 export const revalidate = 60
 export const dynamicParams = true
 
-const RESERVED_TOP_LEVEL_SLUGS = new Set([
-  'portfolio',
-  'portfolio-category',
-  'category',
-  'tag',
-  'author',
-  'admin',
-  'api',
-  '_next',
-])
+const RESERVED_TOP_LEVEL_SLUGS = new Set(['admin', 'api', 'editor', '_next'])
 
 /** Articles keep the previous site's root permalinks — `/<slug>/`, `/en/<slug>/`
  *  — so they resolve here rather than under `/blog/`. Slugs are locale-invariant,
@@ -93,8 +83,7 @@ export default async function CatchAllRoute({ params }: RouteProps) {
 
   const page = await getPageBySlug(slug)
   if (page) {
-    const data = await populatePuckData(page.content as unknown as Data | null)
-    return <Render config={puckConfig} data={data as never} />
+    return <Render config={puckConfig} data={page.content as unknown as Data} />
   }
 
   const post = await getPostBySlug(slug)

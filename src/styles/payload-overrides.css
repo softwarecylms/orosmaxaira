@@ -73,3 +73,13 @@
   font-weight: 600;
   text-decoration: underline;
 }
+
+/* Top-left nav icon — the SoftwareCy dot. Payload sizes this slot for its own
+   narrow mark; keep the dot a true circle. */
+.softwarecy-dot {
+  display: block;
+  flex-shrink: 0;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px;
+}

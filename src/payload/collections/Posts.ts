@@ -15,39 +15,10 @@ export const Posts: CollectionConfig = {
     { name: 'slug', type: 'text', required: true, unique: true, index: true },
     { name: 'excerpt', type: 'textarea' },
     {
-      name: 'category',
-      type: 'select',
-      admin: {
-        description:
-          'Legacy single category for the BlogTeaser tone. Use Categories (multi) for the real taxonomy.',
-      },
-      options: [
-        { label: 'Design', value: 'design' },
-        { label: 'SEO', value: 'seo' },
-        { label: 'Marketing', value: 'marketing' },
-        { label: 'Development', value: 'development' },
-        { label: 'Business', value: 'business' },
-      ],
-    },
-    {
       name: 'categories',
       type: 'relationship',
       relationTo: 'categories',
       hasMany: true,
-      admin: { description: 'Taxonomy categories — drives /category/{slug} archives.' },
-    },
-    {
-      name: 'tags',
-      type: 'relationship',
-      relationTo: 'tags',
-      hasMany: true,
-      admin: { description: 'Taxonomy tags — drives /tag/{slug} archives.' },
-    },
-    {
-      name: 'author',
-      type: 'relationship',
-      relationTo: 'authors',
-      admin: { description: 'Drives /author/{slug} archive.' },
     },
     { name: 'cover', type: 'upload', relationTo: 'media' },
     { name: 'content', type: 'richText' },

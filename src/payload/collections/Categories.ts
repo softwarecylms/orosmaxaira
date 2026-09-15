@@ -6,7 +6,7 @@ export const Categories: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'slug'],
-    description: 'Blog post categories. URL: /category/{slug}',
+    description: 'Blog post categories.',
   },
   access: { read: () => true },
   fields: [

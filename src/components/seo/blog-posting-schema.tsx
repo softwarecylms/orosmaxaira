@@ -1,14 +1,13 @@
 import { siteUrl } from '@/lib/seo'
-import type { Post, Author, Category } from '@/payload-types'
+import type { Post, Category } from '@/payload-types'
 import { mediaSrc } from '@/lib/utils'
 
 type Props = {
   post: Pick<Post, 'title' | 'slug' | 'excerpt' | 'publishedAt' | 'updatedAt' | 'cover'>
-  author?: Author | null
   primaryCategory?: Category | null
 }
 
-export function BlogPostingSchema({ post, author, primaryCategory }: Props) {
+export function BlogPostingSchema({ post, primaryCategory }: Props) {
   const base = siteUrl()
   const canonical = `${base}/${post.slug ?? ''}`
   const image =
@@ -24,9 +23,7 @@ export function BlogPostingSchema({ post, author, primaryCategory }: Props) {
     dateModified: post.updatedAt ?? post.publishedAt ?? undefined,
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
     image: image ? [image.startsWith('http') ? image : `${base}${image}`] : undefined,
-    author: author?.name
-      ? { '@type': 'Person', name: author.name, url: `${base}/author/${author.slug}` }
-      : { '@type': 'Organization', name: 'Όρος Μαχαιρά' },
+    author: { '@type': 'Organization', name: 'Όρος Μαχαιρά' },
     publisher: {
       '@type': 'Organization',
       name: 'Όρος Μαχαιρά',

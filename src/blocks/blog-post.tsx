@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import type { Post, Author, Category, Tag } from '@/payload-types'
+import type { Post, Category } from '@/payload-types'
 import { Section, Container } from '@/components/ui/section'
 import { Reveal } from '@/components/motion/reveal'
 import { LinkButton } from '@/components/ui/button'
@@ -25,16 +25,11 @@ function relDocs<T extends { slug?: string | null; name?: string | null; id?: nu
 
 export function BlogPostRender({ post, relatedPosts = [] }: Props) {
   const cover = mediaSrc(post.cover)
-  const author = post.author && typeof post.author === 'object' ? (post.author as Author) : null
   const categories = relDocs<Category>(post.categories)
-  const tags = relDocs<Tag>(post.tags)
   const primaryCategory = categories[0] ?? null
 
   const breadcrumbItems = [
     { name: 'Blog', href: '/blog' },
-    ...(primaryCategory?.slug
-      ? [{ name: primaryCategory.name ?? primaryCategory.slug, href: `/category/${primaryCategory.slug}` }]
-      : []),
     { name: post.title ?? 'Post', href: `/${post.slug}` },
   ]
 
@@ -48,7 +43,7 @@ export function BlogPostRender({ post, relatedPosts = [] }: Props) {
 
   return (
     <article data-testid="blog-post">
-      <BlogPostingSchema post={post} author={author} primaryCategory={primaryCategory} />
+      <BlogPostingSchema post={post} primaryCategory={primaryCategory} />
       <BreadcrumbSchema items={breadcrumbItems} />
 
       <Section spacing="default" className="bg-background pb-10 md:pb-14">
@@ -85,13 +80,12 @@ export function BlogPostRender({ post, relatedPosts = [] }: Props) {
               {categories.length ? (
                 <div className="flex flex-wrap gap-2">
                   {categories.map((c) => (
-                    <Link
+                    <span
                       key={c.id}
-                      href={`/category/${c.slug}`}
                       className="rounded-full bg-accent-soft px-3 py-1 text-[12px] font-semibold uppercase tracking-wider text-accent"
                     >
                       {c.name}
-                    </Link>
+                    </span>
                   ))}
                 </div>
               ) : null}
@@ -107,27 +101,6 @@ export function BlogPostRender({ post, relatedPosts = [] }: Props) {
               ) : null}
 
               <div className="flex flex-wrap items-center gap-4 text-sm text-muted">
-                {author ? (
-                  <Link
-                    href={`/author/${author.slug}`}
-                    className="inline-flex items-center gap-2 hover:text-foreground"
-                  >
-                    {mediaSrc(author.avatar) ? (
-                      <Image
-                        src={mediaSrc(author.avatar)!}
-                        alt={mediaAlt(author.avatar, author.name)}
-                        width={32}
-                        height={32}
-                        className="size-8 rounded-full object-cover"
-                      />
-                    ) : (
-                      <span className="inline-flex size-8 items-center justify-center rounded-full bg-pink text-[12px] font-semibold text-foreground">
-                        {author.name?.charAt(0) ?? 'A'}
-                      </span>
-                    )}
-                    <span className="font-medium text-foreground">{author.name}</span>
-                  </Link>
-                ) : null}
                 {publishedAt ? <time dateTime={post.publishedAt!}>{publishedAt}</time> : null}
               </div>
             </div>
@@ -166,22 +139,6 @@ export function BlogPostRender({ post, relatedPosts = [] }: Props) {
             </div>
           </Reveal>
 
-          {tags.length ? (
-            <Reveal delay={0.1}>
-              <div className="mt-10 flex flex-wrap items-center gap-2 border-t border-border pt-6">
-                <span className="text-sm font-semibold text-muted">Tags:</span>
-                {tags.map((t) => (
-                  <Link
-                    key={t.id}
-                    href={`/tag/${t.slug}`}
-                    className="rounded-full border border-border-strong/30 px-3 py-1 text-[12px] font-medium text-foreground hover:bg-foreground/5"
-                  >
-                    {t.name}
-                  </Link>
-                ))}
-              </div>
-            </Reveal>
-          ) : null}
 
           {relatedPosts.length ? (
             <Reveal delay={0.12}>

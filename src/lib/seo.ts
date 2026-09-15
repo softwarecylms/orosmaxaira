@@ -201,10 +201,7 @@ export function pageMetadata(
 
 export function postMetadata(
   post:
-    | (Pick<
-        Post,
-        'title' | 'slug' | 'excerpt' | 'cover' | 'seo' | 'publishedAt' | 'updatedAt' | 'author'
-      > & { author?: Post['author'] })
+    | Pick<Post, 'title' | 'slug' | 'excerpt' | 'cover' | 'seo' | 'publishedAt' | 'updatedAt'>
     | null
     | undefined,
 ): Metadata {
@@ -216,10 +213,6 @@ export function postMetadata(
   const image =
     mediaUrl((seo as { image?: MediaLike }).image) || mediaUrl(post.cover as MediaLike)
   const canonical = `/${post.slug ?? ''}`
-  const authorName =
-    post.author && typeof post.author === 'object' && 'name' in post.author
-      ? (post.author as { name?: string }).name
-      : undefined
 
   return {
     title,
@@ -232,7 +225,6 @@ export function postMetadata(
       url: absoluteUrl(canonical),
       publishedTime: post.publishedAt ?? undefined,
       modifiedTime: post.updatedAt ?? post.publishedAt ?? undefined,
-      authors: authorName ? [authorName] : undefined,
       images: image ? [{ url: image }] : undefined,
     },
     twitter: {

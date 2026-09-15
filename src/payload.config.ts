@@ -10,20 +10,9 @@ import { Users } from '@/payload/collections/Users'
 import { Media } from '@/payload/collections/Media'
 import { Pages } from '@/payload/collections/Pages'
 import { Posts } from '@/payload/collections/Posts'
-import { TeamMembers } from '@/payload/collections/TeamMembers'
-import { Jobs } from '@/payload/collections/Jobs'
-import { Faqs } from '@/payload/collections/Faqs'
-import { CaseStudies } from '@/payload/collections/CaseStudies'
-import { Testimonials } from '@/payload/collections/Testimonials'
-import { ClientLogos } from '@/payload/collections/ClientLogos'
 import { Categories } from '@/payload/collections/Categories'
-import { Tags } from '@/payload/collections/Tags'
-import { PortfolioCategories } from '@/payload/collections/PortfolioCategories'
-import { Authors } from '@/payload/collections/Authors'
 
 import { SiteSettings } from '@/payload/globals/SiteSettings'
-import { Header } from '@/payload/globals/Header'
-import { Footer } from '@/payload/globals/Footer'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -35,10 +24,12 @@ export default buildConfig({
     importMap: { baseDir: path.resolve(dirname) },
     meta: {
       titleSuffix: ' — CMS',
+      icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/admin/softwarecy-dot.svg' }],
     },
     components: {
       graphics: {
         Logo: '/payload/admin/Logo.tsx',
+        Icon: '/payload/admin/Icon.tsx',
       },
       // Top of the sidebar: shortcuts to the Medusa admin (shop & bookings).
       beforeNavLinks: ['/payload/admin/MedusaLinks.tsx'],
@@ -46,23 +37,8 @@ export default buildConfig({
       afterNavLinks: ['/payload/admin/SoftwareCyCredit.tsx'],
     },
   },
-  collections: [
-    Pages,
-    Posts,
-    CaseStudies,
-    Categories,
-    Tags,
-    PortfolioCategories,
-    Authors,
-    TeamMembers,
-    Jobs,
-    Faqs,
-    Testimonials,
-    ClientLogos,
-    Media,
-    Users,
-  ],
-  globals: [SiteSettings, Header, Footer],
+  collections: [Pages, Posts, Categories, Media, Users],
+  globals: [SiteSettings],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || 'dev-secret-change-me',
   typescript: {

@@ -26,23 +26,23 @@ src/
   app/(frontend)/   Frontend routes + layout, [slug] catch-all
   app/(payload)/    Payload admin
   app/llms.txt/     + llms-full.txt — AEO manifests (route handlers)
-  blocks/           One file per page block — exports <Name>Render (presentational, no data fetching)
+  blocks/           blog-post.tsx (Payload post template)
+  components/sections/ Page sections (content in via props) — also the Puck blocks
   components/        ui/ (Button, Section, Accordion), motion/ (Reveal, Counter, …), layout/, seo/
   lib/              motion.ts (EASE/DURATION/variants), cms.ts, seo.ts, utils.ts
-  puck/             config.tsx (blocks), adapters.ts, adapt.ts, hydrate.ts, types.ts
-  payload/          config, collections, globals, fields, hooks, admin/PuckField, seed
+  puck/             config.tsx (visual editor blocks)
+  payload/          collections, globals, fields, hooks, admin/ (PuckField, branding)
   styles/globals.css Design tokens (@theme)
 e2e/                Playwright specs (one per block)
 docs/               new-informational-site-prompt.md (bootstrap), weblove-course-learnings.md
 scripts/            new-site.sh (provision GitHub+Vercel+Neon), post-build.mjs
 ```
 
-## Add a block (the contract)
-1. Build `src/blocks/<name>.tsx` exporting `<Name>Render` (takes hydrated data; never fetch inside a block).
-2. Add it to `PuckProps` + `components` in `src/puck/config.tsx` (fields, defaultProps, render adapter).
-3. Register the name under a `categories` group.
-4. If it uses media/relationships, add it to `componentMediaMap` / `componentRelMap` in `src/puck/hydrate.ts`.
-5. `pnpm generate:types` + add an `e2e/<name>.spec.ts`. (No DB migration needed — content is JSON.)
+## Page sections & blocks
+The site's sections take their copy as a `content` prop and fetch nothing themselves
+(`src/components/sections/*`, `src/components/home/*-view.tsx`); a thin server wrapper loads
+the copy. That is what lets the Puck visual editor render the real sections. The generic
+template blocks were removed; the site's own sections are being registered in `src/puck/config.tsx`.
 
 ## Commerce (Medusa eshop)
 Two backends, clear split: **Payload = content**, **Medusa = commerce**. The Next.js app is the
@@ -88,7 +88,6 @@ Both admins are noindex (headers + robots). Payload's sidebar links to the Medus
   Respect `useReducedMotion()` everywhere; ~80/20 stillness; max one signature flourish per page.
 - Reuse `src/components/ui/*` and `src/components/motion/*` — don't create parallel primitives.
 - Display font for big headings/stats; never fake it with `font-bold`.
-- Every new block in `src/blocks/` gets a Playwright spec.
 
 ## After a Payload schema change
 `pnpm generate:types`, then `pnpm migrate:create` + `pnpm migrate`.
@@ -99,5 +98,4 @@ pnpm dev                                   # dev server (3001)
 pnpm test:e2e                               # all Playwright tests
 pnpm test:e2e e2e/<block>.spec.ts           # one spec
 pnpm generate:types                         # regen payload-types.ts
-pnpm seed                                   # reseed DB (demo content)
 ```

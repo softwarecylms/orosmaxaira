@@ -69,16 +69,7 @@ export interface Config {
   collections: {
     pages: Page;
     posts: Post;
-    'case-studies': CaseStudy;
     categories: Category;
-    tags: Tag;
-    'portfolio-categories': PortfolioCategory;
-    authors: Author;
-    'team-members': TeamMember;
-    jobs: Job;
-    faqs: Faq;
-    testimonials: Testimonial;
-    'client-logos': ClientLogo;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -90,16 +81,7 @@ export interface Config {
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
-    'case-studies': CaseStudiesSelect<false> | CaseStudiesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
-    tags: TagsSelect<false> | TagsSelect<true>;
-    'portfolio-categories': PortfolioCategoriesSelect<false> | PortfolioCategoriesSelect<true>;
-    authors: AuthorsSelect<false> | AuthorsSelect<true>;
-    'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
-    jobs: JobsSelect<false> | JobsSelect<true>;
-    faqs: FaqsSelect<false> | FaqsSelect<true>;
-    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
-    'client-logos': ClientLogosSelect<false> | ClientLogosSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -113,13 +95,9 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     'site-settings': SiteSetting;
-    header: Header;
-    footer: Footer;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
-    header: HeaderSelect<false> | HeaderSelect<true>;
-    footer: FooterSelect<false> | FooterSelect<true>;
   };
   locale: null;
   widgets: {
@@ -259,22 +237,7 @@ export interface Post {
   title: string;
   slug: string;
   excerpt?: string | null;
-  /**
-   * Legacy single category for the BlogTeaser tone. Use Categories (multi) for the real taxonomy.
-   */
-  category?: ('design' | 'seo' | 'marketing' | 'development' | 'business') | null;
-  /**
-   * Taxonomy categories — drives /category/{slug} archives.
-   */
   categories?: (number | Category)[] | null;
-  /**
-   * Taxonomy tags — drives /tag/{slug} archives.
-   */
-  tags?: (number | Tag)[] | null;
-  /**
-   * Drives /author/{slug} archive.
-   */
-  author?: (number | null) | Author;
   cover?: (number | null) | Media;
   content?: {
     root: {
@@ -316,7 +279,7 @@ export interface Post {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Blog post categories. URL: /category/{slug}
+ * Blog post categories.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
@@ -341,246 +304,6 @@ export interface Category {
     image?: (number | null) | Media;
     noindex?: boolean | null;
   };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Blog post tags. URL: /tag/{slug}
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tags".
- */
-export interface Tag {
-  id: number;
-  name: string;
-  slug: string;
-  description?: string | null;
-  seo?: {
-    /**
-     * Defaults to the page title if empty (max 60 chars recommended).
-     */
-    title?: string | null;
-    /**
-     * Meta description (140–160 chars recommended).
-     */
-    description?: string | null;
-    /**
-     * Open Graph / Twitter image (1200×630).
-     */
-    image?: (number | null) | Media;
-    noindex?: boolean | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Blog authors. URL: /author/{slug}
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "authors".
- */
-export interface Author {
-  id: number;
-  name: string;
-  slug: string;
-  role?: string | null;
-  bio?: string | null;
-  avatar?: (number | null) | Media;
-  social?: {
-    twitter?: string | null;
-    linkedin?: string | null;
-    website?: string | null;
-  };
-  seo?: {
-    /**
-     * Defaults to the page title if empty (max 60 chars recommended).
-     */
-    title?: string | null;
-    /**
-     * Meta description (140–160 chars recommended).
-     */
-    description?: string | null;
-    /**
-     * Open Graph / Twitter image (1200×630).
-     */
-    image?: (number | null) | Media;
-    noindex?: boolean | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Portfolio items. URL: /portfolio/{slug}
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "case-studies".
- */
-export interface CaseStudy {
-  id: number;
-  title: string;
-  slug: string;
-  client?: string | null;
-  /**
-   * Used to pick a frame in the portfolio card.
-   */
-  device?: ('mobile' | 'laptop' | 'desktop') | null;
-  cover?: (number | null) | Media;
-  summary?: string | null;
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * Original WordPress HTML body, preserved verbatim from the migration. Used as a fallback when richText is empty.
-   */
-  legacyContent?: string | null;
-  liveUrl?: string | null;
-  /**
-   * Drives /portfolio-category/{slug} archives.
-   */
-  portfolioCategories?: (number | PortfolioCategory)[] | null;
-  publishedAt?: string | null;
-  seo?: {
-    /**
-     * Defaults to the page title if empty (max 60 chars recommended).
-     */
-    title?: string | null;
-    /**
-     * Meta description (140–160 chars recommended).
-     */
-    description?: string | null;
-    /**
-     * Open Graph / Twitter image (1200×630).
-     */
-    image?: (number | null) | Media;
-    noindex?: boolean | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * Portfolio (case study) categories. URL: /portfolio-category/{slug}
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "portfolio-categories".
- */
-export interface PortfolioCategory {
-  id: number;
-  name: string;
-  slug: string;
-  description?: string | null;
-  seo?: {
-    /**
-     * Defaults to the page title if empty (max 60 chars recommended).
-     */
-    title?: string | null;
-    /**
-     * Meta description (140–160 chars recommended).
-     */
-    description?: string | null;
-    /**
-     * Open Graph / Twitter image (1200×630).
-     */
-    image?: (number | null) | Media;
-    noindex?: boolean | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "team-members".
- */
-export interface TeamMember {
-  id: number;
-  name: string;
-  role: string;
-  photo?: (number | null) | Media;
-  bio?: string | null;
-  /**
-   * Lower numbers appear first.
-   */
-  order?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "jobs".
- */
-export interface Job {
-  id: number;
-  title: string;
-  location?: string | null;
-  type?: ('full-time' | 'part-time' | 'internship' | 'contract') | null;
-  status?: ('open' | 'closed') | null;
-  summary?: string | null;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  applyUrl?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faqs".
- */
-export interface Faq {
-  id: number;
-  question: string;
-  answer: string;
-  order?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "testimonials".
- */
-export interface Testimonial {
-  id: number;
-  quote: string;
-  author: string;
-  role?: string | null;
-  photo?: (number | null) | Media;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "client-logos".
- */
-export interface ClientLogo {
-  id: number;
-  name: string;
-  logo: number | Media;
-  website?: string | null;
-  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -644,44 +367,8 @@ export interface PayloadLockedDocument {
         value: number | Post;
       } | null)
     | ({
-        relationTo: 'case-studies';
-        value: number | CaseStudy;
-      } | null)
-    | ({
         relationTo: 'categories';
         value: number | Category;
-      } | null)
-    | ({
-        relationTo: 'tags';
-        value: number | Tag;
-      } | null)
-    | ({
-        relationTo: 'portfolio-categories';
-        value: number | PortfolioCategory;
-      } | null)
-    | ({
-        relationTo: 'authors';
-        value: number | Author;
-      } | null)
-    | ({
-        relationTo: 'team-members';
-        value: number | TeamMember;
-      } | null)
-    | ({
-        relationTo: 'jobs';
-        value: number | Job;
-      } | null)
-    | ({
-        relationTo: 'faqs';
-        value: number | Faq;
-      } | null)
-    | ({
-        relationTo: 'testimonials';
-        value: number | Testimonial;
-      } | null)
-    | ({
-        relationTo: 'client-logos';
-        value: number | ClientLogo;
       } | null)
     | ({
         relationTo: 'media';
@@ -761,41 +448,10 @@ export interface PostsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   excerpt?: T;
-  category?: T;
   categories?: T;
-  tags?: T;
-  author?: T;
   cover?: T;
   content?: T;
   legacyContent?: T;
-  publishedAt?: T;
-  seo?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-        noindex?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "case-studies_select".
- */
-export interface CaseStudiesSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  client?: T;
-  device?: T;
-  cover?: T;
-  summary?: T;
-  content?: T;
-  legacyContent?: T;
-  liveUrl?: T;
-  portfolioCategories?: T;
   publishedAt?: T;
   seo?:
     | T
@@ -825,135 +481,6 @@ export interface CategoriesSelect<T extends boolean = true> {
         image?: T;
         noindex?: T;
       };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tags_select".
- */
-export interface TagsSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  description?: T;
-  seo?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-        noindex?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "portfolio-categories_select".
- */
-export interface PortfolioCategoriesSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  description?: T;
-  seo?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-        noindex?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "authors_select".
- */
-export interface AuthorsSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  role?: T;
-  bio?: T;
-  avatar?: T;
-  social?:
-    | T
-    | {
-        twitter?: T;
-        linkedin?: T;
-        website?: T;
-      };
-  seo?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-        noindex?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "team-members_select".
- */
-export interface TeamMembersSelect<T extends boolean = true> {
-  name?: T;
-  role?: T;
-  photo?: T;
-  bio?: T;
-  order?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "jobs_select".
- */
-export interface JobsSelect<T extends boolean = true> {
-  title?: T;
-  location?: T;
-  type?: T;
-  status?: T;
-  summary?: T;
-  description?: T;
-  applyUrl?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faqs_select".
- */
-export interface FaqsSelect<T extends boolean = true> {
-  question?: T;
-  answer?: T;
-  order?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "testimonials_select".
- */
-export interface TestimonialsSelect<T extends boolean = true> {
-  quote?: T;
-  author?: T;
-  role?: T;
-  photo?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "client-logos_select".
- */
-export interface ClientLogosSelect<T extends boolean = true> {
-  name?: T;
-  logo?: T;
-  website?: T;
-  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1135,83 +662,6 @@ export interface SiteSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "header".
- */
-export interface Header {
-  id: number;
-  nav?:
-    | {
-        link: {
-          label: string;
-          href: string;
-          /**
-           * Open in a new tab.
-           */
-          newTab?: boolean | null;
-        };
-        /**
-         * Optional submenu items (e.g. Website Design and SEO under Services).
-         */
-        children?:
-          | {
-              link: {
-                label: string;
-                href: string;
-                /**
-                 * Open in a new tab.
-                 */
-                newTab?: boolean | null;
-              };
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer".
- */
-export interface Footer {
-  id: number;
-  columns?:
-    | {
-        heading: string;
-        links?:
-          | {
-              link: {
-                label: string;
-                href: string;
-                /**
-                 * Open in a new tab.
-                 */
-                newTab?: boolean | null;
-              };
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  bottomNote?: string | null;
-  /**
-   * Small trust badges at the bottom (e.g. Google Reviews).
-   */
-  badges?:
-    | {
-        label: string;
-        sublabel?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
@@ -1255,74 +705,6 @@ export interface SiteSettingsSelect<T extends boolean = true> {
               href?: T;
               newTab?: T;
             };
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "header_select".
- */
-export interface HeaderSelect<T extends boolean = true> {
-  nav?:
-    | T
-    | {
-        link?:
-          | T
-          | {
-              label?: T;
-              href?: T;
-              newTab?: T;
-            };
-        children?:
-          | T
-          | {
-              link?:
-                | T
-                | {
-                    label?: T;
-                    href?: T;
-                    newTab?: T;
-                  };
-              id?: T;
-            };
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer_select".
- */
-export interface FooterSelect<T extends boolean = true> {
-  columns?:
-    | T
-    | {
-        heading?: T;
-        links?:
-          | T
-          | {
-              link?:
-                | T
-                | {
-                    label?: T;
-                    href?: T;
-                    newTab?: T;
-                  };
-              id?: T;
-            };
-        id?: T;
-      };
-  bottomNote?: T;
-  badges?:
-    | T
-    | {
-        label?: T;
-        sublabel?: T;
-        id?: T;
       };
   updatedAt?: T;
   createdAt?: T;
