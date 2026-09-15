@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import Image from 'next/image'
 import { useLocale } from 'next-intl'
 import { Link, useRouter } from '@/i18n/navigation'
-import { motion, useReducedMotion } from 'framer-motion'
-import { Minus, Plus, ShoppingCart, Check } from 'lucide-react'
+import { motion, useAnimate, useReducedMotion } from 'framer-motion'
+import { AlertCircle, Minus, Plus, ShoppingCart, Check } from 'lucide-react'
+import { EASE, DURATION } from '@/lib/motion'
 import type { ShopProduct, ShopProductDetail, ShopVariationSize } from '../shop-content'
 import { isRefrigerated, displaySizeLabel } from '../shop-content'
 import { getProductUi } from './product-ui'
@@ -60,6 +61,32 @@ export function ProductPurchase({
   const [added, setAdded] = useState(false)
 
   const enabled = hasVariations ? selected !== null : product.inStock
+  // No size picked yet. The buy buttons stay clickable so a click can point at
+  // the size chips instead of silently doing nothing.
+  const needsSize = hasVariations && selected === null
+  const [sizeNudge, setSizeNudge] = useState(0)
+  const sizeHintId = useId()
+  const showSizeError = needsSize && sizeNudge > 0
+  const [sizesScope, animateSizes] = useAnimate<HTMLDivElement>()
+  // Once a size is picked the warning is done; un-picking it later shouldn't
+  // bring the red state back until the next click.
+  useEffect(() => {
+    if (selected) setSizeNudge(0)
+  }, [selected])
+
+  function nudgeSize() {
+    setSizeNudge((n) => n + 1)
+    const el = sizesScope.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    // Bring the chips into view when they're under the sticky header or off screen.
+    if (r.top < 100 || r.bottom > window.innerHeight) {
+      el.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' })
+    }
+    if (!reduce) {
+      animateSizes(el, { x: [0, -6, 6, -4, 4, 0] }, { duration: DURATION.base, ease: EASE.soft })
+    }
+  }
   const cheapest = hasVariations
     ? sizes.reduce((a, b) => (b.sortPrice < a.sortPrice ? b : a))
     : null
@@ -97,6 +124,7 @@ export function ProductPurchase({
   }
 
   function addToCart() {
+    if (needsSize) return nudgeSize()
     if (!enabled) return
     addItem(buildItem(), qty)
     flashDrawer()
@@ -105,6 +133,7 @@ export function ProductPurchase({
   }
 
   function buyNow() {
+    if (needsSize) return nudgeSize()
     if (!enabled) return
     addItem(buildItem(), qty)
     router.push('/checkout')
@@ -149,7 +178,7 @@ export function ProductPurchase({
       {/* Size variations */}
       {hasVariations ? (
         <RevealItem className="flex flex-col gap-3">
-          <div className="flex flex-wrap gap-2.5">
+          <div ref={sizesScope} className="flex flex-wrap gap-2.5" data-testid="size-options">
             {sizes.map((s) => {
               const active = s.label === size
               return (
@@ -162,7 +191,9 @@ export function ProductPurchase({
                     'rounded-[4px] border bg-white px-[15px] py-[13px] text-[17px] leading-[24px] transition-colors',
                     active
                       ? 'border-accent text-accent'
-                      : 'border-muted text-muted hover:border-foreground hover:text-foreground',
+                      : showSizeError
+                        ? 'border-red-600 text-red-700 hover:border-foreground hover:text-foreground'
+                        : 'border-muted text-muted hover:border-foreground hover:text-foreground',
                   )}
                 >
                   {displaySizeLabel(s.label)}
@@ -170,6 +201,18 @@ export function ProductPurchase({
               )
             })}
           </div>
+          {/* Keyed on the attempt so each click is announced again. */}
+          {showSizeError ? (
+            <p
+              key={sizeNudge}
+              id={sizeHintId}
+              role="alert"
+              className="flex items-center gap-1.5 text-[14px] font-medium leading-[21px] text-red-700"
+            >
+              <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
+              {ui.selectSize}
+            </p>
+          ) : null}
           {selected ? (
             <p className="flex items-center gap-2.5">
               {selected.container ? (
@@ -218,12 +261,15 @@ export function ProductPurchase({
         <button
           type="button"
           onClick={addToCart}
-          disabled={!enabled}
+          disabled={!enabled && !needsSize}
+          aria-describedby={needsSize ? sizeHintId : undefined}
           className={cn(
             'flex flex-1 items-center justify-center gap-3 rounded-[4px] border border-accent p-[15px] text-[17px] leading-[24px] text-accent transition-colors',
             enabled
               ? 'hover:border-foreground hover:bg-foreground hover:text-white'
-              : 'cursor-not-allowed opacity-75',
+              : needsSize
+                ? 'opacity-75'
+                : 'cursor-not-allowed opacity-75',
           )}
         >
           {added ? (
@@ -248,16 +294,19 @@ export function ProductPurchase({
         <button
           type="button"
           onClick={buyNow}
-          disabled={!enabled}
+          disabled={!enabled && !needsSize}
+          aria-describedby={needsSize ? sizeHintId : undefined}
           className={cn(
             'flex w-full items-center justify-center gap-3 rounded-[4px] bg-accent p-[15px] text-[17px] leading-[24px] text-white transition-colors',
-            enabled ? 'hover:bg-foreground' : 'cursor-not-allowed opacity-75',
+            enabled ? 'hover:bg-foreground' : needsSize ? 'opacity-75' : 'cursor-not-allowed opacity-75',
           )}
         >
           {ui.buyNow}
         </button>
-        {!enabled && hasVariations ? (
-          <p className="mt-2 text-[14px] leading-[21px] text-muted">{ui.selectSize}</p>
+        {needsSize && !showSizeError ? (
+          <p id={sizeHintId} className="mt-2 text-[14px] leading-[21px] text-muted">
+            {ui.selectSize}
+          </p>
         ) : null}
       </RevealItem>
 
