@@ -24,7 +24,9 @@ import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { default as default_fcba87d952044d186c88ce09c9fc0456 } from '../../../payload/admin/Icon.tsx'
 import { default as default_f7b6eaef7d3bf2699b76b607afe23f9f } from '../../../payload/admin/Logo.tsx'
+import { default as default_19354910246a65ec175ce39ae1f55955 } from '../../../payload/admin/TrainingVideo.tsx'
 import { default as default_50e7073268ebc91ecc0ab0901e3001e7 } from '../../../payload/admin/SoftwareCyCredit.tsx'
+import { default as default_5f6ecf0a00d3aac2a6313ef6af896405 } from '../../../payload/admin/ShopDashboard.tsx'
 import { default as default_11b87406bfa0012f6a8103153b8b4c93 } from '../../../payload/admin/MedusaLinks.tsx'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -57,7 +59,9 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "/payload/admin/Icon.tsx#default": default_fcba87d952044d186c88ce09c9fc0456,
   "/payload/admin/Logo.tsx#default": default_f7b6eaef7d3bf2699b76b607afe23f9f,
+  "/payload/admin/TrainingVideo.tsx#default": default_19354910246a65ec175ce39ae1f55955,
   "/payload/admin/SoftwareCyCredit.tsx#default": default_50e7073268ebc91ecc0ab0901e3001e7,
+  "/payload/admin/ShopDashboard.tsx#default": default_5f6ecf0a00d3aac2a6313ef6af896405,
   "/payload/admin/MedusaLinks.tsx#default": default_11b87406bfa0012f6a8103153b8b4c93,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1

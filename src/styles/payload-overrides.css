@@ -103,3 +103,80 @@
   height: 20px !important;
   min-width: 20px;
 }
+
+/* Dashboard — shop & bookings boxes (ShopDashboard.tsx), icons on every box,
+   and the training video (TrainingVideo.tsx). Globals stay in the sidebar only. */
+.dashboard-icon {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 1.15em;
+  line-height: 1;
+}
+.shop-dashboard {
+  margin-bottom: calc(var(--base) * 1);
+}
+.shop-dashboard__card {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+}
+.shop-dashboard__card .card__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.shop-dashboard__card .dashboard-icon {
+  margin-right: 2px;
+}
+.shop-dashboard__external {
+  color: var(--theme-elevation-400);
+}
+.collections__group:has(a[href*='/admin/globals/']) {
+  display: none;
+}
+#card-pages .card__title::before { content: '📄'; }
+#card-posts .card__title::before { content: '📰'; }
+#card-categories .card__title::before { content: '🗂️'; }
+#card-media .card__title::before { content: '🖼️'; }
+#card-users .card__title::before { content: '👥'; }
+.collections__card-list .card[id^='card-'] .card__title::before {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 1.15em;
+  line-height: 1;
+}
+.training-video {
+  margin-top: calc(var(--base) * 2);
+  max-width: 960px;
+}
+.training-video__frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: var(--style-radius-m, 8px);
+  background: var(--theme-elevation-50);
+}
+.training-video__frame iframe,
+.training-video__frame video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.training-video__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: calc(var(--base) * 1);
+  text-align: center;
+  color: var(--theme-elevation-500);
+}
+.training-video__placeholder span {
+  font-size: 40px;
+  line-height: 1;
+}

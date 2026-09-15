@@ -37,6 +37,10 @@ export default buildConfig({
       beforeNavLinks: ['/payload/admin/MedusaLinks.tsx'],
       // Foot of the sidebar, directly above logout: the SoftwareCy credit.
       afterNavLinks: ['/payload/admin/SoftwareCyCredit.tsx'],
+      // Dashboard: shop & bookings boxes (Medusa) above Collections, the
+      // editors' training video below.
+      beforeDashboard: ['/payload/admin/ShopDashboard.tsx'],
+      afterDashboard: ['/payload/admin/TrainingVideo.tsx'],
     },
   },
   collections: [Pages, Posts, Categories, Media, Users],

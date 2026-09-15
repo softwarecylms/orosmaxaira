@@ -29,11 +29,13 @@ const pageUrl = (slug: string | undefined, locale?: string) => {
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
+  // The list reads A→Ω by title.
+  defaultSort: 'title',
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
-    // Every page on one screen.
-    pagination: { defaultLimit: 50 },
+    // 15 per screen, A→Ω by title.
+    pagination: { defaultLimit: 15, limits: [15, 30, 60] },
     description:
       'All the site’s pages. Open one to change its title, link and SEO, and use the Visual Editor to edit what the page shows.',
     preview: (doc, { locale }) => pageUrl(doc?.slug as string | undefined, locale),
