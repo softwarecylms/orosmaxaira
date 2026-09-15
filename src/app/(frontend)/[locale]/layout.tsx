@@ -10,6 +10,11 @@ import { MotionReady } from '@/components/motion/motion-ready'
 import { CartProvider } from '@/components/commerce/cart-store'
 import { CartDrawer } from '@/components/commerce/cart-drawer'
 import { PreviewBridge } from '@/components/preview/preview-bridge'
+import {
+  TagManagerNoscript,
+  TagManagerScript,
+  tagManagerEnabled,
+} from '@/components/analytics/google-tag-manager'
 import { siteUrl } from '@/lib/seo'
 import { routing, type Locale } from '@/i18n/routing'
 
@@ -86,10 +91,14 @@ export default async function FrontendLayout({
   const { locale } = await params
   if (!hasLocale(routing.locales, locale)) notFound()
   setRequestLocale(locale)
+  // Google Tag Manager — public site only (not the CMS admin or the visual editor).
+  const tagManager = await tagManagerEnabled()
 
   return (
     <html lang={locale} className={`${sans.variable} ${display.variable}`}>
+      <head>{tagManager && <TagManagerScript />}</head>
       <body className="bg-background text-foreground antialiased" suppressHydrationWarning>
+        {tagManager && <TagManagerNoscript />}
         <NextIntlClientProvider>
           <MotionReady>
             <CartProvider>
