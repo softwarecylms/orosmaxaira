@@ -1,16 +1,17 @@
 import Image from 'next/image'
 import { Link } from '@/i18n/navigation'
 import { ArrowRight } from 'lucide-react'
-import { getActivitiesContent, getActivitiesUi } from '@/components/activities/activities-content'
+import { getActivitiesUi } from '@/components/activities/activities-content'
 import { SectionHead } from '@/components/shared/section-head'
 import { RevealUp } from '@/components/home/reveal-up'
+import { loadActivitiesContent } from '@/lib/content/load'
 
 /**
  * "Ανακαλύψτε Περισσότερα" / "Discover More" — related activity cards. Sourced
  * from the localized activities content, filtered by the activity's
  * `related_slugs` (the other activities' hrefs), excluding the current page.
  */
-export function ActivityRelated({
+export async function ActivityRelated({
   slugs,
   currentSlug,
   locale = 'el',
@@ -20,7 +21,7 @@ export function ActivityRelated({
   locale?: string
 }) {
   const ui = getActivitiesUi(locale)
-  const items = getActivitiesContent(locale).experiences.items
+  const items = (await loadActivitiesContent(locale)).experiences.items
   // Match on the last path segment so `related_slugs` works whether the admin
   // stored a bare slug ("xenagiseis") or a full href ("/drastiriotites/xenagiseis").
   const lastSeg = (s: string) => s.replace(/\/+$/, '').split('/').pop() ?? s

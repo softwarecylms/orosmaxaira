@@ -12,7 +12,6 @@ import { ContactHero } from '@/components/contact/contact-hero'
 import { ContactMap } from '@/components/contact/contact-map'
 import { ContactMessageForm } from '@/components/contact/contact-message-form'
 import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
-import { getHomeContent } from '@/components/home/home-content'
 import { seoMetadata } from '@/lib/seo'
 import {
   FacebookSolid,
@@ -21,6 +20,7 @@ import {
   PinterestSolid,
   LinkedinSolid,
 } from '@/components/layout/social-icons'
+import { loadContactContent, loadSiteContent } from '@/lib/content/load'
 
 export async function generateMetadata({
   params,
@@ -28,7 +28,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const { meta } = getContactContent(locale)
+  const { meta } = await loadContactContent(locale)
   return seoMetadata({ locale, path: '/epikoinonia', title: meta.title, description: meta.description })
 }
 
@@ -56,9 +56,9 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
 /** Contact page (Figma 146:957) — header/footer come from the shared layout. */
 export default async function ContactPage() {
   const locale = await getLocale()
-  const c = getContactContent(locale)
-  const { FOOTER } = getHomeContent(locale)
-  const social = getHomeContent(locale).FOOTER.social
+  const c = await loadContactContent(locale)
+  const { FOOTER } = await loadSiteContent(locale)
+  const social = FOOTER.social
 
   return (
     <>

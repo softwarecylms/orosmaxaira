@@ -1,12 +1,12 @@
 import Image from 'next/image'
 import { getLocale } from 'next-intl/server'
-import { getHomeContent } from './home-content'
 import { CtaLink } from './cta-link'
 import { RevealUp } from './reveal-up'
+import { loadHomeContent } from '@/lib/content/load'
 
 /** Section 8 — "Από γενιά σε γενιά" heritage block (Figma 118:600). */
 export async function Heritage() {
-  const { HERITAGE } = getHomeContent(await getLocale())
+  const { HERITAGE } = await loadHomeContent(await getLocale())
   return (
     <section data-testid="heritage" className="bg-offwhite py-12 md:py-[70px]">
       <div className="container-wide">

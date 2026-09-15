@@ -1,7 +1,8 @@
 import { getLocale } from 'next-intl/server'
 import { RevealGroup, RevealItem } from './reveal-up'
-import { getHomeContent, type TrustIcon } from './home-content'
+import { type TrustIcon } from './home-content'
 import { PurityIcon, DeliveryIcon, EcoIcon, PaymentIcon } from './trust-icons'
+import { loadHomeContent } from '@/lib/content/load'
 
 const ICONS: Record<TrustIcon, (props: { className?: string }) => React.ReactElement> = {
   purity: PurityIcon,
@@ -12,7 +13,7 @@ const ICONS: Record<TrustIcon, (props: { className?: string }) => React.ReactEle
 
 /** Section 3 — four trust badges (Figma 156:592). */
 export async function TrustBadges() {
-  const { TRUST } = getHomeContent(await getLocale())
+  const { TRUST } = await loadHomeContent(await getLocale())
   return (
     <section data-testid="trust-badges" className="bg-white py-12 md:py-[72px]">
       <div className="container-wide">

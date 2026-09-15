@@ -1,14 +1,14 @@
 import { getLocale } from 'next-intl/server'
-import { getHomeContent } from './home-content'
 import { CtaLink } from './cta-link'
 import { RevealUp } from './reveal-up'
 import { AdoptHiveScene } from './adopt-hive-scene'
+import { loadHomeContent } from '@/lib/content/load'
 
 /** Section 7 — "Υιοθετώ μια κυψέλη" gold banner (Figma 118:547).
  *  The photo comes alive: a Ken Burns drift plus bees on the wing (see
  *  AdoptHiveScene) — the page's signature flourish. */
 export async function AdoptHiveBanner({ body }: { body?: string } = {}) {
-  const { ADOPT } = getHomeContent(await getLocale())
+  const { ADOPT } = await loadHomeContent(await getLocale())
   const text = body ?? ADOPT.body
   return (
     <section data-testid="adopt-hive" className="bg-white pb-12 pt-6 md:pb-[70px] md:pt-[35px]">

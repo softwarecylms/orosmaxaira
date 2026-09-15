@@ -4,7 +4,6 @@ import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import { Phone, User, Heart } from 'lucide-react'
 import { CartBadge } from '@/components/commerce/cart-badge'
-import { getHomeContent } from '@/components/home/home-content'
 import type { Locale } from '@/i18n/routing'
 import { HeaderSearch } from './header-search'
 import { HeaderMobile } from './header-mobile'
@@ -13,6 +12,7 @@ import { HeaderScrollShadow } from './header-scroll-shadow'
 import { HeaderReveal } from './header-reveal'
 import { AnnouncementRotator } from './announcement-rotator'
 import { LanguageSwitcher } from './language-switcher'
+import { loadSiteContent } from '@/lib/content/load'
 
 type SiteHeaderProps = {
   locale: Locale
@@ -22,14 +22,14 @@ type SiteHeaderProps = {
  * OROS MACHAIRA header (Figma 156:1218): announcement bar + utility row
  * (search, phone, language, account, wishlist, cart) + nav row. Search /
  * wishlist are visual stubs; the cart pill (<CartBadge>) reads the client-side
- * honey cart. Content is locale-aware via getHomeContent(locale).
+ * honey cart. Content comes from loadSiteContent(locale).
  */
 /** `<b>` inside an announcement string — the threshold or the discount code. */
 const emphasis = (chunks: ReactNode) => <strong className="font-bold">{chunks}</strong>
 
 export async function SiteHeader({ locale }: SiteHeaderProps) {
   const t = await getTranslations('header')
-  const { NAV, ADOPT_LINK, CONTACT, MEGA_MENU, SEARCH_PLACEHOLDERS } = getHomeContent(locale)
+  const { NAV, ADOPT_LINK, CONTACT, MEGA_MENU, SEARCH_PLACEHOLDERS } = await loadSiteContent(locale)
 
   return (
     <>

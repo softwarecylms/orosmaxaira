@@ -1,0 +1,366 @@
+{
+  "key": "about",
+  "data": {
+    "meta": {
+      "title": "Ποιοί είμαστε",
+      "description": "Είμαστε μία μελισσοκομική οικογένεια. Ασχολούμαστε επαγγελματικά με τη μελισσοκομία από το 1983 — αγνό κυπριακό μέλι από τα άνθη και τα βότανα του Μαχαιρά."
+    },
+    "breadcrumb": [
+      {
+        "label": "Αρχική",
+        "href": "/",
+        "_id": "3ba9ce7521"
+      },
+      {
+        "label": "Ποιοί είμαστε",
+        "_id": "9023c6cedf"
+      }
+    ],
+    "hero": {
+      "eyebrow": "Η ΙΣΤΟΡΙΑ ΜΑΣ",
+      "title": "Ποιοι Είμαστε",
+      "body": [
+        "Είμαστε μία μελισσοκομική οικογένεια. Ασχολούμαστε επαγγελματικά με τη μελισσοκομία από το 1983. Όλα αυτά τα χρόνια, με σκληρή δουλειά και αγάπη για τις μέλισσες καταφέραμε να δημιουργήσουμε μια σχέση εμπιστοσύνης με τους πελάτες μας.",
+        "Έχοντας την ευθύνη όλης της διαδικασίας παραγωγής του μελιού από την κυψέλη στον καταναλωτή, μπορούμε να διασφαλίσουμε την υψηλή ποιότητα και γνησιότητά του μελιού μας."
+      ],
+      "image": "/images/about/about-hero.png",
+      "imageAlt": "Η οικογένεια Όρος Μαχαιρά στο μελισσοκομείο",
+      "author": {
+        "name": "Μέλιος Φιλίππου",
+        "role": "Διευθυντής",
+        "avatar": "/images/about/family-melios.webp"
+      },
+      "awardsCta": "Βραβεία & Διακρίσεις"
+    },
+    "stats": [
+      {
+        "icon": "experience",
+        "value": "40+",
+        "label": "Χρόνια εμπειρίας",
+        "_id": "cb6c3d4493"
+      },
+      {
+        "icon": "clients",
+        "value": "10K",
+        "label": "Έμπιστους πελάτες",
+        "_id": "3695b160fd"
+      },
+      {
+        "icon": "honey",
+        "value": "120",
+        "label": "Τόνοι μέλι τον χρόνο",
+        "_id": "45b7c7a23f"
+      },
+      {
+        "icon": "award",
+        "value": "7",
+        "label": "Βραβεία Ποιότητας",
+        "_id": "337c5ae670"
+      },
+      {
+        "icon": "points",
+        "value": "600+",
+        "label": "Σημεία Πώλησης",
+        "_id": "147b9284c6"
+      }
+    ],
+    "values": [
+      {
+        "icon": "purity",
+        "title": "Αγνότητα",
+        "text": "Το μέλι μας φτάνει στο τραπέζι σας ακριβώς όπως το φτιάχνει η μέλισσα.",
+        "_id": "b20da7aae4"
+      },
+      {
+        "icon": "eco",
+        "title": "Περιβάλλον",
+        "text": "Πιστοποιημένοι με **ISO 14001** & **ISO 22000** - σεβασμός για τη γη και τις μέλισσες.",
+        "_id": "93fedb75cf"
+      },
+      {
+        "icon": "family",
+        "title": "Οικογένεια",
+        "text": "Από το 1983, τρεις γενιές με το ίδιο πάθος για τη φύση και τις μέλισσες.",
+        "_id": "c8993c7e88"
+      }
+    ],
+    "indoor": {
+      "heading": "Στους εσωτερικούς μας χώρους",
+      "cards": [
+        {
+          "title": "Προεργασία & Εμφιάλωση",
+          "text": "Αίθουσα για την προεργασία και εμφιάλωση των μελιών μας.",
+          "image": "/images/about/indoor-1.webp",
+          "_id": "eea7802970"
+        },
+        {
+          "title": "Η ιστορία μας",
+          "text": "Αίθουσα προβολών με την ιστορία μας και τον μαγικό κόσμο της μέλισσας.",
+          "image": "/images/about/indoor-2.webp",
+          "_id": "592fe1fa0c"
+        },
+        {
+          "title": "Υποδοχή & Γευσιγνωσία",
+          "text": "Φιλόξενο χώρο υποδοχής και γευσιγνωσίας των προϊόντων μας.",
+          "image": "/images/about/indoor-3.webp",
+          "_id": "0bfe152b1d"
+        }
+      ]
+    },
+    "outdoor": {
+      "heading": "Στους εξωτερικούς μας χώρους",
+      "cta": {
+        "label": "Δείτε περισσότερα",
+        "href": "/drastiriotites"
+      },
+      "arrows": {
+        "prev": "Προηγούμενο",
+        "next": "Επόμενο"
+      },
+      "slides": [
+        {
+          "title": "Εργαστήρια & Δραστηριότητες",
+          "href": "/drastiriotites",
+          "text": "Ειδικά διαμορφωμένο χώρο για τη διεξαγωγή εργαστηρίων και εκπαιδευτικών δραστηριοτήτων.",
+          "image": "/images/about/outdoor-workshops.png",
+          "_id": "9fd9b79155"
+        },
+        {
+          "title": "Πλούσιους Κήπους",
+          "href": "/drastiriotites/xenagiseis",
+          "text": "Πλούσιους κήπους, που αποτελούν τροφή για τις μέλισσές μας και ένα όμορφο περιβάλλον για τους επισκέπτες.",
+          "image": "/images/about/outdoor-gardens.png",
+          "_id": "e42eda66f3"
+        },
+        {
+          "title": "Εκπαιδευτικά Παιχνίδια",
+          "text": "Διαδραστικά εκπαιδευτικά παιχνίδια για μικρούς και μεγάλους, με θέμα τη μέλισσα και τα προϊόντα της.",
+          "image": "/images/about/outdoor-games.png",
+          "_id": "068fedd392"
+        },
+        {
+          "title": "Επίσκεψη στις Κυψέλες",
+          "href": "/drastiriotites/peripeteies-stis-kypseles",
+          "text": "Δυνατότητα για επίσκεψη στις κυψέλες (με την κατάλληλη προστασία), βιώνοντας από κοντά τον κόσμο του μελισσιού.",
+          "image": "/images/about/outdoor-hives.png",
+          "_id": "09fbe4dfce"
+        },
+        {
+          "title": "Μελισσοθεραπεία",
+          "href": "/drastiriotites/melissotherapeia",
+          "text": "Έναν ειδικό χώρο για μελισσοθεραπεία, για όσους θέλουν να ζήσουν από κοντά την ατμόσφαιρα της κυψέλης.",
+          "image": "/images/about/outdoor-therapy.png",
+          "_id": "8e3a732d0f"
+        }
+      ]
+    },
+    "band": "Η λειτουργία όλων αυτών των χώρων και δραστηριοτήτων διέπεται από τη δέσμευσή μας για βιώσιμη ανάπτυξη και περιβαλλοντική ευθύνη, η οποία αποδεικνύεται έμπρακτα με την εφαρμογή του διεθνούς προτύπου **ISO 14001**: Σύστημα Περιβαλλοντικής Διαχείρισης. Παράλληλα, αναγνωρίζοντας την υψίστη σημασία της ασφάλειας των τροφίμων, πήραμε την πιστοποίηση **ISO 22000**: Σύστημα Διαχείρισης Ασφάλειας Τροφίμων, ενισχύοντας περαιτέρω την εμπιστοσύνη των καταναλωτών στα προϊόντα μας.",
+    "family": {
+      "heading": "Η Οικογένειά μας",
+      "members": [
+        {
+          "name": "Μέλιος Φιλίππου",
+          "role": "Διευθυντής",
+          "photo": "/images/about/family-melios.webp",
+          "_id": "348e3f7380"
+        },
+        {
+          "name": "Βαλεντίνος Φιλίππου",
+          "role": "Υποδιευθυντής",
+          "photo": "/images/about/family-valentinos.webp",
+          "_id": "110bc4754d"
+        },
+        {
+          "name": "Μαρία Σολομωνίδου",
+          "role": "Υπεύθυνη εργοστασίου",
+          "photo": "/images/about/family-maria.webp",
+          "_id": "3545f826bd"
+        },
+        {
+          "name": "Νίκος Φιλίππου",
+          "role": "Υπεύθυνος παραγωγής (Μελισσοκόμος)",
+          "photo": "/images/about/family-nikos.webp",
+          "_id": "4e22140f64"
+        },
+        {
+          "name": "Μιχάλης Φιλίππου",
+          "role": "Υπεύθυνος παραγωγής (Μελισσοκόμος)",
+          "photo": "/images/about/family-michalis.webp",
+          "_id": "e1f1f76026"
+        }
+      ]
+    },
+    "goal": {
+      "eyebrow": "ΟΡΟΣ ΜΑΧΑΙΡΑ",
+      "title": "Στόχος μας",
+      "body": "Στόχος μας είναι να παράγουμε και να διαθέτουμε στην αγορά όλα τα προϊόντα της μέλισσας διατηρώντας τα αγνά και θρεπτικά όπως η μέλισσα τα φτιάχνει.",
+      "image": "/images/about/goal-bg-v3.webp",
+      "imageAlt": "Κερί μέλισσας σε ξύλινη επιφάνεια — Όρος Μαχαιρά"
+    }
+  },
+  "translations": {
+    "en": {
+      "meta": {
+        "title": "About Us",
+        "description": "We are a beekeeping family, working professionally in the beekeeping sector since 1983 — pure Cypriot honey from the flowers and herbs of Machaira."
+      },
+      "breadcrumb": [
+        {
+          "label": "Home",
+          "_id": "3ba9ce7521"
+        },
+        {
+          "label": "About Us",
+          "_id": "9023c6cedf"
+        }
+      ],
+      "hero": {
+        "eyebrow": "OUR STORY",
+        "title": "About Us",
+        "body": [
+          "We are a beekeeping family. We have been beekeeping professionally since 1983. Over the years, hard work and a love of bees have helped us build strong relationships with our customers, founded on trust.",
+          "We take responsibility for every stage of the process — from the hive to your table — which is how we can guarantee the quality and authenticity of our honey."
+        ],
+        "imageAlt": "The Oros Machaira family at the apiary",
+        "author": {
+          "name": "Melios Filippou",
+          "role": "Director"
+        },
+        "awardsCta": "Awards & Distinctions"
+      },
+      "stats": [
+        {
+          "label": "Years of experience",
+          "_id": "cb6c3d4493"
+        },
+        {
+          "label": "Customers who trust us",
+          "_id": "3695b160fd"
+        },
+        {
+          "label": "Tonnes of honey per year",
+          "_id": "45b7c7a23f"
+        },
+        {
+          "label": "Quality Awards",
+          "_id": "337c5ae670"
+        },
+        {
+          "label": "Points of sale",
+          "_id": "147b9284c6"
+        }
+      ],
+      "values": [
+        {
+          "title": "Purity",
+          "text": "Our honey reaches your table exactly as the bee makes it.",
+          "_id": "b20da7aae4"
+        },
+        {
+          "title": "Environment",
+          "text": "Certified to **ISO 14001** & **ISO 22000** — respect for the land and the bees.",
+          "_id": "93fedb75cf"
+        },
+        {
+          "title": "Family",
+          "text": "Since 1983, three generations with the same passion for nature and bees.",
+          "_id": "c8993c7e88"
+        }
+      ],
+      "indoor": {
+        "heading": "In our indoor spaces",
+        "cards": [
+          {
+            "title": "Processing & Bottling",
+            "text": "Where we process and bottle our honey.",
+            "_id": "eea7802970"
+          },
+          {
+            "title": "Our History",
+            "text": "A screening room where we tell our story and introduce the world of the bee.",
+            "_id": "592fe1fa0c"
+          },
+          {
+            "title": "Reception & Tasting",
+            "text": "A welcoming reception and tasting area to try out our products.",
+            "_id": "0bfe152b1d"
+          }
+        ]
+      },
+      "outdoor": {
+        "heading": "In our outdoor spaces",
+        "cta": {
+          "label": "Learn more"
+        },
+        "arrows": {
+          "prev": "Previous",
+          "next": "Next"
+        },
+        "slides": [
+          {
+            "title": "Workshops & Activities",
+            "text": "A specially designed area for conducting workshops and educational activities.",
+            "_id": "9fd9b79155"
+          },
+          {
+            "title": "Lush Gardens",
+            "text": "Lush gardens featuring apiary plants, providing food for our bees and a beautiful environment for visitors.",
+            "_id": "e42eda66f3"
+          },
+          {
+            "title": "Educational Games",
+            "text": "Interactive educational games for children and adults alike alike, themed around the bee and its products.",
+            "_id": "068fedd392"
+          },
+          {
+            "title": "Visiting the Hives",
+            "text": "The unique opportunity to visit the hives (with appropriate protection), experiencing the world of the beehive up close.",
+            "_id": "09fbe4dfce"
+          },
+          {
+            "title": "Apitherapy",
+            "text": "A special area dedicated to apitherapy, for those who want to experience the atmosphere of the hive at first hand.",
+            "_id": "8e3a732d0f"
+          }
+        ]
+      },
+      "band": "Everything we do in these spaces is guided by our commitment to sustainability and environmental responsibility — a commitment we put into practice through **ISO 14001**, the international environmental management standard. Food safety matters just as much, which is why we are also certified to **ISO 22000**, the food safety management standard, further strengthening consumer confidence in our products.",
+      "family": {
+        "heading": "Our Family",
+        "members": [
+          {
+            "name": "Melios Filippou",
+            "role": "Director",
+            "_id": "348e3f7380"
+          },
+          {
+            "name": "Valentinos Filippou",
+            "role": "Deputy Director",
+            "_id": "110bc4754d"
+          },
+          {
+            "name": "Maria Solomonidou",
+            "role": "Plant Manager",
+            "_id": "3545f826bd"
+          },
+          {
+            "name": "Nikos Filippou",
+            "role": "Production Manager (bee-keeper)",
+            "_id": "4e22140f64"
+          },
+          {
+            "name": "Michalis Filippou",
+            "role": "Production Manager (bee-keeper)",
+            "_id": "e1f1f76026"
+          }
+        ]
+      },
+      "goal": {
+        "eyebrow": "OROS MACHAIRA",
+        "title": "Our Goal",
+        "body": "Our goal is to produce and market all bee products while keeping them pure and nutritious, just as the bee makes them.",
+        "imageAlt": "Beeswax on a wooden surface — Oros Machaira"
+      }
+    }
+  }
+}

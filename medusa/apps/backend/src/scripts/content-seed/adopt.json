@@ -1,0 +1,667 @@
+{
+  "key": "adopt",
+  "data": {
+    "meta": {
+      "title": "Υιοθετώ μια Κυψέλη",
+      "description": "Εταιρικό πρόγραμμα «Υιοθετώ μια Κυψέλη» του Όρους Μαχαιρά: υιοθετήστε μια κυψέλη, ζήστε μια μοναδική βιωματική εμπειρία με την ομάδα σας και στηρίξτε τις μέλισσες και το περιβάλλον."
+    },
+    "hero": {
+      "wordmark": "/images/adopt/adopt-logo.webp",
+      "wordmarkAlt": "Adopt a Hive — Όρος Μαχαιρά",
+      "image": "/images/adopt/hero.webp",
+      "imageAlt": "Ομάδα εργαζομένων με στολές μελισσοκόμου γύρω από μια κηρήθρα στο μελισσοκομείο του Όρους Μαχαιρά",
+      "taglinePre": "Γίνε και εσύ με την ομάδα σου μέρος του προγράμματος «Υιοθετώ μια κυψέλη» και…",
+      "taglineAccent": "Bee-come a Hero",
+      "taglinePost": "για τις μέλισσες και το περιβάλλον.",
+      "ctaPrimary": {
+        "label": "Υιοθετήστε μια κυψέλη",
+        "href": "#cta"
+      },
+      "ctaSecondary": {
+        "label": "Δείτε το πακέτο",
+        "href": "#package"
+      }
+    },
+    "stats": [
+      {
+        "value": "200",
+        "label": "κυψέλες — ο στόχος μας",
+        "_id": "f0548cf384"
+      },
+      {
+        "value": "6,000,000",
+        "label": "μέλισσες",
+        "_id": "e90350eac2"
+      },
+      {
+        "value": "11",
+        "label": "εταιρείες-μέλη",
+        "_id": "79df723940"
+      },
+      {
+        "value": "1",
+        "label": "έτος, ανανεώσιμο",
+        "_id": "f9739a44d6"
+      }
+    ],
+    "intro": {
+      "eyebrow": "Η Πρωτοβουλία",
+      "hook": "Τι θα γινόταν άραγε αν κάθε εταιρεία δεν περιοριζόταν μόνο σε επιχειρηματικούς στόχους, αλλά διεύρυνε τις δράσεις της και σε περιβαλλοντικά θέματα;",
+      "body": "Το πρόγραμμα “Υιοθετώ μια κυψέλη” είναι μια πρωτοποριακή πρωτοβουλία από το «Όρος Μαχαιρά» η οποία προσφέρει μια μοναδική ευκαιρία σε κάθε εταιρεία να συνεισφέρει άμεσα στην ευημερία του πλανήτη μας ενισχύοντας παράλληλα το πνεύμα της ομαδικότητας και συνεργασίας μεταξύ των εργαζομένων.",
+      "ctaLabel": "Υιοθετήστε μια κυψέλη",
+      "whyHeading": "Γιατί να Υιοθετήσετε μια Κυψέλη;",
+      "benefits": [
+        {
+          "icon": "Sprout",
+          "title": "Σώζετε τους επικονιαστές",
+          "text": "Κάθε κυψέλη ενισχύει τον πληθυσμό των μελισσών και τον πολλαπλασιασμό των φυτών.",
+          "_id": "3db6f00675"
+        },
+        {
+          "icon": "Users",
+          "title": "Δένετε την ομάδα σας",
+          "text": "Μια μοναδική ομαδική εμπειρία μακριά από το γραφείο, μέσα στη φύση.",
+          "_id": "2ffb19ee8b"
+        },
+        {
+          "icon": "GraduationCap",
+          "title": "Αποκτάτε γνώση & εμπειρία",
+          "text": "Πρακτική επαφή με τον κόσμο της μελισσοκομίας και του οικοσυστήματος.",
+          "_id": "230d93bf20"
+        }
+      ]
+    },
+    "package": {
+      "eyebrow": "Το Πρόγραμμα",
+      "heading": "Τι Περιλαμβάνει το Πακέτο;",
+      "steps": [
+        {
+          "num": "01",
+          "title": "Υιοθεσία Κυψέλης",
+          "text": "Μια κυψέλη υιοθετείται και συντηρείται από εμάς στο όνομα της εταιρείας σας.",
+          "_id": "0224d24985"
+        },
+        {
+          "num": "02",
+          "title": "Επισκέψεις στο Μελισσοκομείο",
+          "text": "Δύο βιωματικές επισκέψεις της ομάδας σας — έως 25 άτομα ανά επίσκεψη.",
+          "link": {
+            "label": "Δείτε τις δύο επισκέψεις",
+            "href": "#visits"
+          },
+          "_id": "77e110592e"
+        },
+        {
+          "num": "03",
+          "title": "Πιστοποιητικό Υιοθεσίας",
+          "text": "Επίσημο πιστοποιητικό που αναγνωρίζει τη συνεισφορά σας στη διατήρηση των μελισσών.",
+          "_id": "e7a67b69dc"
+        }
+      ]
+    },
+    "visits": {
+      "eyebrow": "Η Εμπειρία",
+      "heading": "Οι Δύο Επισκέψεις",
+      "sub": "Δύο ξεχωριστές ημέρες βιωματικής εμπειρίας για τις ομάδες σας.",
+      "items": [
+        {
+          "title": "Πρώτη Επίσκεψη",
+          "image": "/images/adopt/gallery/03.webp",
+          "imageClass": "object-[center_80%]",
+          "pills": [
+            "Απρίλιος–Αύγουστος",
+            "έως 25 άτομα"
+          ],
+          "activities": [
+            {
+              "text": "Εκπαιδευτική περιήγηση & γνωριμία με τις μέλισσες — η ομάδα ντύνεται μελισσοκόμοι και επισκέπτεται τις κυψέλες με την καθοδήγηση των έμπειρων μελισσοκόμων μας.",
+              "_id": "f479aad6b9"
+            },
+            {
+              "text": "Παρακολούθηση εκπαιδευτικού σεμιναρίου για τον ρόλο των μελισσών στο οικοσύστημα και τη σημασία τους για το περιβάλλον.",
+              "_id": "8b8e3e2d41"
+            },
+            {
+              "text": "Γευσιγνωσία & εμφιάλωση φρέσκου μελιού κατευθείαν από την κυψέλη.",
+              "_id": "fbdc88627e"
+            },
+            {
+              "text": "Βάψιμο της κυψέλης στα χρώματα της εταιρείας σας — μια δημιουργική ομαδική δραστηριότητα.",
+              "_id": "3ccdccb312"
+            }
+          ],
+          "_id": "4cf1ba0bef"
+        },
+        {
+          "title": "Δεύτερη Επίσκεψη",
+          "image": "/images/adopt/visit-2.webp",
+          "imageClass": "object-[center_82%]",
+          "pills": [
+            "Ιούνιος–Οκτώβριος",
+            "έως 25 άτομα"
+          ],
+          "activities": [
+            {
+              "text": "Το δεύτερο γκρουπ της ομάδας σας ζει όλες τις δραστηριότητες της πρώτης επίσκεψης — εκτός από το βάψιμο της κυψέλης.",
+              "_id": "66eb0f2f7f"
+            },
+            {
+              "text": "Περίπου 20 kg μέλι ανά κυψέλη, σε βάζα των 250 g — αποκλειστικά εταιρικά δώρα για τους εργαζομένους ή τους πελάτες σας.",
+              "_id": "cd6f8a6d3a"
+            },
+            {
+              "text": "Η κυψέλη συντηρείται από έμπειρους μελισσοκόμους στο όνομα της εταιρείας σας, καθ’ όλη τη διάρκεια της υιοθεσίας.",
+              "_id": "9bbf5ff8e9"
+            },
+            {
+              "text": "Λαμβάνετε τακτικά reports & videos με την πραγματική κατάσταση του μελισσιού σας.",
+              "_id": "75b0466d05"
+            }
+          ],
+          "_id": "1c7e70f451"
+        }
+      ]
+    },
+    "gallery": {
+      "eyebrow": "Στιγμές",
+      "heading": "Η Εμπειρία σε Εικόνες",
+      "images": [
+        {
+          "src": "/images/adopt/gallery/01.webp",
+          "alt": "",
+          "_id": "bd9b58fca9"
+        },
+        {
+          "src": "/images/adopt/gallery/02.webp",
+          "alt": "",
+          "_id": "12ea513e25"
+        },
+        {
+          "src": "/images/adopt/gallery/03.webp",
+          "alt": "",
+          "_id": "792062fe6d"
+        },
+        {
+          "src": "/images/adopt/gallery/04.webp",
+          "alt": "",
+          "_id": "fc661cfbf9"
+        },
+        {
+          "src": "/images/adopt/gallery/05.webp",
+          "alt": "",
+          "_id": "ec1aa00421"
+        },
+        {
+          "src": "/images/adopt/gallery/06.webp",
+          "alt": "",
+          "_id": "0b30c6ee79"
+        },
+        {
+          "src": "/images/adopt/gallery/07.webp",
+          "alt": "",
+          "_id": "c730b80c75"
+        },
+        {
+          "src": "/images/adopt/gallery/08.webp",
+          "alt": "",
+          "_id": "7b1bc8e2f5"
+        },
+        {
+          "src": "/images/adopt/gallery/09.webp",
+          "alt": "",
+          "_id": "7d884a5854"
+        },
+        {
+          "src": "/images/adopt/gallery/10.webp",
+          "alt": "",
+          "_id": "d68744afeb"
+        },
+        {
+          "src": "/images/adopt/gallery/11.webp",
+          "alt": "",
+          "_id": "1d8bcf3c5a"
+        },
+        {
+          "src": "/images/adopt/gallery/12.webp",
+          "alt": "",
+          "_id": "41d5a989d6"
+        },
+        {
+          "src": "/images/adopt/gallery/13.webp",
+          "alt": "",
+          "_id": "715b85ff13"
+        },
+        {
+          "src": "/images/adopt/gallery/14.webp",
+          "alt": "",
+          "_id": "301bed6d52"
+        }
+      ]
+    },
+    "goal": {
+      "eyebrow": "Ο Στόχος μας",
+      "headingLines": [
+        "200 κυψέλες.",
+        "6.000.000 μέλισσες."
+      ],
+      "body": "Δεν πρόκειται μόνο για τη διάσωση των μελισσών. Πρόκειται για τη διάσωση του πλανήτη μας και της βιοποικιλότητας που τον συντηρεί.",
+      "linkLabel": "Αφανείς Ήρωες της Φύσης",
+      "linkHref": "/afaneis-iroes-tis-fysis",
+      "impactHeading": "Γιατί Έχει Σημασία;",
+      "impact": [
+        {
+          "value": "75%",
+          "text": "των παγκόσμιων καλλιεργειών τροφίμων εξαρτώνται από επικονιαστές.",
+          "_id": "b88dd1fb6e"
+        },
+        {
+          "value": "80%",
+          "text": "της επικονίασης παγκοσμίως γίνεται από τις μέλισσες.",
+          "_id": "9e11496916"
+        }
+      ],
+      "closing": "Υιοθετώντας μια κυψέλη, η εταιρεία σας προστατεύει αυτά τα ανεκτίμητα έντομα — και μαζί, τον πλανήτη μας."
+    },
+    "progress": {
+      "eyebrow": "Η Πρόοδός μας",
+      "heading": "Μαζί, προς τις 200 κυψέλες",
+      "unit": "κυψέλες",
+      "adopted": "υιοθετήθηκαν μέχρι σήμερα",
+      "ofGoal": "του στόχου",
+      "remainingPre": "Απομένουν",
+      "remainingPost": "για να πετύχουμε τον στόχο μας.",
+      "cta": "Υιοθετήστε μια κυψέλη"
+    },
+    "faq": {
+      "eyebrow": "Απορίες",
+      "heading": "Συχνές Ερωτήσεις",
+      "intro": "Ό,τι χρειάζεται να ξέρετε πριν γίνετε μέρος του προγράμματος.",
+      "cta": {
+        "label": "Έχετε άλλη ερώτηση;",
+        "href": "#cta"
+      },
+      "items": [
+        {
+          "q": "Χρειάζεται να έχω γνώσεις μελισσοκομίας για να συμμετέχω;",
+          "a": "Όχι. Η φροντίδα της κυψέλης γίνεται εξ ολοκλήρου από την ομάδα μας και τους έμπειρους μελισσοκόμους της.",
+          "_id": "2d7baaa87c"
+        },
+        {
+          "q": "Πού βρίσκονται οι κυψέλες;",
+          "a": "Οι κυψέλες φιλοξενούνται σε ελεγχόμενους φυσικούς χώρους, στις εγκαταστάσεις του Όρους Μαχαιρά.",
+          "_id": "9e58613f89"
+        },
+        {
+          "q": "Πόσο διαρκεί η υιοθεσία μιας κυψέλης;",
+          "a": "Κάθε υιοθεσία διαρκεί ένα έτος, με δυνατότητα ανανέωσης.",
+          "_id": "34f08d73b1"
+        }
+      ]
+    },
+    "partners": {
+      "eyebrow": "Εταιρείες-μέλη",
+      "heading": "Οι Εταιρείες που μας Εμπιστεύτηκαν",
+      "logos": [
+        {
+          "src": "/images/adopt/logos/ecombare.webp",
+          "alt": "ecombare",
+          "_id": "cb6c4f0a95"
+        },
+        {
+          "src": "/images/adopt/logos/smt-shipping.webp",
+          "alt": "SMT Shipping",
+          "_id": "e6dd5ffbd3"
+        },
+        {
+          "src": "/images/adopt/logos/gac.webp",
+          "alt": "GAC",
+          "_id": "882df9644c"
+        },
+        {
+          "src": "/images/adopt/logos/uniteam-marine.webp",
+          "alt": "Uniteam Marine",
+          "_id": "528c4fecaf"
+        },
+        {
+          "src": "/images/adopt/logos/sassy-events.webp",
+          "alt": "Sassy Events",
+          "_id": "7f66dfedd1"
+        },
+        {
+          "src": "/images/adopt/logos/gymnasio-agiou-vasileiou.webp",
+          "alt": "Γυμνάσιο Αγίου Βασιλείου Στροβόλου",
+          "_id": "02427045b2"
+        },
+        {
+          "src": "/images/adopt/logos/goldman-solutions.webp",
+          "alt": "Goldman Solutions",
+          "_id": "7d661502fa"
+        },
+        {
+          "src": "/images/adopt/logos/cyprus-duty-free.webp",
+          "alt": "Cyprus Duty Free",
+          "_id": "c2a2a0e08b"
+        },
+        {
+          "src": "/images/adopt/logos/amdocs.webp",
+          "alt": "Amdocs",
+          "_id": "bfad6fb968"
+        },
+        {
+          "src": "/images/adopt/logos/playrix.webp",
+          "alt": "Playrix",
+          "_id": "7d79a5f946"
+        },
+        {
+          "src": "/images/adopt/logos/genpro.webp",
+          "alt": "GENPRO",
+          "_id": "db5a0c2dac"
+        }
+      ]
+    },
+    "testimonials": {
+      "eyebrow": "Μαρτυρίες",
+      "heading": "Τι Λένε οι Ομάδες που μας Επισκέφθηκαν",
+      "items": [
+        {
+          "quote": "Σε ευχαριστώ πολύ για την εξαιρετική συνεργασία στην πρώτη μας επίσκεψη. Όλοι επιστρέψαμε γεμάτοι ενθουσιασμό και καινούριες γνώσεις! Νομίζω ότι ο στόχος της επιμόρφωσης μέσω εμπειριών επιτεύχθηκε, και εκτιμώ πολύ το ζεστό καλωσόρισμα και την ξενάγηση. Είμαι πολύ χαρούμενη που θα συνεργαστούμε φέτος!",
+          "name": "Antigoni Pafiti",
+          "role": "Sustainability Officer",
+          "_id": "f27147c484"
+        },
+        {
+          "quote": "Our guests and we absolutely loved the event on Saturday and we will definitely be offering this kind of experience again!",
+          "name": "Abi Thatcher Heitmann",
+          "role": "Business Development Director",
+          "_id": "b8248643e9"
+        },
+        {
+          "quote": "I wanted to extend my heartfelt appreciation for the wonderful experience we had last Friday. It was indeed a great learning opportunity for all of us, and we’re eagerly looking forward to our next trip after the summer.",
+          "name": "Chloe Timmis",
+          "role": "Crewing Administration Manager",
+          "_id": "c41b0e30dd"
+        },
+        {
+          "quote": "Σε ευχαριστούμε πολύ. Περάσαμε πολύ όμορφα και τα παιδιά συζητούσαν πως ήταν από τις καλύτερες επισκέψεις που έχουν πάει.",
+          "name": "Κατερίνα Τορτούρη",
+          "role": "Καθηγήτρια Σχεδιασμού & Τεχνολογίας",
+          "_id": "f7038b2f22"
+        }
+      ]
+    },
+    "form": {
+      "firstName": "Όνομα*",
+      "lastName": "Επίθετο*",
+      "email": "Email*",
+      "phone": "Τηλέφωνο",
+      "message": "Μήνυμα*",
+      "submit": "Αποστολή",
+      "thankYou": "Σας ευχαριστούμε! Το μήνυμά σας στάλθηκε — θα επικοινωνήσουμε σύντομα μαζί σας. 🐝"
+    },
+    "cta": {
+      "eyebrow": "Υιοθετώ μια κυψέλη",
+      "heading": "Επικοινωνήστε μαζί μας σήμερα και γίνετε κι εσείς μέρος αυτής της προσπάθειας.",
+      "body": "Η ομάδα μας θα σχεδιάσει μαζί σας την εμπειρία που ταιριάζει στην εταιρεία σας.",
+      "primary": {
+        "label": "Επικοινωνήστε μαζί μας",
+        "href": "/epikoinonia"
+      },
+      "tel": {
+        "label": "+357 25 622 305",
+        "href": "tel:+35725622305"
+      },
+      "contact": {
+        "company": "M.F. Oros Maxaira Ltd",
+        "phone": "+357 25 622 305",
+        "phoneHref": "tel:+35725622305",
+        "address": "Μελίνη, 7716 Λάρνακα, Κύπρος",
+        "hours": "Δευ–Παρ 08:00–16:00 · Σαβ–Κυρ κατόπιν ραντεβού"
+      }
+    }
+  },
+  "translations": {
+    "en": {
+      "meta": {
+        "title": "Adopt a Hive",
+        "description": "The “Adopt a Hive” corporate programme by Oros Machaira: adopt a hive, share a unique hands-on experience with your team and support the bees and the environment."
+      },
+      "hero": {
+        "wordmarkAlt": "Adopt a Hive — Oros Machaira",
+        "imageAlt": "A team of employees in beekeeper suits gathered around a honeycomb at the Oros Machaira apiary",
+        "taglinePre": "Join our “Adopt a Hive” programme with your team and…",
+        "taglinePost": "for the bees and the environment.",
+        "ctaPrimary": {
+          "label": "Adopt a Hive"
+        },
+        "ctaSecondary": {
+          "label": "See the package"
+        }
+      },
+      "stats": [
+        {
+          "label": "hives — our goal",
+          "_id": "f0548cf384"
+        },
+        {
+          "label": "bees",
+          "_id": "e90350eac2"
+        },
+        {
+          "label": "member companies",
+          "_id": "79df723940"
+        },
+        {
+          "label": "year, renewable",
+          "_id": "f9739a44d6"
+        }
+      ],
+      "intro": {
+        "eyebrow": "The Initiative",
+        "hook": "What if a company looked beyond its commercial goals, to the needs of the environment as well?",
+        "body": "The “Adopt a Hive” programme is a pioneering initiative by Oros Machaira that gives your company a direct way to support pollinators and the environment, while bringing your team closer together.",
+        "ctaLabel": "Adopt a Hive",
+        "whyHeading": "Why Adopt a Hive?",
+        "benefits": [
+          {
+            "title": "You help protect pollinators",
+            "text": "Every hive supports bee populations and the pollination of plants.",
+            "_id": "3db6f00675"
+          },
+          {
+            "title": "You connect your team",
+            "text": "A unique team experience away from the office, out in nature.",
+            "_id": "2ffb19ee8b"
+          },
+          {
+            "title": "You gain knowledge and experience",
+            "text": "Hands-on insight into beekeeping and the ecosystem it depends on.",
+            "_id": "230d93bf20"
+          }
+        ]
+      },
+      "package": {
+        "eyebrow": "The Programme",
+        "heading": "What Does the Package Include?",
+        "steps": [
+          {
+            "title": "Hive Adoption",
+            "text": "We set up and maintain a hive in your company’s name.",
+            "_id": "0224d24985"
+          },
+          {
+            "title": "Visits to the Apiary",
+            "text": "Two hands-on visits for your team — up to 25 people per visit.",
+            "link": {
+              "label": "See the two visits"
+            },
+            "_id": "77e110592e"
+          },
+          {
+            "title": "Certificate of Adoption",
+            "text": "An official certificate recognising your contribution to bee conservation.",
+            "_id": "e7a67b69dc"
+          }
+        ]
+      },
+      "visits": {
+        "eyebrow": "The Experience",
+        "heading": "The Two Visits",
+        "sub": "Two distinct days of hands-on experience for your teams.",
+        "items": [
+          {
+            "title": "First Visit",
+            "pills": [
+              "April–August",
+              "up to 25 people"
+            ],
+            "activities": [
+              {
+                "text": "Educational tour & introduction to the bees — the team dresses as beekeepers and visits the hives under the guidance of our experienced beekeepers.",
+                "_id": "f479aad6b9"
+              },
+              {
+                "text": "An educational seminar on the role of bees in the ecosystem and their importance to the environment.",
+                "_id": "8b8e3e2d41"
+              },
+              {
+                "text": "Honey tasting & bottling of fresh honey straight from the hive.",
+                "_id": "fbdc88627e"
+              },
+              {
+                "text": "Painting the hive in your company’s colours — a creative team-building activity.",
+                "_id": "3ccdccb312"
+              }
+            ],
+            "_id": "4cf1ba0bef"
+          },
+          {
+            "title": "Second Visit",
+            "pills": [
+              "June–October",
+              "up to 25 people"
+            ],
+            "activities": [
+              {
+                "text": "The second group takes part in the same activities as the first visit, apart from painting the hive.",
+                "_id": "66eb0f2f7f"
+              },
+              {
+                "text": "Approx. 20 kg of honey per hive, in 250 g jars — exclusive corporate gifts for your employees or clients.",
+                "_id": "cd6f8a6d3a"
+              },
+              {
+                "text": "The hive is maintained by experienced beekeepers in the name of your company throughout the adoption.",
+                "_id": "9bbf5ff8e9"
+              },
+              {
+                "text": "You receive regular updates and video reports on how your hive is doing.",
+                "_id": "75b0466d05"
+              }
+            ],
+            "_id": "1c7e70f451"
+          }
+        ]
+      },
+      "gallery": {
+        "eyebrow": "Moments",
+        "heading": "The Experience in Pictures"
+      },
+      "goal": {
+        "eyebrow": "Our Goal",
+        "headingLines": [
+          "200 hives.",
+          "6,000,000 bees."
+        ],
+        "body": "This is not only about saving the bees. It is about saving our planet and the biodiversity that sustains it.",
+        "linkLabel": "The Unsung Heroes of Nature",
+        "impactHeading": "Why Does It Matter?",
+        "impact": [
+          {
+            "text": "of the world’s food crops depend on pollinators.",
+            "_id": "b88dd1fb6e"
+          },
+          {
+            "text": "of all pollination worldwide is carried out by bees.",
+            "_id": "9e11496916"
+          }
+        ],
+        "closing": "By adopting a hive, your company protects these invaluable insects — and, with them, our planet."
+      },
+      "progress": {
+        "eyebrow": "Our Progress",
+        "heading": "Together, toward 200 hives",
+        "unit": "hives",
+        "adopted": "adopted so far",
+        "ofGoal": "of the goal",
+        "remainingPre": "",
+        "remainingPost": "remaining to reach our goal.",
+        "cta": "Adopt a Hive"
+      },
+      "faq": {
+        "eyebrow": "Questions",
+        "heading": "Frequently Asked Questions",
+        "intro": "Everything you need to know before joining the programme.",
+        "cta": {
+          "label": "Have another question?"
+        },
+        "items": [
+          {
+            "q": "Do I need any beekeeping knowledge to take part?",
+            "a": "No. The hive is fully managed by our team and its expert beekeepers.",
+            "_id": "2d7baaa87c"
+          },
+          {
+            "q": "Where are the hives located?",
+            "a": "The hives are hosted in controlled natural areas within the premises of Oros Machaira.",
+            "_id": "9e58613f89"
+          },
+          {
+            "q": "How long does a hive adoption last?",
+            "a": "Each adoption lasts one year, with the option to renew.",
+            "_id": "34f08d73b1"
+          }
+        ]
+      },
+      "partners": {
+        "eyebrow": "Member companies",
+        "heading": "The companies who trust us"
+      },
+      "testimonials": {
+        "eyebrow": "Testimonials",
+        "heading": "What the Teams Who Visited Us Say",
+        "items": [
+          {
+            "quote": "Thank you so much for the excellent collaboration on our first visit. We all came back full of enthusiasm and new knowledge! I think the goal of learning through experience was achieved, and I really appreciate the warm welcome and the tour. I am delighted that we will be working together again this year!",
+            "_id": "f27147c484"
+          },
+          {
+            "quote": "Thank you so much. We had a wonderful time, and the children were saying it was one of the best visits they have ever been on.",
+            "name": "Katerina Tortouri",
+            "role": "Design & Technology Teacher",
+            "_id": "f7038b2f22"
+          }
+        ]
+      },
+      "form": {
+        "firstName": "Name*",
+        "lastName": "Surname*",
+        "phone": "Telephone",
+        "message": "Message*",
+        "submit": "Send",
+        "thankYou": "Thank you! Your message has been sent — we will get in touch with you soon. 🐝"
+      },
+      "cta": {
+        "eyebrow": "Adopt a Hive",
+        "heading": "Get in touch with us today and become part of this effort too.",
+        "body": "Our team will design, together with you, the experience that best suits your company.",
+        "primary": {
+          "label": "Contact us"
+        },
+        "contact": {
+          "address": "Melini, 7716 Larnaca, Cyprus",
+          "hours": "Mon–Fri 08:00–16:00 · Sat–Sun by appointment"
+        }
+      }
+    }
+  }
+}

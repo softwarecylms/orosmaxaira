@@ -1,18 +1,19 @@
 import Image from 'next/image'
 import { getLocale } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
-import { getHomeContent, type HoneyProduct } from './home-content'
+import { type HoneyProduct } from './home-content'
 import { listShopProducts } from '@/lib/medusa/shop'
 import { categoryLabel } from '@/components/shop/shop-content'
 import { CtaLink } from './cta-link'
 import { DealCarousel } from './deal-carousel'
 import { ArrowRight } from './icons'
 import { RevealUp } from './reveal-up'
+import { loadHomeContent } from '@/lib/content/load'
 
 /** Section 4 — "Τα Διαμάντια του Μαχαιρά" (Figma 118:456). */
 export async function DealOfMonth({ products }: { products?: HoneyProduct[] }) {
   const locale = await getLocale()
-  const { DEAL } = getHomeContent(locale)
+  const { DEAL } = await loadHomeContent(locale)
   const curated = (products?.length ? products : DEAL.products).slice(0, 5)
 
   // Prices come from Medusa (the shop is the source of truth) so a card can never

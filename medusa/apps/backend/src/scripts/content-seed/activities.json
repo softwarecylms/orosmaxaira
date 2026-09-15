@@ -1,0 +1,190 @@
+{
+  "key": "activities",
+  "data": {
+    "hero": {
+      "eyebrow": "Όρος Μαχαιρά Academy",
+      "title": "Μάθε, εξερεύνησε, δημιούργησε",
+      "description": "Ο κόσμος της μέλισσας σε περιμένει — βιωματικές ξεναγήσεις, εργαστήρια και εκπαιδευτικά προγράμματα για μικρούς και μεγάλους.",
+      "image": "/images/activities/hero.webp",
+      "imageAlt": "Βιωματική εμπειρία στο μελισσοκομείο του Όρους Μαχαιρά"
+    },
+    "experiences": {
+      "eyebrow": "Οι Εμπειρίες μας",
+      "heading": "Ανακαλύψτε τις Εμπειρίες μας",
+      "sub": "Βιωματικές ξεναγήσεις, εργαστήρια και εκπαιδευτικά προγράμματα.",
+      "items": [
+        {
+          "image": "/images/activities/gnorizw.webp",
+          "title": "Γνωρίζω τη Μέλισσα",
+          "text": "Εκπαιδευτική ξενάγηση στον κόσμο της μέλισσας και του μελιού, με γευσιγνωσία των προϊόντων μας.",
+          "href": "/drastiriotites/xenagiseis",
+          "badge": "Best Seller",
+          "rating": 4.9,
+          "reviews": 300,
+          "_id": "789b0c96f2"
+        },
+        {
+          "image": "/images/activities/episkepsi.webp",
+          "title": "Περιπέτειες στις Κυψέλες",
+          "text": "Οι επισκέπτες φορούν στολή μελισσοκόμου και γνωρίζουν από κοντά τη ζωή των μελισσών.",
+          "href": "/drastiriotites/peripeteies-stis-kypseles",
+          "badge": "Σχεδόν Sold Out",
+          "rating": 4.9,
+          "reviews": 300,
+          "_id": "0c94e3f046"
+        },
+        {
+          "image": "/images/activities/ergastiria.webp",
+          "title": "Εργαστήρια",
+          "text": "Εκπαιδευτική ξενάγηση και εργαστήρι ζωγραφικής γύψινων φιγούρων, εμπνευσμένο από τη μέλισσα.",
+          "href": "/drastiriotites/ergastiria",
+          "rating": 4.9,
+          "reviews": 300,
+          "_id": "ae300c512c"
+        },
+        {
+          "image": "/images/activities/melisotherapia.webp",
+          "title": "Μελισσοθεραπεία",
+          "text": "Αναπνεύστε τον αέρα της κυψέλης σε έναν ελεγχόμενο χώρο — μια μοναδική εμπειρία χαλάρωσης.",
+          "href": "/drastiriotites/melissotherapeia",
+          "rating": 4.9,
+          "reviews": 300,
+          "_id": "ee8e560d0c"
+        }
+      ]
+    },
+    "programs": {
+      "eyebrow": "Για Σχολεία & Οργανισμούς",
+      "heading": "Εκπαιδευτικά Προγράμματα με Περιβαλλοντικό Αντίκτυπο",
+      "sub": "Προγράμματα με εκπαιδευτικό, περιβαλλοντικό και κοινωνικό αντίκτυπο, ειδικά σχεδιασμένα για σχολεία, εταιρείες και οργανισμούς.",
+      "items": [
+        {
+          "image": "/images/adopt/visit-2.webp",
+          "title": "Εκπαιδευτικές Επισκέψεις Σχολείων",
+          "text": "Ένα οργανωμένο εκπαιδευτικό πρόγραμμα για σχολεία, αφιερωμένο στη μέλισσα, το περιβάλλον και τη βιωματική μάθηση.",
+          "href": "/drastiriotites/scholeia",
+          "cta": "Δείτε το πρόγραμμα",
+          "_id": "3e9a6d6f8c"
+        },
+        {
+          "image": "/images/adopt/hero.webp",
+          "title": "Πρόγραμμα Adopt a Hive",
+          "text": "Το καινοτόμο και βραβευμένο πρόγραμμα ΕΚΕ που μετατρέπει την περιβαλλοντική προσφορά σε μια ουσιαστική συλλογική εμπειρία team building.",
+          "href": "/yiotheto-mia-kypseli",
+          "cta": "Μάθετε περισσότερα",
+          "_id": "93e8565ab5"
+        }
+      ]
+    },
+    "fact": {
+      "eyebrow": "Ήξερες ότι…",
+      "heading": "Οι μέλισσες τρέφουν τον κόσμο.",
+      "body": "Το ένα τρίτο περίπου των τροφίμων που καταναλώνουμε καθημερινά εξαρτάται από την επικονίαση — κυρίως των μελισσών.",
+      "stat": {
+        "value": "1/3",
+        "label": "των τροφίμων μας εξαρτάται από την επικονίαση των μελισσών."
+      },
+      "closing": "Προστατεύοντας τις μέλισσες, προστατεύουμε την τροφή και τη βιοποικιλότητα ολόκληρου του πλανήτη.",
+      "cta": {
+        "label": "Αφανείς Ήρωες της Φύσης",
+        "href": "/afaneis-iroes-tis-fysis"
+      },
+      "image": "/images/nature/pollinators-3.webp",
+      "imageAlt": "Μέλισσα επικονιάζει λουλούδι"
+    },
+    "cta": {
+      "eyebrow": "Κράτηση",
+      "heading": "Κλείστε τη δική σας εμπειρία",
+      "body": "Επιλέξτε τη δραστηριότητα που σας ενδιαφέρει και κλείστε online, ή επικοινωνήστε μαζί μας για ομαδικές και σχολικές κρατήσεις.",
+      "primary": {
+        "label": "Δείτε τις εμπειρίες",
+        "href": "#experiences"
+      },
+      "secondary": {
+        "label": "Επικοινωνία",
+        "href": "/epikoinonia"
+      }
+    }
+  },
+  "translations": {
+    "en": {
+      "hero": {
+        "eyebrow": "Oros Machaira Academy",
+        "title": "Learn, explore, create",
+        "description": "The world of the bee is waiting for you — hands-on tours, workshops and educational programmes whatever your age.",
+        "imageAlt": "A hands-on experience at the Oros Machaira apiary"
+      },
+      "experiences": {
+        "eyebrow": "Our Experiences",
+        "heading": "Discover Our Experiences",
+        "sub": "Hands-on tours, workshops and educational programmes.",
+        "items": [
+          {
+            "title": "Getting to Know the Bee",
+            "text": "An educational tour of the world of the bee and honey, with a tasting of our products.",
+            "_id": "789b0c96f2"
+          },
+          {
+            "title": "Adventures at the Hives",
+            "text": "Visitors put on a beekeeper suit and get to know the life of the bees up close.",
+            "badge": "Almost Sold Out",
+            "_id": "0c94e3f046"
+          },
+          {
+            "title": "Workshops",
+            "text": "An educational tour and a plaster-figure painting workshop, inspired by the bee.",
+            "_id": "ae300c512c"
+          },
+          {
+            "title": "Bee Therapy",
+            "text": "Breathe the air of the hive in a controlled space — a unique, calming experience.",
+            "_id": "ee8e560d0c"
+          }
+        ]
+      },
+      "programs": {
+        "eyebrow": "For Schools & Organisations",
+        "heading": "Educational Programmes with Environmental Impact",
+        "sub": "Programmes with an educational, environmental and social impact, specially designed for schools, companies and organisations.",
+        "items": [
+          {
+            "title": "School Educational Visits",
+            "text": "An organised educational programme for schools, dedicated to the bee, the environment and hands-on learning.",
+            "cta": "See the programme",
+            "_id": "3e9a6d6f8c"
+          },
+          {
+            "title": "Adopt a Hive Programme",
+            "text": "The innovative, award-winning CSR programme that turns environmental action into a meaningful team experience.",
+            "cta": "Learn more",
+            "_id": "93e8565ab5"
+          }
+        ]
+      },
+      "fact": {
+        "eyebrow": "Did you know…",
+        "heading": "Bees feed the world.",
+        "body": "About one third of the food we eat every day depends on pollination — mainly by bees.",
+        "stat": {
+          "label": "of our food depends on pollination by bees."
+        },
+        "closing": "By protecting the bees, we protect the food and biodiversity of the entire planet.",
+        "cta": {
+          "label": "Unsung Heroes of Nature"
+        },
+        "imageAlt": "A bee pollinating a flower"
+      },
+      "cta": {
+        "eyebrow": "Booking",
+        "heading": "Book your own experience",
+        "body": "Choose the activity you are interested in and book online, or get in touch with us for group and school bookings.",
+        "primary": {
+          "label": "See the experiences"
+        },
+        "secondary": {
+          "label": "Contact"
+        }
+      }
+    }
+  }
+}

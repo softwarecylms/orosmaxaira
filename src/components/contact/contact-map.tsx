@@ -1,12 +1,12 @@
 import { ExternalLink } from 'lucide-react'
 import { getLocale } from 'next-intl/server'
-import { getContactContent } from './contact-content'
+import { loadContactContent } from '@/lib/content/load'
 
 /** Full-width embedded Google Map pinning the apiary location. Sits between the
  *  contact form and the values band. */
 export async function ContactMap() {
   const locale = await getLocale()
-  const m = getContactContent(locale).map
+  const m = (await loadContactContent(locale)).map
 
   return (
     <section aria-label={m.title} className="w-full">

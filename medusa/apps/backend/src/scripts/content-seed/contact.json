@@ -1,0 +1,211 @@
+{
+  "key": "contact",
+  "data": {
+    "meta": {
+      "title": "Επικοινωνία",
+      "description": "Επικοινωνήστε με το Όρος Μαχαιρά για παραγγελίες, επισκέψεις και εργαστήρια στο μελισσοκομείο μας στη Μελίνη Λάρνακας. Τηλέφωνο, email και οδηγίες."
+    },
+    "breadcrumb": [
+      {
+        "label": "Αρχική",
+        "href": "/",
+        "_id": "46290f976e"
+      },
+      {
+        "label": "Επικοινωνία",
+        "_id": "3868ae5837"
+      }
+    ],
+    "hero": {
+      "title": "Επικοινωνήστε μαζί μας",
+      "image": "/images/contact/hero.webp",
+      "imageAlt": "Μελισσοκόμοι Όρος Μαχαιρά στο μελισσοκομείο"
+    },
+    "map": {
+      "title": "Πού θα μας βρείτε",
+      "embedSrc": "https://www.google.com/maps?q=34.8649955,33.1669842&z=16&hl=el&output=embed",
+      "link": "https://maps.app.goo.gl/EUCGrKmDcbkCV8CL7",
+      "label": "Όρος Μαχαιρά — τοποθεσία στον χάρτη",
+      "openLabel": "Άνοιγμα στο Google Maps"
+    },
+    "connect": {
+      "heading": "Επικοινωνήστε μαζί μας",
+      "body": [
+        {
+          "text": "Θέλετε να επισκεφτείτε το μελισσοκομείο μας; Μπορείτε να κλείσετε την επίσκεψή σας ",
+          "_id": "4392361f19"
+        },
+        {
+          "text": "εδώ",
+          "href": "/drastiriotites",
+          "accent": true,
+          "_id": "18df5446a2"
+        },
+        {
+          "text": ".",
+          "_id": "5866e0ed0c"
+        }
+      ],
+      "items": [
+        {
+          "icon": "hours",
+          "title": "Ώρες Λειτουργίας",
+          "lines": [
+            "Δευ–Παρ 08:00–16:00"
+          ],
+          "_id": "9d9917528c"
+        },
+        {
+          "icon": "phone",
+          "title": "Τηλέφωνο",
+          "lines": [
+            "+357 25 622 305"
+          ],
+          "href": "tel:+35725622305",
+          "_id": "95bbff2bb9"
+        },
+        {
+          "icon": "location",
+          "title": "Επισκεφθείτε μας",
+          "lines": [
+            "Μελίνη, 7716 Λάρνακα, Κύπρος"
+          ],
+          "href": "https://maps.app.goo.gl/EUCGrKmDcbkCV8CL7",
+          "_id": "785bef1f57"
+        },
+        {
+          "icon": "email",
+          "title": "Email",
+          "lines": [
+            "info@orosmaxaira.com"
+          ],
+          "href": "mailto:info@orosmaxaira.com",
+          "_id": "413e271b76"
+        }
+      ]
+    },
+    "form": {
+      "heading": "Στείλτε μας ένα μήνυμα",
+      "firstName": "Όνομα*",
+      "lastName": "Επίθετο*",
+      "email": "Email*",
+      "phone": "Τηλέφωνο",
+      "message": "Μήνυμα*",
+      "submit": "Αποστολή μηνύματος",
+      "requiredNote": "* Υποχρεωτικό πεδίο",
+      "consentPre": "Συμφωνώ με την ",
+      "consentLink": "Πολιτική Απορρήτου",
+      "consentPost": ".",
+      "thankYou": "Σας ευχαριστούμε! Το μήνυμά σας στάλθηκε — θα επικοινωνήσουμε σύντομα μαζί σας. 🐝"
+    },
+    "values": [
+      {
+        "icon": "purity",
+        "title": "Αγνότητα",
+        "text": "Το μέλι μας φτάνει στο τραπέζι σας ακριβώς όπως το φτιάχνει η μέλισσα.",
+        "_id": "367f3b4bb8"
+      },
+      {
+        "icon": "eco",
+        "title": "Περιβάλλον",
+        "text": "Πιστοποιημένοι με **ISO 14001** & **ISO 22000** - σεβασμός για τη γη και τις μέλισσες.",
+        "_id": "38b28de5bb"
+      },
+      {
+        "icon": "family",
+        "title": "Οικογένεια",
+        "text": "Από το 1983, τρεις γενιές με το ίδιο πάθος για τη φύση και τις μέλισσες.",
+        "_id": "56061bb6d6"
+      }
+    ]
+  },
+  "translations": {
+    "en": {
+      "meta": {
+        "title": "Contact",
+        "description": "Contact Oros Machaira about orders, visits and workshops at our apiary in Melini, Larnaca. Phone, email, opening hours and directions to find us."
+      },
+      "breadcrumb": [
+        {
+          "label": "Home",
+          "_id": "46290f976e"
+        },
+        {
+          "label": "Contact",
+          "_id": "3868ae5837"
+        }
+      ],
+      "hero": {
+        "title": "Contact Us",
+        "imageAlt": "Oros Machaira beekeepers at the apiary"
+      },
+      "map": {
+        "title": "Where to Find Us",
+        "label": "Oros Machaira — location on the map",
+        "openLabel": "Open in Google Maps"
+      },
+      "connect": {
+        "heading": "Get in touch",
+        "body": [
+          {
+            "text": "Interested in visiting our apiary? You can book your visit ",
+            "_id": "4392361f19"
+          },
+          {
+            "text": "here",
+            "_id": "18df5446a2"
+          }
+        ],
+        "items": [
+          {
+            "title": "Opening Hours",
+            "lines": [
+              "Mon–Fri 08:00–16:00"
+            ],
+            "_id": "9d9917528c"
+          },
+          {
+            "title": "Phone",
+            "_id": "95bbff2bb9"
+          },
+          {
+            "title": "Visit Us",
+            "lines": [
+              "Melini, 7716 Larnaca, Cyprus"
+            ],
+            "_id": "785bef1f57"
+          }
+        ]
+      },
+      "form": {
+        "heading": "Send us a message",
+        "firstName": "First name*",
+        "lastName": "Last name*",
+        "phone": "Phone",
+        "message": "Message*",
+        "submit": "Send message",
+        "requiredNote": "* Required field",
+        "consentPre": "I agree to the ",
+        "consentLink": "Privacy Policy",
+        "thankYou": "Thank you! Your message has been sent — we’ll be in touch soon. 🐝"
+      },
+      "values": [
+        {
+          "title": "Purity",
+          "text": "Our honey reaches your table exactly as the bee makes it.",
+          "_id": "367f3b4bb8"
+        },
+        {
+          "title": "Environment",
+          "text": "Certified to **ISO 14001** & **ISO 22000** — respect for the land and the bees.",
+          "_id": "38b28de5bb"
+        },
+        {
+          "title": "Family",
+          "text": "Since 1983, three generations with the same passion for nature and bees.",
+          "_id": "56061bb6d6"
+        }
+      ]
+    }
+  }
+}

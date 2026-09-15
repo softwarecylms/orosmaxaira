@@ -1,6 +1,6 @@
 import { siteUrl } from '@/lib/seo'
-import { getHomeContent } from '@/components/home/home-content'
 import { JsonLd, ORGANIZATION_ID } from './json-ld'
+import { loadSiteContent } from '@/lib/content/load'
 
 /**
  * The farm as an Organization, and the site as its WebSite — on every page, in
@@ -10,10 +10,10 @@ import { JsonLd, ORGANIZATION_ID } from './json-ld'
  * Built from the same content the footer shows. It used to read Payload's site
  * settings, which have never been filled in, so it announced "Your Brand".
  */
-export function OrganizationSchema({ locale }: { locale: string }) {
+export async function OrganizationSchema({ locale }: { locale: string }) {
   const base = siteUrl()
   const en = locale === 'en'
-  const { CONTACT, FOOTER } = getHomeContent(locale)
+  const { CONTACT, FOOTER } = await loadSiteContent(locale)
   const name = en ? 'Oros Machaira' : 'Όρος Μαχαιρά'
 
   return (

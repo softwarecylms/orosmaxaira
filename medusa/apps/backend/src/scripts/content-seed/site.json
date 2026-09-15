@@ -1,0 +1,606 @@
+{
+  "key": "site",
+  "data": {
+    "NAV": [
+      {
+        "label": "Αρχική",
+        "href": "/",
+        "_id": "0fe7cd31c2"
+      },
+      {
+        "label": "Προϊόντα",
+        "href": "/proionta",
+        "children": [
+          {
+            "label": "Μέλι Όρος Μαχαιρά",
+            "href": "/",
+            "_id": "4bbf85784e"
+          },
+          {
+            "label": "Προϊόντα Μέλισσας",
+            "href": "/",
+            "_id": "47e23dd8a6"
+          },
+          {
+            "label": "Φυσικά Καλλυντικά",
+            "href": "/",
+            "_id": "c90ac9bb33"
+          },
+          {
+            "label": "Πακέτα δώρων",
+            "href": "/",
+            "_id": "135c50ad2b"
+          }
+        ],
+        "_id": "107f6a8aa1"
+      },
+      {
+        "label": "Ποιοί είμαστε",
+        "href": "/poioi-eimaste",
+        "_id": "708447c21e"
+      },
+      {
+        "label": "Δραστηριότητες",
+        "href": "/drastiriotites",
+        "groups": [
+          {
+            "title": "Εμπειρίες",
+            "links": [
+              {
+                "label": "Γνωρίζω τη Μέλισσα",
+                "href": "/drastiriotites/xenagiseis",
+                "_id": "56c7164b7a"
+              },
+              {
+                "label": "Περιπέτειες στις Κυψέλες",
+                "href": "/drastiriotites/peripeteies-stis-kypseles",
+                "_id": "cc924efb51"
+              },
+              {
+                "label": "Εργαστήρια",
+                "href": "/drastiriotites/ergastiria",
+                "_id": "ccb4693ba9"
+              },
+              {
+                "label": "Μελισσοθεραπεία",
+                "href": "/drastiriotites/melissotherapeia",
+                "_id": "77c27c23c0"
+              }
+            ],
+            "_id": "9ef31bf237"
+          },
+          {
+            "title": "Προγράμματα",
+            "links": [
+              {
+                "label": "Εκπαιδευτικές Επισκέψεις Σχολείων",
+                "href": "/drastiriotites/scholeia",
+                "_id": "0be5731de8"
+              },
+              {
+                "label": "Υιοθετώ μια κυψέλη",
+                "href": "/yiotheto-mia-kypseli",
+                "_id": "16e33ee50c"
+              }
+            ],
+            "_id": "f798ec4009"
+          }
+        ],
+        "_id": "a5d97fdfa1"
+      },
+      {
+        "label": "Blog",
+        "href": "/blog",
+        "_id": "692a5910d4"
+      },
+      {
+        "label": "Επικοινωνία",
+        "href": "/epikoinonia",
+        "_id": "ddfdb08579"
+      }
+    ],
+    "ADOPT_LINK": {
+      "label": "Υιοθετώ μια κυψέλη",
+      "href": "/yiotheto-mia-kypseli"
+    },
+    "READ_MORE": "Δείτε περισσότερα",
+    "MEGA_MENU": [
+      {
+        "title": "Μέλι",
+        "href": "/proionta/meli",
+        "links": [
+          {
+            "label": "Μέλι Ανθέων",
+            "href": "/product/meli-antheon-oros-machaira",
+            "_id": "c5b45aebc2"
+          },
+          {
+            "label": "Άβραστο (άθερμο) Μέλι Ανθέων",
+            "href": "/product/avrasto-meli-antheon-oros-machaira",
+            "_id": "92e5ff4e7c"
+          },
+          {
+            "label": "Θυμαρίσιο Μέλι",
+            "href": "/product/thymarisio-meli-oros-machaira",
+            "_id": "02601a18e9"
+          }
+        ],
+        "_id": "f91f2ccb6a"
+      },
+      {
+        "title": "Προϊόντα Μέλισσας",
+        "href": "/proionta/proionta-melissas",
+        "links": [
+          {
+            "label": "Υδρόμελο",
+            "href": "/product/ydromelo",
+            "_id": "c8f179dece"
+          },
+          {
+            "label": "Βασιλικός πολτός",
+            "href": "/product/vasilikos-poltos-oros-machaira",
+            "_id": "3bf8d1fce8"
+          },
+          {
+            "label": "Μέλι με Φυστίκια",
+            "href": "/product/meli-me-fistikia",
+            "_id": "f785b4d838"
+          }
+        ],
+        "_id": "4e6bbb1c97"
+      },
+      {
+        "title": "Φυσικά Καλλυντικά",
+        "href": "/proionta/kallyntika",
+        "links": [
+          {
+            "label": "Κρέμα Σώματος",
+            "href": "/product/krema-somatos",
+            "_id": "bb79cac0c7"
+          },
+          {
+            "label": "Φυσική Κηραλοιφή Προσώπου",
+            "href": "/product/fysiki-kiraloifi-gia-prosopo",
+            "_id": "77a77ed29e"
+          },
+          {
+            "label": "Βάλσαμο για τα Χείλη",
+            "href": "/product/valsamo-gia-ta-cheili",
+            "_id": "28683431ed"
+          }
+        ],
+        "_id": "7c6b3ac0eb"
+      },
+      {
+        "title": "Πακέτα δώρων",
+        "href": "/proionta/paketa-doron",
+        "links": [
+          {
+            "label": "Nourish Care Gift Set",
+            "href": "/product/nourish-care-gift-set",
+            "_id": "cb5bfb337a"
+          },
+          {
+            "label": "Everyday Care Duo Gift Set",
+            "href": "/product/everyday-care-duo-gift-set",
+            "_id": "b42add6a5a"
+          },
+          {
+            "label": "Balance Care Gift Set",
+            "href": "/product/balance-care-gift-set",
+            "_id": "da2a7aa362"
+          }
+        ],
+        "_id": "940358337d"
+      }
+    ],
+    "ANNOUNCEMENT": "ΔΩΡΕΑΝ αποστολή στην Κύπρο για παραγγελίες άνω των €70",
+    "CONTACT": {
+      "phone": "+357 25 622 305",
+      "phoneShort": "+357 25 622 305",
+      "phoneHref": "tel:+35725622305",
+      "email": "info@orosmaxaira.com"
+    },
+    "SEARCH_PLACEHOLDER": "🍯 Μέλι",
+    "SEARCH_PLACEHOLDERS": [
+      "🍯 Μέλι",
+      "🥜 Μέλι με Φυστίκια",
+      "🥃 Υδρόμελο"
+    ],
+    "FOOTER": {
+      "tagline": "100% ανεπεξέργαστο μέλι από τα άνθη και τα βότανα του Μαχαιρά.",
+      "columns": [
+        {
+          "title": "Χρήσιμοι Σύνδεσμοι",
+          "links": [
+            {
+              "label": "Αρχική",
+              "href": "/",
+              "_id": "c9f361708a"
+            },
+            {
+              "label": "Ποιοί είμαστε",
+              "href": "/poioi-eimaste",
+              "_id": "8f5e50082e"
+            },
+            {
+              "label": "Βραβεία",
+              "href": "/vraveia",
+              "_id": "c459cbae54"
+            },
+            {
+              "label": "Προϊόντα",
+              "href": "/proionta",
+              "_id": "eee0364f94"
+            },
+            {
+              "label": "Δραστηριότητες",
+              "href": "/drastiriotites",
+              "_id": "29551843e3"
+            },
+            {
+              "label": "Υιοθετώ μια κυψέλη",
+              "href": "/yiotheto-mia-kypseli",
+              "_id": "4d6ffa0491"
+            },
+            {
+              "label": "Γνωρίζω τη Μέλισσα",
+              "href": "/drastiriotites/xenagiseis",
+              "_id": "faa6e438ca"
+            },
+            {
+              "label": "Blog",
+              "href": "/blog",
+              "_id": "dcd8160dae"
+            },
+            {
+              "label": "Επικοινωνία",
+              "href": "/epikoinonia",
+              "_id": "1eb6320759"
+            }
+          ],
+          "_id": "d00d044501"
+        },
+        {
+          "title": "Προϊόντα",
+          "links": [
+            {
+              "label": "Μέλι",
+              "href": "/proionta/meli",
+              "_id": "6884a01d27"
+            },
+            {
+              "label": "Προϊόντα Μέλισσας",
+              "href": "/proionta/proionta-melissas",
+              "_id": "efaac8c42d"
+            },
+            {
+              "label": "Φυσικά Καλλυντικά",
+              "href": "/proionta/kallyntika",
+              "_id": "d4196ee6c2"
+            },
+            {
+              "label": "Πακέτα δώρων",
+              "href": "/proionta/paketa-doron",
+              "_id": "0982e592cc"
+            }
+          ],
+          "_id": "1e70fded01"
+        },
+        {
+          "title": "Επικοινωνία",
+          "lines": [
+            "M.F. Oros Maxaira Ltd",
+            "Τηλ.: +357 25 622 305",
+            "Μελίνη, 7716 Λάρνακα, Κύπρος",
+            "Δευ–Παρ 08:00–16:00",
+            "info@orosmaxaira.com"
+          ],
+          "_id": "bfd8b96f4f"
+        }
+      ],
+      "social": [
+        {
+          "name": "Facebook",
+          "href": "https://www.facebook.com/orosmaxaira",
+          "_id": "6ea0aa897c"
+        },
+        {
+          "name": "Instagram",
+          "href": "https://www.instagram.com/oros_maxaira/",
+          "_id": "3afe75e608"
+        },
+        {
+          "name": "YouTube",
+          "href": "https://www.youtube.com/channel/UCUY_LTKIT5W3GRl8-K7D6rA",
+          "_id": "12f85741cd"
+        },
+        {
+          "name": "Pinterest",
+          "href": "https://www.pinterest.com/orosmaxaira_/",
+          "_id": "538a681ee4"
+        },
+        {
+          "name": "LinkedIn",
+          "href": "https://www.linkedin.com/company/oros-maxaira/",
+          "_id": "16e62b5532"
+        }
+      ],
+      "legal": "© 2026 Oros Machaira | All rights reserved | Powered and Designed by",
+      "legalBrand": "SoftwareCy",
+      "legalBrandHref": "https://softwarecy.com",
+      "policies": [
+        {
+          "label": "Παραγγελίες & Επιστροφές",
+          "href": "/paraggelies-kai-epistrofes",
+          "_id": "56beadbd0f"
+        },
+        {
+          "label": "Πολιτική Αποστολών",
+          "href": "/politiki-apostolis-proionton",
+          "_id": "0fd83bdfbe"
+        },
+        {
+          "label": "Πολιτική Απορρήτου & Cookies",
+          "href": "/privacy-amp-cookie-policy",
+          "_id": "75af251478"
+        }
+      ],
+      "funding": {
+        "text": "Το έργο υλοποιείται στο πλαίσιο του Προγράμματος Πολιτικής Συνοχής «ΘΑλΕΙΑ 2021–2027» με τη συγχρηματοδότηση της ΕΕ",
+        "thaleiaAlt": "ΘΑλΕΙΑ 2021–2027",
+        "cyprusAlt": "Κυπριακή Δημοκρατία",
+        "euAlt": "Με τη χρηματοδότηση της Ευρωπαϊκής Ένωσης"
+      }
+    }
+  },
+  "translations": {
+    "en": {
+      "READ_MORE": "Learn more",
+      "ANNOUNCEMENT": "FREE shipping in Cyprus for orders over €70",
+      "SEARCH_PLACEHOLDER": "🍯 Honey",
+      "SEARCH_PLACEHOLDERS": [
+        "🍯 Honey",
+        "🥜 Honey with Peanuts",
+        "🥃 Mead"
+      ],
+      "ADOPT_LINK": {
+        "label": "Adopt a Hive"
+      },
+      "NAV": [
+        {
+          "label": "Home",
+          "_id": "0fe7cd31c2"
+        },
+        {
+          "label": "Products",
+          "children": [
+            {
+              "label": "Oros Machaira Honey",
+              "_id": "4bbf85784e"
+            },
+            {
+              "label": "Bee Products",
+              "_id": "47e23dd8a6"
+            },
+            {
+              "label": "Natural Cosmetics",
+              "_id": "c90ac9bb33"
+            },
+            {
+              "label": "Gift Sets",
+              "_id": "135c50ad2b"
+            }
+          ],
+          "_id": "107f6a8aa1"
+        },
+        {
+          "label": "About Us",
+          "_id": "708447c21e"
+        },
+        {
+          "label": "Activities",
+          "groups": [
+            {
+              "title": "Experiences",
+              "links": [
+                {
+                  "label": "Getting to Know the Bee",
+                  "_id": "56c7164b7a"
+                },
+                {
+                  "label": "Adventures at the Hives",
+                  "_id": "cc924efb51"
+                },
+                {
+                  "label": "Workshops",
+                  "_id": "ccb4693ba9"
+                },
+                {
+                  "label": "Bee Therapy",
+                  "_id": "77c27c23c0"
+                }
+              ],
+              "_id": "9ef31bf237"
+            },
+            {
+              "title": "Programs",
+              "links": [
+                {
+                  "label": "School Educational Visits",
+                  "_id": "0be5731de8"
+                },
+                {
+                  "label": "Adopt a Hive",
+                  "_id": "16e33ee50c"
+                }
+              ],
+              "_id": "f798ec4009"
+            }
+          ],
+          "_id": "a5d97fdfa1"
+        },
+        {
+          "label": "Contact",
+          "_id": "ddfdb08579"
+        }
+      ],
+      "MEGA_MENU": [
+        {
+          "title": "Honey",
+          "links": [
+            {
+              "label": "Blossom Honey",
+              "_id": "c5b45aebc2"
+            },
+            {
+              "label": "Raw Blossom Honey",
+              "_id": "92e5ff4e7c"
+            },
+            {
+              "label": "Thyme Honey",
+              "_id": "02601a18e9"
+            }
+          ],
+          "_id": "f91f2ccb6a"
+        },
+        {
+          "title": "Bee Products",
+          "links": [
+            {
+              "label": "Mead",
+              "_id": "c8f179dece"
+            },
+            {
+              "label": "Royal Jelly",
+              "_id": "3bf8d1fce8"
+            },
+            {
+              "label": "Honey with Peanuts",
+              "_id": "f785b4d838"
+            }
+          ],
+          "_id": "4e6bbb1c97"
+        },
+        {
+          "title": "Natural Cosmetics",
+          "links": [
+            {
+              "label": "Body Cream",
+              "_id": "bb79cac0c7"
+            },
+            {
+              "label": "Natural Face Balm",
+              "_id": "77a77ed29e"
+            },
+            {
+              "label": "Lip Balm",
+              "_id": "28683431ed"
+            }
+          ],
+          "_id": "7c6b3ac0eb"
+        },
+        {
+          "title": "Gift Sets",
+          "_id": "940358337d"
+        }
+      ],
+      "FOOTER": {
+        "tagline": "100% raw honey from the flowers and herbs of Machaira.",
+        "columns": [
+          {
+            "title": "Useful Links",
+            "links": [
+              {
+                "label": "Home",
+                "_id": "c9f361708a"
+              },
+              {
+                "label": "About Us",
+                "_id": "8f5e50082e"
+              },
+              {
+                "label": "Awards",
+                "_id": "c459cbae54"
+              },
+              {
+                "label": "Products",
+                "_id": "eee0364f94"
+              },
+              {
+                "label": "Activities",
+                "_id": "29551843e3"
+              },
+              {
+                "label": "Adopt a Hive",
+                "_id": "4d6ffa0491"
+              },
+              {
+                "label": "Getting to Know the Bee",
+                "_id": "faa6e438ca"
+              },
+              {
+                "label": "Contact",
+                "_id": "1eb6320759"
+              }
+            ],
+            "_id": "d00d044501"
+          },
+          {
+            "title": "Products",
+            "links": [
+              {
+                "label": "Honey",
+                "_id": "6884a01d27"
+              },
+              {
+                "label": "Bee Products",
+                "_id": "efaac8c42d"
+              },
+              {
+                "label": "Natural Cosmetics",
+                "_id": "d4196ee6c2"
+              },
+              {
+                "label": "Gift Sets",
+                "_id": "0982e592cc"
+              }
+            ],
+            "_id": "1e70fded01"
+          },
+          {
+            "title": "Contact",
+            "lines": [
+              "M.F. Oros Maxaira Ltd",
+              "Tel.: +357 25 622 305",
+              "Melini, 7716 Larnaca, Cyprus",
+              "Mon–Fri 08:00–16:00",
+              "info@orosmaxaira.com"
+            ],
+            "_id": "bfd8b96f4f"
+          }
+        ],
+        "policies": [
+          {
+            "label": "Orders & Returns",
+            "_id": "56beadbd0f"
+          },
+          {
+            "label": "Shipping Policy",
+            "_id": "0fd83bdfbe"
+          },
+          {
+            "label": "Privacy & Cookie Policy",
+            "_id": "75af251478"
+          }
+        ],
+        "funding": {
+          "text": "The project is implemented under the Cohesion Policy Programme “THALIA 2021–2027”, co-funded by the European Union",
+          "thaleiaAlt": "THALIA 2021–2027",
+          "cyprusAlt": "Republic of Cyprus",
+          "euAlt": "Co-funded by the European Union"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,543 @@
+{
+  "key": "home",
+  "data": {
+    "HERO": {
+      "left": {
+        "eyebrow": "ΑΥΘΕΝΤΙΚΗ ΠΑΡΑΔΟΣΗ",
+        "heading": "Οι Θησαυροί της Κυψέλης",
+        "body": "Ανακαλύψτε μεταξύ άλλων το βραβευμένο μας μέλι, το εκλεκτό υδρόμελο και τον βασιλικό πολτό μας.",
+        "cta": {
+          "label": "Δείτε περισσότερα",
+          "href": "/proionta"
+        },
+        "image": "/images/home/hero-jars.webp",
+        "imageAlt": "Βραβευμένο μέλι Όρος Μαχαιρά σε ξύλινη βάση"
+      },
+      "right": {
+        "eyebrow": "ΒΙΩΜΑΤΙΚΗ ΕΜΠΕΙΡΙΑ",
+        "heading": "Εργαστήρια & Εκδηλώσεις",
+        "body": "Ελάτε στο βουνό και ζήστε τη μαγεία του μελισσιού μέσα από μοναδικά, διαδραστικά εργαστήρια για όλη την οικογένεια.",
+        "cta": {
+          "label": "Δείτε περισσότερα",
+          "href": "/drastiriotites"
+        },
+        "image": "/images/home/hero-bee-comb.webp",
+        "imageAlt": "Μέλισσα πάνω σε κηρήθρα"
+      }
+    },
+    "TRUST": [
+      {
+        "icon": "purity",
+        "title": "100% Εγγύηση Αγνότητας",
+        "body": "Απευθείας από το μελισσοκομείο μας στη Μελίνη, χωρίς προσθήκες.",
+        "_id": "92b555c263"
+      },
+      {
+        "icon": "delivery",
+        "title": "Γρήγορη Παράδοση",
+        "body": "Γρήγορη και ασφαλής αποστολή της παραγγελίας σας.",
+        "_id": "7b66682907"
+      },
+      {
+        "icon": "eco",
+        "title": "Οικολογική Συνείδηση",
+        "body": "Χρησιμοποιούμε ανακυκλώσιμα και βιώσιμα υλικά συσκευασίας.",
+        "_id": "a860838ac1"
+      },
+      {
+        "icon": "payment",
+        "title": "Ασφαλείς Online Πληρωμές",
+        "body": "Αγοράστε με σιγουριά χρησιμοποιώντας πιστωτική/χρεωστική κάρτα.",
+        "_id": "0b5a91c3ae"
+      }
+    ],
+    "TICKER": [
+      "100% ΕΓΓΥΗΣΗ ΑΓΝΟΤΗΤΑΣ",
+      "ΓΡΗΓΟΡΗ ΠΑΡΑΔΟΣΗ",
+      "ΑΣΦΑΛΕΙΣ ONLINE ΠΛΗΡΩΜΕΣ",
+      "ΟΙΚΟΛΟΓΙΚΗ ΣΥΝΕΙΔΗΣΗ",
+      "ΓΡΗΓΟΡΗ ΕΞΥΠΗΡΕΤΗΣΗ"
+    ],
+    "DEAL": {
+      "heading": "Τα Διαμάντια του Μαχαιρά",
+      "cta": {
+        "label": "Δείτε περισσότερα",
+        "href": "/proionta"
+      },
+      "featured": {
+        "title": "Το Ελιξίριο των Θεών",
+        "href": "/product/ydromelo",
+        "image": "/images/home/deal-featured.webp",
+        "imageAlt": "Υδρόμελο Melite — Όρος Μαχαιρά"
+      },
+      "products": [
+        {
+          "category": "Μέλι",
+          "title": "Μέλι Ανθέων «Όρος Μαχαιρά»",
+          "price": "€3,00 – €27,50",
+          "image": "/images/home/deal-1.webp",
+          "href": "/product/meli-antheon-oros-machaira",
+          "_id": "bf1916d4ec"
+        },
+        {
+          "category": "Μέλι",
+          "title": "Άβραστο (άθερμο) Μέλι Ανθέων «Όρος Μαχαιρά»",
+          "price": "€3,50 – €31,00",
+          "image": "/images/home/deal-2.webp",
+          "href": "/product/avrasto-meli-antheon-oros-machaira",
+          "_id": "272cddee1d"
+        },
+        {
+          "category": "Προϊόντα Μέλισσας",
+          "title": "Βασιλικός πολτός «Όρος Μαχαιρά»",
+          "price": "€22,00",
+          "image": "/images/home/deal-3.webp",
+          "href": "/product/vasilikos-poltos-oros-machaira",
+          "_id": "c09ad9fd0e"
+        },
+        {
+          "category": "Προϊόντα Μέλισσας",
+          "title": "Υδρόμελο",
+          "price": "€16,00",
+          "image": "/images/home/deal-4.webp",
+          "href": "/product/ydromelo",
+          "_id": "8ea5b076aa"
+        },
+        {
+          "category": "Μέλι",
+          "title": "Θυμαρίσιο Μέλι «Όρος Μαχαιρά»",
+          "price": "€3,50 – €31,00",
+          "image": "/images/home/deal-5.webp",
+          "href": "/product/thymarisio-meli-oros-machaira",
+          "_id": "8df6a44bb4"
+        }
+      ]
+    },
+    "CATEGORIES": {
+      "heading": "Τα προϊόντα μας",
+      "cta": {
+        "label": "Δείτε περισσότερα",
+        "href": "/proionta"
+      },
+      "items": [
+        {
+          "title": "Μέλι Όρος Μαχαιρά",
+          "image": "/images/home/cat-honey.webp",
+          "href": "/proionta/meli",
+          "_id": "a483533e84"
+        },
+        {
+          "title": "Προϊόντα Μέλισσας",
+          "image": "/images/home/cat-bee-products.webp",
+          "href": "/proionta/proionta-melissas",
+          "_id": "f52046945c"
+        },
+        {
+          "title": "Φυσικά Καλλυντικά",
+          "image": "/images/home/cat-cosmetics.webp",
+          "href": "/proionta/kallyntika",
+          "_id": "01a13dd55a"
+        },
+        {
+          "title": "Πακέτα δώρων",
+          "image": "/images/home/cat-gifts.webp",
+          "href": "/proionta/paketa-doron",
+          "_id": "7e122ee483"
+        }
+      ]
+    },
+    "ADOPT": {
+      "eyebrow": "ΒΙΩΜΑΤΙΚΗ ΕΜΠΕΙΡΙΑ",
+      "heading": "Υιοθετώ μια κυψέλη",
+      "body": "Γίνε και εσύ με την ομάδα σου μέρος του προγράμματος \"Υιοθετώ μια κυψέλη\" και… Bee-come a Hero για τις μέλισσες και το περιβάλλον.",
+      "cta": {
+        "label": "Δείτε περισσότερα",
+        "href": "/yiotheto-mia-kypseli"
+      },
+      "image": "/images/home/adopt-bee.webp",
+      "imageAlt": "Μέλισσα πάνω σε κηρήθρα"
+    },
+    "HERITAGE": {
+      "heading": "Από γενιά σε γενιά",
+      "cta": {
+        "label": "Δείτε περισσότερα",
+        "href": "/poioi-eimaste"
+      },
+      "image": "/images/home/family-photo.webp",
+      "imageAlt": "Η οικογένεια Όρος Μαχαιρά",
+      "paragraphs": [
+        [
+          {
+            "text": "Η ιστορία του μελιού ",
+            "_id": "19793329d1"
+          },
+          {
+            "text": "«Όρος Μαχαιρά» ",
+            "bold": true,
+            "_id": "94e6a65e52"
+          },
+          {
+            "text": "πάει πίσω στο 1983. Τότε ο Μιχάλης Φιλίππου άρχισε τη μελισοκομία μαζί με τον γαμπρό του, τον Κώστα Χειμώνα έχοντας πέντε κυψέλες τις οποίες πήραν από τον πατέρα του Κώστα. Για 30 περίπου χρόνια δούλεψαν μαζί σκληρά και με ",
+            "_id": "9be62b5346"
+          },
+          {
+            "text": "αγάπη για τη φύση",
+            "bold": true,
+            "_id": "bd0f7136d5"
+          },
+          {
+            "text": ", τη μέλισσα και τα προϊόντα της.",
+            "_id": "64f756cd6b"
+          }
+        ],
+        [
+          {
+            "text": "Αφού μεγάλωσαν τα παιδιά τους αποφάσισαν ότι θα ήταν καλύτερα για όλη την οικογένεια ο καθένας να τραβήξει τον δρόμο του. Οι γιοι του Μιχάλη Φιλίππου ανέλαβαν σήμερα τα ηνία της εταιρείας η οποία δραστηριοποιείται στην παραγωγή όλων των προϊόντων της μέλισσας, στην συσκευασία τους και στην διάθεσή τους στην αγορά με την επωνυμία «Όρος Μαχαιρά».",
+            "_id": "ef5b7a3d38"
+          }
+        ]
+      ]
+    },
+    "FLATLAY": {
+      "image": "/images/home/products-bg.jpg",
+      "imageAlt": "Προϊόντα Όρος Μαχαιρά σε μαρμάρινη επιφάνεια",
+      "prices": [
+        {
+          "value": "7,50",
+          "left": "27%",
+          "top": "31%",
+          "mLeft": "28%",
+          "mTop": "28%",
+          "handle": "avrasto-meli-antheon-oros-machaira",
+          "size": "500g",
+          "placement": "bottom",
+          "product": {
+            "category": "Μέλι",
+            "title": "Άβραστο Μέλι Ανθέων «Όρος Μαχαιρά»",
+            "price": "€7,50",
+            "image": "/images/home/products/unheated-honey.webp"
+          },
+          "_id": "607534ed0c"
+        },
+        {
+          "value": "12,00",
+          "left": "80%",
+          "top": "31%",
+          "mLeft": "75%",
+          "mTop": "33%",
+          "handle": "thymarisio-meli-oros-machaira",
+          "size": "790g",
+          "placement": "bottom",
+          "product": {
+            "category": "Μέλι",
+            "title": "Θυμαρίσιο Μέλι «Όρος Μαχαιρά»",
+            "price": "€12,00",
+            "image": "/images/home/products/thyme-honey.webp"
+          },
+          "_id": "32c2fe3e1f"
+        },
+        {
+          "value": "16,00",
+          "left": "49%",
+          "top": "59%",
+          "mLeft": "50%",
+          "mTop": "53%",
+          "handle": "ydromelo",
+          "placement": "top",
+          "product": {
+            "category": "Προϊόντα Μέλισσας",
+            "title": "Υδρόμελο «Όρος Μαχαιρά»",
+            "price": "€16,00",
+            "image": "/images/home/products/mead.webp"
+          },
+          "_id": "12f54a556b"
+        },
+        {
+          "value": "22,00",
+          "left": "72%",
+          "top": "71%",
+          "mLeft": "71%",
+          "mTop": "62%",
+          "handle": "vasilikos-poltos-oros-machaira",
+          "placement": "top",
+          "product": {
+            "category": "Προϊόντα Μέλισσας",
+            "title": "Βασιλικός Πολτός «Όρος Μαχαιρά»",
+            "price": "€22,00",
+            "image": "/images/home/products/royal-jelly.webp"
+          },
+          "_id": "3840288ba5"
+        },
+        {
+          "value": "9,90",
+          "left": "30%",
+          "top": "83%",
+          "mLeft": "32%",
+          "mTop": "74%",
+          "handle": "krema-cherion-milk-amp-honey",
+          "placement": "top",
+          "product": {
+            "category": "Φυσικά Καλλυντικά",
+            "title": "Κρέμα Χεριών Milk & Honey",
+            "price": "€9,90",
+            "image": "/images/home/products/hand-cream.webp"
+          },
+          "_id": "144a46d398"
+        }
+      ]
+    },
+    "BLOG": {
+      "heading": "Ο Κόσμος της Μέλισσας & της Φύσης",
+      "cta": {
+        "label": "Δείτε περισσότερα",
+        "href": "/blog"
+      },
+      "badge": "Άρθρα",
+      "featured": {
+        "image": "/images/home/blog-featured.webp",
+        "imageAlt": "Αγνό κυπριακό μέλι Όρος Μαχαιρά",
+        "title": "Πού να Αγοράσεις Αγνό Κυπριακό Μέλι στην Κύπρο",
+        "excerpt": "Το φυσικό αγνό μέλι τοπικής παραγωγής δεν είναι απλά θέμα trend η πολυτέλειας, είναι και θέμα ποιότητας και βιωσιμότητας...",
+        "href": "/"
+      },
+      "items": [
+        {
+          "image": "/images/home/blog-1.webp",
+          "title": "Η Μ.Φ. Όρος Μαχαιρά Λτδ Ενισχύει τη Βιωσιμότητά της με Εξειδικευμένη Υποστήριξη και Συγχρηματοδότηση της ΕΕ",
+          "href": "/",
+          "_id": "352d0c2f61"
+        },
+        {
+          "image": "/images/home/blog-2.webp",
+          "title": "Αναβίωση της κυπριακής αυτόχθονης μέλισσας: Καινοτόμος συνεργασία για την διατήρηση και ταυτοποίηση της φυλής",
+          "href": "/",
+          "_id": "b4d0d58b73"
+        }
+      ]
+    }
+  },
+  "translations": {
+    "en": {
+      "HERO": {
+        "left": {
+          "eyebrow": "AUTHENTIC TRADITION",
+          "heading": "Treasures of the Hive",
+          "body": "Discover our award-winning honey, our fine mead, our royal jelly and more.",
+          "cta": {
+            "label": "Learn more"
+          },
+          "imageAlt": "Award-winning Oros Machaira honey on a wooden stand"
+        },
+        "right": {
+          "eyebrow": "HANDS-ON EXPERIENCE",
+          "heading": "Workshops & Events",
+          "body": "Come up to the mountain and experience the magic of the apiary, through hands-on workshops for the whole family.",
+          "cta": {
+            "label": "Learn more"
+          },
+          "imageAlt": "A bee on a honeycomb"
+        }
+      },
+      "TRUST": [
+        {
+          "title": "100% Purity Guarantee",
+          "body": "Straight from our apiary in Melini, with no additives.",
+          "_id": "92b555c263"
+        },
+        {
+          "title": "Fast Delivery",
+          "body": "Fast and secure shipping of your order.",
+          "_id": "7b66682907"
+        },
+        {
+          "title": "Eco Conscious",
+          "body": "We use recyclable and sustainable packaging materials.",
+          "_id": "a860838ac1"
+        },
+        {
+          "title": "Secure online payments",
+          "body": "Shop with confidence using your credit or debit card.",
+          "_id": "0b5a91c3ae"
+        }
+      ],
+      "TICKER": [
+        "100% PURITY GUARANTEE",
+        "FAST DELIVERY",
+        "SECURE ONLINE PAYMENTS",
+        "ECO CONSCIOUS",
+        "FAST SERVICE"
+      ],
+      "DEAL": {
+        "heading": "The Diamonds of Machaira",
+        "cta": {
+          "label": "Learn more"
+        },
+        "featured": {
+          "title": "The Elixir of the Gods",
+          "imageAlt": "Melite Mead — Oros Machaira"
+        },
+        "products": [
+          {
+            "category": "Honey",
+            "title": "Oros Machaira Raw Blossom Honey",
+            "_id": "bf1916d4ec"
+          },
+          {
+            "category": "Honey",
+            "title": "Oros Machaira Raw Blossom Honey",
+            "_id": "272cddee1d"
+          },
+          {
+            "category": "Bee Products",
+            "title": "Oros Machaira Royal Jelly",
+            "_id": "c09ad9fd0e"
+          },
+          {
+            "category": "Bee Products",
+            "title": "Mead",
+            "_id": "8ea5b076aa"
+          },
+          {
+            "category": "Honey",
+            "title": "Oros Machaira Thyme Honey",
+            "_id": "8df6a44bb4"
+          }
+        ]
+      },
+      "CATEGORIES": {
+        "heading": "Our Products",
+        "cta": {
+          "label": "Learn more"
+        },
+        "items": [
+          {
+            "title": "Oros Machaira Honey",
+            "_id": "a483533e84"
+          },
+          {
+            "title": "Bee Products",
+            "_id": "f52046945c"
+          },
+          {
+            "title": "Natural Cosmetics",
+            "_id": "01a13dd55a"
+          },
+          {
+            "title": "Gift Sets",
+            "_id": "7e122ee483"
+          }
+        ]
+      },
+      "ADOPT": {
+        "eyebrow": "HANDS-ON EXPERIENCE",
+        "heading": "Adopt a Hive",
+        "body": "Join the “Adopt a Hive” programme with your team and… Bee-come a Hero for the bees and the environment.",
+        "cta": {
+          "label": "Learn more"
+        },
+        "imageAlt": "A bee on a honeycomb"
+      },
+      "HERITAGE": {
+        "heading": "From Generation to Generation",
+        "cta": {
+          "label": "Learn more"
+        },
+        "imageAlt": "The Oros Machaira family",
+        "paragraphs": [
+          [
+            {
+              "text": "The story of ",
+              "_id": "19793329d1"
+            },
+            {
+              "text": "Oros Machaira ",
+              "bold": true,
+              "_id": "94e6a65e52"
+            },
+            {
+              "text": "honey goes back to 1983, when Michalis Filippou began beekeeping together with his brother-in-law, Costas Chimonas, starting with five hives given to them by Costas’s father. For some 30 years they worked side by side, driven by ",
+              "_id": "9be62b5346"
+            },
+            {
+              "text": "a love of nature",
+              "bold": true,
+              "_id": "bd0f7136d5"
+            },
+            {
+              "text": ", of bees and of everything the hive produces.",
+              "_id": "64f756cd6b"
+            }
+          ],
+          [
+            {
+              "text": "Once their children had grown up, they decided it would be best for everyone if each family followed its own path. The sons of Michalis Filippou have today taken the reins of the company, which produces the full range of bee products, packages them and brings them to market under the Oros Machaira brand.",
+              "_id": "ef5b7a3d38"
+            }
+          ]
+        ]
+      },
+      "FLATLAY": {
+        "imageAlt": "Oros Machaira products on a marble surface",
+        "prices": [
+          {
+            "product": {
+              "category": "Honey",
+              "title": "Oros Machaira Blossom Honey"
+            },
+            "_id": "607534ed0c"
+          },
+          {
+            "product": {
+              "category": "Honey",
+              "title": "Oros Machaira Thyme Honey"
+            },
+            "_id": "32c2fe3e1f"
+          },
+          {
+            "product": {
+              "category": "Bee Products",
+              "title": "Oros Machaira Mead"
+            },
+            "_id": "12f54a556b"
+          },
+          {
+            "product": {
+              "category": "Bee Products",
+              "title": "Oros Machaira Royal Jelly"
+            },
+            "_id": "3840288ba5"
+          },
+          {
+            "product": {
+              "category": "Natural Cosmetics",
+              "title": "Milk & Honey Hand Cream"
+            },
+            "_id": "144a46d398"
+          }
+        ]
+      },
+      "BLOG": {
+        "heading": "The World of Bees & Nature",
+        "cta": {
+          "label": "Learn more"
+        },
+        "badge": "Articles",
+        "featured": {
+          "imageAlt": "Pure Cypriot Oros Machaira honey",
+          "title": "Where to Buy Pure Cypriot Honey in Cyprus",
+          "excerpt": "Locally produced, pure natural honey isn’t just a matter of trend or luxury — it’s a matter of quality and sustainability…"
+        },
+        "items": [
+          {
+            "title": "M.F. Oros Maxaira Ltd Strengthens its Sustainability with Specialised Support and EU Co-financing",
+            "_id": "352d0c2f61"
+          },
+          {
+            "title": "Reviving the Cypriot native bee: an innovative collaboration to preserve and identify the breed",
+            "_id": "b4d0d58b73"
+          }
+        ]
+      }
+    }
+  }
+}

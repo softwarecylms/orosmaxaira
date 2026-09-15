@@ -2,7 +2,6 @@ import { Link } from '@/i18n/navigation'
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import { Phone } from 'lucide-react'
-import { getHomeContent } from '@/components/home/home-content'
 import type { Locale } from '@/i18n/routing'
 import { RevealUp } from '@/components/home/reveal-up'
 import {
@@ -13,6 +12,7 @@ import {
   LinkedinSolid,
 } from './social-icons'
 import { FooterFunding } from './footer-funding'
+import { loadSiteContent } from '@/lib/content/load'
 
 type SiteFooterProps = {
   locale: Locale
@@ -31,10 +31,10 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
   LinkedIn: LinkedinSolid,
 }
 
-/** OROS MACHAIRA footer (Figma 156:1342). Locale-aware via getHomeContent(locale). */
+/** OROS MACHAIRA footer (Figma 156:1342). Content from loadSiteContent(locale). */
 export async function SiteFooter({ locale }: SiteFooterProps) {
   const t = await getTranslations('footer')
-  const { FOOTER, CONTACT } = getHomeContent(locale)
+  const { FOOTER, CONTACT } = await loadSiteContent(locale)
   return (
     <footer data-testid="site-footer" className="bg-white pt-12 md:pt-[50px]">
       <div className="container-wide">

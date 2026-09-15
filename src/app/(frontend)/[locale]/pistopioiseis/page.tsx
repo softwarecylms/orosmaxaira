@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { getLocale } from 'next-intl/server'
-import { getCertificatesContent, type Certificate } from '@/components/certificates/certificates-content'
+import { type Certificate } from '@/components/certificates/certificates-content'
 import { PageHero } from '@/components/shared/page-hero'
 import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
 import { RichText } from '@/components/activities/detail/rich-text'
 import { seoMetadata } from '@/lib/seo'
 import { breadcrumbJsonLd } from '@/components/seo/json-ld'
 import { cn } from '@/lib/utils'
+import { loadCertificatesContent } from '@/lib/content/load'
 
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -29,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function CertificatesPage() {
   const locale = await getLocale()
   const en = locale === 'en'
-  const { hero, certificates } = getCertificatesContent(locale)
+  const { hero, certificates } = await loadCertificatesContent(locale)
 
   const jsonLd = breadcrumbJsonLd(locale, [
     [en ? 'Home' : 'Αρχική', '/'],

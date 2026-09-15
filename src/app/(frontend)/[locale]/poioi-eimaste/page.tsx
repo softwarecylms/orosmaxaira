@@ -2,17 +2,18 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { getLocale } from 'next-intl/server'
 import { User, Building2 } from 'lucide-react'
-import { getAboutContent, type AboutValueIcon } from '@/components/about/about-content'
+import { type AboutValueIcon } from '@/components/about/about-content'
 import { OutdoorCarousel } from '@/components/about/outdoor-carousel'
 import { RevealUp, RevealGroup, RevealItem } from '@/components/home/reveal-up'
 import { RichText } from '@/components/activities/detail/rich-text'
 import { CtaLink } from '@/components/home/cta-link'
 import { Counter } from '@/components/motion/counter'
 import { seoMetadata } from '@/lib/seo'
+import { loadAboutContent } from '@/lib/content/load'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
-  const { meta } = getAboutContent(locale)
+  const { meta } = await loadAboutContent(locale)
   return seoMetadata({
     locale,
     path: '/poioi-eimaste',
@@ -29,7 +30,7 @@ const VALUE_ICONS: Record<AboutValueIcon, string> = {
 }
 
 export default async function AboutPage() {
-  const a = getAboutContent(await getLocale())
+  const a = await loadAboutContent(await getLocale())
 
   return (
     <>

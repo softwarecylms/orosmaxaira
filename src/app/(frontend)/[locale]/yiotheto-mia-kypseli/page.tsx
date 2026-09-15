@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { getLocale } from 'next-intl/server'
 import { Sprout, Users, GraduationCap } from 'lucide-react'
-import { getAdoptContent, type AdoptBenefitIcon } from '@/components/adopt/adopt-content'
+import { type AdoptBenefitIcon } from '@/components/adopt/adopt-content'
 import { seoMetadata } from '@/lib/seo'
 import { AdoptHero } from '@/components/adopt/adopt-hero'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
@@ -22,6 +22,7 @@ import { AdoptCtaForm } from '@/components/adopt/adopt-cta-form'
 import { CtaLink } from '@/components/home/cta-link'
 import { FaqSchema } from '@/components/seo/faq-schema'
 import { cn } from '@/lib/utils'
+import { loadAdoptContent } from '@/lib/content/load'
 
 export async function generateMetadata({
   params,
@@ -29,7 +30,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const { meta } = getAdoptContent(locale)
+  const { meta } = await loadAdoptContent(locale)
   return seoMetadata({
     locale,
     path: '/yiotheto-mia-kypseli',
@@ -70,7 +71,7 @@ function SectionHead({
 }
 
 export default async function AdoptAHivePage() {
-  const a = getAdoptContent(await getLocale())
+  const a = await loadAdoptContent(await getLocale())
 
   return (
     <>

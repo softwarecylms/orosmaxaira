@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { LegalPage } from '@/components/legal/legal-page'
-import { getLegalContent } from '@/components/legal/legal-content'
 import { seoMetadata } from '@/lib/seo'
+import { loadLegalContent } from '@/lib/content/load'
 
 export async function generateMetadata({
   params,
@@ -9,7 +9,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const m = getLegalContent('privacy', locale).seo
+  const m = (await loadLegalContent('privacy', locale)).seo
   return seoMetadata({
     locale,
     path: '/privacy-amp-cookie-policy',
@@ -24,7 +24,7 @@ export default async function PrivacyPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  const c = getLegalContent('privacy', locale)
+  const c = await loadLegalContent('privacy', locale)
   return (
     <LegalPage
       locale={locale}

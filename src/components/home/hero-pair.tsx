@@ -1,9 +1,9 @@
 import Image from 'next/image'
 import { getLocale } from 'next-intl/server'
-import { getHomeContent } from './home-content'
 import { CtaLink } from './cta-link'
 import { CardSpotlight } from './card-spotlight'
 import { RevealUp } from './reveal-up'
+import { loadHomeContent } from '@/lib/content/load'
 
 /**
  * Section 2 — two hero cards (Figma 181:1298 desktop / 367:2194 tablet+mobile).
@@ -12,7 +12,7 @@ import { RevealUp } from './reveal-up'
  * Left: off-white card, honey-jars photo. Right: gold card, bee photo.
  */
 export async function HeroPair() {
-  const { HERO } = getHomeContent(await getLocale())
+  const { HERO } = await loadHomeContent(await getLocale())
   return (
     <section data-testid="hero-pair" className="bg-white pt-6 md:pt-9">
       <div className="container-wide">

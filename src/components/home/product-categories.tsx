@@ -1,14 +1,14 @@
 import Image from 'next/image'
 import { getLocale } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
-import { getHomeContent } from './home-content'
 import { CtaLink } from './cta-link'
 import { ArrowRight } from './icons'
 import { RevealUp, RevealGroup, RevealItem } from './reveal-up'
+import { loadHomeContent } from '@/lib/content/load'
 
 /** Section 6 — "Τα προϊόντα μας" category cards (Figma 156:1122). */
 export async function ProductCategories() {
-  const { CATEGORIES } = getHomeContent(await getLocale())
+  const { CATEGORIES } = await loadHomeContent(await getLocale())
   return (
     <section data-testid="product-categories" className="bg-white py-14 md:py-20">
       <div className="container-wide flex flex-col gap-7 md:gap-[30px]">

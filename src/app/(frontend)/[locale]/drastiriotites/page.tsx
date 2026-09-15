@@ -3,12 +3,13 @@ import Image from 'next/image'
 import { getLocale } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { ArrowRight } from 'lucide-react'
-import { getActivitiesContent, getActivitiesUi } from '@/components/activities/activities-content'
+import { getActivitiesUi } from '@/components/activities/activities-content'
 import { PageHero } from '@/components/shared/page-hero'
 import { SectionHead } from '@/components/shared/section-head'
 import { FactBand } from '@/components/activities/fact-band'
 import { RevealStagger, RevealStaggerItem } from '@/components/motion/reveal'
 import { seoMetadata } from '@/lib/seo'
+import { loadActivitiesContent } from '@/lib/content/load'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
@@ -29,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ActivitiesPage() {
   const locale = await getLocale()
-  const a = getActivitiesContent(locale)
+  const a = await loadActivitiesContent(locale)
   const ui = getActivitiesUi(locale)
   const heroButtons =
     locale === 'en'

@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import { getLocale } from 'next-intl/server'
 import { RevealUp } from '@/components/home/reveal-up'
-import { getAwardsContent } from '@/components/awards/awards-content'
 import { AwardsHero } from '@/components/awards/awards-hero'
 import { AwardSection } from '@/components/awards/award-section'
 import { seoMetadata } from '@/lib/seo'
 import { cn } from '@/lib/utils'
+import { loadAwardsContent } from '@/lib/content/load'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
@@ -30,7 +30,7 @@ const SHADED_SLUGS = new Set([
 /** Awards / Διακρίσεις showcase — title banner + one full-width section per award
  *  (alternating 50/50 layout, medal badges, image carousel with lightbox). */
 export default async function AwardsPage() {
-  const { hero, awards } = getAwardsContent(await getLocale())
+  const { hero, awards } = await loadAwardsContent(await getLocale())
   return (
     <>
       <AwardsHero

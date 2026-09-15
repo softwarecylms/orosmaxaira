@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { getLocale } from 'next-intl/server'
-import { getNatureContent, type NatureSection } from '@/components/nature/nature-content'
+import { type NatureSection } from '@/components/nature/nature-content'
 import { PageHero } from '@/components/shared/page-hero'
 import { CtaLink } from '@/components/home/cta-link'
 import { AdoptHiveBanner } from '@/components/home/adopt-hive-banner'
@@ -10,6 +10,7 @@ import { Counter } from '@/components/motion/counter'
 import { BoldText } from '@/components/shared/bold-text'
 import { seoMetadata } from '@/lib/seo'
 import { cn } from '@/lib/utils'
+import { loadNatureContent } from '@/lib/content/load'
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
@@ -72,7 +73,7 @@ function StorySection({ s }: { s: NatureSection }) {
 }
 
 export default async function NatureHeroesPage() {
-  const n = getNatureContent(await getLocale())
+  const n = await loadNatureContent(await getLocale())
 
   return (
     <>

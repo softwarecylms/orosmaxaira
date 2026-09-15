@@ -1,0 +1,826 @@
+{
+  "key": "awards",
+  "data": {
+    "breadcrumb": [
+      {
+        "label": "Αρχική",
+        "href": "/",
+        "_id": "be99e36d0b"
+      },
+      {
+        "label": "Βραβεία",
+        "_id": "a7647c187d"
+      }
+    ],
+    "hero": {
+      "title": "Βραβεία & Διακρίσεις",
+      "description": "Κάθε βραβείο είναι μια επιβεβαίωση της δουλειάς, της παράδοσης και της αγάπης μας για τη μέλισσα και τη φύση. Δείτε τις διακρίσεις που μας εμπιστεύτηκαν κορυφαίοι θεσμοί στην Κύπρο και το εξωτερικό.",
+      "image": "/images/awards/hero-award.webp",
+      "imageAlt": "Χρυσό Βραβείο Cyprus Tourism Awards 2025 — Όρος Μαχαιρά"
+    },
+    "awards": [
+      {
+        "slug": "specialist-awards-2026",
+        "event": "Specialist Awards 2026",
+        "year": "2026",
+        "subject": "Άβραστο Μέλι Ανθέων",
+        "badges": [
+          {
+            "tier": "bronze",
+            "label": "Χάλκινο Βραβείο",
+            "meta": "Βαθμολογία 65",
+            "_id": "e50ac682e6"
+          }
+        ],
+        "lead": [
+          {
+            "text": "Με μεγάλη περηφάνια σας ανακοινώνουμε ότι το ",
+            "_id": "03d8966d5f"
+          },
+          {
+            "text": "Άβραστο Μέλι Ανθέων",
+            "href": "/shop/avrasto-meli-antheon-oros-machaira",
+            "_id": "cfa48d1858"
+          },
+          {
+            "text": " μας διακρίθηκε με το ",
+            "_id": "8f3cd56e9d"
+          },
+          {
+            "text": "Χάλκινο Βραβείο",
+            "bold": true,
+            "_id": "e7c04a8656"
+          },
+          {
+            "text": " στα Specialist Awards 2026, συγκεντρώνοντας βαθμολογία 65!",
+            "_id": "231c0d64bc"
+          }
+        ],
+        "body": [
+          [
+            {
+              "text": "Οι κριτές ξεχώρισαν το μέλι μας για:",
+              "bold": true,
+              "_id": "ba7b69b6a1"
+            }
+          ]
+        ],
+        "highlights": [
+          "Την πλούσια και ισορροπημένη γεύση του, χωρίς ελαττώματα.",
+          "Τη σωστή και συμπαγή κρυστάλλωσή του, σήμα κατατεθέν της αγνότητάς του.",
+          "Τα ιδιαίτερα αρώματα από διάφορες ποικιλίες της φύσης, με απαλές νότες θυμαριού."
+        ],
+        "images": [
+          {
+            "src": "/images/awards/specialist-awards-2026/01.webp?v=87452",
+            "w": 1200,
+            "h": 910,
+            "_id": "455daf90fa"
+          },
+          {
+            "src": "/images/awards/specialist-awards-2026/02.webp?v=33480",
+            "w": 1200,
+            "h": 910,
+            "_id": "aa0e6bdc68"
+          }
+        ],
+        "_id": "2a5c20f092"
+      },
+      {
+        "slug": "cyprus-tourism-2025",
+        "event": "Cyprus Tourism Awards 2025",
+        "org": "Boussias Cyprus",
+        "year": "2025",
+        "subject": "Υδρόμελο ΜΕLΙΤΕ",
+        "badges": [
+          {
+            "tier": "gold",
+            "label": "Χρυσό Βραβείο",
+            "meta": "Cypriot Beverage · Βαθμολογία 8.2",
+            "_id": "d8c51fa68c"
+          }
+        ],
+        "lead": [
+          {
+            "text": "Με ιδιαίτερη περηφάνια και συγκίνηση σας ανακοινώνουμε ότι το ",
+            "_id": "735ea0cf77"
+          },
+          {
+            "text": "Υδρόμελο ΜΕLΙΤΕ",
+            "href": "/shop/ydromelo",
+            "_id": "24e094f79a"
+          },
+          {
+            "text": " του Όρος Μαχαιρά κατέκτησε το ",
+            "_id": "c7ac2b978e"
+          },
+          {
+            "text": "Χρυσό Βραβείο",
+            "bold": true,
+            "_id": "33eed2ed10"
+          },
+          {
+            "text": " στα περίφημα Cyprus Tourism Awards, τον κορυφαίο θεσμό που διοργανώνει η Boussias Cyprus.",
+            "_id": "184c2e0075"
+          }
+        ],
+        "body": [
+          [
+            {
+              "text": "Στην κατηγορία ",
+              "_id": "e67db654fb"
+            },
+            {
+              "text": "Cypriot Beverage",
+              "bold": true,
+              "_id": "915a69013d"
+            },
+            {
+              "text": ", το παραδοσιακό μας υδρόμελο ξεχώρισε συγκεντρώνοντας την εντυπωσιακή βαθμολογία 8.2, επιβεβαιώνοντας την ανώτερη ποιότητά του και τη συμβολή του στην ανάδειξη της κυπριακής γαστρονομικής κληρονομιάς.",
+              "_id": "057f6ba91a"
+            }
+          ]
+        ],
+        "images": [
+          {
+            "src": "/images/awards/cyprus-tourism-2025/01.webp?v=55330",
+            "w": 1200,
+            "h": 910,
+            "_id": "2594515b65"
+          },
+          {
+            "src": "/images/awards/cyprus-tourism-2025/02.webp?v=56976",
+            "w": 1200,
+            "h": 910,
+            "_id": "dbf064685b"
+          },
+          {
+            "src": "/images/awards/cyprus-tourism-2025/03.webp?v=69830",
+            "w": 1200,
+            "h": 911,
+            "_id": "d11ebbcd5f"
+          }
+        ],
+        "_id": "f1fcf70570"
+      },
+      {
+        "slug": "excellent-taste-2025",
+        "event": "Excellent Taste Awards 2025",
+        "org": "London",
+        "year": "2025",
+        "subject": "Άβραστο μέλι",
+        "badges": [
+          {
+            "tier": "gold",
+            "label": "Χρυσό Βραβείο",
+            "_id": "27be65fb6c"
+          }
+        ],
+        "lead": [
+          {
+            "text": "Με περηφάνια και μεγάλη μας χαρά μοιραζόμαστε μαζί σας ότι το ",
+            "_id": "f248809190"
+          },
+          {
+            "text": "άβραστο μέλι",
+            "href": "/shop/avrasto-meli-antheon-oros-machaira",
+            "_id": "6d224a2010"
+          },
+          {
+            "text": " μας απέσπασε ",
+            "_id": "bd3c478633"
+          },
+          {
+            "text": "Χρυσό Βραβείο",
+            "bold": true,
+            "_id": "3761cbe702"
+          },
+          {
+            "text": " στα Excellent Taste Awards 2025 – London.",
+            "_id": "86a915671e"
+          }
+        ],
+        "body": [
+          "Μια σημαντική διάκριση που επιβεβαιώνει όλα όσα πρεσβεύουμε εδώ και δεκαετίες.",
+          "Αυτό το βραβείο είναι αφιερωμένο σε όλους εσάς που μας στηρίζετε, μας εμπιστεύεστε και επιλέγετε το μέλι μας να συνοδεύει τις πιο γλυκές σας στιγμές όλα αυτά τα χρόνια.",
+          [
+            {
+              "text": "Σας ευχαριστούμε από καρδιάς!",
+              "bold": true,
+              "_id": "b7e6c31281"
+            }
+          ]
+        ],
+        "images": [
+          {
+            "src": "/images/awards/excellent-taste-2025/01.webp?v=94632",
+            "w": 1200,
+            "h": 910,
+            "_id": "b269078687"
+          },
+          {
+            "src": "/images/awards/excellent-taste-2025/02.webp?v=67544",
+            "w": 1200,
+            "h": 910,
+            "_id": "193dad30c2"
+          }
+        ],
+        "_id": "fa7bdfe389"
+      },
+      {
+        "slug": "ge-neo-epicheirein-2025",
+        "event": "Βραβεία «Γε’ Νέο Επιχειρείν» 2025",
+        "org": "ΚΕΒΕ",
+        "year": "2025",
+        "subject": "Μενέλαος Φιλίππου",
+        "badges": [
+          {
+            "tier": "first",
+            "label": "Βραβείο",
+            "meta": "Κατηγορία: Βιομηχανικές Επιχειρήσεις",
+            "_id": "401340c23b"
+          }
+        ],
+        "lead": [
+          {
+            "text": "Η Επιτροπή Επιλογής του ΚΕΒΕ για τα βραβεία νέων επιχειρηματιών «Γε’ Νέο Επιχειρείν» επέλεξε τον ",
+            "_id": "e24936e3f8"
+          },
+          {
+            "text": "Μενέλαο Φιλίππου",
+            "bold": true,
+            "_id": "30877b0747"
+          },
+          {
+            "text": " να βραβευθεί στην κατηγορία Βιομηχανικές Επιχειρήσεις για το έτος 2025.",
+            "_id": "56b4c9936e"
+          }
+        ],
+        "body": [
+          [
+            {
+              "text": "Τα βραβεία που απονέμονται από το ΚΕΒΕ στοχεύουν στην προβολή και ανάδειξη της ",
+              "_id": "321104f6ff"
+            },
+            {
+              "text": "νεανικής επιχειρηματικότητας",
+              "bold": true,
+              "_id": "32585007dd"
+            },
+            {
+              "text": " και στη συμμετοχή σε ένα παγκόσμιο δίκτυο νέων επιχειρηματιών, επιλεγμένων με αξιοκρατικά κριτήρια.",
+              "_id": "abc889de34"
+            }
+          ]
+        ],
+        "note": "Το συγκεκριμένο βραβείο το παρέλαβε η Μαρία Σολομωνίδου στη θέση του Μέλιου, καθώς εκείνος έλειπε στο εξωτερικό.",
+        "images": [
+          {
+            "src": "/images/awards/ge-neo-epicheirein-2025/01.webp?v=53436",
+            "w": 1200,
+            "h": 909,
+            "_id": "bd8f9f74b3"
+          },
+          {
+            "src": "/images/awards/ge-neo-epicheirein-2025/02.webp?v=69318",
+            "w": 1200,
+            "h": 910,
+            "_id": "1d08a560ac"
+          },
+          {
+            "src": "/images/awards/ge-neo-epicheirein-2025/03.webp?v=118096",
+            "w": 1200,
+            "h": 910,
+            "_id": "cd5906db9d"
+          },
+          {
+            "src": "/images/awards/ge-neo-epicheirein-2025/04.webp?v=45750",
+            "w": 1200,
+            "h": 910,
+            "_id": "807a0fb65a"
+          }
+        ],
+        "_id": "7ab27947e3"
+      },
+      {
+        "slug": "cyprus-tourism-2024",
+        "event": "Cyprus Tourism Awards 2024",
+        "org": "City of Dreams",
+        "year": "2024",
+        "badges": [
+          {
+            "tier": "gold",
+            "label": "Χρυσό Βραβείο",
+            "meta": "Βαθμολογία 7.3",
+            "_id": "2f8672648e"
+          },
+          {
+            "tier": "silver",
+            "label": "Αργυρό Βραβείο",
+            "meta": "Βαθμολογία 4.5",
+            "_id": "03a7a7b88f"
+          }
+        ],
+        "lead": "Με τεράστια χαρά σας ανακοινώνουμε ότι το Όρος Μαχαιρά απέσπασε δύο πολύ σημαντικές διακρίσεις στην τελετή απονομής των Cyprus Tourism Awards, που πραγματοποιήθηκε στο City of Dreams.",
+        "body": [
+          "Η κριτική επιτροπή του θεσμού μάς τίμησε με δύο διακρίσεις, επιβραβεύοντας το όραμά μας για τη φύση και τον άνθρωπο:",
+          [
+            {
+              "text": "🥇 ",
+              "_id": "416679047f"
+            },
+            {
+              "text": "Χρυσό Βραβείο (Gold)",
+              "bold": true,
+              "_id": "f09c4e7042"
+            },
+            {
+              "text": " — Βαθμολογία 7.3, στην κατηγορία «Initiatives to protect the environment / Raising awareness», για το πρωτοποριακό πρόγραμμα Adopt a Hive (Υιοθέτησε ένα Μελίσσι).",
+              "_id": "e02f294c9e"
+            }
+          ],
+          [
+            {
+              "text": "🥈 ",
+              "_id": "b1bc8b45b6"
+            },
+            {
+              "text": "Αργυρό Βραβείο (Silver)",
+              "bold": true,
+              "_id": "359a4c73f1"
+            },
+            {
+              "text": " — Βαθμολογία 4.5, στην κατηγορία «Rural/Mountain tourism, ecotourism, wine tourism & agro tourism», για τις βιωματικές μας εμπειρίες Adventures at the hives (Περιπέτειες στις Μελισσοφωλιές).",
+              "_id": "f8202cb8d0"
+            }
+          ]
+        ],
+        "images": [
+          {
+            "src": "/images/awards/cyprus-tourism-2024/01.webp?v=94224",
+            "w": 1200,
+            "h": 910,
+            "_id": "b3f79d9cea"
+          },
+          {
+            "src": "/images/awards/cyprus-tourism-2024/02.webp?v=91804",
+            "w": 1200,
+            "h": 910,
+            "_id": "f0f2d42081"
+          },
+          {
+            "src": "/images/awards/cyprus-tourism-2024/03.webp?v=109492",
+            "w": 1200,
+            "h": 909,
+            "_id": "09c8efba88"
+          },
+          {
+            "src": "/images/awards/cyprus-tourism-2024/04.webp?v=56022",
+            "w": 1200,
+            "h": 910,
+            "_id": "eeeb8a1850"
+          }
+        ],
+        "_id": "b4deb51945"
+      },
+      {
+        "slug": "cyprus-hospitality",
+        "event": "Cyprus Hospitality Awards",
+        "org": "Υφυπουργείο Τουρισμού",
+        "subject": "Μαρία Σολομωνίδου — «Γνωρίζω τη Μέλισσα»",
+        "badges": [
+          {
+            "tier": "first",
+            "label": "1ο Βραβείο",
+            "_id": "a5bc5597c0"
+          }
+        ],
+        "lead": "Η αυθεντική κυπριακή φιλοξενία και η βιωματική εκπαίδευση βρίσκονται στον πυρήνα όσων κάνουμε καθημερινά στο Όρος Μαχαιρά. Νιώθουμε διπλή περηφάνια, καθώς η προσπάθεια αυτή αναγνωρίστηκε από τον εθνικό φορέα του τουρισμού του τόπου μας.",
+        "body": [
+          [
+            {
+              "text": "Στην τελετή των Cyprus Hospitality Awards, το Υφυπουργείο Τουρισμού απένειμε το ",
+              "_id": "04a1c869c1"
+            },
+            {
+              "text": "1ο Βραβείο",
+              "bold": true,
+              "_id": "b7b93e8347"
+            },
+            {
+              "text": " στην κατηγορία «Εμπειρία Εμπλουτιστικής Δραστηριότητας» στη ",
+              "_id": "f182f20d01"
+            },
+            {
+              "text": "Μαρία Σολομωνίδου",
+              "bold": true,
+              "_id": "18b48e119b"
+            },
+            {
+              "text": ", για το εκπαιδευτικό και βιωματικό πρόγραμμα «Γνωρίζω τη Μέλισσα».",
+              "_id": "aff939c7bb"
+            }
+          ],
+          "Το βραβείο αυτό δεν ανήκει απλώς σε μια δραστηριότητα, αλλά στον άνθρωπο που κρύβεται πίσω από αυτήν. Η Μαρία, με το μόνιμο χαμόγελό της και τον σεβασμό της προς τη φύση, έχει καταφέρει να μετατρέψει μια επίσκεψη στο μελισσοκομείο μας σε μια αξέχαστη εμπειρία ζωής, που εμπλουτίζει το τουριστικό προϊόν της Κύπρου."
+        ],
+        "images": [
+          {
+            "src": "/images/awards/cyprus-hospitality/01.webp?v=30182",
+            "w": 1200,
+            "h": 910,
+            "_id": "a8fb72868b"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/02.webp?v=43664",
+            "w": 1200,
+            "h": 910,
+            "_id": "1904ad9d6b"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/03.webp?v=39216",
+            "w": 1200,
+            "h": 910,
+            "_id": "b360c2ade8"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/04.webp?v=64154",
+            "w": 1200,
+            "h": 910,
+            "_id": "00d9964938"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/05.webp?v=43870",
+            "w": 1200,
+            "h": 910,
+            "_id": "86a6e59f04"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/06.webp?v=37234",
+            "w": 1200,
+            "h": 910,
+            "_id": "3173d8e2fc"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/07.webp?v=20206",
+            "w": 1200,
+            "h": 910,
+            "_id": "09279d8fdf"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/08.webp?v=16906",
+            "w": 1200,
+            "h": 910,
+            "_id": "57ad7f783e"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/09.webp?v=51914",
+            "w": 1200,
+            "h": 910,
+            "_id": "d350063173"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/10.webp?v=40116",
+            "w": 1200,
+            "h": 910,
+            "_id": "a393455531"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/11.webp?v=55700",
+            "w": 1200,
+            "h": 910,
+            "_id": "3309d264c0"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/12.webp?v=25266",
+            "w": 1200,
+            "h": 910,
+            "_id": "44d90ad72b"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/13.webp?v=48540",
+            "w": 1200,
+            "h": 910,
+            "_id": "2539da63e0"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/14.webp?v=40858",
+            "w": 1200,
+            "h": 910,
+            "_id": "dc2d558495"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/15.webp?v=35906",
+            "w": 1200,
+            "h": 910,
+            "_id": "c2f708f5dd"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/16.webp?v=39490",
+            "w": 1200,
+            "h": 910,
+            "_id": "f4200d184f"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/17.webp?v=41512",
+            "w": 1200,
+            "h": 910,
+            "_id": "39829ff42c"
+          },
+          {
+            "src": "/images/awards/cyprus-hospitality/18.webp?v=35262",
+            "w": 1200,
+            "h": 910,
+            "_id": "82d47a6b36"
+          }
+        ],
+        "_id": "206b8ddd78"
+      }
+    ]
+  },
+  "translations": {
+    "en": {
+      "breadcrumb": [
+        {
+          "label": "Home",
+          "_id": "be99e36d0b"
+        },
+        {
+          "label": "Awards",
+          "_id": "a7647c187d"
+        }
+      ],
+      "hero": {
+        "title": "Awards & Distinctions",
+        "description": "Every award is a confirmation of our work, our tradition and our love for the bee and for nature. Explore the awards we have received from leading organisations in Cyprus and abroad.",
+        "imageAlt": "Gold Award, Cyprus Tourism Awards 2025 — Oros Machaira"
+      },
+      "awards": [
+        {
+          "subject": "Raw Blossom Honey",
+          "badges": [
+            {
+              "label": "Bronze Award",
+              "meta": "65/100",
+              "_id": "e50ac682e6"
+            }
+          ],
+          "lead": [
+            {
+              "text": "We are proud to announce that our ",
+              "_id": "03d8966d5f"
+            },
+            {
+              "text": "Raw Blossom Honey",
+              "_id": "cfa48d1858"
+            },
+            {
+              "text": " was distinguished with the ",
+              "_id": "8f3cd56e9d"
+            },
+            {
+              "text": "Bronze Award",
+              "_id": "e7c04a8656"
+            },
+            {
+              "text": " at the Specialist Awards 2026, achieving a score of 65/100!",
+              "_id": "231c0d64bc"
+            }
+          ],
+          "body": [
+            [
+              {
+                "text": "The judges singled out our honey for:",
+                "bold": true,
+                "_id": "ba7b69b6a1"
+              }
+            ]
+          ],
+          "highlights": [
+            "Its rich and balanced flavour, free of defects.",
+            "Its correct, firm crystallisation — a hallmark of its purity.",
+            "Its distinctive aromas from a range of natural varieties, with gentle notes of thyme."
+          ],
+          "_id": "2a5c20f092"
+        },
+        {
+          "subject": "MELITE Mead",
+          "badges": [
+            {
+              "label": "Gold Award",
+              "meta": "Cypriot Beverage · 8.2/10",
+              "_id": "d8c51fa68c"
+            }
+          ],
+          "lead": [
+            {
+              "text": "We are proud to announce that ",
+              "_id": "735ea0cf77"
+            },
+            {
+              "text": "MELITE Mead",
+              "_id": "24e094f79a"
+            },
+            {
+              "text": " by Oros Machaira won the ",
+              "_id": "c7ac2b978e"
+            },
+            {
+              "text": "Gold Award",
+              "_id": "33eed2ed10"
+            },
+            {
+              "text": " at the Cyprus Tourism Awards, the leading awards programme run by Boussias Cyprus.",
+              "_id": "184c2e0075"
+            }
+          ],
+          "body": [
+            [
+              {
+                "text": "In the ",
+                "_id": "e67db654fb"
+              },
+              {
+                "text": "Cypriot Beverage",
+                "bold": true,
+                "_id": "915a69013d"
+              },
+              {
+                "text": " category, our traditional mead stood out with an impressive score of 8.2/10, confirming its superior quality and its contribution to showcasing Cyprus’s gastronomic heritage.",
+                "_id": "057f6ba91a"
+              }
+            ]
+          ],
+          "_id": "f1fcf70570"
+        },
+        {
+          "subject": "Raw Blossom Honey",
+          "badges": [
+            {
+              "label": "Gold Award",
+              "_id": "27be65fb6c"
+            }
+          ],
+          "lead": [
+            {
+              "text": "Our ",
+              "_id": "f248809190"
+            },
+            {
+              "text": "Raw Blossom Honey",
+              "_id": "6d224a2010"
+            },
+            {
+              "text": " received a ",
+              "_id": "bd3c478633"
+            },
+            {
+              "text": "Gold Award",
+              "_id": "3761cbe702"
+            },
+            {
+              "text": " at the Excellent Taste Awards 2025 – London.",
+              "_id": "86a915671e"
+            }
+          ],
+          "body": [
+            "A significant distinction that confirms everything we have stood for over decades.",
+            "This award is dedicated to all of you who support us, trust us and choose our honey to accompany your sweetest moments, year after year.",
+            [
+              {
+                "text": "Thank you from the bottom of our hearts!",
+                "bold": true,
+                "_id": "b7e6c31281"
+              }
+            ]
+          ],
+          "_id": "fa7bdfe389"
+        },
+        {
+          "event": "Young Entrepreneurship Awards 2025 (CCCI)",
+          "org": "CCCI",
+          "subject": "Menelaos Filippou",
+          "badges": [
+            {
+              "label": "Award",
+              "meta": "Category: Industrial Enterprises",
+              "_id": "401340c23b"
+            }
+          ],
+          "lead": [
+            {
+              "text": "The Selection Committee of the CCCI for its Young Entrepreneurship Awards chose ",
+              "_id": "e24936e3f8"
+            },
+            {
+              "text": "Menelaos Filippou",
+              "_id": "30877b0747"
+            },
+            {
+              "text": " to be honoured in the Industrial Enterprises category for 2025.",
+              "_id": "56b4c9936e"
+            }
+          ],
+          "body": [
+            [
+              {
+                "text": "The awards presented by the CCCI aim to promote and highlight ",
+                "_id": "321104f6ff"
+              },
+              {
+                "text": "youth entrepreneurship",
+                "bold": true,
+                "_id": "32585007dd"
+              },
+              {
+                "text": " and participation in a global network of young entrepreneurs, selected on merit-based criteria.",
+                "_id": "abc889de34"
+              }
+            ]
+          ],
+          "note": "The award was accepted by Maria Solomonidou on behalf of Menelaos Filippou, who was abroad at the time.",
+          "_id": "7ab27947e3"
+        },
+        {
+          "badges": [
+            {
+              "label": "Gold Award",
+              "meta": "7.3/10",
+              "_id": "2f8672648e"
+            },
+            {
+              "label": "Silver Award",
+              "meta": "4.5/10",
+              "_id": "03a7a7b88f"
+            }
+          ],
+          "lead": "Oros Machaira received two important distinctions at the Cyprus Tourism Awards ceremony, held at City of Dreams.",
+          "body": [
+            "The judging panel honoured us with two distinctions, rewarding our vision for nature and people:",
+            [
+              {
+                "text": "Gold Award",
+                "bold": true,
+                "_id": "073a3e2b82"
+              },
+              {
+                "text": " — 7.3/10, in the “Initiatives to protect the environment / Raising awareness” category, for the pioneering Adopt a Hive programme.",
+                "_id": "d6cb6ca3c5"
+              }
+            ],
+            [
+              {
+                "text": "Silver Award",
+                "bold": true,
+                "_id": "b2f20cd3ed"
+              },
+              {
+                "text": " — 4.5/10, in the “Rural/Mountain tourism, ecotourism, wine tourism & agro tourism” category, for our experiential Adventures at the Hives.",
+                "_id": "b4367bc496"
+              }
+            ]
+          ],
+          "_id": "b4deb51945"
+        },
+        {
+          "org": "Deputy Ministry of Tourism",
+          "subject": "Maria Solomonidou — “Getting to Know the Bee”",
+          "badges": [
+            {
+              "label": "1st Prize",
+              "_id": "a5bc5597c0"
+            }
+          ],
+          "lead": "Authentic Cypriot hospitality and hands-on education are at the heart of everything we do every day at Oros Machaira. We feel doubly proud, as this effort was recognised by our country’s national tourism authority.",
+          "body": [
+            [
+              {
+                "text": "At the Cyprus Hospitality Awards ceremony, the Deputy Ministry of Tourism presented the ",
+                "_id": "04a1c869c1"
+              },
+              {
+                "text": "1st Prize",
+                "bold": true,
+                "_id": "b7b93e8347"
+              },
+              {
+                "text": " in the “Enrichment Activity Experience” category to ",
+                "_id": "f182f20d01"
+              },
+              {
+                "text": "Maria Solomonidou",
+                "bold": true,
+                "_id": "18b48e119b"
+              },
+              {
+                "text": ", for the educational and experiential programme “Getting to Know the Bee”.",
+                "_id": "aff939c7bb"
+              }
+            ],
+            "This award does not belong merely to an activity, but to the person behind it. With her ever-present smile and her respect for nature, Maria has managed to turn a visit to our apiary into an unforgettable life experience that enriches Cyprus’s tourism offering."
+          ],
+          "_id": "206b8ddd78"
+        }
+      ]
+    }
+  }
+}
