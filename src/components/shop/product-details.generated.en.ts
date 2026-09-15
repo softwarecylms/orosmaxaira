@@ -929,68 +929,68 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
           "label": "100 g",
           "price": "€3,00",
           "sortPrice": 300,
-          "image": "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-meli-anthewn-100 g.jpg"
+          "image": "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-meli-anthewn-100g.jpg"
         },
         {
           "label": "250 g",
           "container": "Squeeze Bottle",
           "price": "€3,90",
           "sortPrice": 390,
-          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-250 g.jpg"
+          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-250g.jpg"
         },
         {
           "label": "330 g",
           "container": "Plastic",
           "price": "€4,80",
           "sortPrice": 480,
-          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-330 g.jpg"
+          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-330g.jpg"
         },
         {
           "label": "480 g",
           "container": "Squeeze Bottle",
           "price": "€6,50",
           "sortPrice": 650,
-          "image": "https://orosmaxaira.com/wp-content/uploads/2021/09/Oros-Maxaira-meli-anthewn-480 g.jpg"
+          "image": "https://orosmaxaira.com/wp-content/uploads/2021/09/Oros-Maxaira-meli-anthewn-480g.jpg"
         },
         {
           "label": "500 g",
           "container": "Glass",
           "price": "€6,50",
           "sortPrice": 650,
-          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-500 g.jpg"
+          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-500g.jpg"
         },
         {
           "label": "790 g",
           "container": "Glass",
           "price": "€8,90",
           "sortPrice": 890,
-          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-790 g.jpg"
+          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-790g.jpg"
         },
         {
           "label": "1 kg",
           "container": "Plastic",
           "price": "€9,95",
           "sortPrice": 995,
-          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-1 kg.jpg"
+          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-1kg.jpg"
         },
         {
           "label": "3 kg",
           "container": "Plastic",
           "price": "€27,50",
           "sortPrice": 2750,
-          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-3 kg.jpg"
+          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-3kg.jpg"
         }
       ]
     },
     "gallery": [
-      "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-meli-anthewn-100 g.jpg",
-      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-250 g.jpg",
-      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-330 g.jpg",
-      "https://orosmaxaira.com/wp-content/uploads/2021/09/Oros-Maxaira-meli-anthewn-480 g.jpg",
-      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-500 g.jpg",
-      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-790 g.jpg",
-      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-1 kg.jpg",
-      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-3 kg.jpg"
+      "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-meli-anthewn-100g.jpg",
+      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-250g.jpg",
+      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-330g.jpg",
+      "https://orosmaxaira.com/wp-content/uploads/2021/09/Oros-Maxaira-meli-anthewn-480g.jpg",
+      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-500g.jpg",
+      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-790g.jpg",
+      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-1kg.jpg",
+      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-meli-anthewn-3kg.jpg"
     ],
     "sections": [
       {
@@ -1023,36 +1023,36 @@ export const GENERATED_PRODUCT_DETAILS_EN: Record<string, ShopProductDetail> = {
           "label": "100 g",
           "price": "€3,50",
           "sortPrice": 350,
-          "image": "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-avrasto-100 g.jpg"
+          "image": "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-avrasto-100g.jpg"
         },
         {
           "label": "500 g",
           "container": "Glass",
           "price": "€7,50",
           "sortPrice": 750,
-          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-500 g.jpg"
+          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-500g.jpg"
         },
         {
           "label": "790 g",
           "container": "Glass",
           "price": "€10,50",
           "sortPrice": 1050,
-          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-790 g.jpg"
+          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-790g.jpg"
         },
         {
           "label": "3 kg",
           "container": "Plastic",
           "price": "€31,00",
           "sortPrice": 3100,
-          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-3 kg.jpg"
+          "image": "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-3kg.jpg"
         }
       ]
     },
     "gallery": [
-      "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-avrasto-100 g.jpg",
-      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-500 g.jpg",
-      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-790 g.jpg",
-      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-3 kg.jpg"
+      "https://orosmaxaira.com/wp-content/uploads/2023/07/Oros-Maxaira-avrasto-100g.jpg",
+      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-500g.jpg",
+      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-790g.jpg",
+      "https://orosmaxaira.com/wp-content/uploads/2020/11/Oros-Maxaira-avrasto-3kg.jpg"
     ],
     "sections": [
       {

@@ -31,8 +31,10 @@ function quotes(t: string): string {
 }
 
 function houseStyle(text: string): string {
-  return text.replace(/(<[^>]*>)|([^<]+)/g, (_m, tag: string, txt: string) => {
-    if (tag) return tag
+  // Tags and URLs pass through untouched: the unit spacing once turned image
+  // file names like "…-anthewn-250g.jpg" into "…-250 g.jpg", which don't exist.
+  return text.replace(/(<[^>]*>|https?:\/\/[^\s<>"')\]]+)|([^<]+?(?=<|https?:\/\/|$))/g, (_m, keep: string, txt: string) => {
+    if (keep) return keep
     let t = quotes(txt)
     t = t
       .replace(/(\d)\s?(kg|Kg|KG)\b/g, "$1 kg")
