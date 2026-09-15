@@ -36,6 +36,15 @@ export default buildConfig({
     meta: {
       titleSuffix: ' — CMS',
     },
+    components: {
+      graphics: {
+        Logo: '/payload/admin/Logo.tsx',
+      },
+      // Top of the sidebar: shortcuts to the Medusa admin (shop & bookings).
+      beforeNavLinks: ['/payload/admin/MedusaLinks.tsx'],
+      // Foot of the sidebar, directly above logout: the SoftwareCy credit.
+      afterNavLinks: ['/payload/admin/SoftwareCyCredit.tsx'],
+    },
   },
   collections: [
     Pages,

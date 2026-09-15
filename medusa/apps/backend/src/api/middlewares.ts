@@ -1,4 +1,10 @@
-import { defineMiddlewares, validateAndTransformBody } from "@medusajs/framework/http"
+import {
+  defineMiddlewares,
+  validateAndTransformBody,
+  type MedusaNextFunction,
+  type MedusaRequest,
+  type MedusaResponse,
+} from "@medusajs/framework/http"
 import { z } from "zod"
 
 /** Body schema for POST /store/bookings. */
@@ -62,8 +68,20 @@ export const MediaAssetSchema = z.object({
 })
 export type MediaAssetBody = z.infer<typeof MediaAssetSchema>
 
+/** Nothing this backend serves is for search engines — the API, the admin,
+ *  the uploads. A header rather than only robots.txt, so it holds even for a
+ *  URL a crawler finds by link. */
+function noindex(_req: MedusaRequest, res: MedusaResponse, next: MedusaNextFunction) {
+  res.setHeader("X-Robots-Tag", "noindex, nofollow")
+  next()
+}
+
 export default defineMiddlewares({
   routes: [
+    {
+      matcher: "/*",
+      middlewares: [noindex],
+    },
     {
       // A whole page's content tree, both languages: allow well past the
       // 100 kB default (the largest page today is ~25 kB).

@@ -3,6 +3,19 @@ import { loadEnv, defineConfig } from '@medusajs/framework/utils'
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
 module.exports = defineConfig({
+  admin: {
+    // The admin is a single-page app; its HTML is where crawlers would land.
+    // Mark it noindex (the API also sends X-Robots-Tag, see src/api/middlewares.ts).
+    vite: () => ({
+      plugins: [
+        {
+          name: "oros-admin-noindex",
+          transformIndexHtml: (html: string) =>
+            html.replace("<head>", '<head>\n    <meta name="robots" content="noindex, nofollow" />'),
+        },
+      ],
+    }),
+  },
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
     http: {
@@ -16,8 +29,9 @@ module.exports = defineConfig({
   modules: [
     // Custom module: activities + availability + bookings (see src/modules/bookings).
     { resolve: "./src/modules/bookings" },
-    // Custom module: editable site copy — pages, header/footer, blog, media
-    // library (see src/modules/content).
+    // Custom module: the media library behind the activity/workshop image picker
+    // (media_asset). Its page-copy tables are being retired — site pages, articles
+    // and settings are edited in Payload.
     { resolve: "./src/modules/content" },
     // File module — images uploaded from the admin. With S3_BUCKET set they go
     // to S3-compatible storage (Cloudflare R2: S3_ENDPOINT = the account's R2

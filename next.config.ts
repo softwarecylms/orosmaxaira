@@ -111,6 +111,14 @@ const nextConfig: NextConfig = {
       ],
     }
 
+    // The CMS admin, its API and the visual editor are never for search engines.
+    // Payload already puts a robots meta in the admin HTML; the header also
+    // covers JSON responses and anything a crawler reaches by link.
+    const noindexHeaders = ['/admin', '/admin/:path*', '/api/:path*', '/editor/:path*'].map((source) => ({
+      source,
+      headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+    }))
+
     // Long-lived immutable caching of static chunks is only safe in production,
     // where Next.js content-hashes chunk filenames (new build ⇒ new URL). In
     // dev the filenames are stable (e.g. page.js), so an immutable header makes
@@ -118,12 +126,13 @@ const nextConfig: NextConfig = {
     // after every edit, surfacing as "Cannot read properties of undefined
     // (reading 'call')" / hydration errors until a manual hard refresh.
     if (process.env.NODE_ENV !== 'production') {
-      return [previewHeaders, securityHeaders]
+      return [previewHeaders, securityHeaders, ...noindexHeaders]
     }
 
     return [
       previewHeaders,
       securityHeaders,
+      ...noindexHeaders,
       {
         source: '/_next/static/(.*)',
         headers: [

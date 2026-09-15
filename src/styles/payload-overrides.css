@@ -1,1 +1,75 @@
 /* Override for the Payload admin styles only. Kept minimal. */
+
+/* Login page — SoftwareCy wordmark on a white card (reads on both themes). */
+.softwarecy-login-logo {
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px 22px;
+  box-sizing: border-box;
+}
+
+/* Sidebar — shortcuts to the Medusa admin (shop & bookings). */
+.medusa-links {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  width: 100%;
+  gap: 2px;
+  margin-bottom: calc(var(--base) * 1);
+  padding-bottom: calc(var(--base) * 0.75);
+  border-bottom: 1px solid var(--theme-elevation-100);
+}
+.medusa-links__label {
+  padding: 4px 0;
+  font-size: 12px;
+  color: var(--theme-elevation-500);
+}
+.medusa-links__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 0;
+  color: var(--theme-text);
+  text-decoration: none;
+}
+.medusa-links__link:hover {
+  color: var(--theme-elevation-900);
+  text-decoration: underline;
+}
+.medusa-links__link svg {
+  flex-shrink: 0;
+  color: var(--theme-elevation-400);
+}
+
+/* Sidebar foot — SoftwareCy credit, directly above the logout button. */
+.softwarecy-credit {
+  align-self: stretch;
+  margin-top: auto;
+  padding-top: calc(var(--base) * 1);
+  border-top: 1px solid var(--theme-elevation-100);
+  color: var(--theme-elevation-500);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.softwarecy-credit__logo {
+  display: inline-block;
+  margin: 2px 0 10px;
+}
+.softwarecy-credit__logo img {
+  display: block;
+  width: 130px;
+  height: auto;
+}
+.softwarecy-credit p {
+  margin: 0 0 8px;
+}
+.softwarecy-credit a:not(.softwarecy-credit__logo) {
+  color: var(--theme-text);
+  font-weight: 600;
+  text-decoration: underline;
+}
