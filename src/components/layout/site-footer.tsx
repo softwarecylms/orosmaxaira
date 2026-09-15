@@ -12,6 +12,7 @@ import {
   PinterestSolid,
   LinkedinSolid,
 } from './social-icons'
+import { FooterFunding } from './footer-funding'
 
 type SiteFooterProps = {
   footer?: unknown
@@ -81,36 +82,8 @@ export async function SiteFooter({ locale }: SiteFooterProps) {
               </Link>
             </div>
 
-            {/* EU / ΘΑλΕΙΑ co-funding — sits with the other credential marks,
-                kept quiet: 20px logos and 11px type. */}
-            <div className="flex flex-col items-center gap-3 lg:mt-auto lg:items-start">
-              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 lg:justify-start">
-                <Image
-                  src="/images/funding/thaleia.png"
-                  alt={FOOTER.funding.thaleiaAlt}
-                  width={514}
-                  height={160}
-                  className="h-5 w-auto opacity-70"
-                />
-                <Image
-                  src="/images/funding/cyprus.png"
-                  alt={FOOTER.funding.cyprusAlt}
-                  width={196}
-                  height={160}
-                  className="h-5 w-auto opacity-70"
-                />
-                <Image
-                  src="/images/funding/eu.png"
-                  alt={FOOTER.funding.euAlt}
-                  width={873}
-                  height={160}
-                  className="h-5 w-auto opacity-70"
-                />
-              </div>
-              <p className="max-w-[300px] text-[11px] leading-[1.5] text-muted/80">
-                {FOOTER.funding.text}
-              </p>
-            </div>
+            {/* EU / ΘΑΛΕΙΑ co-funding — left out on shop pages, see the component. */}
+            <FooterFunding funding={FOOTER.funding} />
           </div>
 
           {/* Link columns + contact/social */}
