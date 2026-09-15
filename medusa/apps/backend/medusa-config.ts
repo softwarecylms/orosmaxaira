@@ -55,35 +55,53 @@ module.exports = defineConfig({
     // Custom module: sales invoices (OMW001584, …) — numbering, settings and the
     // snapshot each PDF is rendered from (see src/lib/invoice).
     { resolve: "./src/modules/invoices" },
-    // File module — images uploaded from the admin. With S3_BUCKET set they go
-    // to S3-compatible storage (Cloudflare R2: S3_ENDPOINT = the account's R2
-    // endpoint, S3_REGION = "auto", S3_FILE_URL = the bucket's public URL).
-    // Without it Medusa's local provider keeps them in ./static, which is fine
-    // in dev but is wiped by every Railway redeploy.
-    ...(process.env.S3_BUCKET
+    // File module — images uploaded from the admin, import/export CSVs.
+    // Railway's disk (./static) is wiped on every deploy, so production stores
+    // files in Vercel Blob (the same store Payload uses, under medusa/). Without
+    // BLOB_READ_WRITE_TOKEN (local dev) S3 is used if configured, else the
+    // default local provider. The File module takes exactly one provider.
+    ...(process.env.BLOB_READ_WRITE_TOKEN
       ? [
           {
             resolve: "@medusajs/file",
             options: {
               providers: [
                 {
-                  resolve: "@medusajs/file-s3",
-                  id: "s3",
+                  resolve: "./src/modules/vercel-blob-file",
+                  id: "vercel-blob",
                   options: {
-                    file_url: process.env.S3_FILE_URL,
-                    access_key_id: process.env.S3_ACCESS_KEY_ID,
-                    secret_access_key: process.env.S3_SECRET_ACCESS_KEY,
-                    region: process.env.S3_REGION ?? "auto",
-                    bucket: process.env.S3_BUCKET,
-                    endpoint: process.env.S3_ENDPOINT,
-                    prefix: "uploads/",
+                    token: process.env.BLOB_READ_WRITE_TOKEN,
+                    prefix: "medusa/",
                   },
                 },
               ],
             },
           },
         ]
-      : []),
+      : process.env.S3_BUCKET
+        ? [
+            {
+              resolve: "@medusajs/file",
+              options: {
+                providers: [
+                  {
+                    resolve: "@medusajs/file-s3",
+                    id: "s3",
+                    options: {
+                      file_url: process.env.S3_FILE_URL,
+                      access_key_id: process.env.S3_ACCESS_KEY_ID,
+                      secret_access_key: process.env.S3_SECRET_ACCESS_KEY,
+                      region: process.env.S3_REGION ?? "auto",
+                      bucket: process.env.S3_BUCKET,
+                      endpoint: process.env.S3_ENDPOINT,
+                      prefix: "uploads/",
+                    },
+                  },
+                ],
+              },
+            },
+          ]
+        : []),
     // Notification module — booking confirmation emails (src/lib/booking-payment.ts).
     {
       resolve: "@medusajs/notification",
