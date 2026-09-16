@@ -64,8 +64,8 @@ function bookingWindow(): [string, string] {
 /** A confirmed activity booking, or a programme booked through its workshop. */
 type AnyBooking = ConfirmedBooking & Partial<ConfirmedWorkshopBooking>
 
-/** 'single' = the activity on its own; 'program' = one of its workshop programmes. */
-type Mode = 'single' | 'program'
+/** 'single' = the activity on its own; a number = that workshop programme (index). */
+type Mode = 'single' | number
 
 /** A programme slot, tagged with the programme (index) it belongs to. */
 type ProgramSlot = AvailabilitySlot & { program: number }
@@ -202,7 +202,11 @@ export function BookingModal({
   // Without programmes there is nothing to choose: straight to the calendar.
   const activeMode: Mode | null = hasPrograms ? mode : 'single'
   const activeSlots: (AvailabilitySlot & { program?: number })[] =
-    activeMode === 'program' ? programSlots : activeMode === 'single' ? singleSlots : []
+    typeof activeMode === 'number'
+      ? programSlots.filter((s) => s.program === activeMode)
+      : activeMode === 'single'
+        ? singleSlots
+        : []
 
   const availableDates = useMemo(
     () => new Set(activeSlots.map((s) => s.date)),
@@ -213,9 +217,8 @@ export function BookingModal({
     .sort((a, b) => a.start_time.localeCompare(b.start_time))
   const selectedSlot = activeSlots.find((s) => s.id === selectedSlotId) ?? null
   const remaining = selectedSlot?.remaining ?? 0
-  // The programme (workshop) behind the chosen date — each month has its own.
-  const programIndex = selectedSlot?.program ?? daySlots[0]?.program
-  const program = activeMode === 'program' && programIndex != null ? programs[programIndex] : null
+  // The chosen programme (each month's workshop is its own option).
+  const program = typeof activeMode === 'number' ? (programs[activeMode] ?? null) : null
   const currency = program?.workshop.currency ?? activity.currency ?? 'eur'
 
   const seats = Object.values(counts).reduce((a, b) => a + b, 0)
@@ -234,7 +237,7 @@ export function BookingModal({
   const scrollTo = (el: HTMLElement | null) =>
     el?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   useEffect(() => {
-    if (mode) scrollTo(dateRef.current)
+    if (mode !== null) scrollTo(dateRef.current)
   }, [mode])
   useEffect(() => {
     if (selectedDate) scrollTo(timeRef.current)
@@ -269,7 +272,7 @@ export function BookingModal({
     setCounts((c) => ({ ...c, [key]: Math.max(0, next) }))
 
   const canSubmit =
-    !!activeMode &&
+    activeMode !== null &&
     !!selectedSlotId &&
     seats >= 1 &&
     seats <= remaining &&
@@ -497,7 +500,7 @@ export function BookingModal({
                     </Step>
                   ) : null}
 
-                  {activeMode ? (
+                  {activeMode !== null ? (
                     <div ref={dateRef} className="scroll-mt-4">
                     <Step n={step + 1} title={ui.stepDate}>
                       <BookingCalendar
@@ -796,8 +799,7 @@ export function ConfirmationNote({ note }: { note: string }) {
 
 /**
  * The first step for an activity with workshop programmes: the activity on its
- * own, or the programme. The programme lists each month's workshop and times,
- * since the workshop — and so the date — decides which one is booked.
+ * own, or one of the programmes — each month's workshop is its own option.
  */
 function ProgramChoice({
   activity,
@@ -816,7 +818,6 @@ function ProgramChoice({
 }) {
   const locale = useLocale()
   const ui = getBookingUi(locale)
-  const lead = programs[0]
   const option = (active: boolean, disabled: boolean) =>
     `flex flex-col gap-1.5 rounded-[10px] border px-4 py-3 text-left transition ${
       active ? 'border-accent bg-accent/10' : 'border-border hover:border-accent'
@@ -859,38 +860,41 @@ function ProgramChoice({
         </span>
       </button>
 
-      <button
-        type="button"
-        onClick={() => onPick('program')}
-        className={option(mode === 'program', false)}
-        data-testid="program-combo"
-      >
-        <span className="text-[15px] font-semibold text-foreground">{lead.tier.label}</span>
-        <span className="text-[12.5px] leading-snug text-muted">{ui.programMonthly}</span>
-        <ul className="flex flex-col gap-1">
-          {programs.map((p) => (
-            <li key={p.workshop.slug} className="text-[12.5px] leading-snug text-foreground">
-              <span className="font-semibold">{months(p)}</span>
-              {': '}
-              {p.tier.long_label ?? p.workshop.title}
-              {times(p) ? (
-                <span className="ml-1.5 inline-flex items-center gap-1 whitespace-nowrap text-muted">
-                  <Clock className="size-3" aria-hidden="true" />
-                  {times(p)}
-                </span>
-              ) : null}
-            </li>
-          ))}
-        </ul>
-        <span className="flex flex-wrap gap-x-3 gap-y-0.5 text-[12.5px] text-muted">
-          {comboAgeTiers(lead.tier, locale).map((t) => (
-            <span key={t.key}>
-              {shortLabel(t.label)}:{' '}
-              <span className="font-semibold text-accent">{priceLabel(t.price)}</span>
+      {programs.map((p, i) => {
+        const available = p.slots.some((s) => s.remaining > 0)
+        return (
+          <button
+            key={p.workshop.slug}
+            type="button"
+            disabled={!available}
+            onClick={() => onPick(i)}
+            className={option(mode === i, !available)}
+            data-testid="program-combo"
+          >
+            <span className="text-[15px] font-semibold text-foreground">
+              {p.tier.label} · {months(p)}
             </span>
-          ))}
-        </span>
-      </button>
+            <span className="text-[12.5px] leading-snug text-foreground">
+              {p.tier.long_label ?? p.workshop.title}
+            </span>
+            {times(p) ? (
+              <span className="flex items-center gap-1.5 text-[12px] text-muted">
+                <Clock className="size-3.5" aria-hidden="true" />
+                {times(p)}
+                {available ? '' : ` · ${ui.unavailableShort}`}
+              </span>
+            ) : null}
+            <span className="flex flex-wrap gap-x-3 gap-y-0.5 text-[12.5px] text-muted">
+              {comboAgeTiers(p.tier, locale).map((t) => (
+                <span key={t.key}>
+                  {shortLabel(t.label)}:{' '}
+                  <span className="font-semibold text-accent">{priceLabel(t.price)}</span>
+                </span>
+              ))}
+            </span>
+          </button>
+        )
+      })}
     </div>
   )
 }

@@ -62,7 +62,7 @@ test.describe('Activity detail + booking', () => {
     }
     await bookBtn.click()
     const modal = page.getByTestId('booking-modal')
-    const combo = modal.getByTestId('program-combo')
+    const combo = modal.getByTestId('program-combo').first()
     const offered = await combo
       .waitFor({ timeout: 15000 })
       .then(() => true)

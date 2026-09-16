@@ -56,7 +56,6 @@ export type BookingUi = {
   // Programme choice (an activity also bookable as a workshop combo)
   stepProgram: string
   singleOption: string
-  programMonthly: string
   seasonTimes: (months: string, time: string) => string
   unavailableShort: string
   stepDate: string
@@ -142,7 +141,6 @@ const EL: BookingUi = {
   callAt: (p) => `Καλέστε στο ${p}`,
   stepProgram: 'Επιλέξτε πρόγραμμα',
   singleOption: 'Μεμονωμένη κράτηση',
-  programMonthly: 'Μαζί με το εργαστήρι του μήνα',
   seasonTimes: (m, t) => `${m} · ${t}`,
   unavailableShort: 'χωρίς διαθέσιμες ημερομηνίες',
   stepDate: 'Επιλέξτε ημερομηνία',
@@ -228,7 +226,6 @@ const EN: BookingUi = {
   callAt: (p) => `Call ${p}`,
   stepProgram: 'Choose a programme',
   singleOption: 'Book it on its own',
-  programMonthly: "Together with the month's workshop",
   seasonTimes: (m, t) => `${m} · ${t}`,
   unavailableShort: 'no available dates',
   stepDate: 'Choose a date',
