@@ -20,3 +20,12 @@ export const sdk = new Medusa({
   debug: process.env.NODE_ENV === 'development',
   publishableKey: process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
 })
+
+/**
+ * How long a cached Medusa read may live without being asked again. The Medusa
+ * backend drops the matching tags itself whenever a product or variant changes
+ * (see medusa/apps/backend/src/subscribers/revalidate-products.ts), so this is
+ * only the safety net for a revalidation request that never arrived — without
+ * it a `force-cache` read with no TTL is kept until the next deploy.
+ */
+export const CACHE_TTL = 3600

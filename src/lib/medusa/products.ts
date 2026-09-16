@@ -1,6 +1,10 @@
-import { sdk } from './client'
+import { sdk, CACHE_TTL } from './client'
 import type { HttpTypes } from '@medusajs/types'
 import { getDefaultRegion } from './region'
+
+// Not imported anywhere today — the shop grid and the product page both go
+// through shop.ts. Kept in step with it (same tags, same TTL) so reviving it
+// cannot bring back a read that is cached until the next deploy.
 
 // `region_id` is required for `calculated_price` to be populated on variants.
 const LIST_FIELDS =
@@ -34,7 +38,7 @@ export async function listProducts(params?: {
         ...(params?.q ? { q: params.q } : {}),
       },
       cache: 'force-cache',
-      next: { tags: ['products'] },
+      next: { tags: ['products'], revalidate: CACHE_TTL },
     },
   )
 
@@ -59,7 +63,7 @@ export async function getProductByHandle(
       limit: 1,
     },
     cache: 'force-cache',
-    next: { tags: ['products', `product-${handle}`] },
+    next: { tags: ['products', `product-${handle}`], revalidate: CACHE_TTL },
   })
 
   return products?.[0] ?? null

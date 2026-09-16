@@ -31,7 +31,10 @@ export default async function createTestActivity({ container }: ExecArgs) {
   const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
   const bookings = container.resolve<BookingsModuleService>(BOOKINGS_MODULE)
 
-  let [activity] = (await bookings.listActivities({ slug: SLUG })) as { id: string }[]
+  // `listActivities` is typed as the single-record overload here, so the array
+  // it actually returns has to go through `unknown` (ts(2352) otherwise —
+  // `medusa build` typechecks src/scripts and fails the Railway deploy on it).
+  let [activity] = (await bookings.listActivities({ slug: SLUG })) as unknown as { id: string }[]
   if (activity) {
     logger.info(`Test activity already exists (${activity.id}).`)
   } else {
@@ -61,7 +64,7 @@ export default async function createTestActivity({ container }: ExecArgs) {
         ],
         related_slugs: [],
       },
-    ] as any)) as { id: string }[]
+    ] as any)) as unknown as { id: string }[]
     activity = created
     logger.info(`Created hidden test activity "${SLUG}" (${activity.id}).`)
   }

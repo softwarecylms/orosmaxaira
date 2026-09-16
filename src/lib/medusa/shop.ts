@@ -1,6 +1,6 @@
 import type { HttpTypes } from '@medusajs/types'
 import { getLocale } from 'next-intl/server'
-import { sdk } from './client'
+import { sdk, CACHE_TTL } from './client'
 import { getDefaultRegion } from './region'
 import {
   SHOP_CATEGORIES,
@@ -157,7 +157,7 @@ export async function listShopProducts(): Promise<ShopCatalogue | null> {
       method: 'GET',
       query: { limit: 200, region_id: region.id, fields: FIELDS },
       cache: 'force-cache',
-      next: { tags: ['products'] },
+      next: { tags: ['products'], revalidate: CACHE_TTL },
     },
   )
 
@@ -179,6 +179,10 @@ const DETAIL_FIELDS = [
   'metadata', // title_en / description_en
   'thumbnail',
   '*images',
+  // Which variant each product image belongs to — the per-size photos are
+  // linked to their variant in the Medusa admin's variant editor (see
+  // variantImages). `*variants` already carries each variant's own thumbnail.
+  'images.variants.id',
   '*categories',
   'categories.metadata',
   '*variants',
@@ -193,8 +197,66 @@ const DETAIL_FIELDS = [
 type MedusaVariant = {
   id: string
   title: string
+  thumbnail?: string | null
   options?: { value: string; option?: { title: string } }[]
   calculated_price?: HttpTypes.StoreCalculatedPrice
+}
+
+type MedusaImage = { id: string; url: string; variants?: { id: string }[] | null }
+
+/**
+ * The photos that belong to one variant, as set in the Medusa admin's variant
+ * editor: its «Κύρια εικόνα» (`variant.thumbnail`) first, then every product
+ * image ticked for that size, in the product's own image order. The first one
+ * is the size's photo; the rest still reach the gallery, because the editor
+ * lets a shop manager give one size more than one picture.
+ *
+ * The links are read from `images.variants.id` — `variant.images` cannot be
+ * used, because Medusa fills it with every product image that belongs to no
+ * variant as well, so it would hand every size the main catalogue photo. (The
+ * admin's variant-thumbnails widget resolves it the same way.)
+ *
+ * Empty while a size has no photo of its own — then the editorial snapshot's
+ * per-size image is used, exactly as before.
+ */
+function variantImages(v: MedusaVariant, images: MedusaImage[]): string[] {
+  const linked = images.filter((i) => i.variants?.some((x) => x.id === v.id)).map((i) => i.url)
+  const main = v.thumbnail || undefined
+  return main ? [main, ...linked.filter((url) => url !== main)] : linked
+}
+
+/**
+ * The detail gallery with every per-size shot replaced by the photo that size
+ * now carries in Medusa (`swap`), plus any linked photo the snapshot never had
+ * (`added`, in size order) — <ProductGallery> only shows an image that is in
+ * its list, so a size photo outside the gallery would be unreachable.
+ *
+ * A photo it brings in is never listed twice, and never repeats `main`, which
+ * <ProductView> already puts in front of this list — two sizes sharing one
+ * picture, or a size pointed at the catalogue photo, would otherwise show the
+ * same thumbnail twice.
+ *
+ * With nothing linked in the admin the snapshot is handed back untouched — a
+ * duplicate the snapshot itself contains is its own business (the pollen page
+ * has one) and is left exactly as it is.
+ */
+function mergeGallery(
+  gallery: string[] | undefined,
+  added: string[],
+  swap: Map<string, string>,
+  main: string,
+): string[] | undefined {
+  if (!swap.size && !added.length) return gallery
+  const out: string[] = []
+  for (const src of gallery ?? []) {
+    const live = swap.get(src)
+    // This size's shot now IS the catalogue photo in front of the gallery.
+    if (live === main) continue
+    const url = live ?? src
+    if (!out.includes(url)) out.push(url)
+  }
+  for (const url of added) if (url !== main && !out.includes(url)) out.push(url)
+  return out.length ? out : gallery
 }
 
 /** Multi-variant honeys have a single "Μέγεθος" option → its value is the size
@@ -223,7 +285,7 @@ export async function getShopProduct(
       method: 'GET',
       query: { handle: greek, region_id: region.id, fields: DETAIL_FIELDS, limit: 1 },
       cache: 'force-cache',
-      next: { tags: ['products', `product-${greek}`] },
+      next: { tags: ['products', `product-${greek}`], revalidate: CACHE_TTL },
     },
   )
   const m = products?.[0]
@@ -238,23 +300,62 @@ export async function getShopProduct(
   const multi = variants.length > 1
 
   let sizes: ShopVariationSize[] | undefined
+  let gallery = staticDetail.gallery
   if (multi) {
     const staticSizes = staticDetail.variations?.sizes ?? []
-    sizes = variants
+    const images = (m.images ?? []) as unknown as MedusaImage[]
+    // The Greek entries, whose labels are Medusa's own option values. The
+    // gallery is the same list in both languages and its per-size shots are
+    // these images, so they are what a live photo replaces — on /en too, where
+    // the English labels ("100 g") match nothing (see `mismatch` below).
+    const greekSizes =
+      locale === 'en' ? (getProductDetail(greek).variations?.sizes ?? []) : staticSizes
+
+    const rows = variants
       .map((v) => {
         const label = sizeLabel(v)
         const st = staticSizes.find((s) => s.label === label)
+        const live = variantImages(v, images)
         const amount = v.calculated_price?.calculated_amount ?? 0
+        // A size the Greek snapshot knows but this locale's does not is the
+        // English label mismatch ("100 g" vs Medusa's "100g"), nothing else:
+        // those chips have always rendered without a photo (and without a
+        // container), and giving them one would start swapping the main image
+        // and make a gallery click select a size. Left alone — fixing the
+        // labels also brings the missing English containers back, and that is a
+        // visible change of its own. The English gallery does follow the link
+        // below, so a photo changed in the admin is never stale in English.
+        const mismatch = !st && greekSizes.some((s) => s.label === label)
         return {
-          label,
-          container: st?.container,
-          price: euro(amount),
-          sortPrice: Math.round(amount * 100),
-          image: st?.image,
-          variantId: v.id,
+          live,
+          size: {
+            label,
+            container: st?.container,
+            price: euro(amount),
+            sortPrice: Math.round(amount * 100),
+            image: mismatch ? undefined : (live[0] ?? st?.image),
+            variantId: v.id,
+          },
         }
       })
-      .sort((a, b) => a.sortPrice - b.sortPrice)
+      .sort((a, b) => a.size.sortPrice - b.size.sortPrice)
+
+    sizes = rows.map((r) => r.size)
+
+    // Where a size now has its own photo in Medusa, that photo takes the place
+    // of the snapshot's shot for the same size; a photo the snapshot never had
+    // is appended (in size order) so the gallery can still reach it.
+    const swap = new Map<string, string>()
+    const added: string[] = []
+    for (const { live, size } of rows) {
+      if (!live.length) continue
+      for (const list of [greekSizes, staticSizes]) {
+        const editorial = list.find((s) => s.label === size.label)?.image
+        if (editorial && editorial !== live[0]) swap.set(editorial, live[0])
+      }
+      added.push(...live)
+    }
+    gallery = mergeGallery(staticDetail.gallery, added, swap, base.image)
   }
 
   const product: ShopProduct = {
@@ -266,6 +367,7 @@ export async function getShopProduct(
   const enDesc = locale === 'en' ? pick(locale, m.metadata, 'description_en', '') : ''
   const detail: ShopProductDetail = {
     ...staticDetail,
+    gallery,
     description: enDesc || staticDetail.description || m.description || '',
     // «Περιγραφή» / «Διατροφική Αξία» tabs — editable in the Medusa admin.
     sections: pickTab(locale, m.metadata, 'sections', staticDetail.sections),
@@ -305,7 +407,7 @@ export async function getAddonVariants(
         limit: handles.length,
       },
       cache: 'force-cache',
-      next: { tags: ['products'] },
+      next: { tags: ['products'], revalidate: CACHE_TTL },
     },
   )
 

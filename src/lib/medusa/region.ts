@@ -1,4 +1,4 @@
-import { sdk } from './client'
+import { sdk, CACHE_TTL } from './client'
 import type { HttpTypes } from '@medusajs/types'
 
 let cached: HttpTypes.StoreRegion | null = null
@@ -16,7 +16,7 @@ export async function getDefaultRegion(): Promise<HttpTypes.StoreRegion | null> 
     }>('/store/regions', {
       method: 'GET',
       cache: 'force-cache',
-      next: { tags: ['regions'] },
+      next: { tags: ['regions'], revalidate: CACHE_TTL },
     })
     cached = regions?.[0] ?? null
     return cached

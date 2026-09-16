@@ -6,6 +6,7 @@ import {
   type MedusaResponse,
 } from "@medusajs/framework/http"
 import { z } from "zod"
+import { revalidateStorefront } from "../lib/storefront"
 
 /** Body schema for POST /store/bookings. */
 export const PostBookingSchema = z.object({
@@ -76,6 +77,22 @@ function noindex(_req: MedusaRequest, res: MedusaResponse, next: MedusaNextFunct
   next()
 }
 
+/**
+ * Linking a photo to a variant (or to none) changes what the product page
+ * shows, but Medusa's `batchVariantImagesWorkflow` emits no event — so the
+ * subscriber in src/subscribers/revalidate-products.ts never hears about it.
+ * Drop the storefront's product cache here instead, once the route has answered
+ * and only when it succeeded. The `products` tag also clears every detail page:
+ * that read is tagged `products` + `product-<handle>`, and Next drops a cached
+ * fetch when any of its tags is revalidated.
+ */
+function revalidateProducts(_req: MedusaRequest, res: MedusaResponse, next: MedusaNextFunction) {
+  res.on("finish", () => {
+    if (res.statusCode < 400) void revalidateStorefront(["products"])
+  })
+  next()
+}
+
 export default defineMiddlewares({
   routes: [
     {
@@ -131,6 +148,17 @@ export default defineMiddlewares({
       matcher: "/admin/invoices/preview",
       method: "POST",
       bodyParser: { sizeLimit: "5mb" },
+    },
+    // The two event-silent variant↔image routes (see revalidateProducts).
+    {
+      matcher: "/admin/products/:id/variants/:variant_id/images/batch",
+      method: "POST",
+      middlewares: [revalidateProducts],
+    },
+    {
+      matcher: "/admin/products/:id/images/:image_id/variants/batch",
+      method: "POST",
+      middlewares: [revalidateProducts],
     },
   ],
 })
