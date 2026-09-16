@@ -5,7 +5,8 @@ import Image from 'next/image'
 import { useLocale } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { CheckCircle2 } from 'lucide-react'
-import { formatCents } from '@/components/commerce/cart-store'
+import { formatCents, shopItemFromCart } from '@/components/commerce/cart-store'
+import { trackPurchase } from '@/lib/analytics'
 import { getCheckoutUi } from './checkout-ui'
 import type { OrderSnapshot } from './checkout-form'
 
@@ -18,7 +19,23 @@ export function OrderConfirmation({ id }: { id: string }) {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(`oros_order_${id}`)
-      if (raw) setOrder(JSON.parse(raw) as OrderSnapshot)
+      if (raw) {
+        const snapshot = JSON.parse(raw) as OrderSnapshot
+        setOrder(snapshot)
+        // Google Analytics: the sale. Marked as counted, so coming back to this
+        // page — or refreshing it — never books the order's revenue twice.
+        const counted = `oros_order_${id}_tracked`
+        if (!localStorage.getItem(counted)) {
+          localStorage.setItem(counted, '1')
+          trackPurchase({
+            id,
+            items: snapshot.items.map((i) => shopItemFromCart(i, i.quantity)),
+            totalCents: snapshot.total,
+            shippingCents: snapshot.shipping,
+            coupon: snapshot.coupon ?? undefined,
+          })
+        }
+      }
     } catch {
       // ignore
     }

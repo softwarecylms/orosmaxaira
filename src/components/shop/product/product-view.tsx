@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { toEuros, trackViewItem } from '@/lib/analytics'
 import type { ShopProduct, ShopProductDetail } from '../shop-content'
 import { ProductGallery } from './product-gallery'
 import { ProductPurchase, type AddonProduct } from './product-purchase'
@@ -31,6 +32,16 @@ export function ProductView({
 
   const [size, setSize] = useState<string | null>(null)
   const [active, setActive] = useState(gallery[0])
+
+  // Google Analytics: the product was looked at.
+  useEffect(() => {
+    trackViewItem({
+      item_id: handle,
+      item_name: product.title,
+      price: toEuros(product.sortPrice),
+      item_category: product.category,
+    })
+  }, [handle, product.title, product.sortPrice, product.category])
 
   const selected = sizes.find((s) => s.label === size) ?? null
 

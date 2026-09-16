@@ -9,6 +9,12 @@ import {
   useRef,
   useState,
 } from 'react'
+import {
+  type ShopItem,
+  toEuros,
+  trackAddToCart,
+  trackRemoveFromCart,
+} from '@/lib/analytics'
 
 /**
  * Client-side cart for the static honey catalogue. Static products aren't in
@@ -73,9 +79,26 @@ export function formatCents(cents: number): string {
   return `€${(cents / 100).toFixed(2).replace('.', ',')}`
 }
 
+/** A cart line as Google Analytics wants it. */
+export function shopItemFromCart(
+  item: Omit<CartItem, 'key' | 'quantity'>,
+  quantity: number,
+): ShopItem {
+  return {
+    item_id: item.handle,
+    item_name: item.title,
+    price: toEuros(item.unitPrice),
+    quantity,
+    ...(item.size ? { item_variant: item.size } : {}),
+  }
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
   const [ready, setReady] = useState(false)
+  // The current lines, readable from the callbacks below without making them
+  // depend on `items` — they only need it to describe what changed.
+  const itemsRef = useRef<CartItem[]>([])
   const [drawerOpen, setDrawerOpen] = useState(false)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -119,6 +142,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setReady(true)
   }, [])
 
+  useEffect(() => {
+    itemsRef.current = items
+  }, [items])
+
   // Persist on change (only after initial hydration).
   useEffect(() => {
     if (!ready) return
@@ -131,6 +158,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addItem = useCallback(
     (item: Omit<CartItem, 'key' | 'quantity'>, quantity = 1) => {
+      trackAddToCart([shopItemFromCart(item, quantity)])
       const key = `${item.handle}|${item.size ?? ''}`
       setItems((prev) => {
         const existing = prev.find((i) => i.key === key)
@@ -146,6 +174,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   )
 
   const setQty = useCallback((key: string, quantity: number) => {
+    const line = itemsRef.current.find((i) => i.key === key)
+    if (line) {
+      const delta = quantity - line.quantity
+      if (delta > 0) trackAddToCart([shopItemFromCart(line, delta)])
+      else if (delta < 0) trackRemoveFromCart([shopItemFromCart(line, -delta)])
+    }
     setItems((prev) =>
       quantity < 1
         ? prev.filter((i) => i.key !== key)
@@ -154,6 +188,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const removeItem = useCallback((key: string) => {
+    const line = itemsRef.current.find((i) => i.key === key)
+    if (line) trackRemoveFromCart([shopItemFromCart(line, line.quantity)])
     setItems((prev) => prev.filter((i) => i.key !== key))
   }, [])
 

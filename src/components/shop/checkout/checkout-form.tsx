@@ -5,7 +5,13 @@ import Image from 'next/image'
 import { useLocale } from 'next-intl'
 import { Link, useRouter } from '@/i18n/navigation'
 import { Check, ChevronDown, Minus, Plus, Tag, Truck } from 'lucide-react'
-import { useCart, formatCents, type CartItem } from '@/components/commerce/cart-store'
+import {
+  useCart,
+  formatCents,
+  shopItemFromCart,
+  type CartItem,
+} from '@/components/commerce/cart-store'
+import { trackBeginCheckout } from '@/lib/analytics'
 import {
   placeMedusaOrder,
   prepareMedusaOrder,
@@ -247,6 +253,13 @@ function CheckoutFormInner() {
   const locale = useLocale()
   const t = getCheckoutUi(locale)
   const { items, subtotal, ready, clear, setQty } = useCart()
+  // Google Analytics: checkout was started — once, on arrival.
+  const checkoutTracked = useRef(false)
+  useEffect(() => {
+    if (!ready || checkoutTracked.current || items.length === 0) return
+    checkoutTracked.current = true
+    trackBeginCheckout(items.map((i) => shopItemFromCart(i, i.quantity)), subtotal)
+  }, [ready, items, subtotal])
   const stripe = useStripe()
   const elements = useElements()
   const [c, setC] = useState<Contact>(EMPTY)

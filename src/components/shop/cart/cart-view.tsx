@@ -4,7 +4,9 @@ import Image from 'next/image'
 import { useLocale } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { Minus, Plus, X, ArrowRight, Check, Truck } from 'lucide-react'
-import { useCart, formatCents } from '@/components/commerce/cart-store'
+import { useEffect, useRef } from 'react'
+import { useCart, formatCents, shopItemFromCart } from '@/components/commerce/cart-store'
+import { trackViewCart } from '@/lib/analytics'
 import { localizedProductTitle, localizedContainer } from '@/components/shop/product-i18n'
 import { getCartViewUi } from './cart-ui'
 import { FREE_SHIPPING_THRESHOLD } from '@/lib/shipping'
@@ -14,6 +16,14 @@ export function CartView() {
   const { items, subtotal, ready, setQty, removeItem } = useCart()
   const locale = useLocale()
   const t = getCartViewUi(locale)
+
+  // Google Analytics: the cart was opened — once per visit to this page.
+  const viewTracked = useRef(false)
+  useEffect(() => {
+    if (!ready || viewTracked.current || items.length === 0) return
+    viewTracked.current = true
+    trackViewCart(items.map((i) => shopItemFromCart(i, i.quantity)), subtotal)
+  }, [ready, items, subtotal])
 
   if (!ready) {
     return <div className="container-wide py-20" aria-hidden="true" />
