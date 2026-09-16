@@ -52,7 +52,7 @@
   },
   "cookies": {
     "title": "We use cookies",
-    "text": "We use cookies to keep the website working and, with your consent, for statistics and advertising. See our <policy>Privacy & Cookie Policy</policy>.",
+    "text": "<strong>We use cookies</strong> to keep the website working and, with your consent, for statistics and advertising. See our <policy>Privacy & Cookie Policy</policy>.",
     "accept": "Accept all",
     "reject": "Reject",
     "settings": "Settings",

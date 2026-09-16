@@ -131,29 +131,42 @@ export function CookieBanner({ initial }: { initial: ConsentState | null }) {
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}
             transition={{ duration: DURATION.ui, ease: EASE.snap }}
           >
-            <div className="mx-auto flex w-full max-w-[880px] flex-col gap-4 rounded-[6px] border border-border bg-white p-5 shadow-[0_20px_60px_-25px_rgba(20,20,20,0.5)] md:flex-row md:items-center md:gap-6">
-              <div className="flex flex-col gap-1">
-                <p className="font-display text-[17px] font-bold text-foreground">{t('title')}</p>
-                <p className="text-[14px] leading-[20px] text-muted">
-                  {t.rich('text', {
-                    policy: (chunks) => (
-                      <Link href={POLICY_PATH} className="text-accent underline underline-offset-2">
-                        {chunks}
-                      </Link>
-                    ),
-                  })}
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 md:ml-auto md:shrink-0 sm:flex-row sm:items-center">
-                <Button variant="ghost" size="sm" onClick={openSettings}>
+            <div className="mx-auto flex w-full max-w-[1240px] flex-col gap-4 rounded-[6px] border border-border bg-white px-5 py-4 shadow-[0_20px_60px_-25px_rgba(20,20,20,0.5)] md:flex-row md:items-center md:gap-8 md:px-6">
+              <p className="text-[14px] leading-[20px] text-muted">
+                {t.rich('text', {
+                  strong: (chunks) => (
+                    <strong className="font-semibold text-foreground">{chunks}</strong>
+                  ),
+                  policy: (chunks) => (
+                    <Link href={POLICY_PATH} className="text-accent underline underline-offset-2">
+                      {chunks}
+                    </Link>
+                  ),
+                })}
+              </p>
+              {/* Narrow screens: refuse and accept share a row, settings wraps
+                  under them. Wide screens: all three sit on one line. */}
+              <div className="flex flex-wrap items-center gap-2 md:ml-auto md:shrink-0 md:flex-nowrap">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="order-3 w-full md:order-none md:w-auto"
+                  onClick={openSettings}
+                >
                   {t('settings')}
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => save(NO_CONSENT)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="order-1 flex-1 md:flex-none"
+                  onClick={() => save(NO_CONSENT)}
+                >
                   {t('reject')}
                 </Button>
                 <Button
                   variant="accent"
                   size="sm"
+                  className="order-2 flex-1 md:flex-none"
                   onClick={() => save({ analytics: true, marketing: true })}
                 >
                   {t('accept')}
