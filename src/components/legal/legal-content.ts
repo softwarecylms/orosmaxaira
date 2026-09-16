@@ -208,6 +208,7 @@ const PRIVACY_SECTIONS: LegalSection[] = [
       [
         'Εταιρείες ταχυμεταφορών (ACS) για την παράδοση της παραγγελίας',
         'Πάροχοι υπηρεσιών πληρωμών για την ασφαλή ολοκλήρωση της συναλλαγής',
+        'Google (Google Analytics / Google Tag Manager) για στατιστικά χρήσης, εφόσον έχετε δώσει τη συγκατάθεσή σας',
       ],
       'Δεν πωλούμε και δεν ενοικιάζουμε τα προσωπικά σας δεδομένα σε τρίτους.',
     ],
@@ -215,7 +216,9 @@ const PRIVACY_SECTIONS: LegalSection[] = [
   {
     heading: 'Cookies',
     body: [
-      'Ο ιστότοπος χρησιμοποιεί cookies για τη σωστή λειτουργία του (π.χ. διατήρηση του καλαθιού), για στατιστικά χρήσης και για τη βελτίωση της εμπειρίας σας. Μπορείτε να διαχειριστείτε ή να απενεργοποιήσετε τα cookies μέσω των ρυθμίσεων του προγράμματος περιήγησής σας.',
+      'Ο ιστότοπος χρησιμοποιεί cookies για τη σωστή λειτουργία του (π.χ. διατήρηση του καλαθιού), για στατιστικά χρήσης και για τη βελτίωση της εμπειρίας σας.',
+      'Τα απαραίτητα cookies λειτουργούν πάντα. Τα cookies στατιστικών και διαφήμισης ενεργοποιούνται μόνο εφόσον δώσετε τη συγκατάθεσή σας στο μήνυμα που εμφανίζεται κατά την πρώτη σας επίσκεψη.',
+      'Μπορείτε να αλλάξετε ή να ανακαλέσετε την επιλογή σας οποτεδήποτε από τον σύνδεσμο «Ρυθμίσεις cookies» στο υποσέλιδο, καθώς και μέσω των ρυθμίσεων του προγράμματος περιήγησής σας.',
     ],
   },
   {
@@ -275,6 +278,7 @@ const PRIVACY_SECTIONS_EN: LegalSection[] = [
       [
         'Courier companies (ACS) for the delivery of your order',
         'Payment service providers for the secure completion of the transaction',
+        'Google (Google Analytics / Google Tag Manager) for usage statistics, where you have given your consent',
       ],
       'We do not sell or rent your personal data to third parties.',
     ],
@@ -282,7 +286,9 @@ const PRIVACY_SECTIONS_EN: LegalSection[] = [
   {
     heading: 'Cookies',
     body: [
-      'The website uses cookies for its proper operation (e.g. keeping your cart), for usage statistics and to improve your experience. You can manage or disable cookies through your browser settings.',
+      'The website uses cookies for its proper operation (e.g. keeping your cart), for usage statistics and to improve your experience.',
+      'Necessary cookies are always active. Statistics and advertising cookies are set only if you give your consent in the notice shown on your first visit.',
+      'You can change or withdraw your choice at any time from the “Cookie settings” link in the footer, as well as through your browser settings.',
     ],
   },
   {
