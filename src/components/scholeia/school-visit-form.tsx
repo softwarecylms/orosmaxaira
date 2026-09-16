@@ -7,6 +7,7 @@ import { BookingCalendar } from '@/components/booking/booking-calendar'
 import { getBookingUi } from '@/components/booking/booking-ui'
 import { MAX_STUDENTS, SCHOOL_WORKSHOP_OPTIONS, pricePerChild } from '@/lib/data/school-visit'
 import { getScholeiaUi } from './scholeia-ui'
+import { trackLead } from '@/lib/analytics'
 
 type FormWorkshopOption = { key: string; short: string }
 type FormPricing = { range: string; price: number | null }[]
@@ -144,6 +145,7 @@ export function SchoolVisitForm({
         throw new Error(data?.error ?? ui.genericError)
       }
       setSent(true)
+      trackLead('school_visit', workshop || undefined)
       onSuccess?.()
     } catch (err) {
       setError(err instanceof Error ? err.message : ui.genericError)

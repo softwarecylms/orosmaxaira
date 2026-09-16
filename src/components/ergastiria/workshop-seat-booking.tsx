@@ -28,6 +28,12 @@ import {
   type ConfirmedWorkshopBooking,
 } from '@/lib/medusa/booking-actions'
 import { stripeConfigured } from '@/components/shop/checkout/stripe-elements'
+import {
+  BOOKING_CATEGORY,
+  bookingItems,
+  trackBeginCheckout,
+  trackPurchase,
+} from '@/lib/analytics'
 import { EASE, DURATION } from '@/lib/motion'
 import { BookingCalendar } from '../booking/booking-calendar'
 import { BookingPaymentStep, type PendingPayment } from '../booking/booking-payment'
@@ -348,8 +354,25 @@ function WorkshopBookingModal({
       .catch(() => {})
   }
 
+  // Google Analytics: the seats on this booking, one item per age tier.
+  const analyticsItems = () =>
+    bookingItems(
+      { id: slug, name: workshopTitle, category: BOOKING_CATEGORY.workshop },
+      ageTiers.map((t) => ({ key: t.key, label: t.label, price: t.price })),
+      counts,
+    )
+
+  const trackConfirmed = (booking: ConfirmedWorkshopBooking) =>
+    trackPurchase({
+      transactionId: booking.reference,
+      items: analyticsItems(),
+      value: booking.total_amount,
+      currency: booking.currency,
+    })
+
   const submit = async () => {
     if (!canSubmit || !selectedSlotId) return
+    trackBeginCheckout(analyticsItems(), total, { currency })
     setSubmitting(true)
     setSubmitError(null)
     const key = `${nonce}-${selectedSlotId}-${counts['adult'] ?? 0}-${counts['child'] ?? 0}-${counts['infant'] ?? 0}`
@@ -366,6 +389,7 @@ function WorkshopBookingModal({
     if (res.ok && res.booking.status === 'confirmed') {
       // Free (€0), or no card provider on the backend: done in one step.
       setResult(res.booking)
+      trackConfirmed(res.booking)
     } else if (res.ok && res.booking.status === 'pending' && res.payment) {
       // The seats are now held — on to the payment step.
       if (stripeConfigured) {
@@ -402,6 +426,7 @@ function WorkshopBookingModal({
     if (r.ok) {
       setPending(null)
       setResult(r.booking)
+      trackConfirmed(r.booking)
       return null
     }
     // The card went through; only the confirmation call failed. The server

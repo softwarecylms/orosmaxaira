@@ -6,7 +6,7 @@ import { useLocale } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { CheckCircle2 } from 'lucide-react'
 import { formatCents, shopItemFromCart } from '@/components/commerce/cart-store'
-import { trackPurchase } from '@/lib/analytics'
+import { toEuros, trackPurchase } from '@/lib/analytics'
 import { getCheckoutUi } from './checkout-ui'
 import type { OrderSnapshot } from './checkout-form'
 
@@ -28,10 +28,10 @@ export function OrderConfirmation({ id }: { id: string }) {
         if (!localStorage.getItem(counted)) {
           localStorage.setItem(counted, '1')
           trackPurchase({
-            id,
+            transactionId: id,
             items: snapshot.items.map((i) => shopItemFromCart(i, i.quantity)),
-            totalCents: snapshot.total,
-            shippingCents: snapshot.shipping,
+            value: toEuros(snapshot.total),
+            shipping: toEuros(snapshot.shipping),
             coupon: snapshot.coupon ?? undefined,
           })
         }

@@ -22,6 +22,9 @@ import { WorkshopClosedNotice } from '@/components/ergastiria/workshop-closed-no
 import { CertificationsNote } from '@/components/certificates/certifications-note'
 import { seoMetadata } from '@/lib/seo'
 import { breadcrumbJsonLd } from '@/components/seo/json-ld'
+import { TrackViewItem } from '@/components/analytics/track-view-item'
+import { BOOKING_CATEGORY } from '@/lib/analytics'
+import { comboFromPrice } from '@/lib/pricing'
 
 // Live so admin edits reflect immediately; falls back to static data if Medusa
 // is unavailable.
@@ -288,6 +291,14 @@ export default async function WorkshopDetailPage({
 
           {/* Sticky booking card — real seat booking when the workshop has
               scheduled dates, otherwise the enquiry form. */}
+          <TrackViewItem
+            item={{
+              item_id: w.slug,
+              item_name: w.title,
+              price: Math.min(...w.tiers.map((t) => comboFromPrice(t)).filter((p) => p > 0), Infinity) || 0,
+              item_category: BOOKING_CATEGORY.workshop,
+            }}
+          />
           <div data-edit="booking" className="flex flex-col gap-4 lg:sticky lg:top-[150px] lg:self-start">
             {w.bookingClosed ? (
               <WorkshopClosedNotice seasonLabel={w.seasonLabel} />

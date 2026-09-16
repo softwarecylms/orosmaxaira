@@ -18,6 +18,12 @@ import { stripeConfigured } from '@/components/shop/checkout/stripe-elements'
 import { EASE, DURATION } from '@/lib/motion'
 import { BookingCalendar } from './booking-calendar'
 import { BookingPaymentStep, type PendingPayment } from './booking-payment'
+import {
+  BOOKING_CATEGORY,
+  bookingItems,
+  trackBeginCheckout,
+  trackPurchase,
+} from '@/lib/analytics'
 import { getBookingUi } from './booking-ui'
 
 const isoOf = (d: Date) =>
@@ -207,8 +213,25 @@ export function BookingModal({
       .catch(() => {})
   }
 
+  // Google Analytics: the people and prices on this booking, one item per tier.
+  const analyticsItems = () =>
+    bookingItems(
+      { id: activity.slug, name: activity.title, category: BOOKING_CATEGORY.activity },
+      tiers.map((t) => ({ key: t.key, label: t.label, price: priceOf(t) })),
+      counts,
+    )
+
+  const trackConfirmed = (booking: ConfirmedBooking) =>
+    trackPurchase({
+      transactionId: booking.reference,
+      items: analyticsItems(),
+      value: booking.total_amount,
+      currency: booking.currency,
+    })
+
   const submit = async () => {
     if (!canSubmit || !selectedSlotId) return
+    trackBeginCheckout(analyticsItems(), total, { currency })
     setSubmitting(true)
     setSubmitError(null)
     const key = `${nonce}-${selectedSlotId}-${counts['adult'] ?? 0}-${counts['child'] ?? 0}-${counts['infant'] ?? 0}`
@@ -224,6 +247,7 @@ export function BookingModal({
     if (res.ok && res.booking.status === 'confirmed') {
       // Free (€0), or no card provider on the backend: done in one step.
       setResult(res.booking)
+      trackConfirmed(res.booking)
     } else if (res.ok && res.booking.status === 'pending' && res.payment) {
       // The seats are now held — on to the payment step.
       if (stripeConfigured) {
@@ -262,6 +286,7 @@ export function BookingModal({
     if (r.ok) {
       setPending(null)
       setResult(r.booking)
+      trackConfirmed(r.booking)
       return null
     }
     // The card went through; only the confirmation call failed. The server

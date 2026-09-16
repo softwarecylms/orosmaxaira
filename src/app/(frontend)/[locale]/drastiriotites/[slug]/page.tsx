@@ -8,6 +8,9 @@ import { getActivity } from '@/lib/medusa/activities'
 import { hreflangAlternates, seoMetadata } from '@/lib/seo'
 import { getActivitiesUi } from '@/components/activities/activities-content'
 import { JsonLd, breadcrumbJsonLd } from '@/components/seo/json-ld'
+import { TrackViewItem } from '@/components/analytics/track-view-item'
+import { BOOKING_CATEGORY } from '@/lib/analytics'
+import { weekdayPrice } from '@/lib/pricing'
 
 // Medusa-backed activities (content, prices, availability) must render live so
 // admin edits + seat counts are never stale. Activities not yet in Medusa fall
@@ -66,6 +69,17 @@ export default async function ActivityExperiencePage({
     return (
       <>
         {crumbs(activity.title)}
+        <TrackViewItem
+          item={{
+            item_id: activity.slug,
+            item_name: activity.title,
+            price: Math.min(
+              ...(activity.price_tiers ?? []).map((t) => weekdayPrice(t)).filter((p) => p > 0),
+              Infinity,
+            ) || 0,
+            item_category: BOOKING_CATEGORY.activity,
+          }}
+        />
         <ActivityDetail activity={activity} locale={locale} />
       </>
     )

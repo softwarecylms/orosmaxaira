@@ -10,6 +10,7 @@ import { EASE, DURATION } from '@/lib/motion'
 import type { PriceTier } from '@/lib/medusa/activities'
 import { getBookingUi } from '@/components/booking/booking-ui'
 import { getErgastiriaUi } from './ergastiria-ui'
+import { trackLead } from '@/lib/analytics'
 
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
 const money = (p: number | string | undefined | null) => {
@@ -259,6 +260,7 @@ function WorkshopBookingForm({
         throw new Error(d?.error ?? eui.genericError)
       }
       setSent(true)
+      trackLead('workshop', workshopTitle)
     } catch (err) {
       setError(err instanceof Error ? err.message : eui.genericError)
     } finally {

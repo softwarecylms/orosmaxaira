@@ -8,6 +8,7 @@ import { workshopForMonth } from '@/lib/data/workshops'
 import { getWorkshopEnquiry, type WorkshopExperienceKey } from '@/lib/data/workshop-enquiry'
 import { getBookingUi } from '@/components/booking/booking-ui'
 import { getErgastiriaUi } from './ergastiria-ui'
+import { trackLead } from '@/lib/analytics'
 
 // Glass fields on the gold band — same treatment as the other on-brand forms.
 const inputCls =
@@ -112,6 +113,7 @@ export function WorkshopEnquiryForm({
         throw new Error(data?.error ?? eui.genericError)
       }
       setSent(true)
+      trackLead('workshop', periodWorkshop?.title)
     } catch (err) {
       setError(err instanceof Error ? err.message : eui.genericError)
     } finally {

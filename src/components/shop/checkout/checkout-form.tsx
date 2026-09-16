@@ -11,7 +11,7 @@ import {
   shopItemFromCart,
   type CartItem,
 } from '@/components/commerce/cart-store'
-import { trackBeginCheckout } from '@/lib/analytics'
+import { toEuros, trackBeginCheckout } from '@/lib/analytics'
 import {
   placeMedusaOrder,
   prepareMedusaOrder,
@@ -258,7 +258,7 @@ function CheckoutFormInner() {
   useEffect(() => {
     if (!ready || checkoutTracked.current || items.length === 0) return
     checkoutTracked.current = true
-    trackBeginCheckout(items.map((i) => shopItemFromCart(i, i.quantity)), subtotal)
+    trackBeginCheckout(items.map((i) => shopItemFromCart(i, i.quantity)), toEuros(subtotal))
   }, [ready, items, subtotal])
   const stripe = useStripe()
   const elements = useElements()
