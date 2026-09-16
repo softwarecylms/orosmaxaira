@@ -12,6 +12,7 @@ import {
   LinkedinSolid,
 } from './social-icons'
 import { FooterFunding } from './footer-funding'
+import { CookieSettingsLink } from '@/components/analytics/cookie-settings-link'
 import { loadSiteContent } from '@/lib/content/load'
 
 type SiteFooterProps = {
@@ -34,6 +35,7 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
 /** OROS MACHAIRA footer (Figma 156:1342). Content from loadSiteContent(locale). */
 export async function SiteFooter({ locale }: SiteFooterProps) {
   const t = await getTranslations('footer')
+  const tCookies = await getTranslations('cookies')
   const { FOOTER, CONTACT } = await loadSiteContent(locale)
   return (
     <footer data-testid="site-footer" data-edit="FOOTER" className="bg-white pt-12 md:pt-[50px]">
@@ -197,6 +199,10 @@ export async function SiteFooter({ locale }: SiteFooterProps) {
                 </Link>
               </span>
             ))}
+            <span className="flex items-center gap-x-2">
+              <span aria-hidden="true">|</span>
+              <CookieSettingsLink label={tCookies('footerLink')} />
+            </span>
           </p>
         </div>
 

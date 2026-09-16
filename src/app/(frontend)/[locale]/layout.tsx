@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Gabarito, Inter } from 'next/font/google'
+import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
 import { setRequestLocale, getTranslations } from 'next-intl/server'
@@ -15,6 +16,9 @@ import {
   TagManagerScript,
   tagManagerEnabled,
 } from '@/components/analytics/google-tag-manager'
+import { ConsentInit } from '@/components/analytics/consent-init'
+import { CookieBanner } from '@/components/analytics/cookie-banner'
+import { CONSENT_COOKIE, parseConsent } from '@/components/analytics/consent'
 import { siteUrl } from '@/lib/seo'
 import { routing, type Locale } from '@/i18n/routing'
 
@@ -93,10 +97,21 @@ export default async function FrontendLayout({
   setRequestLocale(locale)
   // Google Tag Manager — public site only (not the CMS admin or the visual editor).
   const tagManager = await tagManagerEnabled()
+  // The visitor's cookie answer: it sets Google's consent defaults and decides
+  // whether the banner still has a question to ask.
+  const consent = parseConsent((await cookies()).get(CONSENT_COOKIE)?.value)
 
   return (
     <html lang={locale} className={`${sans.variable} ${display.variable}`}>
-      <head>{tagManager && <TagManagerScript />}</head>
+      <head>
+        {tagManager && (
+          <>
+            {/* Consent defaults must be set before Tag Manager loads. */}
+            <ConsentInit />
+            <TagManagerScript />
+          </>
+        )}
+      </head>
       <body className="bg-background text-foreground antialiased" suppressHydrationWarning>
         {tagManager && <TagManagerNoscript />}
         <NextIntlClientProvider>
@@ -106,6 +121,7 @@ export default async function FrontendLayout({
               <main id="main">{children}</main>
               <SiteFooter locale={locale as Locale} />
               <CartDrawer />
+              <CookieBanner initial={consent} />
               <PreviewBridge />
               <OrganizationSchema locale={locale} />
             </CartProvider>

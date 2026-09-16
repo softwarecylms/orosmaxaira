@@ -49,5 +49,22 @@
     "outOfStock": "Out of stock",
     "allProducts": "All products",
     "noResults": "No products found for “{query}”."
+  },
+  "cookies": {
+    "title": "We use cookies",
+    "text": "We use cookies to keep the website working and, with your consent, for statistics and advertising. See our <policy>Privacy & Cookie Policy</policy>.",
+    "accept": "Accept all",
+    "reject": "Reject",
+    "settings": "Settings",
+    "settingsTitle": "Cookie settings",
+    "save": "Save choices",
+    "close": "Close",
+    "necessaryTitle": "Necessary",
+    "necessaryText": "Needed for the website to work, such as your cart and checkout. Always on.",
+    "analyticsTitle": "Statistics",
+    "analyticsText": "Show us how the website is used, so we can improve it (Google Analytics).",
+    "marketingTitle": "Advertising",
+    "marketingText": "Allow relevant ads to be shown and their results measured.",
+    "footerLink": "Cookie settings"
   }
 }
