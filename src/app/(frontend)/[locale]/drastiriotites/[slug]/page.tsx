@@ -4,7 +4,7 @@ import { getLocale } from 'next-intl/server'
 import { getExperiences } from '@/components/activities/experiences'
 import { ActivityExperience } from '@/components/activities/activity-experience'
 import { ActivityDetail } from '@/components/activities/detail/activity-detail'
-import { getActivity } from '@/lib/medusa/activities'
+import { getActivity, getActivityPrograms } from '@/lib/medusa/activities'
 import { hreflangAlternates, seoMetadata } from '@/lib/seo'
 import { getActivitiesUi } from '@/components/activities/activities-content'
 import { JsonLd, breadcrumbJsonLd } from '@/components/seo/json-ld'
@@ -66,6 +66,18 @@ export default async function ActivityExperiencePage({
 
   const activity = await getActivity(slug, locale)
   if (activity) {
+    // Workshop programmes this activity is also bookable as (e.g. «Πλήρες πρόγραμμα»).
+    const iso = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+    const today = new Date()
+    const programs = activity.combo_program_key
+      ? await getActivityPrograms(
+          slug,
+          iso(today),
+          iso(new Date(today.getFullYear(), today.getMonth() + 6, today.getDate())),
+          locale,
+        )
+      : []
     return (
       <>
         {crumbs(activity.title)}
@@ -80,7 +92,7 @@ export default async function ActivityExperiencePage({
             item_category: BOOKING_CATEGORY.activity,
           }}
         />
-        <ActivityDetail activity={activity} locale={locale} />
+        <ActivityDetail activity={activity} programs={programs} locale={locale} />
       </>
     )
   }

@@ -9,8 +9,11 @@ import type BookingsModuleService from "../modules/bookings/service"
 import {
   renderBookingConfirmationEmail,
   renderBookingNoticeEmail,
+  longDate,
+  people as peopleText,
   type BookingEmailData,
 } from "./booking-email"
+import { bookingDetails } from "./booking-details"
 
 /**
  * Card payments for activity and workshop bookings.
@@ -60,6 +63,7 @@ export type BookingRow = {
   total_amount: number
   currency: string
   combo_label?: string | null
+  locale?: string | null
 }
 
 const bookingsOf = (c: MedusaContainer) => c.resolve<BookingsModuleService>(BOOKINGS_MODULE)
@@ -240,19 +244,10 @@ export async function findClientBooking(
   return booking
 }
 
-/** The fields the storefront shows once a booking is confirmed. */
+/** The fields the storefront shows once a booking is confirmed — titles and the
+ *  confirmation note in the customer's language. */
 export async function publicBookingOf(container: MedusaContainer, booking: BookingRow) {
-  const bookings = bookingsOf(container)
-  const slot = await bookings.retrieveAvailabilitySlot(booking.slot_id).catch(() => null)
-  let activity_title: string | undefined
-  let workshop_title: string | undefined
-  if (booking.workshop_id) {
-    const [w] = await bookings.listWorkshops({ id: booking.workshop_id })
-    workshop_title = w?.title
-  } else if (booking.activity_id) {
-    const [a] = await bookings.listActivities({ id: booking.activity_id })
-    activity_title = a?.title
-  }
+  const details = await bookingDetails(container, booking)
   return {
     reference: booking.reference,
     status: booking.status,
@@ -261,12 +256,13 @@ export async function publicBookingOf(container: MedusaContainer, booking: Booki
     adults: booking.adults,
     children: booking.children,
     infants: booking.infants,
-    combo_label: booking.combo_label ?? undefined,
+    combo_label: details.combo ?? undefined,
     email: booking.email,
-    activity_title,
-    workshop_title,
-    date: (slot as { date?: string } | null)?.date,
-    start_time: (slot as { start_time?: string } | null)?.start_time,
+    activity_title: details.kind === "activity" ? details.title : undefined,
+    workshop_title: details.kind === "workshop" ? details.title : undefined,
+    confirmation_note: details.note ?? undefined,
+    date: details.slot?.date,
+    start_time: details.slot?.start_time,
   }
 }
 
@@ -293,7 +289,6 @@ export async function announceBooking(
   booking: BookingRow,
 ): Promise<void> {
   const logger = container.resolve("logger")
-  const bookings = bookingsOf(container)
   // Comma-separated: everyone at the farm who takes bookings.
   const adminEmails = (process.env.BOOKING_ADMIN_EMAIL || "info@orosmaxaira.com")
     .split(",")
@@ -302,108 +297,80 @@ export async function announceBooking(
   const messages: EmailMessage[] = []
 
   try {
-    const slot = (await bookings.retrieveAvailabilitySlot(booking.slot_id).catch(() => null)) as {
-      date?: string
-      start_time?: string
-    } | null
-    const when = slot ? `${slot.date} στις ${slot.start_time}` : ""
-    const people = `${booking.adults} ενήλικες, ${booking.children} παιδιά, ${booking.infants} βρέφη`
+    // The customer's copy in their language; the farm's always in Greek.
+    const customer = await bookingDetails(container, booking)
+    const farm = customer.locale === "el" ? customer : await bookingDetails(container, booking, "el")
+    const slot = customer.slot
+    const en = customer.locale === "en"
+    const shortTime = slot?.start_time?.slice(0, 5)
+    const when = (dateLocale: string, at: string) =>
+      slot ? `${longDate(slot.date, dateLocale)} ${at} ${shortTime}` : ""
     const money = `${Number(booking.total_amount).toFixed(2)} ${String(booking.currency ?? "eur").toUpperCase()}`
     const contact = `${booking.customer_name} (${booking.email}${booking.phone ? ", " + booking.phone : ""})`
-    // Branded HTML parts (src/lib/booking-email.ts); the text above stays as the plain part.
-    const emailData = (kind: BookingEmailData["kind"], title: string, combo?: string | null): BookingEmailData => ({
+    const counts = { adults: booking.adults ?? 0, children: booking.children ?? 0, infants: booking.infants ?? 0 }
+    // Branded HTML parts (src/lib/booking-email.ts); the text below stays as the plain part.
+    const emailData = (d: typeof customer): BookingEmailData => ({
       reference: booking.reference,
-      title,
-      kind,
-      combo,
+      title: d.title,
+      kind: d.kind,
+      combo: d.combo,
       date: slot?.date,
       startTime: slot?.start_time,
-      adults: booking.adults ?? 0,
-      children: booking.children ?? 0,
-      infants: booking.infants ?? 0,
+      ...counts,
       // "€45,00", the way the storefront and the order emails show prices.
       total:
         String(booking.currency ?? "eur").toLowerCase() === "eur"
-          ? `€${Number(booking.total_amount).toFixed(2).replace(".", ",")}`
+          ? `€${Number(booking.total_amount).toFixed(2).replace(".", d.locale === "en" ? "." : ",")}`
           : money,
       customerName: booking.customer_name,
       email: booking.email,
       phone: booking.phone,
+      locale: d.locale,
+      note: d.note,
     })
-
-    if (booking.workshop_id) {
-      const [workshop] = await bookings.listWorkshops({ id: booking.workshop_id })
-      const title = workshop?.title ?? ""
-      const combos = booking.combo_label ?? ""
-      const data = {
-        reference: booking.reference,
-        workshop: title,
-        combo: combos,
-        when,
-        people,
-        total: money,
-        customer_name: booking.customer_name,
-      }
-      messages.push(
-        {
-          to: booking.email,
-          channel: "email",
-          template: "workshop-booking-confirmation",
-          content: {
-            subject: `Επιβεβαίωση κράτησης ${booking.reference} — ${title}`,
-            text: `Ευχαριστούμε ${booking.customer_name}! Η κράτησή σας για το εργαστήρι «${title}» (${combos}) στις ${when} επιβεβαιώθηκε. Άτομα: ${people}. Σύνολο: ${money}. Κωδικός κράτησης: ${booking.reference}.`,
-            html: renderBookingConfirmationEmail(emailData("workshop", title, combos)),
-          },
-          data,
-        },
-        {
-          to: adminEmails[0], // one copy per address — see `outgoing` below
-          channel: "email",
-          template: "workshop-booking-notification",
-          content: {
-            subject: `Νέα κράτηση εργαστηρίου ${booking.reference} — ${title}`,
-            text: `Νέα κράτηση εργαστηρίου: ${title} (${combos}), ${when}. Άτομα: ${people}. Σύνολο ${money}. Πελάτης: ${contact}.`,
-            html: renderBookingNoticeEmail(emailData("workshop", title, combos)),
-          },
-          data,
-        },
-      )
-    } else {
-      const [activity] = await bookings.listActivities({ id: booking.activity_id ?? "" })
-      const title = activity?.title ?? ""
-      const data = {
-        reference: booking.reference,
-        activity: title,
-        when,
-        people,
-        total: money,
-        customer_name: booking.customer_name,
-      }
-      messages.push(
-        {
-          to: booking.email,
-          channel: "email",
-          template: "booking-confirmation",
-          content: {
-            subject: `Επιβεβαίωση κράτησης ${booking.reference} — ${title}`,
-            text: `Ευχαριστούμε ${booking.customer_name}! Η κράτησή σας για «${title}» στις ${when} επιβεβαιώθηκε. Άτομα: ${people}. Σύνολο: ${money}. Κωδικός κράτησης: ${booking.reference}.`,
-            html: renderBookingConfirmationEmail(emailData("activity", title)),
-          },
-          data,
-        },
-        {
-          to: adminEmails[0], // one copy per address — see `outgoing` below
-          channel: "email",
-          template: "booking-notification",
-          content: {
-            subject: `Νέα κράτηση ${booking.reference} — ${title}`,
-            text: `Νέα κράτηση: ${title}, ${when}. ${people}. Σύνολο ${money}. Πελάτης: ${contact}.`,
-            html: renderBookingNoticeEmail(emailData("activity", title)),
-          },
-          data,
-        },
-      )
+    const workshop = customer.kind === "workshop"
+    const data = {
+      reference: booking.reference,
+      [workshop ? "workshop" : "activity"]: farm.title,
+      ...(workshop ? { combo: farm.combo ?? "" } : {}),
+      when: when("el-GR", "στις"),
+      people: peopleText({ ...counts, locale: "el" }),
+      total: money,
+      customer_name: booking.customer_name,
+      locale: customer.locale,
     }
+    const program = (d: typeof customer) => (d.combo ? ` (${d.combo})` : "")
+
+    const customerText = en
+      ? `Thank you ${booking.customer_name}! Your booking for ${workshop ? "the workshop " : ""}“${customer.title}”${program(customer)} on ${when("en-GB", "at")} is confirmed. People: ${peopleText({ ...counts, locale: "en" })}. Total: ${money}. Booking reference: ${booking.reference}.`
+      : `Ευχαριστούμε ${booking.customer_name}! Η κράτησή σας για ${workshop ? "το εργαστήρι " : ""}«${customer.title}»${program(customer)} ${when("el-GR", "στις")} επιβεβαιώθηκε. Άτομα: ${data.people}. Σύνολο: ${money}. Κωδικός κράτησης: ${booking.reference}.`
+
+    messages.push(
+      {
+        to: booking.email,
+        channel: "email",
+        template: workshop ? "workshop-booking-confirmation" : "booking-confirmation",
+        content: {
+          subject: en
+            ? `Booking confirmation ${booking.reference} — ${customer.title}`
+            : `Επιβεβαίωση κράτησης ${booking.reference} — ${customer.title}`,
+          text: customer.note ? `${customerText}\n\n${customer.note}` : customerText,
+          html: renderBookingConfirmationEmail(emailData(customer)),
+        },
+        data,
+      },
+      {
+        to: adminEmails[0], // one copy per address — see `outgoing` below
+        channel: "email",
+        template: workshop ? "workshop-booking-notification" : "booking-notification",
+        content: {
+          subject: `Νέα κράτηση ${workshop ? "εργαστηρίου " : ""}${booking.reference} — ${farm.title}`,
+          text: `Νέα κράτηση${workshop ? " εργαστηρίου" : ""}: ${farm.title}${program(farm)}, ${data.when}. Άτομα: ${data.people}. Σύνολο ${money}. Πελάτης: ${contact}.`,
+          html: renderBookingNoticeEmail(emailData(farm)),
+        },
+        data,
+      },
+    )
   } catch (e: unknown) {
     logger.warn(`Booking email for ${booking.reference} not prepared: ${(e as Error)?.message ?? e}`)
   }

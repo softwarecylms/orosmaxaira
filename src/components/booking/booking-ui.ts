@@ -43,6 +43,8 @@ export type BookingUi = {
   seasonAvailable: string
   requestNote: string
   sendRequest: string
+  sending: string
+  sendFailed: string
   sentMessage: (activity: string) => string
 
   // BookingModal (seat checkout)
@@ -51,6 +53,12 @@ export type BookingUi = {
   loadingAvailability: string
   noDatesAvailable: string
   callAt: (phone: string) => string
+  // Programme choice (an activity also bookable as a workshop combo)
+  stepProgram: string
+  singleOption: string
+  programMonthly: string
+  seasonTimes: (months: string, time: string) => string
+  unavailableShort: string
   stepDate: string
   stepTime: string
   stepPeople: string
@@ -84,6 +92,8 @@ export type BookingUi = {
   bookingConfirmed: string
   bookingRef: string
   fActivity: string
+  fWorkshop: string
+  fProgram: string
   fDate: string
   fTime: string
   fPeople: string
@@ -120,6 +130,8 @@ const EL: BookingUi = {
   requestNote:
     'Το παρόν αποτελεί αίτημα κράτησης. Θα επικοινωνήσουμε μαζί σας για την επιβεβαίωση της διαθεσιμότητας.',
   sendRequest: 'Αποστολή αιτήματος',
+  sending: 'Αποστολή…',
+  sendFailed: 'Δεν ήταν δυνατή η αποστολή. Δοκιμάστε ξανά ή καλέστε μας.',
   sentMessage: (a) =>
     `Λάβαμε το αίτημά σας για την «${a}»! Πρόκειται για αίτημα κράτησης — θα επικοινωνήσουμε σύντομα μαζί σας για την επιβεβαίωση. 🐝`,
 
@@ -128,6 +140,11 @@ const EL: BookingUi = {
   loadingAvailability: 'Φόρτωση διαθεσιμότητας…',
   noDatesAvailable: 'Δεν υπάρχει διαθέσιμη ημερομηνία αυτή τη στιγμή.',
   callAt: (p) => `Καλέστε στο ${p}`,
+  stepProgram: 'Επιλέξτε πρόγραμμα',
+  singleOption: 'Μεμονωμένη κράτηση',
+  programMonthly: 'Μαζί με το εργαστήρι του μήνα',
+  seasonTimes: (m, t) => `${m} · ${t}`,
+  unavailableShort: 'χωρίς διαθέσιμες ημερομηνίες',
   stepDate: 'Επιλέξτε ημερομηνία',
   stepTime: 'Επιλέξτε ώρα',
   stepPeople: 'Άτομα',
@@ -161,6 +178,8 @@ const EL: BookingUi = {
   bookingConfirmed: 'Η κράτησή σας επιβεβαιώθηκε! 🐝',
   bookingRef: 'Κωδικός κράτησης:',
   fActivity: 'Δραστηριότητα',
+  fWorkshop: 'Εργαστήρι',
+  fProgram: 'Πρόγραμμα',
   fDate: 'Ημερομηνία',
   fTime: 'Ώρα',
   fPeople: 'Άτομα',
@@ -197,6 +216,8 @@ const EN: BookingUi = {
   requestNote:
     'This is a booking request. We will contact you to confirm availability.',
   sendRequest: 'Send request',
+  sending: 'Sending…',
+  sendFailed: 'Your request could not be sent. Please try again or call us.',
   sentMessage: (a) =>
     `We have received your request for “${a}”! This is a booking request — we will contact you shortly to confirm. 🐝`,
 
@@ -205,6 +226,11 @@ const EN: BookingUi = {
   loadingAvailability: 'Loading availability…',
   noDatesAvailable: 'There is no available date at the moment.',
   callAt: (p) => `Call ${p}`,
+  stepProgram: 'Choose a programme',
+  singleOption: 'Book it on its own',
+  programMonthly: "Together with the month's workshop",
+  seasonTimes: (m, t) => `${m} · ${t}`,
+  unavailableShort: 'no available dates',
   stepDate: 'Choose a date',
   stepTime: 'Choose a time',
   stepPeople: 'People',
@@ -236,6 +262,8 @@ const EN: BookingUi = {
   bookingConfirmed: 'Your booking is confirmed! 🐝',
   bookingRef: 'Booking reference:',
   fActivity: 'Activity',
+  fWorkshop: 'Workshop',
+  fProgram: 'Programme',
   fDate: 'Date',
   fTime: 'Time',
   fPeople: 'People',

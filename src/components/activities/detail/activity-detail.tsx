@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { Link } from '@/i18n/navigation'
 import { ChevronRight, Clock, Users, CalendarRange } from 'lucide-react'
-import type { Activity } from '@/lib/medusa/activities'
+import type { Activity, ActivityProgram } from '@/lib/medusa/activities'
 import { RevealUp } from '@/components/home/reveal-up'
 import { SectionHead } from '@/components/shared/section-head'
 import { GalleryCarousel } from '@/components/adopt/gallery-carousel'
@@ -21,9 +21,12 @@ import { ActivityRelated } from './activity-related'
  */
 export function ActivityDetail({
   activity,
+  programs = [],
   locale = 'el',
 }: {
   activity: Activity
+  /** Workshop programmes the activity is also bookable as. */
+  programs?: ActivityProgram[]
   locale?: string
 }) {
   const ui = getActivitiesUi(locale)
@@ -131,7 +134,7 @@ export function ActivityDetail({
           {/* Offset clears the sticky header (~142px) so the card's top price
               row isn't tucked underneath it. */}
           <div data-edit="booking" className="flex flex-col gap-4 lg:sticky lg:top-[150px] lg:self-start">
-            <ActivityBookingCard activity={activity} locale={locale} />
+            <ActivityBookingCard activity={activity} programs={programs} locale={locale} />
             <CertificationsNote />
           </div>
         </div>

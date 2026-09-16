@@ -52,7 +52,7 @@ const CONTENT_SCALARS: {
   key: string
   label: string
   group: Exclude<Tab, "availability" | "bookings">
-  type?: "text" | "number" | "textarea" | "image"
+  type?: "text" | "number" | "textarea" | "plaintext" | "image"
   full?: boolean
   /** For an image field: the companion alt key, rendered inside the image box. */
   altKey?: string
@@ -65,6 +65,13 @@ const CONTENT_SCALARS: {
   { key: "season_start_month", label: "Σεζόν από (μήνας 1–12)", group: "basics", type: "number" },
   { key: "season_end_month", label: "Σεζόν έως (μήνας 1–12)", group: "basics", type: "number" },
   { key: "currency", label: "Νόμισμα", group: "basics" },
+  {
+    key: "confirmation_note",
+    label: "Οδηγίες στην επιβεβαίωση κράτησης (email + σελίδα)",
+    group: "basics",
+    type: "plaintext",
+    full: true,
+  },
 
   // ── Περιεχόμενο (reached through the visual editor) ──
   { key: "subtitle", label: "Υπότιτλος", group: "content", full: true },
@@ -96,6 +103,7 @@ const TRANSLATABLE_SCALARS = new Set([
   "description",
   "details",
   "note",
+  "confirmation_note",
   "duration_label",
   "age_label",
   "meta_title",
@@ -233,6 +241,7 @@ export function ActivityEditor({
       }
       payload.status = form.status ?? "draft" // rendered as a separate select
       payload.booking_type = form.booking_type ?? "seats"
+      payload.combo_program_key = form.combo_program_key || null
       if (form.benefits !== undefined) payload.benefits = form.benefits
       // English overlay: drop empty scalars so a blank EN field falls back to Greek.
       if (form.translations?.en) {
@@ -333,6 +342,13 @@ export function ActivityEditor({
             hint={locked ? "κοινό για όλες τις γλώσσες" : undefined}
             alt={s.altKey ? tval(s.altKey) : undefined}
             onAltChange={s.altKey ? (v) => tset(s.altKey!, v) : undefined}
+          />
+        ) : s.type === "plaintext" ? (
+          <Textarea
+            rows={3}
+            value={value}
+            disabled={locked}
+            onChange={(e) => onChange(e.target.value)}
           />
         ) : s.type === "textarea" ? (
           <RichTextarea value={value} disabled={locked} onChange={onChange} />
@@ -480,6 +496,7 @@ export function ActivityEditor({
           {field("duration_label")}
           {field("age_label")}
           {repeaterPrices}
+          {field("confirmation_note")}
         </>
       ),
     },
@@ -564,6 +581,26 @@ export function ActivityEditor({
                         <option value="seats">Θέσεις (slots + πληρωμή)</option>
                         <option value="enquiry">Αίτημα / ραντεβού</option>
                       </select>
+                    </div>
+                    <div className="col-span-2 flex flex-col gap-1">
+                      <Label size="small" weight="plus">
+                        Κράτηση και σε συνδυασμό με εργαστήρι
+                      </Label>
+                      <select
+                        className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm disabled:opacity-50"
+                        value={form.combo_program_key ?? ""}
+                        disabled={en}
+                        onChange={(e) => set("combo_program_key", e.target.value)}
+                      >
+                        <option value="">Όχι — μόνο μεμονωμένη κράτηση</option>
+                        <option value="full">Ναι — και ως «Πλήρες πρόγραμμα» με το εργαστήρι του μήνα</option>
+                        <option value="half">Ναι — και ως «Μισό πρόγραμμα» με το εργαστήρι του μήνα</option>
+                      </select>
+                      <Text size="xsmall" className="text-ui-fg-subtle">
+                        Ο πελάτης διαλέγει στο παράθυρο κράτησης μεμονωμένη κράτηση ή τον συνδυασμό.
+                        Ημερομηνίες, ώρες, θέσεις και τιμές του συνδυασμού ορίζονται σε κάθε εργαστήριο
+                        (Εργαστήρια → Προγράμματα &amp; τιμές / Διαθεσιμότητα).
+                      </Text>
                     </div>
                   </div>
                   {repeaterPrices}

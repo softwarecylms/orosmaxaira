@@ -31,6 +31,8 @@ export type PriceTier = {
   end_time?: string
   age_labels?: { adult?: string; child?: string; infant?: string }
   note?: string
+  /** Workshop combos: practical info shown on the booking confirmation. */
+  confirmation_note?: string
 }
 export type GalleryImage = { url: string; alt?: string }
 export type Feature = { title: string; text: string }
@@ -62,6 +64,10 @@ export type Activity = {
   meta_description?: string | null
   /** 'seats' = real slot/seat checkout; 'enquiry' = appointment request (e.g. Μελισσοθεραπεία). */
   booking_type?: 'seats' | 'enquiry'
+  /** Practical info shown on the booking confirmation (email + on-site). */
+  confirmation_note?: string | null
+  /** Also bookable as this workshop combo (e.g. "full") — see getActivityPrograms. */
+  combo_program_key?: string | null
   price_tiers?: PriceTier[] | null
   gallery?: GalleryImage[] | null
   features?: Feature[] | null
@@ -127,4 +133,68 @@ export async function getAvailability(
       { method: 'GET', query, cache: 'no-store' },
     )
     .catch(() => ({ slots: [] as AvailabilitySlot[], currency: 'eur' }))
+}
+
+/**
+ * A combined programme an activity is also bookable as: one workshop's combo
+ * (e.g. «Πλήρες πρόγραμμα» = Περιπέτειες + Γνωρίζω τη Μέλισσα + that month's
+ * εργαστήρι) with its open slots. Booked through the workshop's own endpoint.
+ */
+export type ActivityProgram = {
+  workshop: { slug: string; title: string; currency: string }
+  tier: PriceTier
+  slots: AvailabilitySlot[]
+}
+
+type RawProgram = {
+  workshop: {
+    slug: string
+    title: string
+    currency?: string
+    translations?: {
+      en?: {
+        title?: string
+        combo_labels?: Record<string, Partial<PriceTier>>
+      }
+    } | null
+  }
+  tier: PriceTier
+  slots: AvailabilitySlot[]
+}
+
+/** The workshop programmes (with open slots) an activity can also be booked as;
+ *  [] when it offers none or Medusa is unreachable. English overlays the
+ *  workshop title and combo labels; the Greek age labels give way to the
+ *  English defaults. */
+export async function getActivityPrograms(
+  slug: string,
+  from: string,
+  to: string,
+  locale?: string,
+): Promise<ActivityProgram[]> {
+  const raw = await sdk.client
+    .fetch<{ programs: RawProgram[] }>(`/store/activities/${slug}/programs`, {
+      method: 'GET',
+      query: { from, to },
+      cache: 'no-store',
+    })
+    .then((r) => r.programs ?? [])
+    .catch(() => [] as RawProgram[])
+
+  return raw.map(({ workshop, tier, slots }) => {
+    const en = locale === 'en' ? workshop.translations?.en : undefined
+    const labels = en?.combo_labels?.[tier.key] ?? {}
+    const blankless = Object.fromEntries(
+      Object.entries(labels).filter(([, v]) => typeof v === 'string' && v.trim()),
+    )
+    return {
+      workshop: {
+        slug: workshop.slug,
+        title: en?.title?.trim() || workshop.title,
+        currency: workshop.currency ?? 'eur',
+      },
+      tier: locale === 'en' ? { ...tier, age_labels: undefined, ...blankless } : tier,
+      slots,
+    }
+  })
 }

@@ -7,6 +7,7 @@ import {
   announceBooking,
   openBookingPayment,
   pendingClientSecret,
+  publicBookingOf,
 } from "../../../../../lib/booking-payment"
 
 /**
@@ -41,29 +42,12 @@ type WorkshopBookingBody = {
   customer: { name: string; email: string; phone?: string }
   notes?: string
   idempotency_key?: string
+  locale?: "el" | "en"
 }
 
 /** Short, human-friendly booking reference, e.g. OM-9F3K2M. */
 function makeReference(): string {
   return "OM-" + randomBytes(4).toString("hex").slice(0, 6).toUpperCase()
-}
-
-/** Only the fields the storefront needs back (never leak payment ids etc.). */
-function publicBooking(b: any, workshopTitle?: string, slot?: any) {
-  return {
-    reference: b.reference,
-    status: b.status,
-    total_amount: b.total_amount,
-    currency: b.currency,
-    adults: b.adults,
-    children: b.children,
-    infants: b.infants,
-    combo_label: b.combo_label,
-    email: b.email,
-    workshop_title: workshopTitle,
-    date: slot?.date,
-    start_time: slot?.start_time,
-  }
 }
 
 /**
@@ -91,13 +75,9 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
       idempotency_key: body.idempotency_key,
     })
     if (existing && (existing as any).status !== "cancelled") {
-      const slot = await bookings
-        .retrieveAvailabilitySlot((existing as any).slot_id)
-        .catch(() => null)
-      const [w] = await bookings.listWorkshops({ slug })
       const secret = await pendingClientSecret(req.scope, existing as any)
       return res.json({
-        booking: publicBooking(existing, w?.title, slot),
+        booking: await publicBookingOf(req.scope, existing as any),
         ...(secret ? { payment: { client_secret: secret, hold_minutes: HOLD_MINUTES } } : {}),
       })
     }
@@ -167,6 +147,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
       currency,
       status: "pending",
       notes: body.notes ?? null,
+      locale: body.locale === "en" ? "en" : "el",
       combo_label: combo.long_label ?? combo.label ?? combo.key,
       workshop_id: workshop.id,
       slot_id: body.slot_id,
@@ -205,10 +186,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
         idempotency_key: body.idempotency_key,
       })
       if (dup && (dup as any).status !== "cancelled") {
-        const dupSlot = await bookings
-          .retrieveAvailabilitySlot((dup as any).slot_id)
-          .catch(() => null)
-        return res.json({ booking: publicBooking(dup, workshop.title, dupSlot) })
+        return res.json({ booking: await publicBookingOf(req.scope, dup as any) })
       }
     }
 
@@ -223,7 +201,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
   if (booking.status === "confirmed") await announceBooking(req.scope, booking)
 
   res.json({
-    booking: publicBooking(booking, workshop.title, slot),
+    booking: await publicBookingOf(req.scope, booking),
     ...(clientSecret ? { payment: { client_secret: clientSecret, hold_minutes: HOLD_MINUTES } } : {}),
   })
 }

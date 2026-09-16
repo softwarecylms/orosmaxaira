@@ -36,11 +36,14 @@ const STYLES = {
   },
 } as const
 
-/** Activity booking-enquiry form (front-end only; a confirmation state on submit).
- *  Collects contact details plus a preferred day & start time within the activity's
- *  daily window. The client is told this is an enquiry pending our confirmation. */
+/** Activity booking-enquiry form. Collects contact details plus a preferred day &
+ *  start time within the activity's daily window. The client is told this is an
+ *  enquiry pending our confirmation. With `activitySlug` it is sent to
+ *  /api/booking-enquiry (the farm is notified, the customer gets an
+ *  acknowledgement); without it, it only shows the confirmation state. */
 export function BookingForm({
   activityName,
+  activitySlug,
   startHour = 8,
   endHour = 16,
   stepMinutes = 30,
@@ -50,6 +53,8 @@ export function BookingForm({
   variant = 'accent',
 }: {
   activityName: string
+  /** The Medusa activity the request is for — enables sending it. */
+  activitySlug?: string
   /** first / last selectable start time (24h), inclusive. */
   startHour?: number
   endHour?: number
@@ -62,8 +67,11 @@ export function BookingForm({
   variant?: 'accent' | 'light'
 }) {
   const s = STYLES[variant]
-  const ui = getBookingUi(useLocale())
+  const locale = useLocale()
+  const ui = getBookingUi(locale)
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [minDate, setMinDate] = useState('')
   const [maxDate, setMaxDate] = useState('')
 
@@ -97,13 +105,47 @@ export function BookingForm({
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault()
-        setSent(true)
+        if (!activitySlug) return setSent(true)
+        const data = Object.fromEntries(new FormData(e.currentTarget)) as Record<string, string>
+        setSending(true)
+        setError(null)
+        try {
+          const res = await fetch('/api/booking-enquiry/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              slug: activitySlug,
+              name: data.name,
+              email: data.email,
+              phone: data.phone,
+              date: data.date,
+              time: data.time,
+              website: data.website,
+              locale,
+            }),
+          })
+          if (!res.ok) throw new Error(String(res.status))
+          setSent(true)
+        } catch {
+          setError(ui.sendFailed)
+        } finally {
+          setSending(false)
+        }
       }}
       className="flex w-full flex-col gap-4 text-left"
     >
       <input type="hidden" name="activity" value={activityName} />
+      {/* Honeypot: hidden from people, filled by bots. */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hidden"
+      />
 
       <input
         type="text"
@@ -170,8 +212,12 @@ export function BookingForm({
         {ui.requestNote}
       </p>
 
-      <button type="submit" className={s.button}>
-        {ui.sendRequest}
+      {error ? (
+        <p className="rounded-[8px] bg-red-50 px-4 py-3 text-[14px] text-red-700">{error}</p>
+      ) : null}
+
+      <button type="submit" disabled={sending} className={`${s.button} disabled:opacity-60`}>
+        {sending ? ui.sending : ui.sendRequest}
       </button>
     </form>
   )

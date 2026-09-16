@@ -21,7 +21,7 @@ test.describe('Activity detail + booking', () => {
     }
 
     // Price tiers + cancellation policy come from the Medusa activity.
-    await expect(page.getByText('Ενήλικες (15+ ετών)').first()).toBeVisible()
+    await expect(page.getByText('Ενήλικες (12+ ετών)').first()).toBeVisible()
     await expect(page.getByText('Χρήσιμες πληροφορίες')).toBeVisible()
     await expect(page.getByText('Πολιτική Ακύρωσης').first()).toBeVisible()
   })
@@ -38,6 +38,11 @@ test.describe('Activity detail + booking', () => {
     await bookBtn.click()
     const modal = page.getByTestId('booking-modal')
     await expect(modal).toBeVisible()
+    // With workshop programmes on offer, the activity on its own is chosen first.
+    const single = modal.getByTestId('program-single')
+    const dateStep = modal.getByText('Επιλέξτε ημερομηνία')
+    await expect(single.or(dateStep)).toBeVisible({ timeout: 15000 })
+    if (await single.isVisible()) await single.click()
     await expect(modal.getByText('Επιλέξτε ημερομηνία')).toBeVisible()
 
     // Availability resolves to a selectable day (seeded Saturdays).
@@ -47,5 +52,30 @@ test.describe('Activity detail + booking', () => {
 
     await page.keyboard.press('Escape')
     await expect(modal).toHaveCount(0)
+  })
+
+  test('offers the Full programme with the month\'s workshop', async ({ page }) => {
+    await page.goto(PATH)
+    const bookBtn = page.getByRole('button', { name: /Δείτε διαθεσιμότητα/ }).first()
+    if ((await bookBtn.count()) === 0) {
+      test.skip(true, 'Medusa activity unavailable — static fallback rendered')
+    }
+    await bookBtn.click()
+    const modal = page.getByTestId('booking-modal')
+    const combo = modal.getByTestId('program-combo')
+    const offered = await combo
+      .waitFor({ timeout: 15000 })
+      .then(() => true)
+      .catch(() => false)
+    if (!offered) {
+      test.skip(true, 'No workshop programme with open dates')
+    }
+
+    await combo.click()
+    await modal.locator('button[aria-pressed="false"]:not([disabled])').first().click()
+    // The chosen date's workshop is named, and people are priced by its combo.
+    await expect(modal.getByText(/Πλήρες πρόγραμμα — Περιπέτειες στις Κυψέλες/)).toBeVisible()
+    await modal.getByRole('button', { name: /θέσεις/ }).first().click()
+    await expect(modal.getByText('20 €').first()).toBeVisible()
   })
 })

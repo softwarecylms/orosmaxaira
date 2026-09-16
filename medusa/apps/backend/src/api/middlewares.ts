@@ -22,6 +22,8 @@ export const PostBookingSchema = z.object({
   infants: z.number().int().min(0).optional(),
   notes: z.string().optional(),
   idempotency_key: z.string().optional(),
+  // The customer's language — the confirmation email is sent in it.
+  locale: z.enum(["el", "en"]).optional(),
 })
 
 /** Body schema for POST /store/workshops/:slug/bookings (combo × people-by-age). */
@@ -38,6 +40,8 @@ export const PostWorkshopBookingSchema = z.object({
   }),
   notes: z.string().optional(),
   idempotency_key: z.string().optional(),
+  // The customer's language — the confirmation email is sent in it.
+  locale: z.enum(["el", "en"]).optional(),
 })
 
 /** Body schema for POST /store/bookings/confirm and /release — the booking's

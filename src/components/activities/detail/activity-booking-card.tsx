@@ -3,8 +3,8 @@
 import { Fragment, useState } from 'react'
 import Image from 'next/image'
 import { CalendarCheck, Phone, ShieldCheck } from 'lucide-react'
-import type { Activity } from '@/lib/medusa/activities'
-import { hasWeekendPricing, weekdayPrice, weekendPrice } from '@/lib/pricing'
+import type { Activity, ActivityProgram } from '@/lib/medusa/activities'
+import { comboFromPrice, hasWeekendPricing, weekdayPrice, weekendPrice } from '@/lib/pricing'
 import { getActivitiesUi } from '@/components/activities/activities-content'
 import { Stars } from './stars'
 import { BookingModal } from '@/components/booking/booking-modal'
@@ -24,9 +24,12 @@ export function formatTierPrice(amount: number, currency = 'eur', priceLocale = 
  */
 export function ActivityBookingCard({
   activity,
+  programs = [],
   locale = 'el',
 }: {
   activity: Activity
+  /** Workshop programmes it is also bookable as — offered in the booking modal. */
+  programs?: ActivityProgram[]
   locale?: string
 }) {
   const ui = getActivitiesUi(locale)
@@ -77,6 +80,23 @@ export function ActivityBookingCard({
               ))}
             </ul>
           )
+        ) : null}
+
+        {programs.length ? (
+          <div className="flex flex-col gap-1 rounded-[12px] bg-cream/60 p-3">
+            <span className="flex items-baseline justify-between gap-3">
+              <span className="text-[14.5px] font-semibold leading-snug text-foreground">
+                {programs[0].tier.label}
+              </span>
+              <span className="shrink-0 text-[13px] text-muted">
+                {ui.bookingFrom}{' '}
+                <span className="text-[16px] font-bold text-accent">
+                  {formatTierPrice(comboFromPrice(programs[0].tier), currency, ui.priceLocale)}
+                </span>
+              </span>
+            </span>
+            <span className="text-[12.5px] leading-snug text-muted">{ui.bookingProgramHint}</span>
+          </div>
         ) : null}
 
         {activity.rating ? (
@@ -135,7 +155,12 @@ export function ActivityBookingCard({
         </div>
       </div>
 
-      <BookingModal activity={activity} open={open} onClose={() => setOpen(false)} />
+      <BookingModal
+        activity={activity}
+        programs={programs}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
     </>
   )
 }

@@ -1,7 +1,12 @@
 'use server'
 
 import { sdk } from './client'
-import { getAvailability, type AvailabilitySlot } from './activities'
+import {
+  getActivityPrograms,
+  getAvailability,
+  type ActivityProgram,
+  type AvailabilitySlot,
+} from './activities'
 import { getWorkshopAvailability } from './workshops'
 
 /** Availability for a visible month, called from the booking modal. */
@@ -11,6 +16,16 @@ export async function getMonthAvailability(
   to: string,
 ): Promise<{ slots: AvailabilitySlot[]; currency: string }> {
   return getAvailability(slug, from, to)
+}
+
+/** The workshop programmes an activity is also bookable as, for the booking modal. */
+export async function getActivityProgramsAction(
+  slug: string,
+  from: string,
+  to: string,
+  locale: string,
+): Promise<ActivityProgram[]> {
+  return getActivityPrograms(slug, from, to, locale)
 }
 
 /** Workshop availability for a visible range, called from the workshop modal. */
@@ -31,6 +46,8 @@ export type CreateBookingInput = {
   infants: number
   notes?: string
   idempotency_key: string
+  /** The customer's language — the confirmation email is sent in it. */
+  locale?: string
 }
 
 export type ConfirmedBooking = {
@@ -45,6 +62,8 @@ export type ConfirmedBooking = {
   activity_title?: string
   date?: string
   start_time?: string
+  /** Practical info for the customer, in their language. */
+  confirmation_note?: string
 }
 
 /**
@@ -58,12 +77,15 @@ export type BookingResult =
   | { ok: true; booking: ConfirmedBooking; payment?: BookingPayment }
   | { ok: false; error: string }
 
+/** The backend accepts "el" or "en" only. */
+const bookingLocale = (locale?: string) => (locale === 'en' ? 'en' : 'el')
+
 /** Create a booking (reserve → open payment → confirm) via the Medusa store API. */
 export async function createBooking(input: CreateBookingInput): Promise<BookingResult> {
   try {
     const r = await sdk.client.fetch<{ booking: ConfirmedBooking; payment?: BookingPayment }>(
       '/store/bookings',
-      { method: 'POST', body: input },
+      { method: 'POST', body: { ...input, locale: bookingLocale(input.locale) } },
     )
     return { ok: true, booking: r.booking, payment: r.payment }
   } catch (e: unknown) {
@@ -81,6 +103,8 @@ export type CreateWorkshopBookingInput = {
   infants: number
   notes?: string
   idempotency_key: string
+  /** The customer's language — the confirmation email is sent in it. */
+  locale?: string
 }
 
 export type ConfirmedWorkshopBooking = {
@@ -96,6 +120,8 @@ export type ConfirmedWorkshopBooking = {
   workshop_title?: string
   date?: string
   start_time?: string
+  /** Practical info for the customer, in their language. */
+  confirmation_note?: string
 }
 
 export type WorkshopBookingResult =
@@ -106,7 +132,8 @@ export type WorkshopBookingResult =
 export async function createWorkshopBooking(
   input: CreateWorkshopBookingInput,
 ): Promise<WorkshopBookingResult> {
-  const { slug, ...body } = input
+  const { slug, ...rest } = input
+  const body = { ...rest, locale: bookingLocale(rest.locale) }
   try {
     const r = await sdk.client.fetch<{
       booking: ConfirmedWorkshopBooking

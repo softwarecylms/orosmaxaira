@@ -314,6 +314,8 @@ export type ActivitiesUi = {
   bookingFree: string
   bookingCheckAvailability: string
   bookingFreeCancellation: string
+  bookingFrom: string
+  bookingProgramHint: string
   bookingQuestions: string
   bookingExperienceBy: string
   /** Intl.NumberFormat locale for currency. */
@@ -347,6 +349,9 @@ const UI_EL: ActivitiesUi = {
   bookingFree: 'Δωρεάν',
   bookingCheckAvailability: 'Δείτε διαθεσιμότητα',
   bookingFreeCancellation: 'Δωρεάν ακύρωση έως 72 ώρες πριν.',
+  bookingFrom: 'από',
+  bookingProgramHint:
+    'Διαθέσιμο και σε συνδυασμό με το εργαστήρι του μήνα — επιλέξτε το στην κράτηση.',
   bookingQuestions: 'Έχετε απορίες για την κράτηση;',
   bookingExperienceBy: 'Μια εμπειρία του',
   priceLocale: 'el-GR',
@@ -390,6 +395,9 @@ const UI_EN: ActivitiesUi = {
   bookingFree: 'Free',
   bookingCheckAvailability: 'Check availability',
   bookingFreeCancellation: 'Free cancellation up to 72 hours before.',
+  bookingFrom: 'from',
+  bookingProgramHint:
+    "Also available combined with the month's workshop — choose it when booking.",
   bookingQuestions: 'Questions about your booking?',
   bookingExperienceBy: 'An experience by',
   priceLocale: 'en-GB',

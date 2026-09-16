@@ -40,6 +40,14 @@ export const Activity = model.define("activity", {
   // Bookable by direct link only (e.g. the €1 test activity): left out of the
   // sitemap list (GET /store/activities) and served noindex by the storefront.
   hidden: model.boolean().default(false),
+  // Practical info added to the booking confirmation (email + on-site), e.g.
+  // "arrive 5 minutes early". English lives in `translations.en.confirmation_note`.
+  confirmation_note: model.text().nullable(),
+  // Also bookable as a workshop combo that includes this activity, e.g. "full"
+  // (Περιπέτειες + Γνωρίζω τη Μέλισσα + the month's εργαστήρι). The booking
+  // modal offers every published workshop's open slots for that combo; their
+  // dates, times and prices are managed on each workshop.
+  combo_program_key: model.text().nullable(),
   meta_title: model.text().nullable(),
   meta_description: model.text().nullable(),
   // Structured content — small arrays edited via repeater sub-forms in admin.
@@ -112,6 +120,8 @@ export const Booking = model.define("booking", {
   // For workshop bookings: which experience combo was chosen (label for admin/email).
   // `adults` doubles as the workshop people count (children/infants stay 0).
   combo_label: model.text().nullable(),
+  // Language the customer booked in ("el" / "en") — the confirmation email's language.
+  locale: model.text().default("el"),
   // A booking belongs to EITHER an activity or a workshop (both nullable).
   activity: model.belongsTo(() => Activity, { mappedBy: "bookings" }).nullable(),
   workshop: model.belongsTo(() => Workshop, { mappedBy: "bookings" }).nullable(),

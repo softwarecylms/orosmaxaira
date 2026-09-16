@@ -47,6 +47,10 @@ function localizeWorkshop(w: Workshop, locale?: string): Workshop {
   if (combo_labels && Array.isArray(w.price_tiers)) {
     merged.price_tiers = w.price_tiers.map((t) => ({ ...t, ...(combo_labels[t.key] ?? {}) }))
   }
+  // The stored age labels are Greek; English uses comboAgeTiers' own defaults.
+  if (Array.isArray(merged.price_tiers)) {
+    merged.price_tiers = merged.price_tiers.map((t) => ({ ...t, age_labels: undefined }))
+  }
   return merged
 }
 

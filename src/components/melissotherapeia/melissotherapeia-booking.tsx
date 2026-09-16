@@ -177,6 +177,7 @@ export function MelissotherapeiaBooking({
               <div className="flex-1 overflow-y-auto px-5 py-5">
                 <BookingForm
                   activityName={ui.activityName}
+                  activitySlug="melissotherapeia"
                   variant="light"
                   seasonStartMonth={seasonStartMonth}
                   seasonEndMonth={seasonEndMonth}

@@ -10,6 +10,7 @@ import {
   Table,
   Tabs,
   Text,
+  Textarea,
   toast,
 } from "@medusajs/ui"
 import { Trash, ArrowDownTray } from "@medusajs/icons"
@@ -127,6 +128,7 @@ type ComboRow = {
   infant?: number | string
   price?: number | string
   note?: string
+  confirmation_note?: string
 }
 
 function tiersToRows(tiers: any[]): ComboRow[] {
@@ -141,6 +143,7 @@ function tiersToRows(tiers: any[]): ComboRow[] {
     infant: t.prices?.infant ?? "",
     price: t.price ?? "",
     note: t.note ?? "",
+    confirmation_note: t.confirmation_note ?? "",
   }))
 }
 
@@ -151,6 +154,7 @@ function rowsToTiers(rows: ComboRow[]): any[] {
     if (r.start_time) out.start_time = r.start_time
     if (r.end_time) out.end_time = r.end_time
     if (r.note) out.note = r.note
+    if (r.confirmation_note?.trim()) out.confirmation_note = r.confirmation_note.trim()
     const hasAge = [r.adult, r.child, r.infant].some((v) => v !== "" && v != null)
     if (hasAge) {
       out.prices = {
@@ -214,7 +218,10 @@ export function WorkshopEditor({
   const jval = (k: string) => (en ? form.translations?.en?.[k] ?? form[k] : form[k])
   // English combo label/description overrides, keyed by combo key. Prices stay on
   // the base record; only the visible strings are translated here.
-  const comboLabels: Record<string, { label?: string; long_label?: string; note?: string }> =
+  const comboLabels: Record<
+    string,
+    { label?: string; long_label?: string; note?: string; confirmation_note?: string }
+  > =
     form.translations?.en?.combo_labels ?? {}
   const setComboLabel = (key: string, field: string, v: string) =>
     setForm((f) => {
@@ -441,6 +448,12 @@ export function WorkshopEditor({
                 value={comboLabels[r.key]?.note ?? ""}
                 onChange={(e) => setComboLabel(r.key, "note", e.target.value)}
               />
+              <Textarea
+                rows={2}
+                placeholder="Booking confirmation note (EN) — e.g. Please arrive 5 minutes before the start."
+                value={comboLabels[r.key]?.confirmation_note ?? ""}
+                onChange={(e) => setComboLabel(r.key, "confirmation_note", e.target.value)}
+              />
             </div>
           ))
       )}
@@ -462,6 +475,12 @@ export function WorkshopEditor({
           { key: "infant", label: "€ Βρέφη (0–3)", type: "number" },
           { key: "price", label: "€ Ενιαία τιμή (μόνο για αίτημα)", type: "number" },
           { key: "note", label: "Σημείωση", width: "col-span-2" },
+          {
+            key: "confirmation_note",
+            label: "Οδηγίες στην επιβεβαίωση κράτησης (email + σελίδα)",
+            type: "textarea",
+            width: "col-span-2",
+          },
         ]}
         blank={{
           key: "",
@@ -474,6 +493,7 @@ export function WorkshopEditor({
           infant: 0,
           price: "",
           note: "",
+          confirmation_note: "",
         }}
       />
       <Text size="xsmall" className="text-ui-fg-subtle">

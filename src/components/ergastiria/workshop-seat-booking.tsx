@@ -38,6 +38,7 @@ import { EASE, DURATION } from '@/lib/motion'
 import { BookingCalendar } from '../booking/booking-calendar'
 import { BookingPaymentStep, type PendingPayment } from '../booking/booking-payment'
 import { getBookingUi } from '../booking/booking-ui'
+import { ConfirmationNote } from '../booking/booking-modal'
 import { getErgastiriaUi } from './ergastiria-ui'
 
 const isoOf = (d: Date) =>
@@ -385,6 +386,7 @@ function WorkshopBookingModal({
       children: counts['child'] ?? 0,
       infants: counts['infant'] ?? 0,
       idempotency_key: key,
+      locale,
     })
     if (res.ok && res.booking.status === 'confirmed') {
       // Free (€0), or no card provider on the backend: done in one step.
@@ -771,6 +773,8 @@ function Confirmation({
         {people ? <Row label={bui.fPeople} value={people} /> : null}
         <Row label={bui.fTotal} value={money(booking.total_amount, currency, bui.priceLocale)} />
       </dl>
+
+      {booking.confirmation_note ? <ConfirmationNote note={booking.confirmation_note} /> : null}
 
       <p className="flex items-center gap-2 text-[13px] text-muted">
         <Mail className="size-4 shrink-0 text-accent" aria-hidden="true" />
