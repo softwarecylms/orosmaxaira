@@ -18,6 +18,7 @@ import {
 } from '@/components/analytics/google-tag-manager'
 import { ConsentInit } from '@/components/analytics/consent-init'
 import { CookieBanner } from '@/components/analytics/cookie-banner'
+import { KlaviyoOnsite } from '@/components/analytics/klaviyo-onsite'
 import { CONSENT_COOKIE, parseConsent } from '@/components/analytics/consent'
 import { siteUrl } from '@/lib/seo'
 import { routing, type Locale } from '@/i18n/routing'
@@ -122,6 +123,8 @@ export default async function FrontendLayout({
               <SiteFooter locale={locale as Locale} />
               <CartDrawer />
               <CookieBanner initial={consent} />
+              {/* Klaviyo — same rule as Tag Manager: the live public site only. */}
+              {tagManager && <KlaviyoOnsite initialMarketing={Boolean(consent?.marketing)} />}
               <PreviewBridge />
               <OrganizationSchema locale={locale} />
             </CartProvider>

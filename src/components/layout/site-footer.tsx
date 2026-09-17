@@ -13,6 +13,7 @@ import {
 } from './social-icons'
 import { FooterFunding } from './footer-funding'
 import { CookieSettingsLink } from '@/components/analytics/cookie-settings-link'
+import { NewsletterSignup } from './newsletter-signup'
 import { loadSiteContent } from '@/lib/content/load'
 
 type SiteFooterProps = {
@@ -176,6 +177,13 @@ export async function SiteFooter({ locale }: SiteFooterProps) {
             </div>
           </div>
         </RevealUp>
+
+        {/* Newsletter (Klaviyo) — only once Klaviyo is configured for this deployment. */}
+        {process.env.NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY && process.env.KLAVIYO_LIST_EL ? (
+          <div className="mt-12">
+            <NewsletterSignup />
+          </div>
+        ) : null}
 
         {/* Bottom legal bar */}
         <div className="mt-12 flex flex-col items-center gap-3 border-t border-border py-5 text-center text-[13px] text-muted md:flex-row md:items-center md:justify-between md:text-left md:text-[15px]">

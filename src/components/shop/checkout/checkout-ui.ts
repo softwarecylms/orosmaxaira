@@ -123,6 +123,8 @@ export type CheckoutUi = {
   termsPre: string
   termsLink: string
   termsPost: string
+  /** Unticked newsletter opt-in (Klaviyo, double opt-in). */
+  newsletterOptIn: string
   submit: string
   submitting: string
   testOrderNote: string
@@ -243,6 +245,8 @@ const EL: CheckoutUi = {
   termsPre: 'Έχω διαβάσει και αποδέχομαι τους ',
   termsLink: 'όρους και προϋποθέσεις',
   termsPost: ' του ιστότοπου',
+  newsletterOptIn:
+    'Θέλω να λαμβάνω email με νέα, συνταγές και προσφορές από το Όρος Μαχαιρά. Μπορώ να διαγραφώ όποτε θέλω.',
   submit: 'Ολοκλήρωση παραγγελίας',
   submitting: 'Επεξεργασία…',
   testOrderNote: 'Δοκιμαστική παραγγελία — δεν πραγματοποιείται χρέωση.',
@@ -353,6 +357,8 @@ const EN: CheckoutUi = {
   termsPre: 'I have read and accept the website ',
   termsLink: 'terms and conditions',
   termsPost: '',
+  newsletterOptIn:
+    'Send me emails with news, recipes and offers from Oros Machaira. I can unsubscribe at any time.',
   submit: 'Place order',
   submitting: 'Processing…',
   testOrderNote: 'Test order — no payment is taken.',

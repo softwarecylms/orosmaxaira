@@ -12,6 +12,7 @@ import {
   type CartItem,
 } from '@/components/commerce/cart-store'
 import { toEuros, trackBeginCheckout } from '@/lib/analytics'
+import { klaviyoStartedCheckout } from '@/lib/klaviyo-browser'
 import {
   placeMedusaOrder,
   prepareMedusaOrder,
@@ -160,6 +161,8 @@ export type Contact = {
   vat: string
   // Ship to a different address
   shipDifferent: boolean
+  /** Newsletter opt-in (unticked by default). */
+  newsletter: boolean
   shipFirstName: string
   shipLastName: string
   shipAddress: string
@@ -199,6 +202,7 @@ const EMPTY: Contact = {
   company: '',
   vat: '',
   shipDifferent: false,
+  newsletter: false,
   shipFirstName: '',
   shipLastName: '',
   shipAddress: '',
@@ -448,6 +452,8 @@ function CheckoutFormInner() {
         vat: c.vat,
         company: c.company,
         notes: c.notes,
+        // Medusa subscribes the customer to the newsletter (Klaviyo) when this is "true".
+        marketing_opt_in: c.newsletter ? 'true' : 'false',
         // The invoice email (Medusa, src/lib/invoice) is written in this language.
         locale,
       },
@@ -594,7 +600,16 @@ function CheckoutFormInner() {
             value={c.phone}
             onChange={set('phone')}
           />
-          <Field label={t.email} type="email" value={c.email} onChange={set('email')} required autoComplete="email" />
+          <Field
+            label={t.email}
+            type="email"
+            value={c.email}
+            onChange={set('email')}
+            // Klaviyo: identify the shopper and record Started Checkout (marketing consent only).
+            onBlur={() => klaviyoStartedCheckout({ email: c.email, firstName: c.firstName, lastName: c.lastName }, items)}
+            required
+            autoComplete="email"
+          />
         </div>
 
         <label className="flex flex-col gap-1.5">
@@ -986,6 +1001,12 @@ function CheckoutFormInner() {
             </Link>
             {t.privacyPost}
           </p>
+          {/* Newsletter opt-in, only where Klaviyo is configured (Medusa does the subscribing). */}
+          {process.env.NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY ? (
+            <Checkbox checked={c.newsletter} onChange={toggle('newsletter')} name="newsletter">
+              {t.newsletterOptIn}
+            </Checkbox>
+          ) : null}
           <Checkbox required name="terms">
             {t.termsPre}
             <Link

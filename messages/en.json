@@ -63,8 +63,20 @@
     "necessaryText": "Needed for the website to work, such as your cart and checkout. Always on.",
     "analyticsTitle": "Statistics",
     "analyticsText": "Show us how the website is used, so we can improve it (Google Analytics).",
-    "marketingTitle": "Advertising",
-    "marketingText": "Allow relevant ads to be shown and their results measured.",
+    "marketingTitle": "Advertising & email",
+    "marketingText": "Allow relevant ads and measuring them, and emails suggesting products you viewed (Klaviyo).",
     "footerLink": "Cookie settings"
+  },
+  "newsletter": {
+    "title": "News from Oros Machaira",
+    "text": "Recipes, new products and offers, a few times a month.",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "Your email",
+    "consent": "I agree to receive emails from Oros Machaira and have read the <policy>Privacy Policy</policy>. I can unsubscribe at any time.",
+    "submit": "Subscribe",
+    "sending": "Subscribing…",
+    "done": "Almost done! Check your inbox and click the confirmation link.",
+    "invalid": "Enter a valid email and tick the consent box.",
+    "error": "We could not subscribe you. Please try again shortly."
   }
 }

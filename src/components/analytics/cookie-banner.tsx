@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { DURATION, EASE } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 import {
+  CONSENT_CHANGE_EVENT,
   CONSENT_COOKIE,
   CONSENT_MAX_AGE,
   NO_CONSENT,
@@ -35,6 +36,7 @@ function remember(state: ConsentState) {
     consent_analytics: state.analytics,
     consent_marketing: state.marketing,
   })
+  window.dispatchEvent(new CustomEvent(CONSENT_CHANGE_EVENT, { detail: state }))
 }
 
 function Toggle({

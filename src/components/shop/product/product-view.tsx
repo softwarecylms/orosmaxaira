@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { toEuros, trackViewItem } from '@/lib/analytics'
+import { klaviyoViewedProduct } from '@/lib/klaviyo-browser'
 import type { ShopProduct, ShopProductDetail } from '../shop-content'
 import { ProductGallery } from './product-gallery'
 import { ProductPurchase, type AddonProduct } from './product-purchase'
@@ -33,7 +34,7 @@ export function ProductView({
   const [size, setSize] = useState<string | null>(null)
   const [active, setActive] = useState(gallery[0])
 
-  // Google Analytics: the product was looked at.
+  // Google Analytics and Klaviyo: the product was looked at.
   useEffect(() => {
     trackViewItem({
       item_id: handle,
@@ -41,7 +42,14 @@ export function ProductView({
       price: toEuros(product.sortPrice),
       item_category: product.category,
     })
-  }, [handle, product.title, product.sortPrice, product.category])
+    klaviyoViewedProduct({
+      handle,
+      title: product.title,
+      category: product.category,
+      price: toEuros(product.sortPrice),
+      image: product.image,
+    })
+  }, [handle, product.title, product.sortPrice, product.category, product.image])
 
   const selected = sizes.find((s) => s.label === size) ?? null
 

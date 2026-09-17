@@ -15,6 +15,7 @@ import {
   trackAddToCart,
   trackRemoveFromCart,
 } from '@/lib/analytics'
+import { klaviyoAddedToCart } from '@/lib/klaviyo-browser'
 
 /**
  * Client-side cart for the static honey catalogue. Static products aren't in
@@ -160,6 +161,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     (item: Omit<CartItem, 'key' | 'quantity'>, quantity = 1) => {
       trackAddToCart([shopItemFromCart(item, quantity)])
       const key = `${item.handle}|${item.size ?? ''}`
+      // Klaviyo wants the whole cart as it is after the add (computed outside the
+      // state updater, which React may run twice).
+      const current = itemsRef.current
+      const cartAfter = current.some((i) => i.key === key)
+        ? current.map((i) => (i.key === key ? { ...i, quantity: i.quantity + quantity } : i))
+        : [...current, { ...item, key, quantity }]
+      klaviyoAddedToCart({ ...item, quantity }, cartAfter)
       setItems((prev) => {
         const existing = prev.find((i) => i.key === key)
         if (existing) {
