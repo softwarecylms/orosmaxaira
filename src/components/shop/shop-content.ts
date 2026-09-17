@@ -183,6 +183,8 @@ export type ShopVariationSize = {
   sortPrice: number
   /** gallery image shown when this size is selected */
   image?: string
+  /** This size's own photos from Medusa (main photo first), when sizes have photos there */
+  images?: string[]
   /** Medusa variant id — used to add the real variant to the cart / order */
   variantId?: string
 }
@@ -195,6 +197,13 @@ export type ShopNutritionRow = { label: string; value: string }
 export type ShopProductDetail = {
   /** detail-page images; falls back to [product.image] */
   gallery?: string[]
+  /**
+   * Set when the product's sizes have their own photos in Medusa: the product's
+   * photos that belong to no size, catalogue photo first. The page then shows the
+   * selected size's `images` followed by these, and only these while no size is
+   * selected (see <ProductView>).
+   */
+  generalImages?: string[]
   /** short blurb under the price */
   description?: string
   /** “Περιγραφή” tab content */

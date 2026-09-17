@@ -13,11 +13,14 @@ export function ProductGallery({
   active,
   onSelect,
   alt,
+  reserveStrip = false,
 }: {
   images: string[]
   active: string
   onSelect: (src: string) => void
   alt: string
+  /** Keep the thumbnail strip's space even with a single image (no layout shift when the list changes). */
+  reserveStrip?: boolean
 }) {
   const ui = getProductUi(useLocale())
   const gallery = images.length ? images : []
@@ -39,8 +42,8 @@ export function ProductGallery({
         ) : null}
       </div>
 
-      {gallery.length > 1 ? (
-        <div className="flex gap-[9px] overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {gallery.length > 1 || reserveStrip ? (
+        <div className="flex min-h-[89px] gap-[9px] overflow-x-auto pb-1 md:min-h-[105px] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {gallery.map((src, i) => (
             <button
               key={src + i}

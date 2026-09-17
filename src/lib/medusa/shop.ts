@@ -202,7 +202,7 @@ type MedusaVariant = {
   calculated_price?: HttpTypes.StoreCalculatedPrice
 }
 
-type MedusaImage = { id: string; url: string; variants?: { id: string }[] | null }
+type MedusaImage = { id: string; url: string; rank?: number | null; variants?: { id: string }[] | null }
 
 /**
  * The photos that belong to one variant, as set in the Medusa admin's variant
@@ -301,9 +301,16 @@ export async function getShopProduct(
 
   let sizes: ShopVariationSize[] | undefined
   let gallery = staticDetail.gallery
+  let generalImages: string[] | undefined
   if (multi) {
     const staticSizes = staticDetail.variations?.sizes ?? []
-    const images = (m.images ?? []) as unknown as MedusaImage[]
+    const images = [...((m.images ?? []) as unknown as MedusaImage[])].sort(
+      (a, b) => (a.rank ?? 0) - (b.rank ?? 0),
+    )
+    // Once any size has a photo of its own in Medusa, the gallery follows Medusa:
+    // a size shows its own photos, and the product's photos that belong to no
+    // size make up the general gallery. Until then, the editorial snapshot.
+    const perVariant = images.some((i) => (i.variants ?? []).length > 0)
     // The Greek entries, whose labels are Medusa's own option values. The
     // gallery is the same list in both languages and its per-size shots are
     // these images, so they are what a live photo replaces — on /en too, where
@@ -333,7 +340,10 @@ export async function getShopProduct(
             container: st?.container,
             price: euro(amount),
             sortPrice: Math.round(amount * 100),
-            image: mismatch ? undefined : (live[0] ?? st?.image),
+            // Per-size photos come from Medusa by variant id, so the English
+            // label mismatch no longer leaves a size without its photo.
+            image: perVariant ? live[0] : mismatch ? undefined : (live[0] ?? st?.image),
+            ...(perVariant ? { images: live } : {}),
             variantId: v.id,
           },
         }
@@ -356,6 +366,13 @@ export async function getShopProduct(
       added.push(...live)
     }
     gallery = mergeGallery(staticDetail.gallery, added, swap, base.image)
+
+    if (perVariant) {
+      const unique = (urls: string[]) => [...new Set(urls.filter(Boolean))]
+      generalImages = unique([base.image, ...images.filter((i) => !(i.variants ?? []).length).map((i) => i.url)])
+      // Every photo of the product, for consumers that list them all (JSON-LD).
+      gallery = unique([...generalImages, ...rows.flatMap((r) => r.live)])
+    }
   }
 
   const product: ShopProduct = {
@@ -368,6 +385,7 @@ export async function getShopProduct(
   const detail: ShopProductDetail = {
     ...staticDetail,
     gallery,
+    generalImages,
     description: enDesc || staticDetail.description || m.description || '',
     // «Περιγραφή» / «Διατροφική Αξία» tabs — editable in the Medusa admin.
     sections: pickTab(locale, m.metadata, 'sections', staticDetail.sections),
