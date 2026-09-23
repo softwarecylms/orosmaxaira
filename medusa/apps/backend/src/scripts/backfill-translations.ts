@@ -55,18 +55,18 @@ const ACTIVITY_EN: Record<string, any> = {
 
   "peripeteies-stis-kypseles": {
     title: "Adventures at the Hives",
-    subtitle: "Suit up and open the hive — a hands-on experience for ages 2 and up.",
+    subtitle: "Suit up and open the hive — a hands-on experience for ages 3 and up.",
     hero_image_alt: "Visitors in beekeeper suits opening the hive",
     description:
       "A **hands-on experience**, suitable for children and adults, where the visitor dresses in a beekeeper suit and visits our hives. With the help of our experienced staff, you open the hive and observe the bee community up close.",
     details:
-      "**Duration:** 45 minutes\n**Ages:** from 2 years and up. Under-18s take part only when accompanied by a parent or guardian, who stays with them throughout. Beekeeper suits are provided for all participants and the entire experience is guided by an experienced beekeeper. We recommend wearing closed shoes and long trousers.",
+      "**Duration:** 45 minutes\n**Ages:** from 3 years and up. Under-18s take part only when accompanied by a parent or guardian, who stays with them throughout. Beekeeper suits are provided for all participants and the entire experience is guided by an experienced beekeeper. We recommend wearing closed shoes and long trousers.",
     note: "The experience runs at weekends from July to November, and only in combination with the “Getting to Know the Bee” programme or one of the workshops — please book in advance through the website. It does not run in winter, as the bees get cold and become aggressive when we open the hive.",
     duration_label: "45 minutes",
-    age_label: "Ages 2+, with a parent",
+    age_label: "Ages 3+, with a parent",
     meta_title: "Adventures at the Hives — Oros Machaira",
     meta_description:
-      "Adventures at the hives: suit up and open the hive with the help of our staff. A hands-on experience for ages 2 and up — combined with “Getting to Know the Bee” or a workshop, weekends only, July–November.",
+      "Adventures at the hives: suit up and open the hive with the help of our staff. A hands-on experience for ages 3 and up — combined with “Getting to Know the Bee” or a workshop, weekends only, July–November.",
     price_tiers: [
       { key: "adult", label: "Ages 12+", price: 15 },
       { key: "child", label: "Ages 4–11", price: 13 },
@@ -75,7 +75,7 @@ const ACTIVITY_EN: Record<string, any> = {
     features: [
       { title: "Suit up", text: "Put on the beekeeper suit and feel safe right next to the hives." },
       { title: "Open the hive", text: "With the help of our staff, open the hive and see the bee community up close." },
-      { title: "Ages 2 and up", text: "A safe, guided experience for children from age 2 and adults — under-18s always accompanied by a parent or guardian." },
+      { title: "Ages 3 and up", text: "A safe, guided experience for children from age 3 and adults — under-18s always accompanied by a parent or guardian." },
     ],
     policies: [
       { title: "Cancellation Policy", body: "Cancel up to 72 hours in advance for a full refund." },

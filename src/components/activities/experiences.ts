@@ -293,12 +293,12 @@ const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
     ...EXPERIENCES['peripeteies-stis-kypseles'],
     metaTitle: 'Adventures at the Hives — Oros Machaira',
     metaDescription:
-      'Adventures at the hives: suit up and open the hive with the help of our staff. A hands-on experience for ages 2 and up, available March–October.',
+      'Adventures at the hives: suit up and open the hive with the help of our staff. A hands-on experience for ages 3 and up, available March–October.',
     hero: {
       ...EXPERIENCES['peripeteies-stis-kypseles'].hero,
       title: 'Adventures at the Hives',
       description:
-        'Suit up and open the hive — a hands-on experience for ages 2 and up.',
+        'Suit up and open the hive — a hands-on experience for ages 3 and up.',
       imageAlt: 'Visitors in beekeeper suits opening the hive',
     },
     intro: {
@@ -327,7 +327,7 @@ const EXPERIENCES_EN: Record<string, ActivityExperienceData> = {
           text: 'With the help of our staff, open the hive and see the bee community up close.',
         },
         {
-          title: 'Ages 2 and up',
+          title: 'Ages 3 and up',
           text: 'A safe, guided experience for children from age 3 and adults — under-18s always accompanied by a parent or guardian.',
         },
       ],
