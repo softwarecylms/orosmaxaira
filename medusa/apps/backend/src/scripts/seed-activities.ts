@@ -184,7 +184,7 @@ export default async function seedActivities({ container }: ExecArgs) {
           { key: "adult", label: "Ενήλικες (12+ ετών)", price: 15 },
           { key: "child", label: "Παιδιά (4–11 ετών)", price: 13 },
           // Hive-opening activity: minimum age 2, so no 0–1 band here.
-          { key: "infant", label: "Νήπια (2–3 ετών)", price: 0, note: "Δωρεάν" },
+          { key: "infant", label: "Νήπια (3 ετών)", price: 0, note: "Δωρεάν" },
         ],
         gallery: Array.from({ length: 11 }, (_, i) => ({
           url: `/images/activities/peripeteies/${String(i + 1).padStart(2, "0")}.webp`,

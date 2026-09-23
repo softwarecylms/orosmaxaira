@@ -80,7 +80,7 @@ export const ACTIVITY_EN: Record<string, Partial<Activity>> = {
     price_tiers: [
       { key: 'adult', label: 'Ages 12+', price: 15 },
       { key: 'child', label: 'Ages 4–11', price: 13 },
-      { key: 'infant', label: 'Ages 2–3', price: 0, note: 'Free' },
+      { key: 'infant', label: 'Ages 3', price: 0, note: 'Free' },
     ],
     features: [
       {
