@@ -8,9 +8,12 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const { from } = req.query as Record<string, string | undefined>
   const filters: Record<string, unknown> = { activity_id: req.params.id }
   if (from) filters.date = { $gte: from }
+  // with_deleted=1 also returns archived slots, so a booking whose slot was
+  // removed still shows its date in the «Κρατήσεις» tab.
   const slots = await bookings.listAvailabilitySlots(filters, {
     take: 2000,
     order: { date: "ASC", start_time: "ASC" },
+    ...((req.query as Record<string, string | undefined>).with_deleted ? { withDeleted: true } : {}),
   })
   res.json({ slots })
 }

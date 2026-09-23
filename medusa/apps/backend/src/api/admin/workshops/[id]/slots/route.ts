@@ -5,12 +5,15 @@ import type BookingsModuleService from "../../../../../modules/bookings/service"
 /** GET /admin/workshops/:id/slots — list slots (optionally ?from=). */
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const bookings = req.scope.resolve<BookingsModuleService>(BOOKINGS_MODULE)
-  const { from } = req.query as Record<string, string | undefined>
+  const { from, with_deleted } = req.query as Record<string, string | undefined>
   const filters: Record<string, unknown> = { workshop_id: req.params.id }
   if (from) filters.date = { $gte: from }
+  // with_deleted=1 also returns archived slots, so a booking whose slot was
+  // removed still shows its date in the «Κρατήσεις» tab.
   const slots = await bookings.listAvailabilitySlots(filters, {
     take: 2000,
     order: { date: "ASC", start_time: "ASC" },
+    ...(with_deleted ? { withDeleted: true } : {}),
   })
   res.json({ slots })
 }

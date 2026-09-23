@@ -12,6 +12,7 @@ import {
   Text,
   Textarea,
   toast,
+  usePrompt,
 } from "@medusajs/ui"
 import { Trash, ArrowDownTray } from "@medusajs/icons"
 import { sdk } from "../lib/sdk"
@@ -115,6 +116,7 @@ const TRANSLATABLE_SCALARS = new Set([
 
 type Slot = {
   id: string
+  deleted_at?: string | null
   date: string
   start_time: string
   end_time?: string | null
@@ -151,6 +153,8 @@ export function ActivityEditor({
 }) {
   const [form, setForm] = useState<Record<string, any>>({})
   const [slots, setSlots] = useState<Slot[]>([])
+  // Every slot including archived ones — only used to label bookings.
+  const [allSlots, setAllSlots] = useState<Slot[]>([])
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -188,11 +192,14 @@ export function ActivityEditor({
   const reload = async () => {
     const [{ activity }, { slots }, { bookings }] = await Promise.all([
       api.get<{ activity: any }>(`/admin/activities/${activityId}`),
-      api.get<{ slots: Slot[] }>(`/admin/activities/${activityId}/slots`),
+      api.get<{ slots: Slot[] }>(`/admin/activities/${activityId}/slots?with_deleted=1`),
       api.get<{ bookings: Booking[] }>(`/admin/bookings?activity_id=${activityId}`),
     ])
     setForm(activity)
-    setSlots(slots)
+    // Archived slots stay out of the programme, but their date still labels the
+    // bookings that were made for them.
+    setAllSlots(slots)
+    setSlots(slots.filter((s) => !s.deleted_at))
     setBookings(bookings)
   }
 
@@ -303,9 +310,32 @@ export function ActivityEditor({
       toast.error("Σφάλμα: " + (e?.message ?? e))
     }
   }
+  const prompt = usePrompt()
+
+  /**
+   * Remove a slot from the programme. A slot whose bookings are all cancelled is
+   * removed together with them (they stay in the database, archived); a slot with
+   * a live booking is refused by the API, and the reason is shown as a toast so
+   * the deletion never fails silently.
+   */
   const deleteSlot = async (id: string) => {
-    await api.del(`/admin/slots/${id}`)
-    setSlots((sl) => sl.filter((s) => s.id !== id))
+    const s = slots.find((x) => x.id === id)
+    const when = s ? `${s.date} ${s.start_time}` : "αυτό το slot"
+    const ok = await prompt({
+      title: "Διαγραφή slot;",
+      description: `Το slot ${when} θα αφαιρεθεί από το πρόγραμμα. Οι ακυρωμένες κρατήσεις του παραμένουν στην καρτέλα «Κρατήσεις».`,
+      confirmText: "Διαγραφή",
+      cancelText: "Άκυρο",
+    })
+    if (!ok) return
+    try {
+      await api.del(`/admin/slots/${id}`)
+      setSlots((sl) => sl.filter((x) => x.id !== id))
+      toast.success("Το slot διαγράφηκε")
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e)
+      toast.error("Το slot δεν διαγράφηκε", { description: message })
+    }
   }
   const cancelBooking = async (id: string) => {
     const { booking } = await api.post<{ booking: Booking }>(
@@ -317,8 +347,9 @@ export function ActivityEditor({
   }
 
   const slotLabel = (id?: string | null) => {
-    const s = slots.find((x) => x.id === id)
-    return s ? `${s.date} ${s.start_time}` : "—"
+    const s = allSlots.find((x) => x.id === id)
+    if (!s) return "—"
+    return `${s.date} ${s.start_time}${s.deleted_at ? " (διαγραμμένο)" : ""}`
   }
 
   /** Render one scalar field. Shared (non-translatable) fields are read-only in
