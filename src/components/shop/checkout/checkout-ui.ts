@@ -26,6 +26,66 @@ const CITY_EN: Record<string, string> = {
   Αμμόχωστος: 'Famagusta',
 }
 
+/** English display names for the (Greek-valued) ACS pickup points and their town
+ *  groups — display only, like CITY_EN: the option VALUES stay Greek, so the
+ *  shipping logic, the order metadata and the admin keep one canonical spelling. */
+const ACS_TOWN_EN: Record<string, string> = { ...CITY_EN, Αθήνα: 'Athens' }
+
+const ACS_POINT_EN: Record<string, string> = {
+  // Nicosia
+  'Ευαγόρου 30, 1097 Λευκωσία': 'Evagorou 30, 1097 Nicosia',
+  'Λεωφ. Κων. Παλαιολόγου 6Α, 1011 Λευκωσία (Πλατεία Ελευθερίας)':
+    'Kon. Palaiologou Ave. 6A, 1011 Nicosia (Eleftheria Square)',
+  'Α. Μιχαλακοπούλου 22, 1075 Λευκωσία': 'A. Michalakopoulou 22, 1075 Nicosia',
+  'Λεωφ. Αθαλάσσας 70, 2012 Στρόβολος': 'Athalassas Ave. 70, 2012 Strovolos',
+  'Βάρκιζας 14, 2033 Στρόβολος': 'Varkizas 14, 2033 Strovolos',
+  '28ης Οκτωβρίου 34Β, 2414 Έγκωμη': '28is Oktovriou 34B, 2414 Engomi',
+  'Λεωφ. Μακαρίου 40Η, 2324 Λακατάμια': 'Makariou Ave. 40H, 2324 Lakatamia',
+  'Κυριάκου Μάτση 7, 1035 Παλλουριώτισσα': 'Kyriakou Matsi 7, 1035 Pallouriotissa',
+  'Λεωφ. Αρχ. Μακαρίου 33, 2220 Λατσιά': 'Archbishop Makariou Ave. 33, 2220 Latsia',
+  'Μακαρίου 27Γ, 2572 Πέρα Χωριό Νήσου': 'Makariou 27C, 2572 Pera Chorio Nisou',
+  'Λεωφ. Αρχ. Μακαρίου Γ΄ 351, 2313 Πάνω Λακατάμια':
+    'Archbishop Makariou III Ave. 351, 2313 Pano Lakatamia',
+  'Γρ. Αυξεντίου & Αυλώνας 2, 2660 Κοκκινοτριμιθιά': 'Gr. Afxentiou & Avlonas 2, 2660 Kokkinotrimithia',
+  'Μεγάλου Αλεξάνδρου 2, 2643 Εργάτες': 'Megalou Alexandrou 2, 2643 Ergates',
+  'Γρίβα Διγενή 70Α, 2722 Αστρομερίτης': 'Griva Digeni 70A, 2722 Astromeritis',
+  'Μακαρίου 47, 2800 Κακοπετριά': 'Makariou 47, 2800 Kakopetria',
+  // Limassol
+  'Στ. Κυριακίδη 41, 3080 Λεμεσός': 'St. Kyriakidi 41, 3080 Limassol',
+  'Ρήγα Φεραίου 3, 3095 Λεμεσός': 'Riga Feraiou 3, 3095 Limassol',
+  'Βασιλέως Παύλου 35Α, 3052 Λεμεσός': 'Vasileos Pavlou 35A, 3052 Limassol',
+  '16ης Ιουνίου 1943 αρ. 18, 3022 Λεμεσός': '16is Iouniou 1943 no. 18, 3022 Limassol',
+  'Λεωφ. Σπ. Κυπριανού 17, 4043 Γερμασόγεια': 'Sp. Kyprianou Ave. 17, 4043 Germasogeia',
+  'Ηλία Καννάουρου 38, 4180 Ύψωνας': 'Ilia Kannaourou 38, 4180 Ypsonas',
+  'Αρχ. Μακαρίου 31, 4620 Επισκοπή': 'Archbishop Makariou 31, 4620 Episkopi',
+  'Στ. Χατζηπετρή 17, Αγρός': 'St. Chatzipetri 17, Agros',
+  'Μαξιμιανού 6, 4607 Πισσούρι': 'Maximianou 6, 4607 Pissouri',
+  // Larnaca
+  'Αρχ. Κυπριανού 18, 6016 Λάρνακα': 'Archbishop Kyprianou 18, 6016 Larnaca',
+  'Λεωφ. Αρτέμιδος 24, 6030 Λάρνακα': 'Artemidos Ave. 24, 6030 Larnaca',
+  'Λεωφ. Μακαρίου Γ΄ 127, 7102 Αραδίππου': 'Makariou III Ave. 127, 7102 Aradippou',
+  'Αρχ. Μακαρίου 56, 7550 Κίτι': 'Archbishop Makariou 56, 7550 Kiti',
+  'Ελευθερίας 16, 7520 Ξυλοφάγου': 'Eleftherias 16, 7520 Xylofagou',
+  'Μετοχίου 21, 7530 Ορμίδια': 'Metochiou 21, 7530 Ormideia',
+  'Ελ. Βενιζέλου 38, 7600 Αθηαίνου': 'El. Venizelou 38, 7600 Athienou',
+  'Αγίας Παρασκευής 41, 7741 Χοιροκοιτία': 'Agias Paraskevis 41, 7741 Choirokoitia',
+  'Αρχ. Μακαρίου 102Α, 7640 Κόρνος': 'Archbishop Makariou 102A, 7640 Kornos',
+  // Paphos
+  'Λεωφ. Μεσόγης 53, 8280 Πάφος': 'Mesogis Ave. 53, 8280 Paphos',
+  'Ν. Νικολαΐδη & Κινύρα 4, 8010 Πάφος': 'N. Nikolaidi & Kinyra 4, 8010 Paphos',
+  'Αγαπήνορος 28, 8049 Κάτω Πάφος': 'Agapinoros 28, 8049 Kato Paphos',
+  'Λεωφ. Χλώρακας, 8220 Χλώρακα': 'Chlorakas Ave., 8220 Chlorakas',
+  'Βασιλέως Στασίοικου 11, 8820 Πόλη Χρυσοχούς': 'Vasileos Stasioikou 11, 8820 Polis Chrysochous',
+  // Famagusta
+  'Σταδίου 84, 5280 Παραλίμνι': 'Stadiou 84, 5280 Paralimni',
+  '1ης Απριλίου 5, 5320 Λιοπέτρι': '1is Apriliou 5, 5320 Liopetri',
+  'Ελευθερίας 4, 5380 Δερύνεια': 'Eleftherias 4, 5380 Deryneia',
+  'Διονυσίου Σολωμού 1, 5330 Αγία Νάπα': 'Dionysiou Solomou 1, 5330 Ayia Napa',
+  // Greece
+  'Κεντρικά Γραφεία ACS — Π. Ράλλη 36-38, 12241 Αιγάλεω':
+    'ACS Head Office — P. Ralli 36-38, 12241 Aigaleo',
+}
+
 type RefItem = { handle: string; title: string }
 type BlockedOpts = { inGreece: boolean; city: string }
 
@@ -73,6 +133,9 @@ export type CheckoutUi = {
   address2Placeholder: string
   city: string
   cityLabel: (value: string) => string
+  /** ACS pickup point / town group, shown translated while the stored value stays Greek. */
+  acsTownLabel: (value: string) => string
+  acsPointLabel: (value: string) => string
   selectCity: string
   postal: string
   company: string
@@ -195,6 +258,8 @@ const EL: CheckoutUi = {
   address2Placeholder: 'Διαμέρισμα, όροφος, κ.λπ. (προαιρετικό)',
   city: 'Πόλη',
   cityLabel: (value) => value,
+  acsTownLabel: (value) => value,
+  acsPointLabel: (value) => value,
   selectCity: 'Επιλέξτε πόλη…',
   postal: 'Ταχ. Κώδικας',
   company: 'Επωνυμία εταιρείας (προαιρετικό)',
@@ -310,6 +375,8 @@ const EN: CheckoutUi = {
   address2Placeholder: 'Apartment, floor, etc. (optional)',
   city: 'City',
   cityLabel: (value) => CITY_EN[value] ?? value,
+  acsTownLabel: (value) => ACS_TOWN_EN[value] ?? value,
+  acsPointLabel: (value) => ACS_POINT_EN[value] ?? value,
   selectCity: 'Select a city…',
   postal: 'Postal code',
   company: 'Company name (optional)',

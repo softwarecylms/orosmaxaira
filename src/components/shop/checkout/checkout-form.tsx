@@ -856,10 +856,12 @@ function CheckoutFormInner() {
               >
                 <option value="">{t.selectAcsPointPlaceholder}</option>
                 {ACS_STORES['Κύπρος'].map((group) => (
-                  <optgroup key={group.town} label={group.town}>
+                  // Labels follow the locale; the values stay Greek, so the order
+                  // and the admin always record one spelling of a pickup point.
+                  <optgroup key={group.town} label={t.acsTownLabel(group.town)}>
                     {group.points.map((pt) => (
                       <option key={pt} value={pt}>
-                        {pt}
+                        {t.acsPointLabel(pt)}
                       </option>
                     ))}
                   </optgroup>
