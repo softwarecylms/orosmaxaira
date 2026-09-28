@@ -75,12 +75,17 @@ export function buildSnapshot(order: any, config: InvoiceConfig, logo: string | 
   const name =
     str(meta.customer_name) || [str(address.first_name), str(address.last_name)].filter(Boolean).join(" ")
 
-  const lines = (order.items ?? []).map((item: any) => ({
-    title: str(item.product_title) || str(item.title),
-    sku: str(item.variant_sku),
-    quantity: num(item.quantity),
-    total: num(item.unit_price) * num(item.quantity),
-  }))
+  const lines = (order.items ?? []).map((item: any) => {
+    // The size lives on the variant ("790g · Γυάλινο"); single-size products have "Default".
+    const product = str(item.product_title) || str(item.title)
+    const variant = str(item.variant_title)
+    return {
+      title: variant && variant !== "Default" ? `${product} – ${variant}` : product,
+      sku: str(item.variant_sku),
+      quantity: num(item.quantity),
+      total: num(item.unit_price) * num(item.quantity),
+    }
+  })
   const itemsTotal = lines.reduce((sum: number, l: { total: number }) => sum + l.total, 0)
   const shipping = num(order.shipping_total)
   const discount = num(order.discount_total)
