@@ -42,7 +42,7 @@ const ACS_POINT_EN: Record<string, string> = {
   '28ης Οκτωβρίου 34Β, 2414 Έγκωμη': '28is Oktovriou 34B, 2414 Engomi',
   'Λεωφ. Μακαρίου 40Η, 2324 Λακατάμια': 'Makariou Ave. 40H, 2324 Lakatamia',
   'Κυριάκου Μάτση 7, 1035 Παλλουριώτισσα': 'Kyriakou Matsi 7, 1035 Pallouriotissa',
-  'Λεωφ. Αρχ. Μακαρίου 33, 2220 Λατσιά': 'Archbishop Makariou Ave. 33, 2220 Latsia',
+  'Γιάννου Κρανιδιώτη 106, 2231 Λατσιά': 'Giannou Kranidioti 106, 2231 Latsia',
   'Μακαρίου 27Γ, 2572 Πέρα Χωριό Νήσου': 'Makariou 27C, 2572 Pera Chorio Nisou',
   'Λεωφ. Αρχ. Μακαρίου Γ΄ 351, 2313 Πάνω Λακατάμια':
     'Archbishop Makariou III Ave. 351, 2313 Pano Lakatamia',
