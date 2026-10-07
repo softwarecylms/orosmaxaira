@@ -67,6 +67,10 @@ storefront for both — it renders CMS pages *and* talks to Medusa's Store API.
   `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_...` (Medusa admin → Settings → Publishable API keys).
 - **Add/manage products**: do it in the Medusa admin (`:9009/app`), not in code. No storefront
   changes needed — `/shop` lists whatever is published to the sales channel.
+- **Analytics** (WooCommerce-style reports): Medusa admin → «Αναλύσεις». UI `src/admin/routes/analytics/*`,
+  API `src/api/admin/analytics/*`, logic `src/lib/analytics/*` (paths under `medusa/apps/backend`). Orders are
+  read through Query — they are versioned, so summing `order_item` rows in SQL double-counts. VAT is derived
+  from the invoice rate; settings live in `store.metadata.analytics`.
 - Payment in dev uses Medusa's **system default provider** (`pp_system_default`) — no real charge.
   Add Stripe (or another provider) before going live.
 
