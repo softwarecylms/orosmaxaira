@@ -120,6 +120,7 @@ const WorkshopsPage = () => {
 export const config = defineRouteConfig({
   label: "Εργαστήρια",
   icon: Sparkles,
+  rank: 11,
 })
 
 export default WorkshopsPage

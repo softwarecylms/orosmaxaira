@@ -15,6 +15,8 @@ const AnalyticsIndex = () => {
 export const config = defineRouteConfig({
   label: "Αναλύσεις",
   icon: ChartBar,
+  // Sidebar order: the «Πωλήσεις» group (1–9), then «Κρατήσεις» (10+) — see medusa-config.ts.
+  rank: 1,
 })
 
 export default AnalyticsIndex

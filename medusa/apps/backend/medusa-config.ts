@@ -3,6 +3,16 @@ import { ADMIN_ICON_PNG, ADMIN_ICON_SVG, ADMIN_TITLE } from './src/lib/admin-bra
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
+// The sidebar's custom pages in two groups. Medusa draws one section for them
+// all; its heading is renamed «Πωλήσεις» (src/admin/i18n) for Αναλύσεις and
+// Τιμολόγια, and the bookings pages get a divider and «Κρατήσεις» heading
+// above the first of them, Δραστηριότητες (route ranks keep that order). The
+// look copies Medusa's own dashed divider and section label.
+const NAV_GROUPS_CSS =
+  'aside nav>div:has(a[href$="/activities"])::before{content:"Κρατήσεις";display:block;margin:10px 0 4px;' +
+  'padding:12px 12px 0;background:linear-gradient(90deg,var(--border-strong) 1px,transparent 1px) top left/4px 1px repeat-x;' +
+  'color:var(--fg-subtle);font-size:12px;line-height:20px;font-weight:500}'
+
 module.exports = defineConfig({
   admin: {
     // The admin is a single-page app; its HTML is where crawlers would land.
@@ -31,6 +41,10 @@ module.exports = defineConfig({
                   `    <style>.grid-cols-\\[24px_1fr_15px\\]>span:first-child{background:#fff url("${ADMIN_ICON_PNG}") center/cover no-repeat}` +
                   `.grid-cols-\\[24px_1fr_15px\\]>span:first-child>*{opacity:0}</style>\n  </head>`
               ),
+        },
+        {
+          name: "oros-admin-nav-groups",
+          transformIndexHtml: (html: string) => html.replace("</head>", `    <style>${NAV_GROUPS_CSS}</style>\n  </head>`),
         },
       ],
     }),

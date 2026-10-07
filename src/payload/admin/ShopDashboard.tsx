@@ -15,6 +15,7 @@ const BOXES = [
   { icon: '🛒', label: 'Orders', path: '/orders', badge: true },
   { icon: '🍯', label: 'Products', path: '/products' },
   { icon: '🧾', label: 'Invoices', path: '/invoices' },
+  { icon: '📊', label: 'Analytics', path: '/analytics' },
   { icon: '👤', label: 'Customers', path: '/customers' },
   { icon: '🏷️', label: 'Coupons', path: '/promotions' },
   { icon: '🐝', label: 'Activities', path: '/activities' },

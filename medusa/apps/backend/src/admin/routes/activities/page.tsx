@@ -134,6 +134,8 @@ const ActivitiesPage = () => {
 export const config = defineRouteConfig({
   label: "Δραστηριότητες",
   icon: Calendar,
+  // First of the «Κρατήσεις» group; its sidebar heading hangs off this item (medusa-config.ts).
+  rank: 10,
 })
 
 export default ActivitiesPage

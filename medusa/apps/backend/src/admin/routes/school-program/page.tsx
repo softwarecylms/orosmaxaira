@@ -397,6 +397,7 @@ const SchoolProgramPage = () => {
 export const config = defineRouteConfig({
   label: "Επισκέψεις Σχολείων",
   icon: AcademicCap,
+  rank: 12,
 })
 
 export default SchoolProgramPage

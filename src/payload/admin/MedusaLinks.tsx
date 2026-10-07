@@ -14,6 +14,7 @@ const MEDUSA_ADMIN = `${(process.env.MEDUSA_ADMIN_URL || process.env.MEDUSA_BACK
 const LINKS = [
   { label: 'Orders', path: '/orders', badge: true },
   { label: 'Products', path: '/products' },
+  { label: 'Analytics', path: '/analytics' },
   { label: 'Workshops', path: '/workshops' },
   { label: 'Activities', path: '/activities' },
   { label: 'School visits', path: '/school-program' },

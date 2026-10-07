@@ -408,6 +408,7 @@ const InvoicesPage = () => (
 export const config = defineRouteConfig({
   label: "Τιμολόγια",
   icon: Receipt,
+  rank: 2,
 })
 
 export default InvoicesPage
