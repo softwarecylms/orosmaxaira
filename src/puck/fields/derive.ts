@@ -6,6 +6,7 @@ import {
   RichParagraphsControl,
   StringListControl,
 } from './controls'
+import { GalleryControl } from './gallery-control'
 import { labelFor, orderKeys } from './labels'
 
 /**
@@ -18,6 +19,8 @@ import { labelFor, orderKeys } from './labels'
  * - `icon` → a choice of the icons the section already uses
  * - a list of strings → one item per line
  * - rich text (spans with bold/links) → **bold** and [link](url) markup
+ * - a gallery — a list of images (items that are just an image plus alt,
+ *   caption or size), or of image paths → thumbnail gallery (gallery-control.tsx)
  * - a list of objects → Puck's repeatable list, fields from all items together
  * - an object → a group
  *
@@ -43,8 +46,25 @@ const isSpanList = (v: unknown): v is Record<string, unknown>[] =>
 const isRichLine = (key: string, v: unknown) =>
   isSpanList(v) && (RICH_KEYS.has(key) || v.some((s) => s.bold || s.href || s.accent))
 
-const custom = (label: string, render: unknown): Field =>
-  ({ type: 'custom', label, render }) as unknown as Field
+/** Keys a gallery item may carry besides its image. Not `title`, so a list of
+ *  `{ image, title }` cards stays a card list. */
+const GALLERY_META = new Set(['alt', 'caption', 'w', 'h', 'width', 'height', '_id'])
+const IMAGE_PATH = /^(\/|https?:\/\/)\S+\.(webp|jpe?g|png|gif|avif|svg)([?#]\S*)?$/i
+
+/** Items that are an image and nothing more (alt, caption, size): a gallery. */
+function galleryShape(items: Record<string, unknown>[]): { imageKey: string; metaKeys: string[] } | null {
+  if (!items.length) return null
+  const keys = [...new Set(items.flatMap((i) => Object.keys(i)))]
+  const img = keys.filter((k) => IMAGE_KEYS.test(k))
+  if (img.length !== 1) return null
+  if (!keys.every((k) => k === img[0] || GALLERY_META.has(k))) return null
+  if (!items.every((i) => typeof i[img[0]] === 'string')) return null
+  return { imageKey: img[0], metaKeys: keys.filter((k) => k !== img[0] && k !== '_id') }
+}
+
+/** A custom field; `extra` travels to the control as part of its `field` prop. */
+const custom = (label: string, render: unknown, extra?: Record<string, unknown>): Field =>
+  ({ type: 'custom', label, render, ...extra }) as unknown as Field
 
 const summaryKeys = ['title', 'label', 'heading', 'name', 'q', 'text', 'event', 'value', 'code', 'alt', 'src']
 
@@ -108,8 +128,13 @@ function fieldFor(key: string, values: unknown[], group = false): Field {
   const arrays = present.filter(Array.isArray) as unknown[][]
   if (arrays.length && arrays.length === present.length) {
     const all = arrays.flat()
+    if (all.length && all.every((x) => typeof x === 'string' && IMAGE_PATH.test(x))) {
+      return custom(label, GalleryControl, { stringItems: true })
+    }
     if (all.every((x) => typeof x === 'string')) return custom(label, StringListControl)
     if (all.every(isObj)) {
+      const gallery = galleryShape(all as Record<string, unknown>[])
+      if (gallery) return custom(label, GalleryControl, gallery)
       return {
         type: 'array',
         label,
