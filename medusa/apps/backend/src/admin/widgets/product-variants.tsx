@@ -7,6 +7,16 @@ import { useEffect, useState, type MouseEvent } from "react"
 import { useNavigate } from "react-router-dom"
 import { displaySrc } from "../components/media-picker"
 import { VariantDrawer } from "../components/variant-drawer"
+import {
+  discountListProblem,
+  discountOf,
+  fetchPriceLists,
+  findDiscountList,
+  isPlain,
+  money,
+  priceIdsOf,
+  shopPriceOf,
+} from "../lib/price-lists"
 import { sdk } from "../lib/sdk"
 
 /**
@@ -21,7 +31,9 @@ import { sdk } from "../lib/sdk"
  *
  * Each row shows the variant's own picture — its thumbnail, else its first
  * linked image — and a placeholder otherwise. It never falls back to the
- * product's thumbnail, so a variant without a picture stands out.
+ * product's thumbnail, so a variant without a picture stands out. The price is
+ * what the shop charges, in the store's default currency: the regular price
+ * struck through when the variant has a discounted price (lib/price-lists.ts).
  *
  * The native section is hidden once found (by its create link, else by its
  * heading and table). If a future dashboard changes that markup, the native
@@ -34,7 +46,7 @@ const HIDE_STYLE = `[${MARK_HIDDEN}] { display: none !important; }`
 const NATIVE_HEADINGS = ["Variants", "Παραλλαγές"]
 
 const VARIANT_FIELDS =
-  "id,title,sku,thumbnail,variant_rank,manage_inventory,inventory_quantity,*options,*prices,+prices.price_rules.attribute"
+  "id,title,sku,thumbnail,variant_rank,manage_inventory,inventory_quantity,*options,*prices,+prices.price_rules.attribute,+prices.price_rules.value"
 const IMAGE_FIELDS = "id,images.id,images.url,images.rank,images.variants.id"
 
 type Price = { id: string; amount: number; currency_code: string; rules?: Record<string, string>; min_quantity?: number | null; max_quantity?: number | null }
@@ -65,16 +77,7 @@ function findNativeSection(productId: string): HTMLElement | null {
   return null
 }
 
-const money = (amount: number, currency: string) => {
-  try {
-    return new Intl.NumberFormat("el-GR", { style: "currency", currency: currency.toUpperCase() }).format(amount)
-  } catch {
-    return `${amount} ${currency.toUpperCase()}`
-  }
-}
-
-const plainPrices = (v: Variant) =>
-  (v.prices ?? []).filter((p) => !Object.keys(p.rules ?? {}).length && p.min_quantity == null && p.max_quantity == null)
+const plainPrices = (v: Variant) => (v.prices ?? []).filter(isPlain)
 
 const ProductVariantsWidget = ({ data }: DetailWidgetProps<HttpTypes.AdminProduct>) => {
   const productId = data.id
@@ -92,6 +95,22 @@ const ProductVariantsWidget = ({ data }: DetailWidgetProps<HttpTypes.AdminProduc
         order: "variant_rank",
       } as HttpTypes.AdminProductVariantParams)
       return r.variants as unknown as Variant[]
+    },
+  })
+  // The shop's currency and regions, and the price lists: sale prices sit in the
+  // variants' price sets, so they are told apart by id. Keyed under "price_lists"
+  // so the drawer's save refreshes it.
+  const pricingQuery = useQuery({
+    queryKey: ["price_lists", "oros-variant-prices"],
+    queryFn: async () => {
+      const [store, regions, lists] = await Promise.all([
+        sdk.admin.store.list(),
+        sdk.admin.region.list({ limit: 9999, fields: "id,currency_code" }),
+        fetchPriceLists(),
+      ])
+      const currencies = store.stores[0]?.supported_currencies ?? []
+      const currency = (currencies.find((c) => c.is_default) ?? currencies[0])?.currency_code ?? null
+      return { currency, regions: regions.regions, lists }
     },
   })
   const imagesQuery = useQuery({
@@ -122,6 +141,29 @@ const ProductVariantsWidget = ({ data }: DetailWidgetProps<HttpTypes.AdminProduc
     v.thumbnail || images.find((i) => (i.variants ?? []).some((x) => x?.id === v.id))?.url || null
 
   const variants = variantsQuery.data ?? []
+
+  const priceOf = (v: Variant) => {
+    const pricing = pricingQuery.data
+    if (!pricing?.currency) {
+      if (pricingQuery.isLoading) return "…"
+      const prices = plainPrices(v)
+      return prices.length ? prices.map((p) => money(Number(p.amount), p.currency_code)).join(" · ") : "—"
+    }
+    const code = pricing.currency
+    const listIds = priceIdsOf(pricing.lists)
+    const regular = shopPriceOf((v.prices ?? []).filter((p) => !listIds.has(p.id)), code, pricing.regions)
+    const list = findDiscountList(pricing.lists)
+    const discount = list && !discountListProblem(list) ? discountOf(list, v.id, code) : null
+    if (discount && (!regular || Number(discount.amount) < Number(regular.amount))) {
+      return (
+        <>
+          {regular ? <s className="text-ui-fg-muted mr-1.5">{money(Number(regular.amount), code)}</s> : null}
+          {money(Number(discount.amount), code)}
+        </>
+      )
+    }
+    return regular ? money(Number(regular.amount), code) : "—"
+  }
 
   const remove = async (v: Variant, e?: MouseEvent) => {
     e?.stopPropagation()
@@ -207,7 +249,6 @@ const ProductVariantsWidget = ({ data }: DetailWidgetProps<HttpTypes.AdminProduc
               <Table.Body>
                 {variants.map((v) => {
                   const picture = pictureOf(v)
-                  const prices = plainPrices(v)
                   return (
                     <Table.Row
                       key={v.id}
@@ -244,9 +285,7 @@ const ProductVariantsWidget = ({ data }: DetailWidgetProps<HttpTypes.AdminProduc
                         </div>
                       </Table.Cell>
                       <Table.Cell>
-                        <Text size="small">
-                          {prices.length ? prices.map((p) => money(Number(p.amount), p.currency_code)).join(" · ") : "—"}
-                        </Text>
+                        <Text size="small">{priceOf(v)}</Text>
                       </Table.Cell>
                       <Table.Cell>
                         <Text size="small" className={v.manage_inventory ? "" : "text-ui-fg-subtle"}>

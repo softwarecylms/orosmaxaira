@@ -14,6 +14,9 @@ export type ShopProduct = {
   category: ShopCategory
   title: string
   price: string
+  /** The regular price, shown struck through before `price` when that is a
+   *  discount (a Medusa sale price) — for a range, that of the cheapest size. */
+  compareAt?: string
   /** starting price in cents — used for price filter + price sort */
   sortPrice: number
   inStock: boolean
@@ -179,6 +182,8 @@ export type ShopVariationSize = {
   container?: string
   /** display price for this size, e.g. '€5,70' */
   price: string
+  /** this size's regular price when `price` is a discount, e.g. '€6,90' (shown struck through) */
+  compareAt?: string
   /** numeric price in cents — used for cart totals */
   sortPrice: number
   /** gallery image shown when this size is selected */

@@ -11,9 +11,15 @@ export function cn(...inputs: ClassValue[]) {
  * we show only the starting price, prefixed with «Από» / «From» per locale.
  */
 export function displayPrice(price: string, locale: string = 'el'): string {
+  const { prefix, amount } = priceParts(price, locale)
+  return prefix ? `${prefix} ${amount}` : amount
+}
+
+/** `displayPrice` in two parts: the «Από» / «From» of a range ('' for a single price) and the amount. */
+export function priceParts(price: string, locale: string = 'el'): { prefix: string; amount: string } {
   const parts = price.split(/\s*[–—-]\s*/)
-  if (parts.length <= 1) return price
-  return `${locale === 'en' ? 'From' : 'Από'} ${parts[0].trim()}`
+  if (parts.length <= 1) return { prefix: '', amount: price }
+  return { prefix: locale === 'en' ? 'From' : 'Από', amount: parts[0].trim() }
 }
 
 export function mediaSrc(media: unknown): string | undefined {

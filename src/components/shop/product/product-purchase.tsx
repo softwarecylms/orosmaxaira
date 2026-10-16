@@ -12,6 +12,7 @@ import { isRefrigerated, displaySizeLabel } from '../shop-content'
 import { getProductUi } from './product-ui'
 import { useCart, parsePrice } from '@/components/commerce/cart-store'
 import { displayPrice, cn } from '@/lib/utils'
+import { SalePrice } from '../sale-price'
 import { RevealGroup, RevealItem } from '@/components/home/reveal-up'
 import { DescriptionBody } from './description-body'
 import { CertificationsNote } from '@/components/certificates/certifications-note'
@@ -93,12 +94,15 @@ export function ProductPurchase({
   const phone = '+357 25 622 305'
 
   // Title price: the selected variant's price once chosen, else "Από €<min>"
-  // for ranges/variations, else the single price.
-  const priceText = selected
-    ? selected.price
-    : hasVariations
-      ? `${ui.fromPrice} ${cheapest!.price}`
-      : displayPrice(product.price, locale)
+  // for ranges/variations, else the single price — each with its regular price
+  // struck through when it is a discount.
+  const titlePrice = selected ? (
+    <SalePrice price={selected.price} compareAt={selected.compareAt} locale={locale} />
+  ) : hasVariations ? (
+    <SalePrice prefix={ui.fromPrice} price={cheapest!.price} compareAt={cheapest!.compareAt} locale={locale} />
+  ) : (
+    <SalePrice price={product.price} compareAt={product.compareAt} locale={locale} />
+  )
 
   function buildItem() {
     if (hasVariations && selected) {
@@ -153,7 +157,7 @@ export function ProductPurchase({
       </RevealItem>
 
       <RevealItem>
-        <p className="text-[22px] font-medium leading-[26.4px] text-accent">{priceText}</p>
+        <p className="text-[22px] font-medium leading-[26.4px] text-accent">{titlePrice}</p>
       </RevealItem>
 
       {detail.description ? (
@@ -222,7 +226,7 @@ export function ProductPurchase({
                 </>
               ) : null}
               <span className="text-[22px] font-medium leading-[26.4px] text-accent">
-                {selected.price}
+                <SalePrice price={selected.price} compareAt={selected.compareAt} locale={locale} />
               </span>
             </p>
           ) : null}

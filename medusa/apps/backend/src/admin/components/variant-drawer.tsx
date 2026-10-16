@@ -21,12 +21,30 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { useBlocker, useLocation, useNavigate } from "react-router-dom"
 import { MediaPickerModal, displaySrc } from "./media-picker"
+import {
+  DISCOUNT_FLAG,
+  DISCOUNT_LIST,
+  discountListProblem,
+  discountOf,
+  fetchPriceLists,
+  findDiscountList,
+  isPlain,
+  isRegionPrice,
+  money,
+  plainPrice,
+  priceIdsOf,
+  regionalIn,
+  sameCurrency,
+  shopPriceOf,
+  type PriceList,
+} from "../lib/price-lists"
 import { sdk } from "../lib/sdk"
 
 /**
  * The variant drawer — one right-hand panel for everything about a variant:
- * title/codes/options, prices per store currency and per region, stock per
- * location, shipping dimensions, the variant's own images (upload, pick from the
+ * title/codes/options, the price and an optional discounted price (in the
+ * store's default currency — the one the shop sells in), stock per location,
+ * shipping dimensions, the variant's own images (upload, pick from the
  * product's unassigned images, reorder, remove or delete, main image) and the
  * product's categories. The same drawer creates a variant (`variantId: null`).
  *
@@ -44,7 +62,14 @@ import { sdk } from "../lib/sdk"
  *    hides `price_list_id`, so their ids are looked up and kept out of the
  *    payload (the module never touches them; sending one would fail the save).
  *    Rules other than `region_id` come back lossy (no operator), so those lock
- *    the price inputs.
+ *    the price inputs. A region price beats the plain price in its region, so
+ *    the price field shows it when there is one, and a new price replaces the
+ *    region prices in that currency (they are left out of the payload) — what is
+ *    typed is what the shop charges. Prices in the store's other currencies are
+ *    not shown (no region sells in them) and are kept as they are.
+ *  - The discounted price is this variant's price in one sale price list
+ *    (lib/price-lists.ts), written with that list's own batch endpoint after the
+ *    variant's prices. Medusa charges the lower of the two.
  *  - `categories` on a product update replaces the set, so only the boxes the
  *    user toggled are applied on top of the product's current categories.
  *  - `manage_inventory: false` unlinks the inventory item and Medusa never
@@ -182,11 +207,17 @@ type Loaded = {
   // null = that list failed to load; only its section is disabled.
   categories: Category[] | null
   currencies: Currency[] | null
+  /** The store's default currency — the only one prices are edited in (null: none, or they didn't load). */
+  currency: Currency | null
   locations: Location[] | null
   sectionErrors: Partial<Record<"categories" | "currencies" | "locations" | "regions", string>>
-  /** null = the regions didn't load: region prices are then shown, not edited. */
+  /** Which region prices the shop charges. null = they didn't load: a variant with region prices is then locked. */
   regions: Region[] | null
-  /** This variant's price-list (sale) prices — shown only; `variant.prices` excludes them. */
+  /** The sale list behind «Τιμή έκπτωσης» — null until the first discount creates it (or if the lists didn't load). */
+  discountList: PriceList | null
+  /** This variant's discounted price in that list. */
+  discount: Price | null
+  /** This variant's other price-list prices — shown only; `variant.prices` excludes them. */
   listPrices: Price[]
   orphan: Orphan | null
   /** Set when the price set can't be round-tripped safely — price inputs are then read-only. */
@@ -201,8 +232,8 @@ type NumberKey = (typeof NUMBER_KEYS)[number]
 type Draft = { title: string } & Record<TextKey, string> &
   Record<NumberKey, string> & {
     options: Record<string, string> // option id → value
-    prices: Record<string, string> // currency code → amount text
-    regionPrices: Record<string, string> // region id → amount text (the region's currency)
+    price: string // amount text, store currency; "" keeps the stored price
+    discount: string // amount text, store currency; "" = no discount
     manage_inventory: boolean
     allow_backorder: boolean
     stock: Record<string, string> // `${itemId}|${locationId}` → quantity text
@@ -247,26 +278,6 @@ const normText = (s: string | null | undefined) => (s ?? "").trim() || null
 const stockKey = (itemId: string, locationId: string) => `${itemId}|${locationId}`
 const rulesOf = (p: Price): Record<string, string> => p.rules ?? {}
 
-/** The editable price for a currency: no rules, no quantity tier. */
-const isPlain = (p: Price) =>
-  Object.keys(rulesOf(p)).length === 0 && p.min_quantity == null && p.max_quantity == null
-
-const plainPrice = (prices: Price[], currency: string) =>
-  prices.find((p) => p.currency_code.toLowerCase() === currency.toLowerCase() && isPlain(p))
-
-/** A region's price: exactly one rule, `region_id`, and no quantity tier. */
-const regionPrice = (prices: Price[], region: Region) =>
-  prices.find((p) => {
-    const rules = rulesOf(p)
-    return (
-      Object.keys(rules).length === 1 &&
-      rules.region_id === region.id &&
-      p.currency_code.toLowerCase() === region.currency_code.toLowerCase() &&
-      p.min_quantity == null &&
-      p.max_quantity == null
-    )
-  })
-
 const newKey = (url: string) => `new:${url}`
 
 /** What the pricing module de-duplicates on before matching ids (ids are not part of it). */
@@ -292,26 +303,28 @@ const PRICE_LOCK_RULES =
   "Η παραλλαγή έχει τιμές με κανόνες πέρα από την περιοχή, που δεν διαβάζονται πλήρως εδώ. Για να μην αλλοιωθούν, οι τιμές δεν αλλάζουν από εδώ."
 const PRICE_LOCK_LISTS =
   "Δεν ήταν δυνατός ο έλεγχος για λίστες τιμών (εκπτώσεις). Για να μη χαθεί καμία τιμή, οι τιμές δεν αλλάζουν από εδώ."
+const PRICE_LOCK_REGIONS =
+  "Η παραλλαγή έχει διαφορετικές τιμές ανά περιοχή, που δεν χωράνε σε ένα πεδίο. Για να μη χαθεί καμία, οι τιμές δεν αλλάζουν από εδώ."
+const PRICE_LOCK_NO_REGIONS =
+  "Η παραλλαγή έχει τιμές ανά περιοχή, αλλά οι περιοχές δεν φορτώθηκαν, οπότε δεν είναι σαφές ποια τιμή ισχύει. Οι τιμές δεν αλλάζουν από εδώ."
 
 /**
  * Why this variant's own prices can't be round-tripped safely, or null.
  * The admin response keeps one value per rule attribute and no operator; only
  * `region_id` rules (the only kind the dashboard creates) survive that intact.
+ * Region prices in the shop currency must agree, as one field stands for them all.
  */
-function priceLockFor(prices: Price[]): string | null {
+function priceLockFor(prices: Price[], currency: string | null, regions: Region[] | null): string | null {
   if (prices.some((p) => Object.keys(rulesOf(p)).some((attr) => attr !== "region_id"))) return PRICE_LOCK_RULES
-  return hasHashCollision(prices) ? PRICE_LOCK : null
-}
-
-/** Ids of every price-list price. They sit in variants' price sets but aren't the variants' own prices. */
-async function fetchPriceListPriceIds(): Promise<Set<string>> {
-  const ids = new Set<string>()
-  for (let offset = 0; ; ) {
-    const r = await sdk.admin.priceList.list({ offset, limit: 500, fields: "id,prices.id" })
-    for (const list of r.price_lists) for (const p of list.prices ?? []) ids.add(p.id)
-    offset += r.price_lists.length
-    if (!r.price_lists.length || offset >= r.count) return ids
+  if (hasHashCollision(prices)) return PRICE_LOCK
+  if (currency) {
+    if (!regions) {
+      if (prices.some((p) => isRegionPrice(p) && sameCurrency(p.currency_code, currency))) return PRICE_LOCK_NO_REGIONS
+    } else if (new Set(regionalIn(prices, currency, regions).map((p) => Number(p.amount))).size > 1) {
+      return PRICE_LOCK_REGIONS
+    }
   }
+  return null
 }
 
 const isShared = (link: InventoryLink) => (link.inventory?.variants?.length ?? 0) > 1
@@ -466,7 +479,7 @@ async function findOrphan(variant: Variant): Promise<Orphan | null> {
 }
 
 async function loadAll(productId: string, variantId: string | null): Promise<Loaded> {
-  const [fetched, product, categories, currencies, locations, regions, listPriceIds] = await Promise.all([
+  const [fetched, product, categories, currencies, locations, regions, lists] = await Promise.all([
     variantId ? fetchVariant(productId, variantId) : Promise.resolve(blankVariant()),
     sdk.admin.product.retrieve(productId, { fields: PRODUCT_FIELDS }).then((r) => r.product as unknown as Product),
     soft(
@@ -492,7 +505,7 @@ async function loadAll(productId: string, variantId: string | null): Promise<Loa
         .list({ limit: 9999, fields: "id,name,currency_code" })
         .then((r) => r.regions as unknown as Region[])
     ),
-    variantId ? soft(fetchPriceListPriceIds()) : Promise.resolve({ value: new Set<string>(), error: null }),
+    soft(fetchPriceLists()),
   ])
   const sectionErrors: Loaded["sectionErrors"] = {}
   if (categories.error) sectionErrors.categories = categories.error
@@ -500,36 +513,44 @@ async function loadAll(productId: string, variantId: string | null): Promise<Loa
   if (locations.error) sectionErrors.locations = locations.error
   if (regions.error) sectionErrors.regions = regions.error
 
-  const listIds = listPriceIds.value
+  const listIds = lists.value ? priceIdsOf(lists.value) : null
   const variant = listIds ? { ...fetched, prices: fetched.prices.filter((p) => !listIds.has(p.id)) } : fetched
+  const currency = currencies.value ? (currencies.value.find((c) => c.is_default) ?? currencies.value[0] ?? null) : null
+  const discountList = lists.value ? findDiscountList(lists.value) : null
+  const found = variantId && currency ? discountOf(discountList, variantId, currency.currency_code) : null
+  const discount: Price | null = found
+    ? { id: found.id, amount: Number(found.amount), currency_code: found.currency_code }
+    : null
   return {
     isNew: !variantId,
     variant,
     product,
     categories: categories.value,
     currencies: currencies.value,
+    currency,
     locations: locations.value,
     sectionErrors,
     regions: regions.value,
-    listPrices: listIds ? fetched.prices.filter((p) => listIds.has(p.id)) : [],
+    discountList,
+    discount,
+    listPrices: listIds ? fetched.prices.filter((p) => listIds.has(p.id) && p.id !== discount?.id) : [],
     orphan: variantId ? await findOrphan(variant) : null,
-    // Without the price-list ids a sale price would pass for a regular one.
-    priceLock: listIds ? priceLockFor(variant.prices) : PRICE_LOCK_LISTS,
+    // Without the price-list ids a sale price would pass for a regular one. A new
+    // variant has no prices yet; its save reads the lists again before writing.
+    priceLock: !variantId
+      ? null
+      : listIds
+        ? priceLockFor(variant.prices, currency?.currency_code ?? null, regions.value)
+        : PRICE_LOCK_LISTS,
   }
 }
 
-function initialDraft({ variant, product, currencies, locations, regions, orphan }: Loaded): Draft {
+function initialDraft({ variant, product, currency, locations, regions, orphan, discount }: Loaded): Draft {
   const options: Record<string, string> = {}
   for (const o of product.options ?? []) {
     const value = variant.options?.find((v) => v.option_id === o.id)?.value
     if (value) options[o.id] = value
   }
-  const prices: Record<string, string> = {}
-  for (const c of currencies ?? []) {
-    prices[c.currency_code] = numText(plainPrice(variant.prices, c.currency_code)?.amount)
-  }
-  const regionPrices: Record<string, string> = {}
-  for (const r of regions ?? []) regionPrices[r.id] = numText(regionPrice(variant.prices, r)?.amount)
   const rank = new Map((product.images ?? []).map((i, n) => [i.id, i.rank ?? n]))
   const imageIds = assignedImageIds(variant)
   const stock: Record<string, string> = {}
@@ -552,8 +573,8 @@ function initialDraft({ variant, product, currencies, locations, regions, orphan
     ...(Object.fromEntries(TEXT_KEYS.map((k) => [k, variant[k] ?? ""])) as Record<TextKey, string>),
     ...(Object.fromEntries(NUMBER_KEYS.map((k) => [k, numText(variant[k])])) as Record<NumberKey, string>),
     options,
-    prices,
-    regionPrices,
+    price: currency ? numText(shopPriceOf(variant.prices, currency.currency_code, regions)?.amount) : "",
+    discount: numText(discount?.amount),
     manage_inventory: variant.manage_inventory,
     allow_backorder: variant.allow_backorder,
     stock,
@@ -620,8 +641,8 @@ function rebase(draft: Draft, oldBase: Draft, prev: Loaded, next: Loaded, nextBa
     ;(out as Record<string, unknown>)[k] = pick(draft[k], oldBase[k], nextBase[k])
   }
   out.options = record(draft.options, oldBase.options, nextBase.options)
-  out.prices = record(draft.prices, oldBase.prices, nextBase.prices)
-  out.regionPrices = record(draft.regionPrices, oldBase.regionPrices, nextBase.regionPrices)
+  out.price = pick(draft.price, oldBase.price, nextBase.price)
+  out.discount = pick(draft.discount, oldBase.discount, nextBase.discount)
   out.stock = record(draft.stock, oldBase.stock, nextBase.stock)
   out.relink =
     draft.relink && !!next.orphan && next.orphan.id === prev.orphan?.id && !(next.variant.inventory_items ?? []).length
@@ -668,9 +689,14 @@ function loadedLevel(loaded: Loaded, itemId: string, locationId: string): Level 
 
 const decimalsOf = (c: Currency) => c.currency?.decimal_digits ?? 2
 
-const regionDecimals = (loaded: Loaded, r: Region) => {
-  const c = (loaded.currencies ?? []).find((x) => x.currency_code.toLowerCase() === r.currency_code.toLowerCase())
-  return c ? decimalsOf(c) : 2
+/** The regular and discounted price this draft would leave (an empty price field keeps the stored one). */
+function pricesAfter(draft: Draft, base: Draft, currency: Currency) {
+  const decimals = decimalsOf(currency)
+  const typed = parseDecimal(draft.price, decimals)
+  return {
+    regular: typed ?? parseDecimal(base.price),
+    discount: parseDecimal(draft.discount, decimals),
+  }
 }
 
 /** Live validation — keyed so each field can show its own message. Untouched fields are never judged. */
@@ -686,20 +712,26 @@ function validate(draft: Draft, base: Draft, loaded: Loaded): Record<string, str
     }
   }
 
-  for (const c of loaded.currencies ?? []) {
-    const raw = draft.prices[c.currency_code] ?? ""
-    if (raw.trim() === (base.prices[c.currency_code] ?? "").trim()) continue
-    if (Number.isNaN(parseDecimal(raw, decimalsOf(c)))) {
-      errors[`price:${c.currency_code}`] = `Μη έγκυρο ποσό — έως ${decimalsOf(c)} δεκαδικά, χωρίς χιλιάδες (π.χ. 1200,50).`
-    }
-  }
-
-  for (const r of loaded.regions ?? []) {
-    const raw = draft.regionPrices[r.id] ?? ""
-    if (raw.trim() === (base.regionPrices[r.id] ?? "").trim()) continue
-    const decimals = regionDecimals(loaded, r)
-    if (Number.isNaN(parseDecimal(raw, decimals))) {
-      errors[`region:${r.id}`] = `Μη έγκυρο ποσό — έως ${decimals} δεκαδικά, χωρίς χιλιάδες (π.χ. 1200,50).`
+  const currency = loaded.currency
+  if (currency) {
+    const invalid = `Μη έγκυρο ποσό — έως ${decimalsOf(currency)} δεκαδικά, χωρίς χιλιάδες (π.χ. 1200,50).`
+    const priceChanged = draft.price.trim() !== base.price.trim()
+    const discountChanged = draft.discount.trim() !== base.discount.trim()
+    const { regular, discount } = pricesAfter(draft, base, currency)
+    if (priceChanged && Number.isNaN(regular)) errors.price = invalid
+    if (discountChanged && Number.isNaN(discount)) errors.discount = invalid
+    // Medusa would simply charge the regular price for a "discount" that isn't lower.
+    if ((priceChanged || discountChanged) && !errors.price && !errors.discount && discount !== null) {
+      const code = currency.currency_code
+      if (discount <= 0) errors.discount = "Η τιμή έκπτωσης πρέπει να είναι μεγαλύτερη από 0."
+      else if (regular === null) errors.discount = "Ορίστε πρώτα την κανονική τιμή."
+      else if (discount >= regular) {
+        if (discountChanged) {
+          errors.discount = `Η τιμή έκπτωσης πρέπει να είναι μικρότερη από την κανονική (${money(regular, code)}).`
+        } else {
+          errors.price = `Η κανονική τιμή πρέπει να είναι μεγαλύτερη από την τιμή έκπτωσης (${money(discount, code)}) — αλλάξτε ή σβήστε την έκπτωση.`
+        }
+      }
     }
   }
 
@@ -916,21 +948,20 @@ const VariantEditor = ({ productId, variantId, open, onClose }: EditorProps) => 
     let id = currentId
     const creating = loaded.isNew && !id
     try {
-      const priceChanges = loaded.priceLock
-        ? []
-        : (loaded.currencies ?? [])
-            .map((c) => ({ c, raw: draft.prices[c.currency_code] ?? "" }))
-            .filter(({ c, raw }) => raw.trim() !== "" && raw.trim() !== (base.prices[c.currency_code] ?? "").trim())
-            .map(({ c, raw }) => ({ code: c.currency_code, amount: parseDecimal(raw, decimalsOf(c)) as number }))
-            .filter(({ code, amount }) => amount !== parseDecimal(base.prices[code] ?? ""))
-      const regionChanges =
-        loaded.priceLock || !loaded.regions
-          ? []
-          : loaded.regions
-              .map((r) => ({ region: r, raw: draft.regionPrices[r.id] ?? "" }))
-              .filter(({ region, raw }) => raw.trim() !== "" && raw.trim() !== (base.regionPrices[region.id] ?? "").trim())
-              .map(({ region, raw }) => ({ region, amount: parseDecimal(raw, regionDecimals(loaded, region)) as number }))
-              .filter(({ region, amount }) => amount !== parseDecimal(base.regionPrices[region.id] ?? ""))
+      const code = loaded.currency?.currency_code ?? null
+      const decimals = loaded.currency ? decimalsOf(loaded.currency) : 2
+      // The new price, or null: untouched, emptied (keeps the stored one) or the same amount.
+      let newPrice: number | null = null
+      if (!loaded.priceLock && code && draft.price.trim() && draft.price.trim() !== base.price.trim()) {
+        const amount = parseDecimal(draft.price, decimals) as number
+        if (amount !== parseDecimal(base.price)) newPrice = amount
+      }
+      // The new discount: undefined = untouched, null = remove it.
+      let newDiscount: number | null | undefined
+      if (!loaded.priceLock && code && draft.discount.trim() !== base.discount.trim()) {
+        const amount = parseDecimal(draft.discount, decimals)
+        if (amount !== parseDecimal(base.discount)) newDiscount = amount
+      }
 
       // ── 0. «Νέα παραλλαγή»: create it (Medusa creates and links its inventory item), then its stock ──
       if (creating) {
@@ -952,14 +983,7 @@ const VariantEditor = ({ productId, variantId, open, onClose }: EditorProps) => 
         if (productOptions.length) {
           body.options = Object.fromEntries(productOptions.map((o) => [o.title, draft.options[o.id]]))
         }
-        body.prices = [
-          ...priceChanges.map(({ code, amount }) => ({ currency_code: code, amount })),
-          ...regionChanges.map(({ region, amount }) => ({
-            currency_code: region.currency_code,
-            amount,
-            rules: { region_id: region.id },
-          })),
-        ]
+        body.prices = newPrice !== null && code ? [{ currency_code: code, amount: newPrice }] : []
         const before = new Set((loaded.product.variants ?? []).map((v) => v.id))
         const { product } = await sdk.admin.product.createVariant(
           productId,
@@ -997,10 +1021,10 @@ const VariantEditor = ({ productId, variantId, open, onClose }: EditorProps) => 
       // A fresh read: prices, stock levels, images and categories are applied
       // against what is stored *now*, not what the drawer loaded.
       step = "Ανάγνωση παραλλαγής"
-      const [fresh, freshProduct, freshListIds] = await Promise.all([
+      const [fresh, freshProduct, freshLists] = await Promise.all([
         fetchVariant(productId, variantId),
         sdk.admin.product.retrieve(productId, { fields: "id,*categories" }).then((r) => r.product as unknown as Product),
-        !creating && (priceChanges.length || regionChanges.length) ? fetchPriceListPriceIds() : Promise.resolve(null),
+        newPrice !== null || newDiscount !== undefined ? fetchPriceLists() : Promise.resolve(null),
       ])
 
       if (!creating) {
@@ -1025,15 +1049,19 @@ const VariantEditor = ({ productId, variantId, open, onClose }: EditorProps) => 
           body.options = Object.fromEntries(productOptions.map((o) => [o.title, draft.options[o.id]]))
         }
 
-        if ((priceChanges.length || regionChanges.length) && freshListIds) {
+        if (newPrice !== null && code && freshLists) {
           // Sale prices share the price set but are never touched by this update —
           // and an id the module doesn't count as the variant's own would fail it.
-          const own = fresh.prices.filter((p) => !freshListIds.has(p.id))
-          const lock = priceLockFor(own)
+          const listIds = priceIdsOf(freshLists)
+          const own = fresh.prices.filter((p) => !listIds.has(p.id))
+          const lock = priceLockFor(own, code, loaded.regions)
           if (lock) throw new Error(lock)
+          // Region prices in this currency are folded into the one price: left out
+          // of the payload, the module deletes them, so the shop charges what was typed.
+          const folded = new Set(regionalIn(own, code, loaded.regions ?? []).map((p) => p.id))
           // The full set, each price with id + currency + rules: anything left out,
           // or sent without its rules, would be deleted by the pricing module.
-          const prices: HttpTypes.AdminUpdateProductVariantPrice[] = own.map((p) => {
+          const prices: HttpTypes.AdminUpdateProductVariantPrice[] = own.filter((p) => !folded.has(p.id)).map((p) => {
             const rules = rulesOf(p)
             return {
               id: p.id,
@@ -1044,24 +1072,10 @@ const VariantEditor = ({ productId, variantId, open, onClose }: EditorProps) => 
               ...(p.max_quantity != null ? { max_quantity: p.max_quantity } : {}),
             } as HttpTypes.AdminUpdateProductVariantPrice
           })
-          for (const { code, amount } of priceChanges) {
-            const existing = plainPrice(own, code)
-            const entry = existing && prices.find((p) => p.id === existing.id)
-            if (entry) entry.amount = amount
-            else prices.push({ currency_code: code, amount })
-          }
-          for (const { region, amount } of regionChanges) {
-            const existing = regionPrice(own, region)
-            const entry = existing && prices.find((p) => p.id === existing.id)
-            if (entry) entry.amount = amount
-            else {
-              prices.push({
-                currency_code: region.currency_code,
-                amount,
-                rules: { region_id: region.id },
-              } as HttpTypes.AdminUpdateProductVariantPrice)
-            }
-          }
+          const existing = plainPrice(own, code)
+          const entry = existing && prices.find((p) => p.id === existing.id)
+          if (entry) entry.amount = newPrice
+          else prices.push({ currency_code: code, amount: newPrice })
           // Two entries the module would see as one = one of them gets deleted.
           if (hasHashCollision(prices as Parameters<typeof priceHash>[0][])) throw new Error(PRICE_LOCK)
           body.prices = prices
@@ -1195,6 +1209,35 @@ const VariantEditor = ({ productId, variantId, open, onClose }: EditorProps) => 
         }
       }
 
+      // ── 3b. discounted price: this variant's price in the discount list (made on first use) ──
+      if (newDiscount !== undefined && code && freshLists) {
+        step = "Τιμή έκπτωσης"
+        const list = findDiscountList(freshLists)
+        const current = discountOf(list, variantId, code)
+        if (newDiscount === null) {
+          if (list && current) await sdk.admin.priceList.batchPrices(list.id, { delete: [current.id] })
+        } else if (list && current) {
+          if (Number(current.amount) !== newDiscount) {
+            await sdk.admin.priceList.batchPrices(list.id, {
+              update: [{ id: current.id, variant_id: variantId, currency_code: code, amount: newDiscount }],
+            })
+          }
+        } else if (list) {
+          await sdk.admin.priceList.batchPrices(list.id, {
+            create: [{ variant_id: variantId, currency_code: code, amount: newDiscount }],
+          })
+        } else {
+          await sdk.admin.priceList.create({
+            ...DISCOUNT_LIST,
+            type: "sale",
+            status: "active",
+            metadata: { [DISCOUNT_FLAG]: true },
+            prices: [{ variant_id: variantId, currency_code: code, amount: newDiscount }],
+          } as unknown as HttpTypes.AdminCreatePriceList)
+        }
+        done.push(step)
+      }
+
       // ── 4a. product images: new pictures, deletions and this variant's order in ONE write ──
       const productImages = loaded.product.images ?? []
       const newImageIds: string[] = []
@@ -1302,7 +1345,7 @@ const VariantEditor = ({ productId, variantId, open, onClose }: EditorProps) => 
       if (warnings.length) toast.warning(warnings.join(" "))
     } finally {
       await Promise.all(
-        [["products"], ["product_variants"], ["product_variant"], ["inventory_items"], ["product_categories"]].map(
+        [["products"], ["product_variants"], ["product_variant"], ["inventory_items"], ["product_categories"], ["price_lists"]].map(
           (queryKey) => queryClient.invalidateQueries({ queryKey })
         )
       )
@@ -1378,16 +1421,26 @@ type FieldsProps = {
 }
 
 const EditorFields = ({ loaded, draft, base, errors, set }: FieldsProps) => {
-  const { variant, product, currencies, locations, regions, orphan, sectionErrors, listPrices } = loaded
+  const { variant, product, currencies, currency, locations, regions, orphan, sectionErrors, listPrices } = loaded
   const links = variant.inventory_items ?? []
   const images = [...(product.images ?? [])].sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0))
   const tree = useMemo(() => categoryTree(loaded.categories ?? []), [loaded.categories])
   const regionName = (rid: string) => (regions ?? []).find((r) => r.id === rid)?.name ?? rid
-  // Everything the inputs above don't edit: kept as-is on save, listed for reference.
-  const otherPrices = variant.prices.filter((p) => {
-    if (isPlain(p)) return !(currencies ?? []).some((c) => c.currency_code.toLowerCase() === p.currency_code.toLowerCase())
-    return !(regions ?? []).some((r) => regionPrice([p], r))
-  })
+  // Prices the two inputs don't stand for: kept as-is on save, listed for reference.
+  // Plain prices in other currencies aren't listed — no region sells in them.
+  const folded = new Set(currency ? regionalIn(variant.prices, currency.currency_code, regions ?? []).map((p) => p.id) : [])
+  const otherPrices = variant.prices.filter((p) => !isPlain(p) && !folded.has(p.id))
+  const code = currency?.currency_code ?? ""
+  const symbol = currency?.currency?.symbol_native ?? code.toUpperCase()
+  const after = currency ? pricesAfter(draft, base, currency) : null
+  const percentOff =
+    after && !errors.price && !errors.discount && after.regular && after.discount && after.discount < after.regular
+      ? Math.round((1 - after.discount / after.regular) * 100)
+      : null
+  const discountProblem =
+    loaded.discountList && (draft.discount.trim() || base.discount.trim())
+      ? discountListProblem(loaded.discountList)
+      : null
   const thumbnail = thumbnailAfter(draft, base, images)
 
   const readOnlyPrices = (title: string, prices: Price[]) => (
@@ -1719,77 +1772,60 @@ const EditorFields = ({ loaded, draft, base, errors, set }: FieldsProps) => {
       </Section>
 
       {/* 2 ── Τιμές */}
-      <Section title="Τιμές" hint="Οι τιμές περιλαμβάνουν ΦΠΑ. Ένα κενό πεδίο αφήνει την υπάρχουσα τιμή ως έχει.">
+      <Section title="Τιμές" hint="Οι τιμές περιλαμβάνουν ΦΠΑ.">
         {!currencies ? (
           <Note error>Δεν φορτώθηκαν τα νομίσματα του καταστήματος: {sectionErrors.currencies}</Note>
+        ) : !currency ? (
+          <Note>Το κατάστημα δεν έχει νομίσματα.</Note>
         ) : (
           <>
             {loaded.priceLock && <Note error>{loaded.priceLock}</Note>}
-            {currencies.length === 0 && <Note>Το κατάστημα δεν έχει νομίσματα.</Note>}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {currencies.map((c) => {
-                const code = c.currency_code
-                const symbol = c.currency?.symbol_native ?? code.toUpperCase()
-                return (
-                  <div key={code} className={clx(c.is_default && "sm:col-span-2")}>
-                    <Field
-                      label={`${c.currency?.name ?? code.toUpperCase()} (${code.toUpperCase()})`}
-                      error={errors[`price:${code}`]}
-                    >
-                      <div className="flex items-center gap-x-2">
-                        <Text size={c.is_default ? "large" : "small"} weight="plus" className="w-6 text-center">
-                          {symbol}
-                        </Text>
-                        <Input
-                          size={c.is_default ? "base" : "small"}
-                          inputMode="decimal"
-                          placeholder={base.prices[code] ? base.prices[code] : "Χωρίς τιμή"}
-                          value={draft.prices[code] ?? ""}
-                          disabled={!!loaded.priceLock}
-                          aria-invalid={!!errors[`price:${code}`]}
-                          className={clx(c.is_default && "font-medium")}
-                          onChange={(e) => set({ prices: { ...draft.prices, [code]: e.target.value } })}
-                        />
-                      </div>
-                    </Field>
-                  </div>
-                )
-              })}
-            </div>
-            {regions === null ? (
-              <Note error>Δεν φορτώθηκαν οι περιοχές: {sectionErrors.regions}</Note>
-            ) : (
-              regions.length > 0 && (
-                <div className="flex flex-col gap-y-2">
-                  <Text size="xsmall" weight="plus" className="text-ui-fg-subtle">
-                    Τιμές ανά περιοχή — κενό: ισχύει η τιμή του νομίσματος
+              <Field label="Κανονική τιμή" error={errors.price}>
+                <div className="flex items-center gap-x-2">
+                  <Text size="large" weight="plus" className="w-6 text-center">
+                    {symbol}
                   </Text>
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    {regions.map((r) => (
-                      <Field
-                        key={r.id}
-                        label={`${r.name} (${r.currency_code.toUpperCase()})`}
-                        error={errors[`region:${r.id}`]}
-                      >
-                        <Input
-                          size="small"
-                          inputMode="decimal"
-                          placeholder={base.regionPrices[r.id] ? base.regionPrices[r.id] : "Χωρίς τιμή περιοχής"}
-                          value={draft.regionPrices[r.id] ?? ""}
-                          disabled={!!loaded.priceLock}
-                          aria-invalid={!!errors[`region:${r.id}`]}
-                          onChange={(e) => set({ regionPrices: { ...draft.regionPrices, [r.id]: e.target.value } })}
-                        />
-                      </Field>
-                    ))}
-                  </div>
+                  <Input
+                    inputMode="decimal"
+                    placeholder={base.price || "Χωρίς τιμή"}
+                    value={draft.price}
+                    disabled={!!loaded.priceLock}
+                    aria-invalid={!!errors.price}
+                    className="font-medium"
+                    onChange={(e) => set({ price: e.target.value })}
+                  />
                 </div>
-              )
-            )}
+                <Text size="xsmall" className="text-ui-fg-subtle">
+                  Ένα κενό πεδίο αφήνει την τιμή ως έχει.
+                </Text>
+              </Field>
+              <Field label="Τιμή έκπτωσης" error={errors.discount}>
+                <div className="flex items-center gap-x-2">
+                  <Text size="large" weight="plus" className="w-6 text-center">
+                    {symbol}
+                  </Text>
+                  <Input
+                    inputMode="decimal"
+                    placeholder="Χωρίς έκπτωση"
+                    value={draft.discount}
+                    disabled={!!loaded.priceLock}
+                    aria-invalid={!!errors.discount}
+                    onChange={(e) => set({ discount: e.target.value })}
+                  />
+                </div>
+                <Text size="xsmall" className="text-ui-fg-subtle">
+                  {percentOff !== null && after?.regular && after.discount
+                    ? `Ο πελάτης πληρώνει ${money(after.discount, code)} αντί ${money(after.regular, code)} (−${percentOff}%).`
+                    : "Προαιρετική. Κενό: χωρίς έκπτωση."}
+                </Text>
+              </Field>
+            </div>
+            {discountProblem && <Note error>{discountProblem}</Note>}
             {otherPrices.length > 0 &&
               readOnlyPrices("Άλλες τιμές — δεν αλλάζουν από εδώ και διατηρούνται κατά την αποθήκευση", otherPrices)}
             {listPrices.length > 0 &&
-              readOnlyPrices("Τιμές λιστών τιμών (εκπτώσεις) — αλλάζουν από τις «Λίστες τιμών»", listPrices)}
+              readOnlyPrices("Τιμές άλλων λιστών τιμών — αλλάζουν από τις «Λίστες τιμών»", listPrices)}
           </>
         )}
       </Section>

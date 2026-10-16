@@ -3,7 +3,7 @@ import { useLocale } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import type { HoneyProduct } from './home-content'
 import { proiontaHref } from '@/components/shop/shop-content'
-import { displayPrice } from '@/lib/utils'
+import { SalePrice } from '@/components/shop/sale-price'
 
 /** Bespoke product card used in the Deal-of-the-Month row (Figma "Product w price"). */
 export function ProductCardHoney({ product }: { product: HoneyProduct }) {
@@ -33,7 +33,9 @@ export function ProductCardHoney({ product }: { product: HoneyProduct }) {
           {product.title}
         </h3>
       </Link>
-      <p className="text-[14px] leading-[21px] text-accent">{displayPrice(product.price, locale)}</p>
+      <p className="text-[14px] leading-[21px] text-accent">
+        <SalePrice price={product.price} compareAt={product.compareAt} locale={locale} />
+      </p>
     </div>
   )
 }

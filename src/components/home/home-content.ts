@@ -174,6 +174,8 @@ export type HoneyProduct = {
   category: string
   title: string
   price: string
+  /** The regular price when `price` is a discount — set from the live catalogue, never in the copy. */
+  compareAt?: string
 }
 
 export const DEAL = {

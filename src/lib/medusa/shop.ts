@@ -85,17 +85,20 @@ const euro = (n: number) => `€${n.toFixed(2).replace('.', ',')}`
 
 function mapProduct(p: HttpTypes.StoreProduct, locale: string): ShopProduct | null {
   const variants = p.variants ?? []
-  const amounts = variants
-    .map(
-      (v) =>
-        (v as { calculated_price?: HttpTypes.StoreCalculatedPrice }).calculated_price
-          ?.calculated_amount,
-    )
-    .filter((n): n is number => n != null)
-  if (!amounts.length) return null
+  const prices = variants
+    .map((v) => (v as { calculated_price?: HttpTypes.StoreCalculatedPrice }).calculated_price)
+    .filter((cp): cp is HttpTypes.StoreCalculatedPrice => cp?.calculated_amount != null)
+  if (!prices.length) return null
 
+  const amounts = prices.map((cp) => cp.calculated_amount as number)
   const min = Math.min(...amounts)
   const max = Math.max(...amounts)
+  // A sale price (Medusa sale price list) comes with the regular one as
+  // `original_amount`. Struck through only when every size at the lowest
+  // price is on sale — otherwise that price is a regular one too.
+  const regularAtMin = Math.min(
+    ...prices.filter((cp) => cp.calculated_amount === min).map((cp) => cp.original_amount ?? min),
+  )
 
   const catName = (p.categories ?? []).find((c) =>
     (SHOP_CATEGORIES as readonly string[]).includes(c.name),
@@ -121,6 +124,7 @@ function mapProduct(p: HttpTypes.StoreProduct, locale: string): ShopProduct | nu
     category,
     title,
     price: min === max ? euro(min) : `${euro(min)} – ${euro(max)}`,
+    ...(regularAtMin > min ? { compareAt: euro(regularAtMin) } : {}),
     sortPrice: Math.round(min * 100),
     priceRange: [Math.round(min * 100), Math.round(max * 100)],
     inStock,
@@ -324,6 +328,8 @@ export async function getShopProduct(
         const st = staticSizes.find((s) => s.label === label)
         const live = variantImages(v, images)
         const amount = v.calculated_price?.calculated_amount ?? 0
+        // The regular price — above `amount` when this size is on sale.
+        const regular = v.calculated_price?.original_amount ?? amount
         // A size the Greek snapshot knows but this locale's does not is the
         // English label mismatch ("100 g" vs Medusa's "100g"), nothing else:
         // those chips have always rendered without a photo (and without a
@@ -335,10 +341,12 @@ export async function getShopProduct(
         const mismatch = !st && greekSizes.some((s) => s.label === label)
         return {
           live,
+          regular,
           size: {
             label,
             container: st?.container,
             price: euro(amount),
+            ...(regular > amount ? { compareAt: euro(regular) } : {}),
             sortPrice: Math.round(amount * 100),
             // Per-size photos come from Medusa by variant id, so the English
             // label mismatch no longer leaves a size without its photo.
@@ -348,7 +356,8 @@ export async function getShopProduct(
           },
         }
       })
-      .sort((a, b) => a.size.sortPrice - b.size.sortPrice)
+      // By regular price, so a discount never reorders the sizes.
+      .sort((a, b) => a.regular - b.regular || a.size.sortPrice - b.size.sortPrice)
 
     sizes = rows.map((r) => r.size)
 

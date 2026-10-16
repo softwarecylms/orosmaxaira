@@ -7,7 +7,7 @@ import { ShoppingCart } from 'lucide-react'
 import type { ShopProduct } from './shop-content'
 import { categoryLabel, handleOf, productHref, proiontaHref } from './shop-content'
 import { getShopUi } from './shop-ui'
-import { displayPrice } from '@/lib/utils'
+import { SalePrice } from './sale-price'
 
 /**
  * Shop product card (Figma 209:4451 "Item"). Image, category, title, gold price
@@ -62,7 +62,9 @@ export function ShopProductCard({
         </h3>
       </Link>
 
-      <p className="text-[16px] leading-[24px] text-accent">{displayPrice(product.price, locale)}</p>
+      <p className="text-[16px] leading-[24px] text-accent">
+        <SalePrice price={product.price} compareAt={product.compareAt} locale={locale} />
+      </p>
 
       <Link
         href={href}

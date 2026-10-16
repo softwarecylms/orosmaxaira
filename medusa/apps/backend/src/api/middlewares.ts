@@ -85,6 +85,9 @@ function noindex(_req: MedusaRequest, res: MedusaResponse, next: MedusaNextFunct
  * Linking a photo to a variant (or to none) changes what the product page
  * shows, but Medusa's `batchVariantImagesWorkflow` emits no event — so the
  * subscriber in src/subscribers/revalidate-products.ts never hears about it.
+ * The price-list workflows are just as silent, and a sale price (the variant
+ * drawer's «Τιμή έκπτωσης») changes what the shop charges. A list that starts or
+ * ends on a date later is left to the cache TTL (an hour at most).
  * Drop the storefront's product cache here instead, once the route has answered
  * and only when it succeeded. The `products` tag also clears every detail page:
  * that read is tagged `products` + `product-<handle>`, and Next drops a cached
@@ -161,6 +164,27 @@ export default defineMiddlewares({
     },
     {
       matcher: "/admin/products/:id/images/:image_id/variants/batch",
+      method: "POST",
+      middlewares: [revalidateProducts],
+    },
+    // The event-silent price-list routes (see revalidateProducts).
+    {
+      matcher: "/admin/price-lists",
+      method: "POST",
+      middlewares: [revalidateProducts],
+    },
+    {
+      matcher: "/admin/price-lists/:id",
+      method: ["POST", "DELETE"],
+      middlewares: [revalidateProducts],
+    },
+    {
+      matcher: "/admin/price-lists/:id/prices/batch",
+      method: "POST",
+      middlewares: [revalidateProducts],
+    },
+    {
+      matcher: "/admin/price-lists/:id/products",
       method: "POST",
       middlewares: [revalidateProducts],
     },

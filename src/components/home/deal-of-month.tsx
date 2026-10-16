@@ -28,6 +28,8 @@ export async function withLivePrices(curated: HoneyProduct[], locale: string): P
     const handle = p.href.match(/\/product\/([^/]+)/)?.[1]
     const live = handle ? catalogue.products.find((x) => x.handle === handle) : undefined
     // Category too: Royal Jelly and Mead are Bee Products, not Honey.
-    return live ? { ...p, price: live.price, category: categoryLabel(live.category, locale) } : p
+    return live
+      ? { ...p, price: live.price, compareAt: live.compareAt, category: categoryLabel(live.category, locale) }
+      : p
   })
 }
