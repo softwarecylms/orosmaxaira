@@ -1,7 +1,19 @@
-/** Auto-generated from orosmaxaira.com WP REST API. Blog posts (metadata + HTML body). */
+/**
+ * The blog as it was on the old WordPress site (generated once from its REST API):
+ * metadata + HTML body, Greek, with the English translations below.
+ *
+ * Since 2026-10-19 the articles live in Payload → Posts; this file is what
+ * scripts/seed-payload-posts.mts imported, and the site's fallback when the CMS
+ * has no articles or can't be reached (src/lib/blog.ts). Editing it does not
+ * change the live blog.
+ */
 export type BlogPost = {
   slug: string; title: string; date: string; dateText: string;
   excerpt: string; image: string; readMins: number; content: string
+  /** Category slugs, the first one shown on the article (here: POST_CATEGORIES). */
+  categories?: string[]
+  /** Search-result overrides set in the CMS. */
+  seo?: { title?: string; description?: string; image?: string; noindex?: boolean }
 }
 
 export const BLOG_POSTS: BlogPost[] = [

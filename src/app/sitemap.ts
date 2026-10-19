@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 import { siteUrl } from '@/lib/seo'
 import { sdk } from '@/lib/medusa/client'
 import { isHiddenProduct } from '@/lib/medusa/shop'
-import { getBlogPosts } from '@/components/blog/blog-data'
+import { getBlogPosts } from '@/lib/blog'
 import { ARTICLE_DUPLICATE_OF } from '@/components/blog/article-seo'
 import { CATEGORY_SLUGS, SHOP_PRODUCTS, handleOf } from '@/components/shop/shop-content'
 import { enHandle } from '@/components/shop/product-slugs'
@@ -116,8 +116,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   // Articles keep the previous site's root permalinks, in both languages.
-  for (const post of getBlogPosts('el')) {
-    if (post.slug && !ARTICLE_DUPLICATE_OF[post.slug]) entries.push({ el: `/${post.slug}/`, en: `/en/${post.slug}/`, lastModified: date(post.date) })
+  for (const post of await getBlogPosts('el')) {
+    if (post.slug && !ARTICLE_DUPLICATE_OF[post.slug] && !post.seo?.noindex) {
+      entries.push({ el: `/${post.slug}/`, en: `/en/${post.slug}/`, lastModified: date(post.date) })
+    }
   }
 
   const seen = new Set<string>()

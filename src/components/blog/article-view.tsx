@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import { CalendarDays, Phone, Mail } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
-import { getBlogCategories, POST_CATEGORIES } from '@/components/blog/blog-categories'
 import { getBlogUi, formatBlogDate } from '@/components/blog/blog-ui'
 import { Reveal } from '@/components/motion/reveal'
 import { ArticleFeaturedImage } from '@/components/blog/article-featured-image'
@@ -29,14 +28,15 @@ export function ArticleView({
   post,
   related,
   locale,
+  categoryName,
 }: {
   post: BlogPost
   related: BlogPost[]
   locale: string
+  /** The article's first category, named in this language — shown on its picture. */
+  categoryName?: string
 }) {
   const ui = getBlogUi(locale)
-  const categorySlug = POST_CATEGORIES[post.slug]?.[0]
-  const categoryName = getBlogCategories(locale).find((c) => c.slug === categorySlug)?.name
   // Share the locale's own permalink, not always the Greek one.
   const url = articleUrl(post.slug, locale)
   const shares = [

@@ -229,7 +229,7 @@ export interface Media {
   };
 }
 /**
- * Blog articles. URL: /{slug} (root, matches the old WordPress permalinks).
+ * The blog’s articles. «Create New» writes a new one; open one to change it. «Publish changes» puts it on the site (orosmaxaira.com/blog and the home page) straight away.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
@@ -237,10 +237,30 @@ export interface Media {
 export interface Post {
   id: number;
   title: string;
+  /**
+   * The article’s address: orosmaxaira.com/<link>/ (and /en/<link>/). Left empty, it is made from the Greek title. Changing it breaks links to the old address.
+   */
   slug: string;
-  excerpt?: string | null;
+  /**
+   * Shown on the article; the blog lists newest first.
+   */
+  publishedAt?: string | null;
+  /**
+   * The first one is shown on the article’s picture.
+   */
   categories?: (number | Category)[] | null;
+  /**
+   * A sentence or two for the blog list and search results. Left empty, the opening paragraph is used.
+   */
+  excerpt?: string | null;
+  /**
+   * The article’s main picture (about 1200×800).
+   */
   cover?: (number | null) | Media;
+  /**
+   * Used while no «Cover image» is uploaded. Articles from the old site keep their picture here.
+   */
+  legacyCover?: string | null;
   content?: {
     root: {
       type: string;
@@ -257,10 +277,9 @@ export interface Post {
     [k: string]: unknown;
   } | null;
   /**
-   * Original WordPress HTML body, preserved verbatim from the migration. Used as a fallback when the rich text is empty.
+   * The article’s text as it was on the old WordPress site, kept for reference. The site shows «Text» above; this only shows if «Text» is empty.
    */
   legacyContent?: string | null;
-  publishedAt?: string | null;
   seo?: {
     /**
      * Defaults to the page title if empty (max 60 chars recommended).
@@ -452,12 +471,13 @@ export interface PagesSelect<T extends boolean = true> {
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
-  excerpt?: T;
+  publishedAt?: T;
   categories?: T;
+  excerpt?: T;
   cover?: T;
+  legacyCover?: T;
   content?: T;
   legacyContent?: T;
-  publishedAt?: T;
   seo?:
     | T
     | {

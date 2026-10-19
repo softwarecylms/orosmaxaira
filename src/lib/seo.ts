@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import type { Page, Post } from '@/payload-types'
+import type { Page } from '@/payload-types'
 
 /**
  * The public origin every canonical, hreflang, sitemap and structured-data URL
@@ -187,44 +187,6 @@ export function pageMetadata(
       title,
       description,
       url: canonical,
-      images: image ? [{ url: image }] : undefined,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: image ? [image] : undefined,
-    },
-    robots: (seo as { noindex?: boolean }).noindex ? { index: false, follow: false } : undefined,
-  }
-}
-
-export function postMetadata(
-  post:
-    | Pick<Post, 'title' | 'slug' | 'excerpt' | 'cover' | 'seo' | 'publishedAt' | 'updatedAt'>
-    | null
-    | undefined,
-): Metadata {
-  if (!post) return { title: 'Not found' }
-  const seo = post.seo ?? {}
-  const title = (seo as { title?: string }).title || post.title
-  const description =
-    (seo as { description?: string }).description || post.excerpt || undefined
-  const image =
-    mediaUrl((seo as { image?: MediaLike }).image) || mediaUrl(post.cover as MediaLike)
-  const canonical = `/${post.slug ?? ''}`
-
-  return {
-    title,
-    description,
-    alternates: { canonical },
-    openGraph: {
-      title,
-      description,
-      type: 'article',
-      url: absoluteUrl(canonical),
-      publishedTime: post.publishedAt ?? undefined,
-      modifiedTime: post.updatedAt ?? post.publishedAt ?? undefined,
       images: image ? [{ url: image }] : undefined,
     },
     twitter: {

@@ -1,5 +1,5 @@
 import { getLocale } from 'next-intl/server'
-import { getBlogPosts } from '@/components/blog/blog-data'
+import { getBlogPosts } from '@/lib/blog'
 import { loadHomeContent } from '@/lib/content/load'
 import { BlogTeaserView } from './blog-teaser-view'
 
@@ -7,7 +7,7 @@ import { BlogTeaserView } from './blog-teaser-view'
 export async function BlogTeaser() {
   const locale = await getLocale()
   const { BLOG } = await loadHomeContent(locale)
-  const posts = [...getBlogPosts(locale)]
+  const posts = [...(await getBlogPosts(locale))]
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 3)
     .map(({ slug, title, image, excerpt }) => ({ slug, title, image, excerpt }))

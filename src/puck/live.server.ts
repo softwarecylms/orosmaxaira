@@ -1,6 +1,6 @@
 import 'server-only'
 import type { Data } from '@measured/puck'
-import { getBlogPosts } from '@/components/blog/blog-data'
+import { getBlogPosts } from '@/lib/blog'
 import { categoryLabel } from '@/components/shop/shop-content'
 import { getAddonVariants, listShopProducts } from '@/lib/medusa/shop'
 import { loadSiteContent } from '@/lib/content/load'
@@ -18,7 +18,7 @@ export async function resolveLive(data: Data | null | undefined, locale: string)
   const tasks: Promise<void>[] = []
 
   if (types.has('BlogTeaser')) {
-    live.posts = [...getBlogPosts(locale)]
+    live.posts = [...(await getBlogPosts(locale))]
       .sort((a, b) => b.date.localeCompare(a.date))
       .slice(0, 3)
       .map(({ slug, title, image, excerpt }) => ({ slug, title, image, excerpt }))

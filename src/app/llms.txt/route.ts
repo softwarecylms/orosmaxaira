@@ -1,4 +1,5 @@
-import { getSiteSettings, getAllPagesMeta, getAllPosts } from '@/lib/cms'
+import { getSiteSettings, getAllPagesMeta } from '@/lib/cms'
+import { getBlogPosts } from '@/lib/blog'
 import { siteUrl } from '@/lib/seo'
 
 /**
@@ -27,7 +28,7 @@ export async function GET() {
   const [settings, pages, posts] = await Promise.all([
     getSiteSettings(),
     getAllPagesMeta(),
-    getAllPosts(200),
+    getBlogPosts('el'),
   ])
 
   const s = (settings ?? {}) as Record<string, unknown>

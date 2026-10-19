@@ -26,10 +26,9 @@ src/
   app/(frontend)/   Frontend routes + layout, [slug] catch-all
   app/(payload)/    Payload admin
   app/llms.txt/     + llms-full.txt — AEO manifests (route handlers)
-  blocks/           blog-post.tsx (Payload post template)
   components/sections/ Page sections (content in via props) — also the Puck blocks
   components/        ui/ (Button, Section, Accordion), motion/ (Reveal, Counter, …), layout/, seo/
-  lib/              motion.ts (EASE/DURATION/variants), cms.ts, seo.ts, utils.ts
+  lib/              motion.ts (EASE/DURATION/variants), cms.ts, blog.ts (articles), seo.ts, utils.ts
   puck/             config.tsx (visual editor blocks)
   payload/          collections, globals, fields, hooks, admin/ (PuckField, branding)
   styles/globals.css Design tokens (@theme)
@@ -88,6 +87,14 @@ sidebar links to the Medusa sections. Content is bilingual (Payload localization
 - **Editor**: `/editor/<locale>` (`src/app/(editor)`, `src/puck/editor.tsx`) runs inside the admin
   overlay (`src/payload/admin/PuckField.tsx`) and syncs by postMessage; Payload saves drafts,
   publishes and keeps versions. Live data (prices, newest articles) comes from `src/puck/live.server.ts`.
+- **Blog** (Payload → Posts): title, link, date, categories, excerpt, cover, rich text, SEO, el/en,
+  drafts + versions. Articles live at `/<slug>/` (the old WordPress permalinks) via the catch-all;
+  `src/lib/blog.ts` reads them (cached, tag `posts`, cleared on publish by
+  `src/payload/hooks/revalidate-post.ts`) and `src/lib/blog-html.ts` renders the rich text for
+  `<ArticleView>`. The 73 old-site articles were imported by `scripts/seed-payload-posts.mts`
+  (`DRY=1` checks the conversion, `FORCE=1`, `ONLY=`); their pictures are «Image by address» blocks
+  and `legacyCover` paths under `/wp-content/uploads/`. `src/components/blog/blog-data.ts` is that
+  snapshot and the fallback when the CMS has no articles — editing it no longer changes the blog.
 - **Seed/re-seed** pages from the built-in copy: `npx tsx scripts/seed-payload-pages.mts`
   (skips existing pages; `FORCE=1`, `ONLY=<slug>`). The `*-content.ts` files are the defaults for new
   blocks and the fallback — editing them does not change pages already in Payload.

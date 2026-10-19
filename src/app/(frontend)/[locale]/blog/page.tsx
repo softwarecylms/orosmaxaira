@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { getLocale } from 'next-intl/server'
-import { getBlogPosts } from '@/components/blog/blog-data'
-import { getBlogCategories, POST_CATEGORIES } from '@/components/blog/blog-categories'
+import { getBlogPosts, getBlogTaxonomy } from '@/lib/blog'
 import { getBlogUi } from '@/components/blog/blog-ui'
 import { PageHero } from '@/components/shared/page-hero'
 import { BlogFilterGrid } from '@/components/blog/blog-filter-grid'
@@ -21,6 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function BlogPage() {
   const locale = await getLocale()
   const ui = getBlogUi(locale)
+  const [posts, { categories, postCategories }] = await Promise.all([getBlogPosts(locale), getBlogTaxonomy(locale)])
 
   return (
     <>
@@ -33,9 +33,9 @@ export default async function BlogPage() {
 
       <section className="container-wide py-12 md:py-[70px]">
         <BlogFilterGrid
-          posts={getBlogPosts(locale)}
-          categories={getBlogCategories(locale)}
-          postCategories={POST_CATEGORIES}
+          posts={posts}
+          categories={categories}
+          postCategories={postCategories}
         />
       </section>
     </>

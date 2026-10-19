@@ -1,10 +1,9 @@
 import { notFound } from 'next/navigation'
 import { getLocale } from 'next-intl/server'
-import { getAllPageSlugs, getAllPostSlugs, getPostBySlug, getRelatedPosts } from '@/lib/cms'
+import { getAllPageSlugs } from '@/lib/cms'
 import { getPayloadPage, ManagedPage, managedMetadata } from '@/lib/cms/pages'
-import { hreflangAlternates, postMetadata, seoMetadata } from '@/lib/seo'
-import { BlogPostRender } from '@/blocks/blog-post'
-import { getBlogPosts } from '@/components/blog/blog-data'
+import { NOINDEX, hreflangAlternates, seoMetadata } from '@/lib/seo'
+import { getBlogArticle, getBlogPosts, getBlogTaxonomy } from '@/lib/blog'
 import { ArticleView } from '@/components/blog/article-view'
 import { articlePath } from '@/components/blog/article-url'
 import { getBlogUi } from '@/components/blog/blog-ui'
@@ -16,26 +15,16 @@ export const dynamicParams = true
 
 const RESERVED_TOP_LEVEL_SLUGS = new Set(['admin', 'api', 'editor', '_next'])
 
-/** Articles keep the previous site's root permalinks — `/<slug>/`, `/en/<slug>/`
- *  — so they resolve here rather than under `/blog/`. Slugs are locale-invariant,
- *  so the Greek list covers both locales. */
-function findArticle(slug: string, locale: string) {
-  return getBlogPosts(locale).find((p) => p.slug === slug)
-}
-
+/** Articles (Payload → Posts, see src/lib/blog.ts) keep the previous site's root
+ *  permalinks — `/<slug>/`, `/en/<slug>/` — so they resolve here rather than
+ *  under `/blog/`. Slugs are locale-invariant, so the Greek list covers both. */
 export async function generateStaticParams() {
-  const [pageSlugs, postSlugs] = await Promise.all([
-    getAllPageSlugs(),
-    getAllPostSlugs(),
-  ])
+  const [pageSlugs, posts] = await Promise.all([getAllPageSlugs(), getBlogPosts('el')])
   const all = new Set<string>()
   for (const s of pageSlugs) {
     if (s && s !== 'home' && !RESERVED_TOP_LEVEL_SLUGS.has(s)) all.add(s)
   }
-  for (const s of postSlugs) {
-    if (s && !RESERVED_TOP_LEVEL_SLUGS.has(s)) all.add(s)
-  }
-  for (const p of getBlogPosts('el')) {
+  for (const p of posts) {
     if (p.slug && !RESERVED_TOP_LEVEL_SLUGS.has(p.slug)) all.add(p.slug)
   }
   return Array.from(all).map((slug) => ({ slug }))
@@ -50,21 +39,19 @@ export async function generateMetadata({ params }: RouteProps) {
   if (page?.content?.content?.length) {
     return managedMetadata(slug, { locale, path: `/${slug}`, title: page.title }, { always: true })
   }
-  const post = await getPostBySlug(slug)
-  if (post) return postMetadata(post)
-
-  const article = findArticle(slug, locale)
+  const article = await getBlogArticle(slug, locale)
   const alternates = hreflangAlternates(locale, articlePath(canonicalArticleSlug(slug)))
   if (article) {
     return seoMetadata({
       locale,
       alternates,
-      title: articleSeoTitle(slug, locale, article.title),
+      title: article.seo?.title || articleSeoTitle(slug, locale, article.title),
       // 15 articles have no excerpt; their opening paragraph stands in.
-      description: article.excerpt || article.content,
-      image: article.image,
+      description: article.seo?.description || article.excerpt || article.content,
+      image: article.seo?.image || article.image,
       type: 'article',
       publishedTime: article.date,
+      ...(article.seo?.noindex ? { robots: NOINDEX } : {}),
     })
   }
   return { title: 'Not found' }
@@ -81,23 +68,11 @@ export default async function CatchAllRoute({ params }: RouteProps) {
     return <ManagedPage slug={slug} locale={locale} fallback={null} always />
   }
 
-  const post = await getPostBySlug(slug)
-  if (post) {
-    const categories = Array.isArray(post.categories) ? post.categories : []
-    const primaryCategory = categories.find(
-      (c) => typeof c === 'object' && c !== null && 'id' in c,
-    ) as { id: number; slug?: string | null } | undefined
-    const relatedPosts = primaryCategory?.id
-      ? await getRelatedPosts(primaryCategory.id, slug, 3)
-      : []
-    return <BlogPostRender post={post} relatedPosts={relatedPosts} />
-  }
-
-  const article = findArticle(slug, locale)
+  const article = await getBlogArticle(slug, locale)
   if (article) {
-    const related = getBlogPosts(locale)
-      .filter((p) => p.slug !== slug)
-      .slice(0, 3)
+    const [posts, { categories }] = await Promise.all([getBlogPosts(locale), getBlogTaxonomy(locale)])
+    const related = posts.filter((p) => p.slug !== slug).slice(0, 3)
+    const categoryName = categories.find((c) => c.slug === article.categories?.[0])?.name
     const blogUi = getBlogUi(locale)
     return (
       <>
@@ -111,7 +86,7 @@ export default async function CatchAllRoute({ params }: RouteProps) {
             ]),
           ]}
         />
-        <ArticleView post={article} related={related} locale={locale} />
+        <ArticleView post={article} related={related} locale={locale} categoryName={categoryName} />
       </>
     )
   }
