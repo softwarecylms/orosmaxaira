@@ -4,20 +4,27 @@
 //
 //   npx tsx scripts/seed-payload-posts.mts
 //
-// The WordPress HTML becomes rich text the editor can change, and is also kept
-// verbatim in «Original text (HTML)». Pictures inside the text become «Image by
-// address» blocks (the files stay where they are, under /wp-content/uploads/).
+// The WordPress HTML becomes rich text the editor can change (the original stays
+// in the snapshot file). Pictures inside the text become «Image by address»
+// blocks (the files stay where they are, under /wp-content/uploads/).
 // Every converted article is checked against the original — same words, links,
 // headings, list items and pictures — and nothing is written unless all pass.
 //
 // Articles that already exist are left alone (an editor may have changed them);
 // FORCE=1 rewrites them (earlier versions stay in the article's history).
 // ONLY=<slug>[,<slug>] limits the run. DRY=1 converts and checks only.
+//
+// Covers: each article's picture from the old site (public/wp-content/uploads/)
+// is uploaded once to Media — Vercel Blob when BLOB_READ_WRITE_TOKEN is set,
+// as in production — and set as its «Cover image». COVERS=1 does only that, for
+// articles that exist but have no cover yet.
 // Point DATABASE_URI at the database to load (local by default, from .env).
 // A run outside Next.js can't clear the site's cache: afterwards, revalidate
 // the `posts` tag (POST /api/revalidate/ with {"tags":["posts"]}).
 import 'dotenv/config'
 import { randomBytes } from 'node:crypto'
+import { existsSync } from 'node:fs'
+import path from 'node:path'
 import { JSDOM } from 'jsdom'
 import { getPayload } from 'payload'
 import { convertHTMLToLexical, editorConfigFactory } from '@payloadcms/richtext-lexical'
@@ -32,6 +39,7 @@ type Lexical = { root: Node & { children: Node[] } }
 
 const FORCE = process.env.FORCE === '1'
 const DRY = process.env.DRY === '1'
+const COVERS = process.env.COVERS === '1'
 const ONLY = new Set((process.env.ONLY ?? '').split(',').map((s) => s.trim()).filter(Boolean))
 
 /** The old site's own files are served by this site: keep the path, drop the host. */
@@ -129,6 +137,43 @@ function check(slug: string, lang: string, original: string, converted: string):
 const payload = await getPayload({ config })
 const editorConfig = await editorConfigFactory.default({ config: payload.config })
 
+/** The Media id of an article's old-site picture, uploading it the first time it's needed. */
+const mediaBySource = new Map<string, number | string>()
+async function coverFor(image: string, alt: string): Promise<number | string | null> {
+  const source = sitePath(image)
+  if (!source.startsWith('/wp-content/')) return null
+  const known = mediaBySource.get(source)
+  if (known) return known
+  const file = path.join(process.cwd(), 'public', decodeURI(source))
+  if (!existsSync(file)) {
+    console.log(`  ! no file for ${source}`)
+    return null
+  }
+  // Media stores images as .webp: a picture uploaded by an earlier run has that name.
+  const stored = `${path.basename(file, path.extname(file))}.webp`
+  const found = await payload.find({ collection: 'media', where: { filename: { equals: stored } }, limit: 1, depth: 0 })
+  const id = found.docs[0]?.id ?? (await payload.create({ collection: 'media', locale: 'el', data: { alt }, filePath: file })).id
+  mediaBySource.set(source, id)
+  return id
+}
+
+if (COVERS) {
+  let attached = 0
+  for (const post of BLOG_POSTS.filter((p) => !ONLY.size || ONLY.has(p.slug))) {
+    const existing = await payload.find({ collection: 'posts', where: { slug: { equals: post.slug } }, limit: 1, depth: 0, draft: true })
+    const doc = existing.docs[0]
+    if (!doc || doc.cover || !post.image) continue
+    const cover = await coverFor(post.image, post.title)
+    if (!cover) continue
+    // The cover is the same in both languages; publishing keeps the article live.
+    await payload.update({ collection: 'posts', id: doc.id, data: { cover, _status: 'published' } as never })
+    attached++
+    console.log(`+ cover ${post.slug}`)
+  }
+  console.log(`Done: ${attached} covers attached, ${mediaBySource.size} pictures in Media.`)
+  process.exit(0)
+}
+
 const en = new Map(getBlogPosts('en').map((p) => [p.slug, p]))
 const selected = BLOG_POSTS.filter((p) => !ONLY.size || ONLY.has(p.slug))
 
@@ -190,9 +235,8 @@ for (const { post, enPost, el, en: enText } of converted) {
     excerpt: post.excerpt,
     publishedAt,
     categories: (POST_CATEGORIES[post.slug] ?? []).flatMap((s) => (categoryIds.has(s) ? [categoryIds.get(s)!] : [])),
-    legacyCover: post.image ? sitePath(post.image) : null,
+    cover: post.image ? await coverFor(post.image, post.title) : null,
     content: el,
-    legacyContent: post.content,
     seo: { title: seo?.el ?? '' },
     _status: 'published' as const,
   }
@@ -207,7 +251,6 @@ for (const { post, enPost, el, en: enText } of converted) {
       title: enPost.title,
       excerpt: enPost.excerpt,
       content: enText,
-      legacyContent: enPost.content,
       seo: { title: seo?.en ?? '' },
       _status: 'published',
     } as never,

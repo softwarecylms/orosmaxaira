@@ -36,9 +36,9 @@ async function cms() {
 
 const dateOf = (doc: Pick<Post, 'publishedAt' | 'createdAt'>) => (doc.publishedAt ?? doc.createdAt).slice(0, 10)
 
-const imageOf = (doc: Pick<Post, 'cover' | 'legacyCover'>) => {
+const imageOf = (doc: Pick<Post, 'cover'>) => {
   const cover = doc.cover as Media | number | null | undefined
-  return (typeof cover === 'object' && cover?.url) || doc.legacyCover || ''
+  return (typeof cover === 'object' && cover?.url) || ''
 }
 
 const categoriesOf = (doc: Pick<Post, 'categories'>) =>
@@ -79,7 +79,6 @@ const SUMMARY_SELECT = {
   publishedAt: true,
   createdAt: true,
   cover: true,
-  legacyCover: true,
   categories: true,
   seo: true,
 } as const

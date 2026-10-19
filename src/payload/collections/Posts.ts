@@ -112,25 +112,13 @@ export const Posts: CollectionConfig = {
       admin: { description: 'A sentence or two for the blog list and search results. Left empty, the opening paragraph is used.' },
     },
     {
-      type: 'row',
-      fields: [
-        {
-          name: 'cover',
-          label: 'Cover image',
-          type: 'upload',
-          relationTo: 'media',
-          admin: { width: '50%', description: 'The article’s main picture (about 1200×800).' },
-        },
-        {
-          name: 'legacyCover',
-          label: 'Cover from the old site',
-          type: 'text',
-          admin: {
-            width: '50%',
-            description: 'Used while no «Cover image» is uploaded. Articles from the old site keep their picture here.',
-          },
-        },
-      ],
+      name: 'cover',
+      label: 'Cover image',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'The featured image: at the top of the article, on its card in the blog and on the home page (about 1200×800).',
+      },
     },
     {
       name: 'content',
@@ -140,24 +128,6 @@ export const Posts: CollectionConfig = {
       editor: lexicalEditor({
         features: ({ defaultFeatures }) => [...defaultFeatures, BlocksFeature({ blocks: [LegacyImageBlock] })],
       }),
-    },
-    {
-      type: 'collapsible',
-      label: 'Old site (reference only)',
-      admin: { initCollapsed: true },
-      fields: [
-        {
-          name: 'legacyContent',
-          label: 'Original text (HTML)',
-          type: 'textarea',
-          localized: true,
-          admin: {
-            readOnly: true,
-            description:
-              'The article’s text as it was on the old WordPress site, kept for reference. The site shows «Text» above; this only shows if «Text» is empty.',
-          },
-        },
-      ],
     },
     seoField,
   ],

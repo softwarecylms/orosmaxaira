@@ -52,9 +52,9 @@ export function hasRichText(content: Post['content'] | undefined): content is Ri
   return only.type !== 'paragraph' || (only.children?.length ?? 0) > 0
 }
 
-/** The body the site shows: the rich text, or — while that is empty — the old site's HTML. */
-export function postBodyHtml(doc: Pick<Post, 'content' | 'legacyContent'>, locale: string): string {
-  return hasRichText(doc.content) ? richTextToHtml(doc.content, locale) : (doc.legacyContent ?? '')
+/** The body the site shows. */
+export function postBodyHtml(doc: Pick<Post, 'content'>, locale: string): string {
+  return hasRichText(doc.content) ? richTextToHtml(doc.content, locale) : ''
 }
 
 /** Readable text of some HTML — for word counts and the import's checks. */

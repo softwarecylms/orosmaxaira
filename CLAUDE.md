@@ -92,9 +92,11 @@ sidebar links to the Medusa sections. Content is bilingual (Payload localization
   `src/lib/blog.ts` reads them (cached, tag `posts`, cleared on publish by
   `src/payload/hooks/revalidate-post.ts`) and `src/lib/blog-html.ts` renders the rich text for
   `<ArticleView>`. The 73 old-site articles were imported by `scripts/seed-payload-posts.mts`
-  (`DRY=1` checks the conversion, `FORCE=1`, `ONLY=`); their pictures are «Image by address» blocks
-  and `legacyCover` paths under `/wp-content/uploads/`. `src/components/blog/blog-data.ts` is that
-  snapshot and the fallback when the CMS has no articles — editing it no longer changes the blog.
+  (`DRY=1` checks the conversion, `FORCE=1`, `ONLY=`, `COVERS=1` attaches missing covers): covers
+  are uploaded from `public/wp-content/uploads/` to Media (Vercel Blob with `BLOB_READ_WRITE_TOKEN`;
+  move a local `public/media` aside first, or clashing names get `-1`), pictures inside the text are
+  «Image by address» blocks. `src/components/blog/blog-data.ts` is that snapshot (and the original
+  HTML) and the fallback when the CMS has no articles — editing it no longer changes the blog.
 - **Seed/re-seed** pages from the built-in copy: `npx tsx scripts/seed-payload-pages.mts`
   (skips existing pages; `FORCE=1`, `ONLY=<slug>`). The `*-content.ts` files are the defaults for new
   blocks and the fallback — editing them does not change pages already in Payload.

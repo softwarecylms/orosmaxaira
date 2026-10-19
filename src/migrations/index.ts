@@ -5,6 +5,7 @@ import * as migration_20260521_064532_url_parity_collections from './20260521_06
 import * as migration_20260915_120058_remove_template_collections from './20260915_120058_remove_template_collections';
 import * as migration_20260915_122520_localize_content from './20260915_122520_localize_content';
 import * as migration_20261019_063325_posts_legacy_cover from './20261019_063325_posts_legacy_cover';
+import * as migration_20261019_074344_posts_drop_old_site_fields from './20261019_074344_posts_drop_old_site_fields';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20261019_063325_posts_legacy_cover.up,
     down: migration_20261019_063325_posts_legacy_cover.down,
-    name: '20261019_063325_posts_legacy_cover'
+    name: '20261019_063325_posts_legacy_cover',
+  },
+  {
+    up: migration_20261019_074344_posts_drop_old_site_fields.up,
+    down: migration_20261019_074344_posts_drop_old_site_fields.down,
+    name: '20261019_074344_posts_drop_old_site_fields'
   },
 ];

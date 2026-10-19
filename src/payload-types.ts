@@ -254,13 +254,9 @@ export interface Post {
    */
   excerpt?: string | null;
   /**
-   * The article’s main picture (about 1200×800).
+   * The featured image: at the top of the article, on its card in the blog and on the home page (about 1200×800).
    */
   cover?: (number | null) | Media;
-  /**
-   * Used while no «Cover image» is uploaded. Articles from the old site keep their picture here.
-   */
-  legacyCover?: string | null;
   content?: {
     root: {
       type: string;
@@ -276,10 +272,6 @@ export interface Post {
     };
     [k: string]: unknown;
   } | null;
-  /**
-   * The article’s text as it was on the old WordPress site, kept for reference. The site shows «Text» above; this only shows if «Text» is empty.
-   */
-  legacyContent?: string | null;
   seo?: {
     /**
      * Defaults to the page title if empty (max 60 chars recommended).
@@ -475,9 +467,7 @@ export interface PostsSelect<T extends boolean = true> {
   categories?: T;
   excerpt?: T;
   cover?: T;
-  legacyCover?: T;
   content?: T;
-  legacyContent?: T;
   seo?:
     | T
     | {
