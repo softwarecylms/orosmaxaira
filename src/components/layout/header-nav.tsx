@@ -22,8 +22,10 @@ type NavItem = {
  *  href (locale-independent), not its label. */
 const MEGA_HREF = '/proionta'
 
-/** A muted link in the products menu — single lines keep the design's 39px rows, a long one wraps tight. */
-const MEGA_LINK = 'block py-[7.5px] text-[17px] leading-[24px] text-muted transition-colors hover:text-accent'
+/** A muted link in the products menu — 32px rows, a long one wraps tight. */
+const MEGA_LINK = 'block py-[5px] text-[15px] leading-[22px] text-muted transition-colors hover:text-accent'
+/** A column title in the products menu. */
+const MEGA_TITLE = 'text-[15px] font-bold leading-[22px] text-foreground transition-colors hover:text-accent'
 
 /**
  * Desktop nav row. "Προϊόντα" opens the product mega menu — Όρος Μαχαιρά's
@@ -203,13 +205,13 @@ export function HeaderNav({
           aria-label={megaLabel}
           className="w-[1321px] max-w-[calc(100vw-2.5rem)] overflow-hidden rounded-[4px] bg-white shadow-[0_0_12px_rgba(35,31,32,0.1)]"
         >
-          <div className="grid gap-[33px] p-[45px]" style={grid}>
+          <div className="grid gap-6 px-8 py-7" style={grid}>
             {mega.map((col) => (
-              <div key={col.title} className="flex min-w-0 flex-col gap-[15px]">
+              <div key={col.title} className="flex min-w-0 flex-col gap-2">
                 <Link
                   href={col.href}
                   onClick={close}
-                  className="text-[17px] font-bold leading-[24px] text-foreground transition-colors hover:text-accent"
+                  className={MEGA_TITLE}
                 >
                   {col.title}
                 </Link>
@@ -228,7 +230,7 @@ export function HeaderNav({
                   aria-label={t('viewAll', { category: col.title })}
                   className="text-accent transition-colors hover:text-gold-strong"
                 >
-                  <ArrowRight className="size-[15px]" />
+                  <ArrowRight className="size-[13px]" />
                 </Link>
               </div>
             ))}
@@ -261,20 +263,20 @@ function PartnerBand({
   const ui = getShopUi(useLocale())
 
   return (
-    <div className="grid gap-[33px] bg-cream px-[45px] py-[32px]" style={columns}>
-      <div className="flex min-w-0 flex-col gap-3">
+    <div className="grid gap-6 bg-cream px-8 py-6" style={columns}>
+      <div className="flex min-w-0 flex-col gap-2">
         <Link
           href={partners.href}
           onClick={onNavigate}
-          className="text-[17px] font-bold leading-[24px] text-foreground transition-colors hover:text-accent"
+          className={MEGA_TITLE}
         >
           {partners.title}
         </Link>
-        <p className="text-[15px] leading-[22px] text-muted">{t('partnerIntro')}</p>
-        <ul className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] leading-[22px]">
+        <p className="text-[13px] leading-[19px] text-muted">{t('partnerIntro')}</p>
+        <ul className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[14px] leading-[21px]">
           {partners.categories.map((c) => (
             // The separator trails each link, so a wrapped line never starts with one.
-            <li key={c.href} className="after:ml-2 after:text-muted after:content-['·'] last:after:content-none">
+            <li key={c.href} className="after:ml-1.5 after:text-muted after:content-['·'] last:after:content-none">
               <Link href={c.href} onClick={onNavigate} className="text-foreground transition-colors hover:text-accent">
                 {c.label}
               </Link>
@@ -284,34 +286,34 @@ function PartnerBand({
         <Link
           href={partners.href}
           onClick={onNavigate}
-          className="mt-1 inline-flex items-center gap-2 self-start text-[15px] font-medium text-accent transition-colors hover:text-gold-strong"
+          className="mt-0.5 inline-flex items-center gap-1.5 self-start text-[14px] font-medium text-accent transition-colors hover:text-gold-strong"
         >
           {t('partnerAll')}
-          <ArrowRight className="size-[13px]" />
+          <ArrowRight className="size-[12px]" />
         </Link>
       </div>
 
       <ul
-        className="grid gap-5"
+        className="grid gap-4"
         style={{ gridColumn: '2 / -1', gridTemplateColumns: `repeat(${Math.max(partners.brands.length, 3)}, minmax(0, 1fr))` }}
       >
         {partners.brands.map((b) => (
-          <li key={b.href} className="flex flex-col rounded-[8px] bg-white p-[22px]">
+          <li key={b.href} className="flex flex-col rounded-[8px] bg-white px-[18px] py-4">
             <Link
               href={b.href}
               onClick={onNavigate}
-              className="font-display text-[26px] leading-[1.1] text-foreground transition-colors hover:text-accent"
+              className="font-display text-[20px] leading-[1.15] text-foreground transition-colors hover:text-accent"
             >
               {b.label}
             </Link>
-            <span className="mt-1.5 text-[13px] leading-[18px] text-muted">{ui.count(b.count)}</span>
-            <ul className="mt-4 flex flex-col border-t border-border pt-2">
+            <span className="mt-0.5 text-[12px] leading-[17px] text-muted">{ui.count(b.count)}</span>
+            <ul className="mt-2.5 flex flex-col border-t border-border pt-1.5">
               {b.categories.map((c) => (
                 <li key={c.href}>
                   <Link
                     href={c.href}
                     onClick={onNavigate}
-                    className="block py-[6px] text-[15px] leading-[22px] text-muted transition-colors hover:text-accent"
+                    className="block py-[3px] text-[14px] leading-[21px] text-muted transition-colors hover:text-accent"
                   >
                     {c.label}
                   </Link>
@@ -322,9 +324,9 @@ function PartnerBand({
               href={b.href}
               onClick={onNavigate}
               aria-label={t('viewAll', { category: b.label })}
-              className="mt-auto pt-3 text-accent transition-colors hover:text-gold-strong"
+              className="mt-auto pt-2 text-accent transition-colors hover:text-gold-strong"
             >
-              <ArrowRight className="size-[15px]" />
+              <ArrowRight className="size-[12px]" />
             </Link>
           </li>
         ))}
