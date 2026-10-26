@@ -6,15 +6,22 @@ import Image from 'next/image'
 import { Link } from '@/i18n/navigation'
 import { ArrowRight, SlidersHorizontal, X } from 'lucide-react'
 import {
+  OWN_BRAND,
+  OWN_CATEGORIES,
   PARTNER_CATEGORY,
+  PARTNER_SUBCATEGORIES,
   SHOP_CATEGORIES,
   SHOP_PRICE_MAX,
   SHOP_PRICE_MIN,
   SHOP_PRODUCTS,
   SHOP_SORTS,
+  brandLabel,
+  brandOf,
   categoryLabel,
+  isPartnerCategory,
   productPriceRangeCents,
   proiontaHref,
+  type ShopBrand,
   type ShopCategory,
   type ShopProduct,
   type ShopSort,
@@ -43,17 +50,12 @@ const PAGE_SIZE = 12
 const PAGE_STEP = 8
 
 // Default catalogue order: honey (Μέλι) first, then bee products (Προϊόντα Μέλισσας)
-// with Υδρόμελο + bee pollen (Γύρη Μελισσών) leading, then cosmetics, then gift sets.
+// with Υδρόμελο + bee pollen (Γύρη Μελισσών) leading, then cosmetics, gift sets and
+// accessories, then the partner brands' categories (SHOP_CATEGORIES order).
 // Stable sort keeps each group's existing relative order.
-const DEFAULT_CATEGORY_RANK: Record<string, number> = {
-  Μέλι: 0,
-  'Προϊόντα Μέλισσας': 1,
-  Καλλυντικά: 2,
-  'Πακέτα Δώρων': 3,
-  Αξεσουάρ: 4,
-}
 function defaultOrderRank(p: ShopProduct): number {
-  const cat = DEFAULT_CATEGORY_RANK[p.category] ?? 4
+  const rank = SHOP_CATEGORIES.indexOf(p.category)
+  const cat = rank < 0 ? SHOP_CATEGORIES.length : rank
   const lead =
     p.category === 'Προϊόντα Μέλισσας' &&
     (p.title === 'Υδρόμελο' || p.title.startsWith('Γύρη Μελισσών'))
@@ -65,21 +67,40 @@ function defaultOrderRank(p: ShopProduct): number {
 export function ShopBrowser({
   products = SHOP_PRODUCTS,
   initialCategory,
+  initialBrand,
 }: {
   products?: ShopProduct[]
   /** Pre-selected category from the /proionta/<slug> route. */
   initialCategory?: ShopCategory
+  /** Pre-selected brand (its collection handle) from ?brand=. */
+  initialBrand?: string
 } = {}) {
   const locale = useLocale()
   const ui = getShopUi(locale)
-  // The category comes from the URL path (/proionta/<slug>); keep the filter in
-  // sync when navigating between category pages.
-  const [cats, setCats] = useState<Set<ShopCategory>>(() =>
-    initialCategory ? new Set([initialCategory]) : new Set(),
+  // Όρος Μαχαιρά's products and the partner brands' are browsed apart: a category
+  // page shows its own side only (the partner section's page all of its side);
+  // /proionta shows both, the partners in their own block.
+  const scope: 'all' | 'own' | 'partners' = !initialCategory
+    ? 'all'
+    : isPartnerCategory(initialCategory)
+      ? 'partners'
+      : 'own'
+  const scoped = useMemo(
+    () => (scope === 'all' ? products : products.filter((p) => (scope === 'partners') === isPartnerCategory(p.category))),
+    [products, scope],
   )
+
+  // The category comes from the URL path (/proionta/<slug>), the brand from
+  // ?brand=; keep the filters in sync when navigating between category pages.
+  const startCats = (): Set<ShopCategory> =>
+    initialCategory && initialCategory !== PARTNER_CATEGORY ? new Set([initialCategory]) : new Set()
+  const startBrands = (): Set<string> => new Set(initialBrand ? [initialBrand] : [])
+  const [cats, setCats] = useState(startCats)
+  const [brands, setBrands] = useState(startBrands)
   useEffect(() => {
-    setCats(initialCategory ? new Set([initialCategory]) : new Set())
-  }, [initialCategory])
+    setCats(startCats())
+    setBrands(startBrands())
+  }, [initialCategory, initialBrand])
 
   const [priceMin, setPriceMin] = useState(SHOP_PRICE_MIN)
   const [priceMax, setPriceMax] = useState(SHOP_PRICE_MAX)
@@ -105,16 +126,29 @@ export function ShopBrowser({
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   // Only categories that have something to show (a new category may hold only
-  // hidden products for a while).
-  const categories = useMemo(
-    () => SHOP_CATEGORIES.filter((c) => products.some((p) => p.inStock && p.category === c)),
-    [products],
-  )
+  // hidden products for a while), Όρος Μαχαιρά's apart from the partner brands'.
+  const categoryGroups = useMemo(() => {
+    const listed = (list: ShopCategory[]) => list.filter((c) => scoped.some((p) => p.inStock && p.category === c))
+    return [
+      { title: brandLabel(OWN_BRAND, locale), items: listed(OWN_CATEGORIES) },
+      { title: categoryLabel(PARTNER_CATEGORY, locale), items: listed(PARTNER_SUBCATEGORIES) },
+    ].filter((g) => g.items.length > 0)
+  }, [scoped, locale])
+
+  // The makers among what can be shown — Όρος Μαχαιρά first, then the partners A–Z.
+  const brandOptions = useMemo(() => {
+    const found = new Map<string, ShopBrand>()
+    for (const p of scoped) if (p.inStock) found.set(brandOf(p).handle, brandOf(p))
+    return [...found.values()].sort((a, b) =>
+      a.handle === OWN_BRAND.handle ? -1 : b.handle === OWN_BRAND.handle ? 1 : a.name.localeCompare(b.name),
+    )
+  }, [scoped])
 
   const filtered = useMemo(() => {
-    let list = products.filter((p) => {
+    let list = scoped.filter((p) => {
       if (!p.inStock) return false // hide out-of-stock products
       if (cats.size > 0 && !cats.has(p.category)) return false
+      if (brands.size > 0 && !brands.has(brandOf(p).handle)) return false
       // Keep a product when its variant price range overlaps the selected range,
       // so it isn't hidden just because its cheapest size is below priceMin.
       const [minCents, maxCents] = productPriceRangeCents(p)
@@ -125,16 +159,16 @@ export function ShopBrowser({
     else if (sort === 'name-asc') list = [...list].sort((a, b) => a.title.localeCompare(b.title, 'el'))
     else list = [...list].sort((a, b) => defaultOrderRank(a) - defaultOrderRank(b)) // 'default'
     return list
-  }, [products, cats, priceMin, priceMax, sort])
+  }, [scoped, cats, brands, priceMin, priceMax, sort])
 
   // Reset the infinite-scroll window whenever the result set changes.
-  useEffect(() => setVisible(PAGE_SIZE), [cats, priceMin, priceMax, sort])
+  useEffect(() => setVisible(PAGE_SIZE), [cats, brands, priceMin, priceMax, sort])
 
-  // With no category picked, other makers' products leave the main grid for
-  // their own block below it; picking their category shows them as usual.
-  const apart = cats.size === 0
-  const main = apart ? filtered.filter((p) => p.category !== PARTNER_CATEGORY) : filtered
-  const partners = apart ? filtered.filter((p) => p.category === PARTNER_CATEGORY) : []
+  // On /proionta with no category or brand picked, other makers' products leave
+  // the main grid for their own block below it; picking one shows them as usual.
+  const apart = scope === 'all' && cats.size === 0 && brands.size === 0
+  const main = apart ? filtered.filter((p) => !isPartnerCategory(p.category)) : filtered
+  const partners = apart ? filtered.filter((p) => isPartnerCategory(p.category)) : []
 
   const shown = main.slice(0, visible)
   const hasMore = visible < main.length
@@ -162,13 +196,22 @@ export function ShopBrowser({
       return next
     })
 
+  const toggleBrand = (handle: string) =>
+    setBrands((prev) => {
+      const next = new Set(prev)
+      next.has(handle) ? next.delete(handle) : next.add(handle)
+      return next
+    })
+
   const clearAll = () => {
     setCats(new Set())
+    setBrands(new Set())
     setPriceMin(SHOP_PRICE_MIN)
     setPriceMax(SHOP_PRICE_MAX)
   }
 
-  const dirty = cats.size > 0 || priceMin !== SHOP_PRICE_MIN || priceMax !== SHOP_PRICE_MAX
+  const dirty =
+    cats.size > 0 || brands.size > 0 || priceMin !== SHOP_PRICE_MIN || priceMax !== SHOP_PRICE_MAX
 
   const pctMin = ((priceMin - SHOP_PRICE_MIN) / (SHOP_PRICE_MAX - SHOP_PRICE_MIN)) * 100
   const pctMax = ((priceMax - SHOP_PRICE_MIN) / (SHOP_PRICE_MAX - SHOP_PRICE_MIN)) * 100
@@ -180,20 +223,54 @@ export function ShopBrowser({
         <h3 className="text-[22px] font-medium leading-[26.4px] text-foreground">
           {ui.filters.category}
         </h3>
-        {categories.map((c) => (
-          <label key={c} className="flex cursor-pointer items-center gap-2.5 py-0.5">
-            <input
-              type="checkbox"
-              checked={cats.has(c)}
-              onChange={() => toggleCat(c)}
-              className="size-4 shrink-0 cursor-pointer rounded-[4px] border border-border accent-accent"
-            />
-            <span className="text-[14px] leading-[21px] text-foreground">
-              {categoryLabel(c, locale)}
-            </span>
-          </label>
+        {categoryGroups.map((group) => (
+          <div
+            key={group.title}
+            role={categoryGroups.length > 1 ? 'group' : undefined}
+            aria-label={categoryGroups.length > 1 ? group.title : undefined}
+            className="flex flex-col gap-[15px]"
+          >
+            {categoryGroups.length > 1 ? (
+              <span className="text-[12px] font-bold uppercase leading-[18px] tracking-[0.08em] text-gold-strong">
+                {group.title}
+              </span>
+            ) : null}
+            {group.items.map((c) => (
+              <label key={c} className="flex cursor-pointer items-center gap-2.5 py-0.5">
+                <input
+                  type="checkbox"
+                  checked={cats.has(c)}
+                  onChange={() => toggleCat(c)}
+                  className="size-4 shrink-0 cursor-pointer rounded-[4px] border border-border accent-accent"
+                />
+                <span className="text-[14px] leading-[21px] text-foreground">
+                  {categoryLabel(c, locale)}
+                </span>
+              </label>
+            ))}
+          </div>
         ))}
       </div>
+
+      {/* Brand — when there is more than one maker to choose from */}
+      {brandOptions.length > 1 ? (
+        <div className="flex flex-col gap-[15px] border-b border-border pb-[30px]">
+          <h3 className="text-[22px] font-medium leading-[26.4px] text-foreground">
+            {ui.filters.brand}
+          </h3>
+          {brandOptions.map((b) => (
+            <label key={b.handle} className="flex cursor-pointer items-center gap-2.5 py-0.5">
+              <input
+                type="checkbox"
+                checked={brands.has(b.handle)}
+                onChange={() => toggleBrand(b.handle)}
+                className="size-4 shrink-0 cursor-pointer rounded-[4px] border border-border accent-accent"
+              />
+              <span className="text-[14px] leading-[21px] text-foreground">{brandLabel(b, locale)}</span>
+            </label>
+          ))}
+        </div>
+      ) : null}
 
       {/* Price */}
       <div className="flex flex-col gap-5">

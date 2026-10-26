@@ -82,7 +82,8 @@ export function productJsonLd({
     url,
     image: images,
     ...(description ? { description } : {}),
-    brand: { '@type': 'Brand', name: brand(locale) },
+    // A partner product (ApiLab, Dermamel…) carries its own maker's name.
+    brand: { '@type': 'Brand', name: product.brand?.name ?? brand(locale) },
     category: product.category,
     offers:
       low === high

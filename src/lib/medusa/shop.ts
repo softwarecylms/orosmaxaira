@@ -3,8 +3,11 @@ import { getLocale } from 'next-intl/server'
 import { sdk, CACHE_TTL } from './client'
 import { getDefaultRegion } from './region'
 import {
+  PARTNER_CATEGORY,
   SHOP_CATEGORIES,
   getProductDetail,
+  isPartnerCategory,
+  type ShopBrand,
   type ShopCategory,
   type ShopProduct,
   type ShopProductDetail,
@@ -74,6 +77,8 @@ const FIELDS = [
   '*images',
   '*categories',
   'categories.metadata', // name_en
+  'collection.title', // a partner product's brand
+  'collection.handle',
   '*variants.calculated_price',
   '+variants.inventory_quantity',
   '+variants.manage_inventory', // required for inventory_quantity to populate
@@ -100,9 +105,12 @@ function mapProduct(p: HttpTypes.StoreProduct, locale: string): ShopProduct | nu
     ...prices.filter((cp) => cp.calculated_amount === min).map((cp) => cp.original_amount ?? min),
   )
 
-  const catName = (p.categories ?? []).find((c) =>
-    (SHOP_CATEGORIES as readonly string[]).includes(c.name),
-  )?.name
+  // A partner product sits in one of the partner section's sub-categories,
+  // which wins over the section itself.
+  const known = (p.categories ?? [])
+    .map((c) => c.name)
+    .filter((name) => (SHOP_CATEGORIES as readonly string[]).includes(name))
+  const catName = known.find((name) => name !== PARTNER_CATEGORY) ?? known[0]
   const category = (catName ?? p.categories?.[0]?.name ?? 'Μέλι') as ShopCategory
 
   const inStock = variants.some((v) => {
@@ -133,7 +141,17 @@ function mapProduct(p: HttpTypes.StoreProduct, locale: string): ShopProduct | nu
     // EN uses the live site's English product slug; EL uses the Greek handle.
     href: `/product/${productSlug(p.handle!, locale)}`,
     hidden: isHiddenProduct(p.metadata),
+    ...(isPartnerCategory(category) ? { brand: partnerBrand(p) } : {}),
   }
+}
+
+/** A partner product's brand: its Medusa collection (Products → Collections), or
+ *  the `brand` the import left in its metadata until it has one. */
+function partnerBrand(p: HttpTypes.StoreProduct): ShopBrand | undefined {
+  const collection = (p as { collection?: { title?: string; handle?: string } | null }).collection
+  const name = collection?.title || (typeof p.metadata?.brand === 'string' ? p.metadata.brand : '')
+  if (!name) return undefined
+  return { name, handle: collection?.handle || name.toLowerCase().replace(/[^a-z0-9]+/g, '-') }
 }
 
 /** A product flagged `metadata.hidden` in Medusa is reachable by its link but

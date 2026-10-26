@@ -15,10 +15,39 @@ export type ShopCategory =
   | 'Πακέτα Δώρων'
   | 'Αξεσουάρ'
   | 'Συνεργαζόμενες μάρκες'
+  // The partner products' categories, as the client's sheet sorts them.
+  | 'Σπρέι'
+  | 'Μέλι με βότανα'
+  | 'Κρέμες'
+  | 'Σιρόπια'
+  | 'Παστίλιες'
 
 /** Other makers' products (ApiLab, Apimel, Dermamel…): the client wants them apart
- *  from Όρος Μαχαιρά's own — their own category, and their own block on /proionta. */
+ *  from Όρος Μαχαιρά's own — their own section of the shop and of the menu, with
+ *  their own categories (PARTNER_SUBCATEGORIES) and a brand filter. */
 export const PARTNER_CATEGORY: ShopCategory = 'Συνεργαζόμενες μάρκες'
+
+/** Όρος Μαχαιρά's own categories, in filter and menu order. */
+export const OWN_CATEGORIES: ShopCategory[] = ['Μέλι', 'Προϊόντα Μέλισσας', 'Καλλυντικά', 'Πακέτα Δώρων', 'Αξεσουάρ']
+
+/** The partner products' categories: sub-categories of PARTNER_CATEGORY in Medusa,
+ *  at /proionta/synergazomenes-markes/<slug>/. */
+export const PARTNER_SUBCATEGORIES: ShopCategory[] = ['Σπρέι', 'Μέλι με βότανα', 'Κρέμες', 'Σιρόπια', 'Παστίλιες']
+
+/** Whether a category belongs to the partner brands' section. */
+export const isPartnerCategory = (category: string): boolean =>
+  category === PARTNER_CATEGORY || (PARTNER_SUBCATEGORIES as string[]).includes(category)
+
+/** Whether a product is listed under a category — the partner section holds its sub-categories. */
+export const inCategory = (product: ShopProduct, category: ShopCategory): boolean =>
+  product.category === category || (category === PARTNER_CATEGORY && isPartnerCategory(product.category))
+
+/** Who makes a product. `handle` is the Medusa collection's (a partner brand). */
+export type ShopBrand = { name: string; handle: string }
+export const OWN_BRAND: ShopBrand = { name: 'Όρος Μαχαιρά', handle: 'oros-machaira' }
+export const brandOf = (product: ShopProduct): ShopBrand => product.brand ?? OWN_BRAND
+export const brandLabel = (brand: ShopBrand, locale: string): string =>
+  brand.handle === OWN_BRAND.handle && locale === 'en' ? 'Oros Machaira' : brand.name
 
 export type ShopProduct = {
   category: ShopCategory
@@ -42,6 +71,8 @@ export type ShopProduct = {
   /** Medusa `metadata.hidden` — buyable by direct link only (e.g. the €1 test
    *  product): left out of the shop grid, categories, search and sitemap. */
   hidden?: boolean
+  /** A partner product's brand (its Medusa collection); unset = Όρος Μαχαιρά. */
+  brand?: ShopBrand
 }
 
 /**
@@ -52,17 +83,12 @@ export type ShopProduct = {
 export const REFRIGERATED_HANDLES = ['vasilikos-poltos-oros-machaira', 'gyri-oros-machaira']
 export const isRefrigerated = (handle: string) => REFRIGERATED_HANDLES.includes(handle)
 
-/** Filter sidebar categories, in Figma order. */
-export const SHOP_CATEGORIES: ShopCategory[] = [
-  'Μέλι',
-  'Προϊόντα Μέλισσας',
-  'Καλλυντικά',
-  'Πακέτα Δώρων',
-  'Αξεσουάρ',
-  'Συνεργαζόμενες μάρκες',
-]
+/** Every category the shop knows: Όρος Μαχαιρά's own, then the partner section's. */
+export const SHOP_CATEGORIES: ShopCategory[] = [...OWN_CATEGORIES, PARTNER_CATEGORY, ...PARTNER_SUBCATEGORIES]
 
-/** Greek URL slugs per category (match the live site: /proionta/<slug>/). */
+/** Greek URL slug per category — also its Medusa handle (match the live site:
+ *  /proionta/<slug>/; a partner sub-category's page is under its section's, see
+ *  categoryPath). */
 export const CATEGORY_SLUGS: Record<ShopCategory, string> = {
   Μέλι: 'meli',
   'Προϊόντα Μέλισσας': 'proionta-melissas',
@@ -70,6 +96,19 @@ export const CATEGORY_SLUGS: Record<ShopCategory, string> = {
   'Πακέτα Δώρων': 'paketa-doron',
   Αξεσουάρ: 'aksesouar',
   'Συνεργαζόμενες μάρκες': 'synergazomenes-markes',
+  Σπρέι: 'sprei',
+  'Μέλι με βότανα': 'meli-me-votana',
+  Κρέμες: 'kremes',
+  Σιρόπια: 'siropia',
+  Παστίλιες: 'pastilies',
+}
+
+/** A category page's path below /proionta/ — e.g. `meli`, `synergazomenes-markes/sprei`. */
+export function categoryPath(category: ShopCategory): string {
+  const slug = CATEGORY_SLUGS[category]
+  return isPartnerCategory(category) && category !== PARTNER_CATEGORY
+    ? `${CATEGORY_SLUGS[PARTNER_CATEGORY]}/${slug}`
+    : slug
 }
 export const CATEGORY_BY_SLUG: Record<string, ShopCategory> = Object.fromEntries(
   (Object.entries(CATEGORY_SLUGS) as [ShopCategory, string][]).map(([name, slug]) => [slug, name]),
@@ -83,19 +122,21 @@ export const CATEGORY_LABELS_EN: Record<ShopCategory, string> = {
   'Πακέτα Δώρων': 'Gift Sets',
   Αξεσουάρ: 'Accessories',
   'Συνεργαζόμενες μάρκες': 'Partner Brands',
+  Σπρέι: 'Sprays',
+  'Μέλι με βότανα': 'Honey with Herbs',
+  Κρέμες: 'Creams',
+  Σιρόπια: 'Syrups',
+  Παστίλιες: 'Lozenges',
 }
 
-/** Slug lookup that accepts EITHER the Greek canonical name or the English label,
- *  so category tags work in both locales. */
-const CATEGORY_SLUG_BY_LABEL: Record<string, string> = {
-  ...CATEGORY_SLUGS,
-  ...Object.fromEntries(
-    (Object.entries(CATEGORY_LABELS_EN) as [ShopCategory, string][]).map(([name, en]) => [
-      en,
-      CATEGORY_SLUGS[name],
-    ]),
-  ),
-}
+/** Category lookup that accepts EITHER the Greek canonical name or the English
+ *  label, so category tags work in both locales. */
+const CATEGORY_BY_LABEL: Record<string, ShopCategory> = Object.fromEntries(
+  (Object.entries(CATEGORY_LABELS_EN) as [ShopCategory, string][]).flatMap(([name, en]) => [
+    [name, name],
+    [en, name],
+  ]),
+)
 
 /** Localized category display label (el = the canonical Greek name). */
 export function categoryLabel(category: string, locale: string): string {
@@ -107,8 +148,34 @@ export function categoryLabel(category: string, locale: string): string {
 /** Path to the products page, optionally filtered by category. Accepts a Greek
  *  or English category label; unknown labels fall back to the all-products page. */
 export function proiontaHref(category?: string): string {
-  const slug = category ? CATEGORY_SLUG_BY_LABEL[category] : undefined
-  return slug ? `/proionta/${slug}` : '/proionta'
+  const found = category ? CATEGORY_BY_LABEL[category] : undefined
+  return found ? `/proionta/${categoryPath(found)}` : '/proionta'
+}
+
+/** The partner section of the menus: its categories and brands that have
+ *  products to show, linked to their pages (a brand: the section filtered by it). */
+export type PartnerMenu = {
+  title: string
+  href: string
+  categories: { label: string; href: string }[]
+  brands: { label: string; href: string }[]
+}
+export function partnerMenu(products: ShopProduct[], locale: string): PartnerMenu | null {
+  const listed = products.filter((p) => p.inStock && !p.hidden && isPartnerCategory(p.category))
+  if (!listed.length) return null
+  const brands = new Map(listed.flatMap((p) => (p.brand ? [[p.brand.handle, p.brand.name] as const] : [])))
+  const section = proiontaHref(PARTNER_CATEGORY)
+  return {
+    title: categoryLabel(PARTNER_CATEGORY, locale),
+    href: section,
+    categories: PARTNER_SUBCATEGORIES.filter((c) => listed.some((p) => p.category === c)).map((c) => ({
+      label: categoryLabel(c, locale),
+      href: proiontaHref(c),
+    })),
+    brands: [...brands]
+      .sort((a, b) => a[1].localeCompare(b[1]))
+      .map(([handle, name]) => ({ label: name, href: `${section}?brand=${handle}` })),
+  }
 }
 /** Internal path to a product detail page. */
 export function productHref(handle: string): string {

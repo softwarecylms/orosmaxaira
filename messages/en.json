@@ -25,7 +25,12 @@
   },
   "nav": {
     "mainNav": "Main navigation",
-    "viewAll": "View all — {category}"
+    "viewAll": "View all — {category}",
+    "ownProducts": "Oros Machaira",
+    "partnerIntro": "Selected bee products from our partner makers.",
+    "partnerCategories": "Categories",
+    "partnerBrands": "Brands",
+    "partnerAll": "View all"
   },
   "legal": {
     "terms": "Terms & Conditions",

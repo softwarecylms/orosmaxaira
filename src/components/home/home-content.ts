@@ -25,6 +25,7 @@ export const NAV: {
       { label: 'Προϊόντα Μέλισσας', href: '/proionta/proionta-melissas' },
       { label: 'Φυσικά Καλλυντικά', href: '/proionta/kallyntika' },
       { label: 'Πακέτα δώρων', href: '/proionta/paketa-doron' },
+      { label: 'Αξεσουάρ', href: '/proionta/aksesouar' },
     ],
   },
   { label: 'Ποιοί είμαστε', href: '/poioi-eimaste' },
@@ -98,6 +99,14 @@ export const MEGA_MENU: MegaColumn[] = [
       { label: 'Nourish Care Gift Set', href: '/product/nourish-care-gift-set' },
       { label: 'Everyday Care Duo Gift Set', href: '/product/everyday-care-duo-gift-set' },
       { label: 'Balance Care Gift Set', href: '/product/balance-care-gift-set' },
+    ],
+  },
+  {
+    title: 'Αξεσουάρ',
+    href: '/proionta/aksesouar',
+    links: [
+      { label: 'Μεγάλο Ξύλινο Κουταλάκι', href: '/product/megalo-xylino-koytalaki-melioy' },
+      { label: 'Μικρό Ξύλινο Κουταλάκι', href: '/product/mikro-xylino-koytalaki-melioy' },
     ],
   },
 ]
@@ -404,6 +413,8 @@ export const FOOTER = {
         { label: 'Προϊόντα Μέλισσας', href: '/proionta/proionta-melissas' },
         { label: 'Φυσικά Καλλυντικά', href: '/proionta/kallyntika' },
         { label: 'Πακέτα δώρων', href: '/proionta/paketa-doron' },
+        { label: 'Αξεσουάρ', href: '/proionta/aksesouar' },
+        { label: 'Συνεργαζόμενες μάρκες', href: '/proionta/synergazomenes-markes' },
       ],
     },
     {
@@ -473,6 +484,7 @@ const HOME_EN: HomeContent = {
         { label: 'Bee Products', href: '/proionta/proionta-melissas' },
         { label: 'Natural Cosmetics', href: '/proionta/kallyntika' },
         { label: 'Gift Sets', href: '/proionta/paketa-doron' },
+        { label: 'Accessories', href: '/proionta/aksesouar' },
       ],
     },
     { label: 'About Us', href: '/poioi-eimaste' },
@@ -536,6 +548,14 @@ const HOME_EN: HomeContent = {
         { label: 'Nourish Care Gift Set', href: '/product/nourish-care-gift-set' },
         { label: 'Everyday Care Duo Gift Set', href: '/product/everyday-care-duo-gift-set' },
         { label: 'Balance Care Gift Set', href: '/product/balance-care-gift-set' },
+      ],
+    },
+    {
+      title: 'Accessories',
+      href: '/proionta/aksesouar',
+      links: [
+        { label: 'Big Wooden Spoon', href: '/product/megalo-xylino-koytalaki-melioy' },
+        { label: 'Small Wooden Spoon', href: '/product/mikro-xylino-koytalaki-melioy' },
       ],
     },
   ],
@@ -664,6 +684,8 @@ const HOME_EN: HomeContent = {
           { label: 'Bee Products', href: '/proionta/proionta-melissas' },
           { label: 'Natural Cosmetics', href: '/proionta/kallyntika' },
           { label: 'Gift Sets', href: '/proionta/paketa-doron' },
+          { label: 'Accessories', href: '/proionta/aksesouar' },
+          { label: 'Partner Brands', href: '/proionta/synergazomenes-markes' },
         ],
       },
       {

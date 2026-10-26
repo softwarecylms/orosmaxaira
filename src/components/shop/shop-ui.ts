@@ -23,6 +23,7 @@ const SORT_LABELS_EN: Record<ShopSort, string> = {
 const SHOP_UI_EL = {
   filters: {
     category: SHOP_PAGE.filters.category, // Κατηγορία
+    brand: 'Μάρκα',
     price: SHOP_PAGE.filters.price, // Τιμή
     clear: SHOP_PAGE.filters.clear, // Καθαρισμός φίλτρων
     empty: SHOP_PAGE.filters.empty, // Δεν βρέθηκαν προϊόντα…
@@ -61,6 +62,7 @@ export type ShopUi = typeof SHOP_UI_EL
 const SHOP_UI_EN: ShopUi = {
   filters: {
     category: 'Category',
+    brand: 'Brand',
     price: 'Price',
     clear: 'Clear filters',
     empty: 'No products match these filters.',

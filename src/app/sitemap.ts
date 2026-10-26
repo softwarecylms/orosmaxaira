@@ -4,7 +4,7 @@ import { sdk } from '@/lib/medusa/client'
 import { isHiddenProduct, listShopProducts } from '@/lib/medusa/shop'
 import { getBlogPosts } from '@/lib/blog'
 import { ARTICLE_DUPLICATE_OF } from '@/components/blog/article-seo'
-import { CATEGORY_SLUGS, SHOP_PRODUCTS, handleOf } from '@/components/shop/shop-content'
+import { SHOP_CATEGORIES, SHOP_PRODUCTS, categoryPath, handleOf, inCategory } from '@/components/shop/shop-content'
 import { enHandle } from '@/components/shop/product-slugs'
 import { getExperiences } from '@/components/activities/experiences'
 import { getWorkshops as getStaticWorkshops } from '@/lib/data/workshops'
@@ -86,9 +86,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Categories with listed products only (a new one may hold hidden products for now).
   const catalogue = await listShopProducts().catch(() => null)
-  for (const [name, slug] of Object.entries(CATEGORY_SLUGS)) {
-    if (catalogue && !catalogue.products.some((p) => p.category === name)) continue
-    entries.push({ el: `/proionta/${slug}/`, en: `/en/proionta/${slug}/` })
+  for (const category of SHOP_CATEGORIES) {
+    if (catalogue && !catalogue.products.some((p) => inCategory(p, category))) continue
+    const path = categoryPath(category)
+    entries.push({ el: `/proionta/${path}/`, en: `/en/proionta/${path}/` })
   }
 
   const productRows: Dated[] = products ?? SHOP_PRODUCTS.map((p) => ({ handle: handleOf(p) }))

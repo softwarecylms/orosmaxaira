@@ -48,6 +48,31 @@ export const CATEGORY_SEO_EL: Record<ShopCategory, CategorySeo> = {
     description:
       'Επιλεγμένα προϊόντα μέλισσας από συνεργαζόμενους παραγωγούς: σπρέι πρόπολης, μέλι με βότανα, σιρόπια και κρέμες ApiLab, Apimel και Dermamel.',
   },
+  Σπρέι: {
+    title: 'Σπρέι — ApiLab, Apimel, Dermamel',
+    description:
+      'Σπρέι πρόπολης ApiLab και Apimel και το παιδικό σπρέι Dermamel Kids REPEL OFF, από τις συνεργαζόμενες μάρκες του «Όρος Μαχαιρά». Αποστολή στην Κύπρο.',
+  },
+  'Μέλι με βότανα': {
+    title: 'Μέλι με Βότανα ApiLab',
+    description:
+      'Μέλι με βότανα της ApiLab — Salvia, Apipropol, Mirosan, Gastro, Excelsa και Cratecor σε βάζα 250g, από τις συνεργαζόμενες μάρκες μας. Αποστολή στην Κύπρο.',
+  },
+  Κρέμες: {
+    title: 'Κρέμες Dermamel — ATOPI-D, SCAR-LESS, HEMO-DERM',
+    description:
+      'Κρέμες Dermamel με προϊόντα μέλισσας — ATOPI-D, SCAR-LESS και HEMO-DERM — από τις συνεργαζόμενες μάρκες του «Όρος Μαχαιρά». Αποστολή στην Κύπρο.',
+  },
+  Σιρόπια: {
+    title: 'Σιρόπια ApiLab — Bronhimel, ApiLax',
+    description:
+      'Σιρόπια ApiLab — Bronhimel, Bronhimel Junior και ApiLax σε φιάλες 150ml — από τις συνεργαζόμενες μάρκες του «Όρος Μαχαιρά». Αποστολή στην Κύπρο.',
+  },
+  Παστίλιες: {
+    title: 'Παστίλιες Πρόπολης Apimel',
+    description:
+      'Παστίλιες Apimel με πρόπολη και βιταμίνη C, από τις συνεργαζόμενες μάρκες του καταστήματος «Όρος Μαχαιρά» στη Μελίνη. Αποστολή σε όλη την Κύπρο.',
+  },
 }
 
 export const CATEGORY_SEO_EN: Record<ShopCategory, CategorySeo> = {
@@ -80,6 +105,31 @@ export const CATEGORY_SEO_EN: Record<ShopCategory, CategorySeo> = {
     title: 'Partner Brands — ApiLab, Apimel, Dermamel',
     description:
       'Selected bee products from our partner makers: propolis sprays, honey with herbs, syrups and creams by ApiLab, Apimel and Dermamel. Delivered in Cyprus.',
+  },
+  Σπρέι: {
+    title: 'Sprays — ApiLab, Apimel, Dermamel',
+    description:
+      'Propolis sprays by ApiLab and Apimel and the Dermamel Kids REPEL OFF spray, from the partner brands at the Oros Machaira shop. Delivered in Cyprus.',
+  },
+  'Μέλι με βότανα': {
+    title: 'ApiLab Honey with Herbs',
+    description:
+      'ApiLab honey with herbs — Salvia, Apipropol, Mirosan, Gastro, Excelsa and Cratecor in 250g jars, from our partner brands. Delivered in Cyprus.',
+  },
+  Κρέμες: {
+    title: 'Dermamel Creams — ATOPI-D, SCAR-LESS, HEMO-DERM',
+    description:
+      'Dermamel creams with bee products — ATOPI-D, SCAR-LESS and HEMO-DERM — from the partner brands at the Oros Machaira shop. Delivered in Cyprus.',
+  },
+  Σιρόπια: {
+    title: 'ApiLab Syrups — Bronhimel, ApiLax',
+    description:
+      'ApiLab syrups — Bronhimel, Bronhimel Junior and ApiLax in 150ml bottles — from the partner brands at the Oros Machaira shop. Delivered in Cyprus.',
+  },
+  Παστίλιες: {
+    title: 'Apimel Propolis Lozenges',
+    description:
+      'Apimel lozenges with propolis and vitamin C, from the partner brands at the Oros Machaira shop in Melini, Cyprus. Delivered across Cyprus.',
   },
 }
 

@@ -24,7 +24,12 @@ import { canonicalHandle, productHreflang } from '@/components/shop/product-slug
 import { localizedProductTitle } from '@/components/shop/product-i18n'
 import { seoMetadata, siteUrl } from '@/lib/seo'
 import { JsonLd, breadcrumbJsonLd, productJsonLd } from '@/components/seo/json-ld'
-import { CATEGORY_SLUGS, type ShopCategory } from '@/components/shop/shop-content'
+import {
+  PARTNER_CATEGORY,
+  categoryPath as pathOf,
+  isPartnerCategory,
+  type ShopCategory,
+} from '@/components/shop/shop-content'
 
 type Params = { params: Promise<{ handle: string }> }
 
@@ -97,7 +102,12 @@ export default async function ProductPage({ params }: Params) {
   const title = localizedProductTitle(greek, product.title ?? '', locale)
   const url = `${siteUrl()}${productHreflang(handle, locale).canonical}`
   const categoryName = categoryLabel(product.category, locale)
-  const categoryPath = `/proionta/${CATEGORY_SLUGS[product.category as ShopCategory]}/`
+  const categoryPath = `/proionta/${pathOf(product.category as ShopCategory)}/`
+  // A partner product's category sits under the partner section.
+  const section =
+    isPartnerCategory(product.category) && product.category !== PARTNER_CATEGORY
+      ? { name: categoryLabel(PARTNER_CATEGORY, locale), path: `/proionta/${pathOf(PARTNER_CATEGORY)}/` }
+      : null
 
   return (
     <>
@@ -107,6 +117,7 @@ export default async function ProductPage({ params }: Params) {
           breadcrumbJsonLd(locale, [
             [getShopUi(locale).breadcrumb.home, '/'],
             [ui.breadcrumbProducts, '/proionta/'],
+            ...(section ? [[section.name, section.path] as [string, string]] : []),
             [categoryName, categoryPath],
             [title],
           ]),
@@ -123,6 +134,14 @@ export default async function ProductPage({ params }: Params) {
               {ui.breadcrumbProducts}
             </Link>
             <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
+            {section ? (
+              <>
+                <Link href={section.path} className="transition-colors hover:text-accent">
+                  {section.name}
+                </Link>
+                <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
+              </>
+            ) : null}
             <Link href={categoryPath} className="transition-colors hover:text-accent">
               {categoryName}
             </Link>
