@@ -125,27 +125,33 @@ export function ShopBrowser({
   const [visible, setVisible] = useState(PAGE_SIZE)
   const [filtersOpen, setFiltersOpen] = useState(false)
 
+  // Every maker in the shop — Όρος Μαχαιρά first, then the partners A–Z — on
+  // every page. Picking one from the other side of the shop (Όρος Μαχαιρά on a
+  // partner page, a partner on one of Όρος Μαχαιρά's) opens the list to the whole shop.
+  const brandOptions = useMemo(() => {
+    const found = new Map<string, ShopBrand>()
+    for (const p of products) if (p.inStock) found.set(brandOf(p).handle, brandOf(p))
+    return [...found.values()].sort((a, b) =>
+      a.handle === OWN_BRAND.handle ? -1 : b.handle === OWN_BRAND.handle ? 1 : a.name.localeCompare(b.name),
+    )
+  }, [products])
+  const base = useMemo(() => {
+    const here = new Set(scoped.map((p) => brandOf(p).handle))
+    return [...brands].some((b) => !here.has(b)) ? products : scoped
+  }, [products, scoped, brands])
+
   // Only categories that have something to show (a new category may hold only
   // hidden products for a while), Όρος Μαχαιρά's apart from the partner brands'.
   const categoryGroups = useMemo(() => {
-    const listed = (list: ShopCategory[]) => list.filter((c) => scoped.some((p) => p.inStock && p.category === c))
+    const listed = (list: ShopCategory[]) => list.filter((c) => base.some((p) => p.inStock && p.category === c))
     return [
       { title: brandLabel(OWN_BRAND, locale), items: listed(OWN_CATEGORIES) },
       { title: categoryLabel(PARTNER_CATEGORY, locale), items: listed(PARTNER_SUBCATEGORIES) },
     ].filter((g) => g.items.length > 0)
-  }, [scoped, locale])
-
-  // The makers among what can be shown — Όρος Μαχαιρά first, then the partners A–Z.
-  const brandOptions = useMemo(() => {
-    const found = new Map<string, ShopBrand>()
-    for (const p of scoped) if (p.inStock) found.set(brandOf(p).handle, brandOf(p))
-    return [...found.values()].sort((a, b) =>
-      a.handle === OWN_BRAND.handle ? -1 : b.handle === OWN_BRAND.handle ? 1 : a.name.localeCompare(b.name),
-    )
-  }, [scoped])
+  }, [base, locale])
 
   const filtered = useMemo(() => {
-    let list = scoped.filter((p) => {
+    let list = base.filter((p) => {
       if (!p.inStock) return false // hide out-of-stock products
       if (cats.size > 0 && !cats.has(p.category)) return false
       if (brands.size > 0 && !brands.has(brandOf(p).handle)) return false
@@ -159,7 +165,7 @@ export function ShopBrowser({
     else if (sort === 'name-asc') list = [...list].sort((a, b) => a.title.localeCompare(b.title, 'el'))
     else list = [...list].sort((a, b) => defaultOrderRank(a) - defaultOrderRank(b)) // 'default'
     return list
-  }, [scoped, cats, brands, priceMin, priceMax, sort])
+  }, [base, cats, brands, priceMin, priceMax, sort])
 
   // Reset the infinite-scroll window whenever the result set changes.
   useEffect(() => setVisible(PAGE_SIZE), [cats, brands, priceMin, priceMax, sort])
@@ -196,12 +202,14 @@ export function ShopBrowser({
       return next
     })
 
-  const toggleBrand = (handle: string) =>
-    setBrands((prev) => {
-      const next = new Set(prev)
-      next.has(handle) ? next.delete(handle) : next.add(handle)
-      return next
-    })
+  const toggleBrand = (handle: string) => {
+    const next = new Set(brands)
+    next.has(handle) ? next.delete(handle) : next.add(handle)
+    setBrands(next)
+    // A picked category that none of the picked brands make would leave nothing to show.
+    if (next.size > 0)
+      setCats((prev) => new Set([...prev].filter((c) => products.some((p) => p.category === c && next.has(brandOf(p).handle)))))
+  }
 
   const clearAll = () => {
     setCats(new Set())
