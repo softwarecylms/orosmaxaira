@@ -153,18 +153,19 @@ export function proiontaHref(category?: string): string {
 }
 
 /** The partner section of the menus: its categories and brands that have
- *  products to show, linked to their pages (a brand: the section filtered by it). */
+ *  products to show, linked to their pages (a brand: the section filtered by
+ *  it) — a brand with how many products it lists and the categories they are in. */
 export type PartnerMenu = {
   title: string
   href: string
   categories: { label: string; href: string }[]
-  brands: { label: string; href: string }[]
+  brands: { label: string; href: string; count: number; categories: { label: string; href: string }[] }[]
 }
 export function partnerMenu(products: ShopProduct[], locale: string): PartnerMenu | null {
   const listed = products.filter((p) => p.inStock && !p.hidden && isPartnerCategory(p.category))
   if (!listed.length) return null
-  const brands = new Map(listed.flatMap((p) => (p.brand ? [[p.brand.handle, p.brand.name] as const] : [])))
   const section = proiontaHref(PARTNER_CATEGORY)
+  const brands = new Map(listed.flatMap((p) => (p.brand ? [[p.brand.handle, p.brand.name] as const] : [])))
   return {
     title: categoryLabel(PARTNER_CATEGORY, locale),
     href: section,
@@ -174,7 +175,18 @@ export function partnerMenu(products: ShopProduct[], locale: string): PartnerMen
     })),
     brands: [...brands]
       .sort((a, b) => a[1].localeCompare(b[1]))
-      .map(([handle, name]) => ({ label: name, href: `${section}?brand=${handle}` })),
+      .map(([handle, name]) => {
+        const own = listed.filter((p) => p.brand?.handle === handle)
+        return {
+          label: name,
+          href: `${section}?brand=${handle}`,
+          count: own.length,
+          categories: PARTNER_SUBCATEGORIES.filter((c) => own.some((p) => p.category === c)).map((c) => ({
+            label: categoryLabel(c, locale),
+            href: `${proiontaHref(c)}?brand=${handle}`,
+          })),
+        }
+      }),
   }
 }
 /** Internal path to a product detail page. */

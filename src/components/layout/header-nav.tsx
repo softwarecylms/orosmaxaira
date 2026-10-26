@@ -1,13 +1,14 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ArrowRight } from '@/components/home/icons'
 import type { MegaColumn } from '@/components/home/home-content'
 import type { PartnerMenu } from '@/components/shop/shop-content'
+import { getShopUi } from '@/components/shop/shop-ui'
 
 type NavLink = { label: string; href: string }
 type NavItem = {
@@ -23,8 +24,6 @@ const MEGA_HREF = '/proionta'
 
 /** A muted link in the products menu — single lines keep the design's 39px rows, a long one wraps tight. */
 const MEGA_LINK = 'block py-[7.5px] text-[17px] leading-[24px] text-muted transition-colors hover:text-accent'
-/** Small caps label over a list in the partner brands' band. */
-const BAND_LABEL = 'flex h-6 items-center text-[12px] font-bold uppercase tracking-[0.08em] text-gold-strong'
 
 /**
  * Desktop nav row. "Προϊόντα" opens the product mega menu — Όρος Μαχαιρά's
@@ -236,65 +235,100 @@ export function HeaderNav({
           </div>
 
           {partners ? (
-            <div className="grid gap-[33px] border-t border-border bg-offwhite px-[45px] py-[32px]" style={grid}>
-              <div className="flex min-w-0 flex-col gap-[15px]">
-                <Link
-                  href={partners.href}
-                  onClick={close}
-                  className="text-[17px] font-bold leading-[24px] text-foreground transition-colors hover:text-accent"
-                >
-                  {partners.title}
-                </Link>
-                <p className="text-[15px] leading-[22px] text-muted">{t('partnerIntro')}</p>
-                <Link
-                  href={partners.href}
-                  onClick={close}
-                  aria-label={t('viewAll', { category: partners.title })}
-                  className="text-accent transition-colors hover:text-gold-strong"
-                >
-                  <ArrowRight className="size-[15px]" />
-                </Link>
-              </div>
-              {partners.categories.length ? (
-                <div className="col-span-2 flex min-w-0 flex-col gap-[15px]">
-                  <span className={BAND_LABEL}>{t('partnerCategories')}</span>
-                  {/* Two columns, lined up with the two above. */}
-                  <div className="grid grid-cols-2 gap-[33px]">
-                    {[
-                      partners.categories.slice(0, Math.ceil(partners.categories.length / 2)),
-                      partners.categories.slice(Math.ceil(partners.categories.length / 2)),
-                    ].map((list, i) => (
-                      <ul key={i} className="flex flex-col">
-                        {list.map((l) => (
-                          <li key={l.href}>
-                            <Link href={l.href} onClick={close} className={MEGA_LINK}>
-                              {l.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-              {partners.brands.length ? (
-                <div className="flex min-w-0 flex-col gap-[15px]">
-                  <span className={BAND_LABEL}>{t('partnerBrands')}</span>
-                  <ul className="flex flex-col">
-                    {partners.brands.map((l) => (
-                      <li key={l.href}>
-                        <Link href={l.href} onClick={close} className={MEGA_LINK}>
-                          {l.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-            </div>
+            <PartnerBand partners={partners} columns={grid} onNavigate={close} />
           ) : null}
         </div>
       </div>
+    </div>
+  )
+}
+
+/**
+ * The partner brands' band at the foot of the products menu, on Όρος Μαχαιρά's
+ * column grid: the section's title, intro and categories in the first column,
+ * and a card per brand across the others — its products and its categories.
+ */
+function PartnerBand({
+  partners,
+  columns,
+  onNavigate,
+}: {
+  partners: PartnerMenu
+  columns: React.CSSProperties
+  onNavigate: () => void
+}) {
+  const t = useTranslations('nav')
+  const ui = getShopUi(useLocale())
+
+  return (
+    <div className="grid gap-[33px] bg-cream px-[45px] py-[32px]" style={columns}>
+      <div className="flex min-w-0 flex-col gap-3">
+        <Link
+          href={partners.href}
+          onClick={onNavigate}
+          className="text-[17px] font-bold leading-[24px] text-foreground transition-colors hover:text-accent"
+        >
+          {partners.title}
+        </Link>
+        <p className="text-[15px] leading-[22px] text-muted">{t('partnerIntro')}</p>
+        <ul className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] leading-[22px]">
+          {partners.categories.map((c) => (
+            // The separator trails each link, so a wrapped line never starts with one.
+            <li key={c.href} className="after:ml-2 after:text-muted after:content-['·'] last:after:content-none">
+              <Link href={c.href} onClick={onNavigate} className="text-foreground transition-colors hover:text-accent">
+                {c.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <Link
+          href={partners.href}
+          onClick={onNavigate}
+          className="mt-1 inline-flex items-center gap-2 self-start text-[15px] font-medium text-accent transition-colors hover:text-gold-strong"
+        >
+          {t('partnerAll')}
+          <ArrowRight className="size-[13px]" />
+        </Link>
+      </div>
+
+      <ul
+        className="grid gap-5"
+        style={{ gridColumn: '2 / -1', gridTemplateColumns: `repeat(${Math.max(partners.brands.length, 3)}, minmax(0, 1fr))` }}
+      >
+        {partners.brands.map((b) => (
+          <li key={b.href} className="flex flex-col rounded-[8px] bg-white p-[22px]">
+            <Link
+              href={b.href}
+              onClick={onNavigate}
+              className="font-display text-[26px] leading-[1.1] text-foreground transition-colors hover:text-accent"
+            >
+              {b.label}
+            </Link>
+            <span className="mt-1.5 text-[13px] leading-[18px] text-muted">{ui.count(b.count)}</span>
+            <ul className="mt-4 flex flex-col border-t border-border pt-2">
+              {b.categories.map((c) => (
+                <li key={c.href}>
+                  <Link
+                    href={c.href}
+                    onClick={onNavigate}
+                    className="block py-[6px] text-[15px] leading-[22px] text-muted transition-colors hover:text-accent"
+                  >
+                    {c.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Link
+              href={b.href}
+              onClick={onNavigate}
+              aria-label={t('viewAll', { category: b.label })}
+              className="mt-auto pt-3 text-accent transition-colors hover:text-gold-strong"
+            >
+              <ArrowRight className="size-[15px]" />
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
