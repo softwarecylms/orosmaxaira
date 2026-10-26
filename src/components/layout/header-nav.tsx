@@ -7,12 +7,11 @@ import { ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ArrowRight } from '@/components/home/icons'
 import type { MegaColumn } from '@/components/home/home-content'
+import type { PartnerMenu } from '@/components/shop/shop-content'
 
 type NavLink = { label: string; href: string }
 type NavItem = {
   label: string
-  /** Shown instead of `label` below xl, where the row is short of room. */
-  shortLabel?: string
   href: string
   children?: NavLink[]
   groups?: { title: string; links: NavLink[] }[]
@@ -22,24 +21,35 @@ type NavItem = {
  *  href (locale-independent), not its label. */
 const MEGA_HREF = '/proionta'
 
+/** A muted link in the products menu — single lines keep the design's 39px rows, a long one wraps tight. */
+const MEGA_LINK = 'block py-[7.5px] text-[17px] leading-[24px] text-muted transition-colors hover:text-accent'
+/** Small caps label over a list in the partner brands' band. */
+const BAND_LABEL = 'flex h-6 items-center text-[12px] font-bold uppercase tracking-[0.08em] text-gold-strong'
+
 /**
- * Desktop nav row. "Προϊόντα" opens the product mega menu; any other item with
- * `children` opens a simple dropdown beneath it. Menus open on hover/focus and
- * stay open while the pointer is over the trigger or the panel (short close delay).
+ * Desktop nav row. "Προϊόντα" opens the product mega menu — Όρος Μαχαιρά's
+ * category columns, and below them, in a band of their own, the partner brands'
+ * categories and brands; any other item with `children` opens a simple dropdown
+ * beneath it. Menus open on hover/focus and stay open while the pointer is over
+ * the trigger or the panel (short close delay).
  */
 export function HeaderNav({
   nav,
   adopt,
   mega,
+  partners,
 }: {
   nav: NavItem[]
   adopt: { label: string; href: string }
   mega: MegaColumn[]
+  /** The partner brands' part of the products menu (none while they have no listed products). */
+  partners?: PartnerMenu | null
 }) {
   const [openItem, setOpenItem] = useState<string | null>(null)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const t = useTranslations('nav')
   const megaLabel = nav.find((i) => i.href === MEGA_HREF)?.label ?? ''
+  const grid = { gridTemplateColumns: `repeat(${Math.max(mega.length, 4)}, minmax(0, 1fr))` }
 
   const openMenu = (label: string) => {
     if (timer.current) clearTimeout(timer.current)
@@ -80,14 +90,7 @@ export function HeaderNav({
                   aria-expanded={hasDropdown ? isOpen : undefined}
                   onFocus={hasDropdown ? () => openMenu(item.label) : undefined}
                 >
-                  {item.shortLabel ? (
-                    <>
-                      <span className="xl:hidden">{item.shortLabel}</span>
-                      <span className="hidden xl:inline">{item.label}</span>
-                    </>
-                  ) : (
-                    item.label
-                  )}
+                  {item.label}
                   {hasDropdown ? (
                     <ChevronDown
                       className={cn(
@@ -184,7 +187,8 @@ export function HeaderNav({
         </Link>
       </nav>
 
-      {/* Mega menu panel — Προϊόντα only */}
+      {/* Mega menu panel — Προϊόντα only. Όρος Μαχαιρά's columns, and below them a
+          band for the partner brands on the same column grid. */}
       <div
         onMouseEnter={() => openMenu(megaLabel)}
         onMouseLeave={scheduleClose}
@@ -198,40 +202,97 @@ export function HeaderNav({
         <div
           role="menu"
           aria-label={megaLabel}
-          className="flex w-[1321px] max-w-[calc(100vw-2.5rem)] gap-[33px] rounded-[4px] bg-white p-[45px] shadow-[0_0_12px_rgba(35,31,32,0.1)]"
+          className="w-[1321px] max-w-[calc(100vw-2.5rem)] overflow-hidden rounded-[4px] bg-white shadow-[0_0_12px_rgba(35,31,32,0.1)]"
         >
-          {mega.map((col) => (
-            <div key={col.title} className="flex min-w-0 flex-1 flex-col gap-[15px]">
-              <Link
-                href={col.href}
-                onClick={close}
-                className="text-[17px] font-bold leading-[24px] text-foreground transition-colors hover:text-accent"
-              >
-                {col.title}
-              </Link>
-              <ul className="flex flex-col">
-                {col.links.map((l) => (
-                  <li key={l.label}>
-                    <Link
-                      href={l.href}
-                      onClick={close}
-                      className="block py-[7.5px] text-[17px] leading-[24px] text-muted transition-colors hover:text-accent"
-                    >
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href={col.href}
-                onClick={close}
-                aria-label={t('viewAll', { category: col.title })}
-                className="text-accent transition-colors hover:text-gold-strong"
-              >
-                <ArrowRight className="size-[15px]" />
-              </Link>
+          <div className="grid gap-[33px] p-[45px]" style={grid}>
+            {mega.map((col) => (
+              <div key={col.title} className="flex min-w-0 flex-col gap-[15px]">
+                <Link
+                  href={col.href}
+                  onClick={close}
+                  className="text-[17px] font-bold leading-[24px] text-foreground transition-colors hover:text-accent"
+                >
+                  {col.title}
+                </Link>
+                <ul className="flex flex-col">
+                  {col.links.map((l) => (
+                    <li key={l.label}>
+                      <Link href={l.href} onClick={close} className={MEGA_LINK}>
+                        {l.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href={col.href}
+                  onClick={close}
+                  aria-label={t('viewAll', { category: col.title })}
+                  className="text-accent transition-colors hover:text-gold-strong"
+                >
+                  <ArrowRight className="size-[15px]" />
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          {partners ? (
+            <div className="grid gap-[33px] border-t border-border bg-offwhite px-[45px] py-[32px]" style={grid}>
+              <div className="flex min-w-0 flex-col gap-[15px]">
+                <Link
+                  href={partners.href}
+                  onClick={close}
+                  className="text-[17px] font-bold leading-[24px] text-foreground transition-colors hover:text-accent"
+                >
+                  {partners.title}
+                </Link>
+                <p className="text-[15px] leading-[22px] text-muted">{t('partnerIntro')}</p>
+                <Link
+                  href={partners.href}
+                  onClick={close}
+                  aria-label={t('viewAll', { category: partners.title })}
+                  className="text-accent transition-colors hover:text-gold-strong"
+                >
+                  <ArrowRight className="size-[15px]" />
+                </Link>
+              </div>
+              {partners.categories.length ? (
+                <div className="col-span-2 flex min-w-0 flex-col gap-[15px]">
+                  <span className={BAND_LABEL}>{t('partnerCategories')}</span>
+                  {/* Two columns, lined up with the two above. */}
+                  <div className="grid grid-cols-2 gap-[33px]">
+                    {[
+                      partners.categories.slice(0, Math.ceil(partners.categories.length / 2)),
+                      partners.categories.slice(Math.ceil(partners.categories.length / 2)),
+                    ].map((list, i) => (
+                      <ul key={i} className="flex flex-col">
+                        {list.map((l) => (
+                          <li key={l.href}>
+                            <Link href={l.href} onClick={close} className={MEGA_LINK}>
+                              {l.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+              {partners.brands.length ? (
+                <div className="flex min-w-0 flex-col gap-[15px]">
+                  <span className={BAND_LABEL}>{t('partnerBrands')}</span>
+                  <ul className="flex flex-col">
+                    {partners.brands.map((l) => (
+                      <li key={l.href}>
+                        <Link href={l.href} onClick={close} className={MEGA_LINK}>
+                          {l.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
             </div>
-          ))}
+          ) : null}
         </div>
       </div>
     </div>

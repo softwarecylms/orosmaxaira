@@ -26,10 +26,11 @@
   "nav": {
     "mainNav": "Κύρια πλοήγηση",
     "viewAll": "Δείτε όλα — {category}",
+    "ownProducts": "Όρος Μαχαιρά",
+    "partnerIntro": "Επιλεγμένα προϊόντα μέλισσας από συνεργαζόμενους παραγωγούς.",
     "partnerCategories": "Κατηγορίες",
     "partnerBrands": "Μάρκες",
-    "partnerAll": "Όλα τα προϊόντα",
-    "partnerShort": "Μάρκες"
+    "partnerAll": "Όλα τα προϊόντα"
   },
   "legal": {
     "terms": "Όροι & Προϋποθέσεις",
