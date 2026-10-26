@@ -1,7 +1,7 @@
 import type { ShopCategory } from './shop-content'
 
 /**
- * Default SEO for the four shop category pages (`/proionta/<slug>/`).
+ * Default SEO for the shop category pages (`/proionta/<slug>/`).
  *
  * These are FALLBACKS. The live values are read from the Medusa category's
  * `metadata` (`meta_title`, `meta_description`, `meta_title_en`,
@@ -38,6 +38,16 @@ export const CATEGORY_SEO_EL: Record<ShopCategory, CategorySeo> = {
     description:
       'Έτοιμα σετ δώρου με κυπριακό μέλι και φυσικά καλλυντικά, συσκευασμένα στο μελισσοκομείο μας στη Μελίνη. Ιδανικά για εταιρικά και εορταστικά δώρα.',
   },
+  Αξεσουάρ: {
+    title: 'Αξεσουάρ Μελιού — Ξύλινα Κουταλάκια',
+    description:
+      'Ξύλινα κουταλάκια μελιού και μικρά αξεσουάρ για το τραπέζι, από το μελισσοκομείο «Όρος Μαχαιρά» στη Μελίνη. Αποστολή σε όλη την Κύπρο και την Ελλάδα.',
+  },
+  'Συνεργαζόμενες μάρκες': {
+    title: 'Συνεργαζόμενες Μάρκες — ApiLab, Apimel, Dermamel',
+    description:
+      'Επιλεγμένα προϊόντα μέλισσας από συνεργαζόμενους παραγωγούς: σπρέι πρόπολης, μέλι με βότανα, σιρόπια και κρέμες ApiLab, Apimel και Dermamel.',
+  },
 }
 
 export const CATEGORY_SEO_EN: Record<ShopCategory, CategorySeo> = {
@@ -60,6 +70,16 @@ export const CATEGORY_SEO_EN: Record<ShopCategory, CategorySeo> = {
     title: 'Honey & Cosmetics Gift Sets',
     description:
       'Ready-to-give gift sets of Cypriot honey and natural cosmetics, boxed at our apiary in Melini. Ideal for corporate and festive gifting in Cyprus.',
+  },
+  Αξεσουάρ: {
+    title: 'Honey Accessories — Wooden Honey Spoons',
+    description:
+      'Wooden honey spoons and small table accessories from the Oros Machaira apiary in Melini, Cyprus. Delivered across Cyprus and Greece with your honey.',
+  },
+  'Συνεργαζόμενες μάρκες': {
+    title: 'Partner Brands — ApiLab, Apimel, Dermamel',
+    description:
+      'Selected bee products from our partner makers: propolis sprays, honey with herbs, syrups and creams by ApiLab, Apimel and Dermamel. Delivered in Cyprus.',
   },
 }
 

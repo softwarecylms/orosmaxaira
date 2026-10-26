@@ -8,7 +8,17 @@
 import { GENERATED_PRODUCT_DETAILS } from './product-details.generated'
 import { GENERATED_PRODUCT_DETAILS_EN } from './product-details.generated.en'
 
-export type ShopCategory = 'Μέλι' | 'Προϊόντα Μέλισσας' | 'Καλλυντικά' | 'Πακέτα Δώρων'
+export type ShopCategory =
+  | 'Μέλι'
+  | 'Προϊόντα Μέλισσας'
+  | 'Καλλυντικά'
+  | 'Πακέτα Δώρων'
+  | 'Αξεσουάρ'
+  | 'Συνεργαζόμενες μάρκες'
+
+/** Other makers' products (ApiLab, Apimel, Dermamel…): the client wants them apart
+ *  from Όρος Μαχαιρά's own — their own category, and their own block on /proionta. */
+export const PARTNER_CATEGORY: ShopCategory = 'Συνεργαζόμενες μάρκες'
 
 export type ShopProduct = {
   category: ShopCategory
@@ -48,6 +58,8 @@ export const SHOP_CATEGORIES: ShopCategory[] = [
   'Προϊόντα Μέλισσας',
   'Καλλυντικά',
   'Πακέτα Δώρων',
+  'Αξεσουάρ',
+  'Συνεργαζόμενες μάρκες',
 ]
 
 /** Greek URL slugs per category (match the live site: /proionta/<slug>/). */
@@ -56,6 +68,8 @@ export const CATEGORY_SLUGS: Record<ShopCategory, string> = {
   'Προϊόντα Μέλισσας': 'proionta-melissas',
   Καλλυντικά: 'kallyntika',
   'Πακέτα Δώρων': 'paketa-doron',
+  Αξεσουάρ: 'aksesouar',
+  'Συνεργαζόμενες μάρκες': 'synergazomenes-markes',
 }
 export const CATEGORY_BY_SLUG: Record<string, ShopCategory> = Object.fromEntries(
   (Object.entries(CATEGORY_SLUGS) as [ShopCategory, string][]).map(([name, slug]) => [slug, name]),
@@ -67,6 +81,8 @@ export const CATEGORY_LABELS_EN: Record<ShopCategory, string> = {
   'Προϊόντα Μέλισσας': 'Bee Products',
   Καλλυντικά: 'Natural Cosmetics',
   'Πακέτα Δώρων': 'Gift Sets',
+  Αξεσουάρ: 'Accessories',
+  'Συνεργαζόμενες μάρκες': 'Partner Brands',
 }
 
 /** Slug lookup that accepts EITHER the Greek canonical name or the English label,
@@ -195,6 +211,8 @@ export type ShopVariationSize = {
 }
 export type ShopVariations = {
   sizes: ShopVariationSize[]
+  /** What the options are, for the "pick one" prompt (default: sizes). */
+  choice?: 'size' | 'colour'
 }
 export type ShopSection = { heading?: string; body: string }
 export type ShopNutritionRow = { label: string; value: string }

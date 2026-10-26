@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Link } from '@/i18n/navigation'
 import { ArrowRight, SlidersHorizontal, X } from 'lucide-react'
 import {
+  PARTNER_CATEGORY,
   SHOP_CATEGORIES,
   SHOP_PRICE_MAX,
   SHOP_PRICE_MIN,
@@ -13,6 +14,7 @@ import {
   SHOP_SORTS,
   categoryLabel,
   productPriceRangeCents,
+  proiontaHref,
   type ShopCategory,
   type ShopProduct,
   type ShopSort,
@@ -48,6 +50,7 @@ const DEFAULT_CATEGORY_RANK: Record<string, number> = {
   'Προϊόντα Μέλισσας': 1,
   Καλλυντικά: 2,
   'Πακέτα Δώρων': 3,
+  Αξεσουάρ: 4,
 }
 function defaultOrderRank(p: ShopProduct): number {
   const cat = DEFAULT_CATEGORY_RANK[p.category] ?? 4
@@ -101,6 +104,13 @@ export function ShopBrowser({
   const [visible, setVisible] = useState(PAGE_SIZE)
   const [filtersOpen, setFiltersOpen] = useState(false)
 
+  // Only categories that have something to show (a new category may hold only
+  // hidden products for a while).
+  const categories = useMemo(
+    () => SHOP_CATEGORIES.filter((c) => products.some((p) => p.inStock && p.category === c)),
+    [products],
+  )
+
   const filtered = useMemo(() => {
     let list = products.filter((p) => {
       if (!p.inStock) return false // hide out-of-stock products
@@ -120,8 +130,14 @@ export function ShopBrowser({
   // Reset the infinite-scroll window whenever the result set changes.
   useEffect(() => setVisible(PAGE_SIZE), [cats, priceMin, priceMax, sort])
 
-  const shown = filtered.slice(0, visible)
-  const hasMore = visible < filtered.length
+  // With no category picked, other makers' products leave the main grid for
+  // their own block below it; picking their category shows them as usual.
+  const apart = cats.size === 0
+  const main = apart ? filtered.filter((p) => p.category !== PARTNER_CATEGORY) : filtered
+  const partners = apart ? filtered.filter((p) => p.category === PARTNER_CATEGORY) : []
+
+  const shown = main.slice(0, visible)
+  const hasMore = visible < main.length
 
   // Infinite scroll: grow the window as the sentinel enters view.
   const sentinel = useRef<HTMLDivElement | null>(null)
@@ -164,7 +180,7 @@ export function ShopBrowser({
         <h3 className="text-[22px] font-medium leading-[26.4px] text-foreground">
           {ui.filters.category}
         </h3>
-        {SHOP_CATEGORIES.map((c) => (
+        {categories.map((c) => (
           <label key={c} className="flex cursor-pointer items-center gap-2.5 py-0.5">
             <input
               type="checkbox"
@@ -363,6 +379,33 @@ export function ShopBrowser({
               <span className="size-6 animate-spin rounded-full border-2 border-border border-t-accent" />
             </div>
           )}
+
+          {partners.length > 0 && !hasMore ? (
+            <div className="mt-14 border-t border-border pt-10 md:mt-16">
+              <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div className="flex flex-col gap-1.5">
+                  <h2 className="font-display text-[28px] leading-[1.15] text-foreground md:text-[34px]">
+                    {categoryLabel(PARTNER_CATEGORY, locale)}
+                  </h2>
+                  <p className="text-[15px] text-muted">{ui.partners.body}</p>
+                </div>
+                <Link
+                  href={proiontaHref(PARTNER_CATEGORY)}
+                  className="inline-flex items-center gap-2 self-start text-[15px] font-medium text-accent transition-colors hover:text-foreground sm:self-auto"
+                >
+                  {ui.partners.all}
+                  <ArrowRight className="size-4" strokeWidth={2} aria-hidden="true" />
+                </Link>
+              </div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 2xl:grid-cols-4">
+                {partners.map((p) => (
+                  <RevealUp key={p.href} className="h-full">
+                    <ShopProductCard product={p} shortCta />
+                  </RevealUp>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

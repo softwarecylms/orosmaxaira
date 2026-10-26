@@ -21,6 +21,7 @@ const PRODUCT_UI_EL = {
   addToCartShort: 'Προσθήκη',
   buyNow: 'Aγοράστε τώρα',
   selectSize: 'Επιλέξτε μέγεθος για να συνεχίσετε.',
+  selectColour: 'Επιλέξτε χρώμα για να συνεχίσετε.',
   crossSellHeading: '🔥 Συνδυάστε το με',
   /** aria-label for an add-on's add button, e.g. "Προσθήκη <Υδρόμελο> στο καλάθι". */
   addonAria: (title: string) => `Προσθήκη ${title} στο καλάθι`,
@@ -64,6 +65,7 @@ const PRODUCT_UI_EN: ProductUi = {
   addToCartShort: 'Add',
   buyNow: 'Buy now',
   selectSize: 'Select a size to continue.',
+  selectColour: 'Select a colour to continue.',
   crossSellHeading: '🔥 Pair it with',
   addonAria: (title: string) => `Add ${title} to cart`,
   delivery: {

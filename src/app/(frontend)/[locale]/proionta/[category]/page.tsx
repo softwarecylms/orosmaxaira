@@ -5,11 +5,12 @@ import { ProductsPage } from '@/components/shop/products-page'
 import { CATEGORY_BY_SLUG, CATEGORY_SLUGS } from '@/components/shop/shop-content'
 import { getShopUi } from '@/components/shop/shop-ui'
 import { getCategorySeo } from '@/lib/medusa/category-seo'
+import { listShopProducts } from '@/lib/medusa/shop'
 import { hreflangAlternates, seoMetadata } from '@/lib/seo'
 
 type Params = { params: Promise<{ category: string }> }
 
-/** Pre-render the four category permalinks (/proionta/meli/ etc.). */
+/** Pre-render the category permalinks (/proionta/meli/ etc.). */
 export function generateStaticParams() {
   return Object.values(CATEGORY_SLUGS).map((category) => ({ category }))
 }
@@ -32,5 +33,8 @@ export default async function ProiontaCategoryPage({ params }: Params) {
   const { category: slug } = await params
   const category = CATEGORY_BY_SLUG[slug]
   if (!category) notFound()
+  // A category with nothing listed yet (its products still hidden) has no page.
+  const catalogue = await listShopProducts().catch(() => null)
+  if (catalogue && !catalogue.products.some((p) => p.category === category)) notFound()
   return <ProductsPage category={category} />
 }

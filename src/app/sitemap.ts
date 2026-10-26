@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { siteUrl } from '@/lib/seo'
 import { sdk } from '@/lib/medusa/client'
-import { isHiddenProduct } from '@/lib/medusa/shop'
+import { isHiddenProduct, listShopProducts } from '@/lib/medusa/shop'
 import { getBlogPosts } from '@/lib/blog'
 import { ARTICLE_DUPLICATE_OF } from '@/components/blog/article-seo'
 import { CATEGORY_SLUGS, SHOP_PRODUCTS, handleOf } from '@/components/shop/shop-content'
@@ -84,7 +84,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const entries: Entry[] = STATIC_PAGES.map((el) => ({ el, en: en(el) }))
 
-  for (const slug of Object.values(CATEGORY_SLUGS)) {
+  // Categories with listed products only (a new one may hold hidden products for now).
+  const catalogue = await listShopProducts().catch(() => null)
+  for (const [name, slug] of Object.entries(CATEGORY_SLUGS)) {
+    if (catalogue && !catalogue.products.some((p) => p.category === name)) continue
     entries.push({ el: `/proionta/${slug}/`, en: `/en/proionta/${slug}/` })
   }
 

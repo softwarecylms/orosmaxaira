@@ -191,6 +191,7 @@ const DETAIL_FIELDS = [
   'categories.metadata',
   '*variants',
   '*variants.options',
+  'variants.options.option.title', // «Μέγεθος» or «Χρώμα» — what the customer chooses
   '*variants.metadata', // variant title_en (container translations)
   '*variants.calculated_price',
   '+variants.inventory_quantity',
@@ -204,6 +205,14 @@ type MedusaVariant = {
   thumbnail?: string | null
   options?: { value: string; option?: { title: string } }[]
   calculated_price?: HttpTypes.StoreCalculatedPrice
+  metadata?: Record<string, unknown> | null
+}
+
+/** The chip label in this language: the option value, or — for a word like a
+ *  colour, not a size — its English translation in the variant's `option_en`. */
+const optionLabel = (v: MedusaVariant, locale: string) => {
+  const en = v.metadata?.option_en
+  return locale === 'en' && typeof en === 'string' && en.trim() ? en.trim() : sizeLabel(v)
 }
 
 type MedusaImage = { id: string; url: string; rank?: number | null; variants?: { id: string }[] | null }
@@ -343,7 +352,7 @@ export async function getShopProduct(
           live,
           regular,
           size: {
-            label,
+            label: optionLabel(v, locale),
             container: st?.container,
             price: euro(amount),
             ...(regular > amount ? { compareAt: euro(regular) } : {}),
@@ -399,7 +408,13 @@ export async function getShopProduct(
     // «Περιγραφή» / «Διατροφική Αξία» tabs — editable in the Medusa admin.
     sections: pickTab(locale, m.metadata, 'sections', staticDetail.sections),
     nutrition: pickTab(locale, m.metadata, 'nutrition', staticDetail.nutrition),
-    variations: sizes ? { sizes } : undefined,
+    variations: sizes
+      ? {
+          sizes,
+          // What the customer is choosing — the lip balm's options are colours.
+          choice: variants[0]?.options?.[0]?.option?.title === 'Χρώμα' ? 'colour' : 'size',
+        }
+      : undefined,
     metaTitle: seoField(locale, m.metadata, 'meta_title'),
     metaDescription: seoField(locale, m.metadata, 'meta_description'),
   }

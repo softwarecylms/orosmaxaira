@@ -40,6 +40,11 @@ const SHOP_UI_EL = {
   addToCartShort: 'Προσθήκη',
   outOfStock: 'Εξαντλήθηκε',
   breadcrumb: { home: 'Αρχική', products: 'Προϊόντα' },
+  /** The block of other makers' products under the main grid on /proionta. */
+  partners: {
+    body: 'Επιλεγμένα προϊόντα μέλισσας από συνεργαζόμενους παραγωγούς.',
+    all: 'Όλα τα προϊόντα',
+  },
   /** Checkout stepper node labels (cart → checkout → order). */
   steps: ['ΚΑΛΑΘΙ', 'ΤΑΜΕΙΟ', 'ΠΑΡΑΓΓΕΛΙΑ'] as [string, string, string],
   meta: {
@@ -78,6 +83,10 @@ const SHOP_UI_EN: ShopUi = {
   addToCartShort: 'Add',
   outOfStock: 'Out of stock',
   breadcrumb: { home: 'Home', products: 'Products' },
+  partners: {
+    body: 'Selected bee products from our partner makers.',
+    all: 'View all',
+  },
   steps: ['CART', 'CHECKOUT', 'ORDER'],
   meta: {
     listingTitle: 'Products',

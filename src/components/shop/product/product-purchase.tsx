@@ -57,6 +57,7 @@ export function ProductPurchase({
 
   const sizes = detail.variations?.sizes ?? []
   const hasVariations = sizes.length > 0
+  const pickPrompt = detail.variations?.choice === 'colour' ? ui.selectColour : ui.selectSize
 
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
@@ -214,7 +215,7 @@ export function ProductPurchase({
               className="flex items-center gap-1.5 text-[14px] font-medium leading-[21px] text-red-700"
             >
               <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
-              {ui.selectSize}
+              {pickPrompt}
             </p>
           ) : null}
           {selected ? (
@@ -309,7 +310,7 @@ export function ProductPurchase({
         </button>
         {needsSize && !showSizeError ? (
           <p id={sizeHintId} className="mt-2 text-[14px] leading-[21px] text-muted">
-            {ui.selectSize}
+            {pickPrompt}
           </p>
         ) : null}
       </RevealItem>
