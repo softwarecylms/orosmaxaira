@@ -34,29 +34,30 @@ export async function SiteHeader({ locale }: SiteHeaderProps) {
   const tNav = await getTranslations('nav')
   const { NAV, ADOPT_LINK, CONTACT, MEGA_MENU, SEARCH_PLACEHOLDERS } = await loadSiteContent(locale)
 
-  // The partner brands' products get their own part of the products menu, built
-  // from what the shop lists (their categories and brands), never mixed into
-  // Όρος Μαχαιρά's. On mobile, «Προϊόντα» then opens as titled groups.
+  // The partner brands' products are never mixed into Όρος Μαχαιρά's menu: they
+  // get their own menu item after «Προϊόντα» — their categories and brands, from
+  // what the shop lists (none while nothing of theirs is listed).
   const catalogue = await listShopProducts().catch(() => null)
   const partners = catalogue ? partnerMenu(catalogue.products, locale) : null
-  const mobileNav = partners
-    ? NAV.map((item) =>
+  const nav = partners
+    ? NAV.flatMap((item) =>
         item.href === '/proionta'
-          ? {
-              ...item,
-              children: undefined,
-              groups: [
-                { title: tNav('ownProducts'), links: item.children ?? [] },
-                {
-                  title: partners.title,
-                  links: [{ label: tNav('partnerAll'), href: partners.href }, ...partners.categories],
-                },
-                ...(partners.brands.length > 1
-                  ? [{ title: tNav('partnerBrands'), links: partners.brands }]
-                  : []),
-              ],
-            }
-          : item,
+          ? [
+              item,
+              {
+                label: partners.title,
+                shortLabel: tNav('partnerShort'),
+                href: partners.href,
+                groups: [
+                  {
+                    title: tNav('partnerCategories'),
+                    links: [{ label: tNav('partnerAll'), href: partners.href }, ...partners.categories],
+                  },
+                  ...(partners.brands.length ? [{ title: tNav('partnerBrands'), links: partners.brands }] : []),
+                ],
+              },
+            ]
+          : [item],
       )
     : NAV
 
@@ -161,7 +162,7 @@ export async function SiteHeader({ locale }: SiteHeaderProps) {
               <User className="size-6" aria-hidden="true" />
             </Link>
             <HeaderMobile
-              nav={mobileNav}
+              nav={nav}
               adopt={ADOPT_LINK}
               phone={{ label: CONTACT.phone, href: CONTACT.phoneHref }}
               searchPlaceholders={SEARCH_PLACEHOLDERS}
@@ -171,7 +172,7 @@ export async function SiteHeader({ locale }: SiteHeaderProps) {
 
         {/* Nav row with the Προϊόντα mega menu */}
         <HeaderReveal delay={0.16} editKey="NAV">
-          <HeaderNav nav={NAV} adopt={ADOPT_LINK} mega={MEGA_MENU} partners={partners} />
+          <HeaderNav nav={nav} adopt={ADOPT_LINK} mega={MEGA_MENU} />
         </HeaderReveal>
         </div>
       </header>
