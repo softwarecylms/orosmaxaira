@@ -8,7 +8,8 @@ import { cn } from '@/lib/utils'
 import { HeaderSearch } from './header-search'
 import { LanguageSwitcher } from './language-switcher'
 
-type NavLink = { label: string; href: string }
+/** A link in a titled group; `links` nests under it (a partner brand's categories). */
+type NavLink = { label: string; href: string; links?: { label: string; href: string }[] }
 type NavItem = {
   label: string
   href: string
@@ -106,10 +107,28 @@ export function HeaderMobile({
                                     <Link
                                       href={l.href}
                                       onClick={() => setOpen(false)}
-                                      className="block py-2 pl-4 text-[15px] text-muted transition-colors hover:text-accent"
+                                      className={cn(
+                                        'block py-2 pl-4 text-[15px] transition-colors hover:text-accent',
+                                        l.links ? 'font-medium text-foreground' : 'text-muted',
+                                      )}
                                     >
                                       {l.label}
                                     </Link>
+                                    {l.links ? (
+                                      <ul className="flex flex-col pb-1">
+                                        {l.links.map((s) => (
+                                          <li key={s.href}>
+                                            <Link
+                                              href={s.href}
+                                              onClick={() => setOpen(false)}
+                                              className="block py-1.5 pl-8 text-[14px] text-muted transition-colors hover:text-accent"
+                                            >
+                                              {s.label}
+                                            </Link>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    ) : null}
                                   </li>
                                 ))}
                               </ul>

@@ -35,8 +35,9 @@ export async function SiteHeader({ locale }: SiteHeaderProps) {
   const { NAV, ADOPT_LINK, CONTACT, MEGA_MENU, SEARCH_PLACEHOLDERS } = await loadSiteContent(locale)
 
   // The partner brands' products get their own part of the products menu, built
-  // from what the shop lists (their categories and brands), never mixed into
-  // Όρος Μαχαιρά's. On mobile, «Προϊόντα» then opens as titled groups.
+  // from what the shop lists (their brands and categories), never mixed into
+  // Όρος Μαχαιρά's. On mobile, «Προϊόντα» then opens as titled groups, each
+  // brand with its categories under it — as on desktop.
   const catalogue = await listShopProducts().catch(() => null)
   const partners = catalogue ? partnerMenu(catalogue.products, locale) : null
   const mobileNav = partners
@@ -49,11 +50,11 @@ export async function SiteHeader({ locale }: SiteHeaderProps) {
                 { title: tNav('ownProducts'), links: item.children ?? [] },
                 {
                   title: partners.title,
-                  links: [{ label: tNav('partnerAll'), href: partners.href }, ...partners.categories],
+                  links: [
+                    { label: tNav('partnerAll'), href: partners.href },
+                    ...partners.brands.map((b) => ({ label: b.label, href: b.href, links: b.categories })),
+                  ],
                 },
-                ...(partners.brands.length > 1
-                  ? [{ title: tNav('partnerBrands'), links: partners.brands }]
-                  : []),
               ],
             }
           : item,

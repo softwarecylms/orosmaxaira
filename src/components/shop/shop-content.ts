@@ -152,13 +152,12 @@ export function proiontaHref(category?: string): string {
   return found ? `/proionta/${categoryPath(found)}` : '/proionta'
 }
 
-/** The partner section of the menus: its categories and brands that have
- *  products to show, linked to their pages (a brand: the section filtered by
- *  it) — a brand with the categories it has products in. */
+/** The partner section of the menus: its brands that have products to show,
+ *  linked to the section filtered by each, with the categories each has
+ *  products in (linked to the category, filtered by the brand). */
 export type PartnerMenu = {
   title: string
   href: string
-  categories: { label: string; href: string }[]
   brands: { label: string; href: string; categories: { label: string; href: string }[] }[]
 }
 export function partnerMenu(products: ShopProduct[], locale: string): PartnerMenu | null {
@@ -169,10 +168,6 @@ export function partnerMenu(products: ShopProduct[], locale: string): PartnerMen
   return {
     title: categoryLabel(PARTNER_CATEGORY, locale),
     href: section,
-    categories: PARTNER_SUBCATEGORIES.filter((c) => listed.some((p) => p.category === c)).map((c) => ({
-      label: categoryLabel(c, locale),
-      href: proiontaHref(c),
-    })),
     brands: [...brands]
       .sort((a, b) => a[1].localeCompare(b[1]))
       .map(([handle, name]) => {
