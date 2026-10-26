@@ -149,21 +149,27 @@ export type ShopCatalogue = {
   priceMax: number
 }
 
+/** The published catalogue as Medusa returns it (cached under the `products` tag). */
+async function fetchCatalogue(regionId: string): Promise<HttpTypes.StoreProduct[]> {
+  const { products } = await sdk.client.fetch<{ products: HttpTypes.StoreProduct[] }>(
+    '/store/products',
+    {
+      method: 'GET',
+      query: { limit: 200, region_id: regionId, fields: FIELDS },
+      cache: 'force-cache',
+      next: { tags: ['products'], revalidate: CACHE_TTL },
+    },
+  )
+  return products
+}
+
 /** Fetch the full published catalogue from Medusa, mapped for <ShopBrowser>. */
 export async function listShopProducts(): Promise<ShopCatalogue | null> {
   const region = await getDefaultRegion()
   if (!region) return null
   const locale = await getLocale()
 
-  const { products } = await sdk.client.fetch<{ products: HttpTypes.StoreProduct[] }>(
-    '/store/products',
-    {
-      method: 'GET',
-      query: { limit: 200, region_id: region.id, fields: FIELDS },
-      cache: 'force-cache',
-      next: { tags: ['products'], revalidate: CACHE_TTL },
-    },
-  )
+  const products = await fetchCatalogue(region.id)
 
   const mapped = products
     .map((p) => mapProduct(p, locale))
@@ -173,6 +179,43 @@ export async function listShopProducts(): Promise<ShopCatalogue | null> {
   const priceMin = Math.floor(Math.min(...mapped.map((p) => p.priceRange![0])) / 100)
   const priceMax = Math.ceil(Math.max(...mapped.map((p) => p.priceRange![1])) / 100)
   return { products: mapped, priceMin, priceMax }
+}
+
+/** A product as the header search knows it: titles in both languages, so it is
+ *  found whichever language the visitor types in. */
+export type SearchProduct = {
+  handle: string
+  /** The English URL slug (/en/product/<slugEn>). */
+  slugEn: string
+  title: string
+  titleEn: string
+  category: ShopCategory
+  price: string
+  inStock: boolean
+  image: string
+}
+
+/** Every listed product (published, not hidden) for the header search. */
+export async function listSearchProducts(): Promise<SearchProduct[] | null> {
+  const region = await getDefaultRegion()
+  if (!region) return null
+  const products = (await fetchCatalogue(region.id)).flatMap((p) => {
+    const el = mapProduct(p, 'el')
+    if (!el || el.hidden) return []
+    return [
+      {
+        handle: p.handle!,
+        slugEn: productSlug(p.handle!, 'en'),
+        title: el.title,
+        titleEn: pick('en', p.metadata, 'title_en', p.title),
+        category: el.category,
+        price: el.price,
+        inStock: el.inStock,
+        image: el.image,
+      },
+    ]
+  })
+  return products.length ? products : null
 }
 
 const DETAIL_FIELDS = [

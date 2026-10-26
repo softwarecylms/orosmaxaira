@@ -6,8 +6,8 @@ import { useLocale, useTranslations } from 'next-intl'
 import { Link, usePathname, useRouter } from '@/i18n/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Search } from 'lucide-react'
-import { SHOP_PRODUCTS, handleOf, categoryLabel } from '@/components/shop/shop-content'
-import { PRODUCT_TITLE_EN, localizedProductTitle } from '@/components/shop/product-i18n'
+import { categoryLabel } from '@/components/shop/shop-content'
+import type { SearchProduct } from '@/lib/medusa/shop'
 import { EASE } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
@@ -33,10 +33,26 @@ function score(title: string, category: string, nq: string): number {
   return 9
 }
 
+/** The shop's products (/api/search-products/), fetched once per visit — the
+ *  first time a search box is used — and shared by the desktop and mobile boxes.
+ *  A failed load is forgotten, so the next use tries again. */
+let catalogue: Promise<SearchProduct[]> | null = null
+function loadCatalogue(): Promise<SearchProduct[]> {
+  catalogue ??= fetch('/api/search-products/')
+    .then((r) => (r.ok ? (r.json() as Promise<{ products: SearchProduct[] }>) : Promise.reject(r.status)))
+    .then((d) => d.products)
+    .catch(() => {
+      catalogue = null
+      return []
+    })
+  return catalogue
+}
+
 /**
- * Header search box with a live product-results dropdown. Filters the static
- * catalogue (`SHOP_PRODUCTS`) by title/category as you type and links each hit
- * to its product page. While empty it shows the rotating placeholder hint.
+ * Header search box with a live product-results dropdown. Filters every listed
+ * product in the shop (live from Medusa, see loadCatalogue) by title/category as
+ * you type and links each hit to its product page. While empty it shows the
+ * rotating placeholder hint.
  */
 export function HeaderSearch({
   placeholders: SEARCH_PLACEHOLDERS,
@@ -53,7 +69,12 @@ export function HeaderSearch({
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(0)
+  const [products, setProducts] = useState<SearchProduct[] | null>(null)
   const rootRef = useRef<HTMLFormElement>(null)
+
+  const load = () => {
+    if (!products?.length) loadCatalogue().then(setProducts)
+  }
 
   const q = query.trim()
   const showHint = q === ''
@@ -71,19 +92,19 @@ export function HeaderSearch({
     const nq = norm(q)
     // Match against BOTH the Greek and English title/category so results appear
     // regardless of the language the visitor types in.
-    return SHOP_PRODUCTS.map((p) => {
-      const enTitle = PRODUCT_TITLE_EN[handleOf(p)] ?? p.title
-      const s = Math.min(
-        score(p.title, p.category, nq),
-        score(enTitle, categoryLabel(p.category, 'en'), nq),
-      )
-      return { p, s }
-    })
+    return (products ?? [])
+      .map((p) => {
+        const s = Math.min(
+          score(p.title, p.category, nq),
+          score(p.titleEn, categoryLabel(p.category, 'en'), nq),
+        )
+        return { p, s }
+      })
       .filter((x) => x.s < 9)
       .sort((a, b) => a.s - b.s) // stable sort keeps catalogue order within a tier
       .slice(0, MAX_RESULTS)
       .map((x) => x.p)
-  }, [q])
+  }, [q, products])
 
   // Reset the keyboard highlight whenever the query changes.
   useEffect(() => setActive(0), [q])
@@ -118,6 +139,8 @@ export function HeaderSearch({
     setQuery('')
   }
 
+  const hrefOf = (p: SearchProduct) => `/product/${locale === 'en' ? p.slugEn : p.handle}`
+
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!open || results.length === 0) return
     if (e.key === 'ArrowDown') {
@@ -131,12 +154,13 @@ export function HeaderSearch({
       const r = results[active] ?? results[0]
       if (r) {
         close()
-        router.push(`/product/${handleOf(r)}`)
+        router.push(hrefOf(r))
       }
     }
   }
 
-  const expanded = open && q !== ''
+  // Nothing to show until the products are in (a moment, on the first use).
+  const expanded = open && q !== '' && products !== null
 
   return (
     <form
@@ -147,7 +171,7 @@ export function HeaderSearch({
         const r = results[active] ?? results[0]
         if (r) {
           close()
-          router.push(`/product/${handleOf(r)}`)
+          router.push(hrefOf(r))
         }
       }}
       className={cn('relative', className)}
@@ -165,8 +189,10 @@ export function HeaderSearch({
           onChange={(e) => {
             setQuery(e.target.value)
             setOpen(e.target.value.trim() !== '')
+            load()
           }}
           onFocus={() => {
+            load()
             if (q !== '') setOpen(true)
           }}
           onKeyDown={onKeyDown}
@@ -213,11 +239,11 @@ export function HeaderSearch({
               <>
                 <ul id="header-search-listbox" role="listbox" className="max-h-[62vh] overflow-y-auto py-1.5">
                   {results.map((p, idx) => {
-                    const handle = handleOf(p)
+                    const title = locale === 'en' ? p.titleEn : p.title
                     return (
-                      <li key={handle} role="option" aria-selected={idx === active}>
+                      <li key={p.handle} role="option" aria-selected={idx === active}>
                         <Link
-                          href={`/product/${handle}`}
+                          href={hrefOf(p)}
                           onMouseEnter={() => setActive(idx)}
                           className={cn(
                             'flex items-center gap-3 px-4 py-2.5 transition-colors',
@@ -225,11 +251,13 @@ export function HeaderSearch({
                           )}
                         >
                           <span className="relative size-11 shrink-0 overflow-hidden rounded-[4px] bg-offwhite">
-                            <Image src={p.image} alt={p.imageAlt} fill sizes="44px" className="object-cover" />
+                            {p.image ? (
+                              <Image src={p.image} alt={title} fill sizes="44px" className="object-cover" />
+                            ) : null}
                           </span>
                           <span className="flex min-w-0 flex-1 flex-col">
                             <span className="truncate text-[14px] font-medium leading-[18px] text-foreground">
-                              {localizedProductTitle(handle, p.title, locale)}
+                              {title}
                             </span>
                             <span className="text-[12px] text-muted">
                               {categoryLabel(p.category, locale)}
