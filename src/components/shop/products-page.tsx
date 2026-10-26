@@ -74,7 +74,12 @@ export async function ProductsPage({ category, brand }: { category?: ShopCategor
         </nav>
       </div>
 
-      <ShopBrowser products={catalogue?.products} initialCategory={category} initialBrand={brand} />
+      <ShopBrowser
+        products={catalogue?.products}
+        priceBounds={catalogue ? [catalogue.priceMin, catalogue.priceMax] : undefined}
+        initialCategory={category}
+        initialBrand={brand}
+      />
     </>
   )
 }

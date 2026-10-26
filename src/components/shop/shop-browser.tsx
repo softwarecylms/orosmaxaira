@@ -66,15 +66,21 @@ function defaultOrderRank(p: ShopProduct): number {
 
 export function ShopBrowser({
   products = SHOP_PRODUCTS,
+  priceBounds = [SHOP_PRICE_MIN, SHOP_PRICE_MAX],
   initialCategory,
   initialBrand,
 }: {
   products?: ShopProduct[]
+  /** The price slider's ends in whole euros — the live catalogue's cheapest and
+   *  dearest product. The snapshot's own range is only for the offline fallback:
+   *  applied to the live shop it hid everything priced outside it. */
+  priceBounds?: [number, number]
   /** Pre-selected category from the /proionta/<slug> route. */
   initialCategory?: ShopCategory
   /** Pre-selected brand (its collection handle) from ?brand=. */
   initialBrand?: string
 } = {}) {
+  const [boundMin, boundMax] = priceBounds
   const locale = useLocale()
   const ui = getShopUi(locale)
   // Όρος Μαχαιρά's products and the partner brands' are browsed apart: a category
@@ -102,22 +108,27 @@ export function ShopBrowser({
     setBrands(startBrands())
   }, [initialCategory, initialBrand])
 
-  const [priceMin, setPriceMin] = useState(SHOP_PRICE_MIN)
-  const [priceMax, setPriceMax] = useState(SHOP_PRICE_MAX)
+  const [priceMin, setPriceMin] = useState(boundMin)
+  const [priceMax, setPriceMax] = useState(boundMax)
+  // A product priced beyond the old ends (a new one in the admin) widens the range.
+  useEffect(() => {
+    setPriceMin(boundMin)
+    setPriceMax(boundMax)
+  }, [boundMin, boundMax])
   // Editable text mirrors of the price bounds: free typing, clamped on commit.
-  const [minText, setMinText] = useState(String(SHOP_PRICE_MIN))
-  const [maxText, setMaxText] = useState(String(SHOP_PRICE_MAX))
+  const [minText, setMinText] = useState(String(boundMin))
+  const [maxText, setMaxText] = useState(String(boundMax))
   useEffect(() => setMinText(String(priceMin)), [priceMin])
   useEffect(() => setMaxText(String(priceMax)), [priceMax])
   const commitMin = () => {
     const v = Math.round(Number(minText))
-    const clamped = Number.isFinite(v) ? Math.min(Math.max(v, SHOP_PRICE_MIN), priceMax) : priceMin
+    const clamped = Number.isFinite(v) ? Math.min(Math.max(v, boundMin), priceMax) : priceMin
     setPriceMin(clamped)
     setMinText(String(clamped))
   }
   const commitMax = () => {
     const v = Math.round(Number(maxText))
-    const clamped = Number.isFinite(v) ? Math.max(Math.min(v, SHOP_PRICE_MAX), priceMin) : priceMax
+    const clamped = Number.isFinite(v) ? Math.max(Math.min(v, boundMax), priceMin) : priceMax
     setPriceMax(clamped)
     setMaxText(String(clamped))
   }
@@ -214,15 +225,15 @@ export function ShopBrowser({
   const clearAll = () => {
     setCats(new Set())
     setBrands(new Set())
-    setPriceMin(SHOP_PRICE_MIN)
-    setPriceMax(SHOP_PRICE_MAX)
+    setPriceMin(boundMin)
+    setPriceMax(boundMax)
   }
 
   const dirty =
-    cats.size > 0 || brands.size > 0 || priceMin !== SHOP_PRICE_MIN || priceMax !== SHOP_PRICE_MAX
+    cats.size > 0 || brands.size > 0 || priceMin !== boundMin || priceMax !== boundMax
 
-  const pctMin = ((priceMin - SHOP_PRICE_MIN) / (SHOP_PRICE_MAX - SHOP_PRICE_MIN)) * 100
-  const pctMax = ((priceMax - SHOP_PRICE_MIN) / (SHOP_PRICE_MAX - SHOP_PRICE_MIN)) * 100
+  const pctMin = ((priceMin - boundMin) / (boundMax - boundMin)) * 100
+  const pctMax = ((priceMax - boundMin) / (boundMax - boundMin)) * 100
 
   const filterPanel = (
     <div className="flex flex-col gap-[30px] rounded-[4px] bg-white p-[25px]">
@@ -293,8 +304,8 @@ export function ShopBrowser({
           />
           <input
             type="range"
-            min={SHOP_PRICE_MIN}
-            max={SHOP_PRICE_MAX}
+            min={boundMin}
+            max={boundMax}
             value={priceMin}
             aria-label={ui.filters.minAria}
             onChange={(e) => setPriceMin(Math.min(Number(e.target.value), priceMax))}
@@ -302,8 +313,8 @@ export function ShopBrowser({
           />
           <input
             type="range"
-            min={SHOP_PRICE_MIN}
-            max={SHOP_PRICE_MAX}
+            min={boundMin}
+            max={boundMax}
             value={priceMax}
             aria-label={ui.filters.maxAria}
             onChange={(e) => setPriceMax(Math.max(Number(e.target.value), priceMin))}
