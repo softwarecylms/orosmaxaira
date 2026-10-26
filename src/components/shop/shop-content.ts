@@ -154,12 +154,12 @@ export function proiontaHref(category?: string): string {
 
 /** The partner section of the menus: its categories and brands that have
  *  products to show, linked to their pages (a brand: the section filtered by
- *  it) — a brand with how many products it lists and the categories they are in. */
+ *  it) — a brand with the categories it has products in. */
 export type PartnerMenu = {
   title: string
   href: string
   categories: { label: string; href: string }[]
-  brands: { label: string; href: string; count: number; categories: { label: string; href: string }[] }[]
+  brands: { label: string; href: string; categories: { label: string; href: string }[] }[]
 }
 export function partnerMenu(products: ShopProduct[], locale: string): PartnerMenu | null {
   const listed = products.filter((p) => p.inStock && !p.hidden && isPartnerCategory(p.category))
@@ -180,7 +180,6 @@ export function partnerMenu(products: ShopProduct[], locale: string): PartnerMen
         return {
           label: name,
           href: `${section}?brand=${handle}`,
-          count: own.length,
           categories: PARTNER_SUBCATEGORIES.filter((c) => own.some((p) => p.category === c)).map((c) => ({
             label: categoryLabel(c, locale),
             href: `${proiontaHref(c)}?brand=${handle}`,

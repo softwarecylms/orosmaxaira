@@ -1,14 +1,13 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ArrowRight } from '@/components/home/icons'
 import type { MegaColumn } from '@/components/home/home-content'
 import type { PartnerMenu } from '@/components/shop/shop-content'
-import { getShopUi } from '@/components/shop/shop-ui'
 
 type NavLink = { label: string; href: string }
 type NavItem = {
@@ -247,8 +246,9 @@ export function HeaderNav({
 
 /**
  * The partner brands' band at the foot of the products menu, on Όρος Μαχαιρά's
- * column grid: the section's title, intro and categories in the first column,
- * and a card per brand across the others — its products and its categories.
+ * column grid: the section's title and intro in the first column, and a card per
+ * brand across the others, styled like the columns above — the brand, its
+ * categories, an arrow.
  */
 function PartnerBand({
   partners,
@@ -260,7 +260,6 @@ function PartnerBand({
   onNavigate: () => void
 }) {
   const t = useTranslations('nav')
-  const ui = getShopUi(useLocale())
 
   return (
     <div className="grid gap-6 bg-cream px-8 py-6" style={columns}>
@@ -273,16 +272,6 @@ function PartnerBand({
           {partners.title}
         </Link>
         <p className="text-[13px] leading-[19px] text-muted">{t('partnerIntro')}</p>
-        <ul className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[14px] leading-[21px]">
-          {partners.categories.map((c) => (
-            // The separator trails each link, so a wrapped line never starts with one.
-            <li key={c.href} className="after:ml-1.5 after:text-muted after:content-['·'] last:after:content-none">
-              <Link href={c.href} onClick={onNavigate} className="text-foreground transition-colors hover:text-accent">
-                {c.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
         <Link
           href={partners.href}
           onClick={onNavigate}
@@ -298,23 +287,14 @@ function PartnerBand({
         style={{ gridColumn: '2 / -1', gridTemplateColumns: `repeat(${Math.max(partners.brands.length, 3)}, minmax(0, 1fr))` }}
       >
         {partners.brands.map((b) => (
-          <li key={b.href} className="flex flex-col rounded-[8px] bg-white px-[18px] py-4">
-            <Link
-              href={b.href}
-              onClick={onNavigate}
-              className="font-display text-[20px] leading-[1.15] text-foreground transition-colors hover:text-accent"
-            >
+          <li key={b.href} className="flex flex-col gap-2 rounded-[8px] bg-white px-[18px] py-4">
+            <Link href={b.href} onClick={onNavigate} className={MEGA_TITLE}>
               {b.label}
             </Link>
-            <span className="mt-0.5 text-[12px] leading-[17px] text-muted">{ui.count(b.count)}</span>
-            <ul className="mt-2.5 flex flex-col border-t border-border pt-1.5">
+            <ul className="flex flex-col">
               {b.categories.map((c) => (
                 <li key={c.href}>
-                  <Link
-                    href={c.href}
-                    onClick={onNavigate}
-                    className="block py-[3px] text-[14px] leading-[21px] text-muted transition-colors hover:text-accent"
-                  >
+                  <Link href={c.href} onClick={onNavigate} className={MEGA_LINK}>
                     {c.label}
                   </Link>
                 </li>
@@ -324,9 +304,9 @@ function PartnerBand({
               href={b.href}
               onClick={onNavigate}
               aria-label={t('viewAll', { category: b.label })}
-              className="mt-auto pt-2 text-accent transition-colors hover:text-gold-strong"
+              className="mt-auto text-accent transition-colors hover:text-gold-strong"
             >
-              <ArrowRight className="size-[12px]" />
+              <ArrowRight className="size-[13px]" />
             </Link>
           </li>
         ))}
