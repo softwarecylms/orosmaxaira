@@ -189,6 +189,8 @@ export function WorkshopEditor({
 }) {
   const [form, setForm] = useState<Record<string, any>>({})
   const [slots, setSlots] = useState<Slot[]>([])
+  // Slot rows edited but not yet stored (see editSlot).
+  const [dirtySlots, setDirtySlots] = useState<Set<string>>(new Set())
   // Every slot including archived ones — only used to label bookings.
   const [allSlots, setAllSlots] = useState<Slot[]>([])
   const [bookings, setBookings] = useState<Booking[]>([])
@@ -307,6 +309,11 @@ export function WorkshopEditor({
         payload.translations = form.translations ?? null
       }
       await api.post(`/admin/workshops/${workshopId}`, payload)
+      // Date rows edited but not stored yet (e.g. a capacity still being typed).
+      for (const id of dirtySlots) {
+        const slot = slots.find((x) => x.id === id)
+        if (slot) await saveSlot(slot, true)
+      }
       toast.success("Αποθηκεύτηκε")
       setSavedAt((n) => n + 1)
       onSaved()
@@ -345,17 +352,38 @@ export function WorkshopEditor({
     }
   }
 
-  const saveSlot = async (s: Slot) => {
+  const saveSlot = async (s: Slot, quiet = false) => {
     try {
       await api.post(`/admin/slots/${s.id}`, {
         capacity: Number(s.capacity),
         status: s.status,
         combo_key: s.combo_key || null,
       })
-      toast.success("Το slot αποθηκεύτηκε")
+      setDirtySlots((d) => {
+        const n = new Set(d)
+        n.delete(s.id)
+        return n
+      })
+      if (!quiet) toast.success(`Αποθηκεύτηκε: ${s.date} ${s.start_time}${s.status === "closed" ? " — κλειστό" : ""}`)
+      return true
     } catch (e: any) {
       toast.error("Σφάλμα: " + (e?.message ?? e))
+      return false
     }
+  }
+
+  /**
+   * Edit a slot row. A status (or programme) change is stored at once — it used
+   * to wait for the row's small save icon, so closing a date and pressing the
+   * top «Αποθήκευση» left it open on the site. A capacity change is stored when
+   * the field loses focus; anything still pending goes out with «Αποθήκευση».
+   */
+  const editSlot = (id: string, patch: Partial<Slot>, saveNow = false) => {
+    const current = slots.find((x) => x.id === id)
+    if (!current) return
+    setSlots((sl) => sl.map((x) => (x.id === id ? { ...x, ...patch } : x)))
+    if (saveNow) void saveSlot({ ...current, ...patch })
+    else setDirtySlots((d) => new Set(d).add(id))
   }
   const prompt = usePrompt()
 
@@ -775,13 +803,7 @@ export function WorkshopEditor({
                               <select
                                 className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm"
                                 value={s.combo_key ?? ""}
-                                onChange={(e) =>
-                                  setSlots((sl) =>
-                                    sl.map((x) =>
-                                      x.id === s.id ? { ...x, combo_key: e.target.value } : x,
-                                    ),
-                                  )
-                                }
+                                onChange={(e) => editSlot(s.id, { combo_key: e.target.value }, true)}
                               >
                                 <option value="">—</option>
                                 {comboOptions.map((c) => (
@@ -796,13 +818,8 @@ export function WorkshopEditor({
                                 className="w-16"
                                 type="number"
                                 value={String(s.capacity)}
-                                onChange={(e) =>
-                                  setSlots((sl) =>
-                                    sl.map((x) =>
-                                      x.id === s.id ? { ...x, capacity: e.target.value as any } : x,
-                                    ),
-                                  )
-                                }
+                                onChange={(e) => editSlot(s.id, { capacity: e.target.value as any })}
+                                onBlur={() => dirtySlots.has(s.id) && void saveSlot(s)}
                               />
                             </Table.Cell>
                             <Table.Cell>{s.booked_count}</Table.Cell>
@@ -810,13 +827,7 @@ export function WorkshopEditor({
                               <select
                                 className="h-8 rounded-md border border-ui-border-base bg-ui-bg-field px-2 text-sm"
                                 value={s.status}
-                                onChange={(e) =>
-                                  setSlots((sl) =>
-                                    sl.map((x) =>
-                                      x.id === s.id ? { ...x, status: e.target.value } : x,
-                                    ),
-                                  )
-                                }
+                                onChange={(e) => editSlot(s.id, { status: e.target.value }, true)}
                               >
                                 <option value="open">Ανοιχτό</option>
                                 <option value="closed">Κλειστό</option>
