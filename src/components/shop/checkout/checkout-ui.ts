@@ -107,6 +107,8 @@ export type CheckoutUi = {
   noShippingError: string
   noPaymentError: string
   couponRejectedError: string
+  couponSaleItemsError: string
+  couponUsedError: string
   totalMismatchError: string
   cardDeclinedError: string
   /** @param ref the Stripe payment reference, for support to trace the charge. */
@@ -215,6 +217,10 @@ const EL: CheckoutUi = {
   noPaymentError: 'Δεν υπάρχει διαθέσιμος τρόπος πληρωμής.',
   couponRejectedError:
     'Ο κωδικός κουπονιού δεν έγινε δεκτός για αυτή την παραγγελία. Αφαιρέστε τον και δοκιμάστε ξανά.',
+  couponSaleItemsError:
+    'Ο κωδικός δεν ισχύει μαζί με προϊόντα σε προσφορά. Αφαιρέστε τον κωδικό ή τα προϊόντα σε προσφορά.',
+  couponUsedError:
+    'Ο κωδικός έχει ήδη χρησιμοποιηθεί με αυτό το email — ισχύει μία φορά ανά πελάτη. Αφαιρέστε τον και δοκιμάστε ξανά.',
   totalMismatchError:
     'Το σύνολο της παραγγελίας άλλαξε. Ανανεώστε τη σελίδα και δοκιμάστε ξανά.',
   cardDeclinedError:
@@ -339,6 +345,10 @@ const EN: CheckoutUi = {
   noPaymentError: 'No payment method is available.',
   couponRejectedError:
     'The coupon code was not accepted for this order. Remove it and try again.',
+  couponSaleItemsError:
+    'This code cannot be combined with products on offer. Remove the code or the products on offer.',
+  couponUsedError:
+    'This code has already been used with this email — it is valid once per customer. Remove it and try again.',
   totalMismatchError: 'Your order total changed. Refresh the page and try again.',
   cardDeclinedError:
     'Payment was not completed. Check your card details or try another card.',

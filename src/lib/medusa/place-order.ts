@@ -8,6 +8,7 @@ import { FREE_SHIPPING_OPTION_NAME, FREE_SHIPPING_THRESHOLD_EUR } from '../shipp
 import { pickProvider } from './payment-provider'
 import { eurToCents, orderError, type OrderError } from './order-errors'
 import { sendOrderEmails } from '../order-email'
+import { COUPONS } from '../coupons'
 
 /**
  * Turn the (client-side) honey cart into a REAL Medusa order. The storefront
@@ -115,6 +116,19 @@ export async function prepareMedusaOrder(
     //    carries its own minimum-order rule, so a code the client believed in
     //    simply produces no discount if the cart does not qualify. The total
     //    check in step 7 is what stops us charging more than we displayed.
+    const coupon = input.coupon ? COUPONS[input.coupon] : undefined
+    if (input.coupon && coupon?.noSaleItems) {
+      // A sale-priced line carries its regular price as `compare_at_unit_price`
+      // (Medusa sets it from the sale price list), and Medusa would happily take
+      // the code off the sale price too — so this rule is ours to enforce.
+      const { cart: lines } = await sdk.store.cart.retrieve(cartId, {
+        fields: 'items.unit_price,items.compare_at_unit_price',
+      })
+      const onSale = (lines?.items ?? []).some(
+        (i) => Number(i.compare_at_unit_price ?? 0) > Number(i.unit_price ?? 0),
+      )
+      if (onSale) return orderError('coupon_sale_items')
+    }
     if (input.coupon) {
       try {
         await sdk.client.fetch(`/store/carts/${cartId}/promotions`, {
@@ -163,10 +177,15 @@ export async function prepareMedusaOrder(
     if (serverTotalCents !== input.expectedTotalCents) {
       // A requested code that produced no discount is the likeliest cause, and
       // has a clearer remedy than "the total changed".
-      const code =
-        input.coupon && Number(finalCart?.discount_total ?? 0) === 0
-          ? 'coupon_rejected'
-          : 'total_mismatch'
+      // For a once-per-customer code with no minimum, on a cart already cleared
+      // of sale items, the only reason left for Medusa to decline it is that
+      // this email has used it before.
+      const declined = !!input.coupon && Number(finalCart?.discount_total ?? 0) === 0
+      const code = !declined
+        ? 'total_mismatch'
+        : coupon?.oncePerCustomer && !coupon.minSubtotal
+          ? 'coupon_used'
+          : 'coupon_rejected'
       return orderError(code, { serverTotalCents })
     }
 

@@ -18,6 +18,8 @@ export type OrderErrorCode =
   | 'no_shipping'
   | 'no_payment_provider'
   | 'coupon_rejected'
+  | 'coupon_sale_items'
+  | 'coupon_used'
   | 'total_mismatch'
   | 'no_client_secret'
   | 'complete_failed'

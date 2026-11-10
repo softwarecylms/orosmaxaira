@@ -1,7 +1,9 @@
 /**
  * Discount codes — the single source of truth for the storefront.
  *
- * BEE10 takes 10% off once the goods subtotal reaches €150. "Goods subtotal"
+ * BEE10 takes 10% off once the goods subtotal reaches €150. WELCOME10 (the
+ * Klaviyo welcome email's code) takes 10% off any order, once per email
+ * address, and never on top of a sale price. "Goods subtotal"
  * means the line items BEFORE any discount and EXCLUDING shipping, which is the
  * same figure Medusa calls `item_subtotal` — so the client-side check here and
  * the promotion rule on the Medusa record (see
@@ -19,6 +21,12 @@ export type Coupon = {
   value: number
   /** Minimum goods subtotal in cents, before discount and excluding shipping. */
   minSubtotal: number
+  /** Not valid when the cart holds anything at a sale price («Τιμή έκπτωσης»).
+   *  Checked against Medusa when the code is entered and again at payment. */
+  noSaleItems?: boolean
+  /** One use per email address — enforced by the Medusa campaign budget
+   *  (`use_by_attribute` on `customer_email`), so only knowable at payment. */
+  oncePerCustomer?: boolean
 }
 
 /** €150,00 in cents. */
@@ -29,6 +37,7 @@ export const BEE10_MIN_SUBTOTAL_EUR = BEE10_MIN_SUBTOTAL / 100
 
 export const COUPONS: Record<string, Coupon> = {
   BEE10: { kind: 'pct', value: 10, minSubtotal: BEE10_MIN_SUBTOTAL },
+  WELCOME10: { kind: 'pct', value: 10, minSubtotal: 0, noSaleItems: true, oncePerCustomer: true },
 }
 
 /**

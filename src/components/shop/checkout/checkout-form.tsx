@@ -44,6 +44,7 @@ import {
   earnsFreeShipping,
 } from '@/lib/shipping'
 import { checkCoupon, couponDiscount } from '@/lib/coupons'
+import { cartHasSaleItems } from '@/lib/medusa/coupon-check'
 
 const HOME_SHIPPING = 500 // €5,00 home delivery (Cyprus, below threshold)
 const ACS_SHIPPING = 250 // €2,50 ACS pickup (Cyprus)
@@ -339,11 +340,14 @@ function CheckoutFormInner() {
   const shippingProgress = Math.min(100, Math.round((eligibleTotal / FREE_SHIPPING_THRESHOLD) * 100))
   const total = subtotal + shipping - discount
 
-  function applyCoupon() {
+  async function applyCoupon() {
     const code = couponInput.trim().toUpperCase()
     if (!code) return
     const check = checkCoupon(code, subtotal)
-    if (check.ok) {
+    if (check.ok && check.coupon.noSaleItems && (await cartHasSaleItems(items))) {
+      setCoupon(null)
+      setCouponError(t.couponSaleItemsError)
+    } else if (check.ok) {
       setCoupon(code)
       setCouponError('')
     } else {
@@ -380,6 +384,8 @@ function CheckoutFormInner() {
       case 'no_payment_provider':
       case 'no_client_secret': return t.noPaymentError
       case 'coupon_rejected': return t.couponRejectedError
+      case 'coupon_sale_items': return t.couponSaleItemsError
+      case 'coupon_used': return t.couponUsedError
       case 'total_mismatch': return t.totalMismatchError
       default: return e.message || t.orderFailedError
     }
@@ -903,7 +909,7 @@ function CheckoutFormInner() {
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault()
-                      applyCoupon()
+                      void applyCoupon()
                     }
                   }}
                   aria-label={t.couponCode}
@@ -911,7 +917,7 @@ function CheckoutFormInner() {
                 />
                 <button
                   type="button"
-                  onClick={applyCoupon}
+                  onClick={() => void applyCoupon()}
                   className="shrink-0 rounded-[4px] border border-foreground px-4 py-2.5 text-[14px] font-medium text-foreground transition-colors hover:bg-foreground hover:text-white"
                 >
                   {t.apply}
