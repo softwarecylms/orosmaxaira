@@ -141,6 +141,8 @@ function mapProduct(p: HttpTypes.StoreProduct, locale: string): ShopProduct | nu
     // EN uses the live site's English product slug; EL uses the Greek handle.
     href: `/product/${productSlug(p.handle!, locale)}`,
     hidden: isHiddenProduct(p.metadata),
+    // Position set in the admin's «Σειρά προϊόντων» panel — same for every locale.
+    ...(typeof p.metadata?.sort_rank === 'number' ? { sortRank: p.metadata.sort_rank } : {}),
     ...(isPartnerCategory(category) ? { brand: partnerBrand(p) } : {}),
   }
 }

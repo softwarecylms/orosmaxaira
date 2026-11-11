@@ -52,6 +52,8 @@ const PAGE_STEP = 8
 // Default catalogue order: honey (Μέλι) first, then bee products (Προϊόντα Μέλισσας)
 // with Υδρόμελο + bee pollen (Γύρη Μελισσών) leading, then cosmetics, gift sets and
 // accessories, then the partner brands' categories (SHOP_CATEGORIES order).
+// Within a category, the order set in the Medusa admin («Σειρά προϊόντων»,
+// `sortRank`) comes first; products never arranged there follow, as before.
 // Stable sort keeps each group's existing relative order.
 function defaultOrderRank(p: ShopProduct): number {
   const rank = SHOP_CATEGORIES.indexOf(p.category)
@@ -61,7 +63,8 @@ function defaultOrderRank(p: ShopProduct): number {
     (p.title === 'Υδρόμελο' || p.title.startsWith('Γύρη Μελισσών'))
       ? 0
       : 1
-  return cat * 10 + lead
+  const within = p.sortRank ?? 1_000_000 + lead
+  return cat * 10_000_000 + within
 }
 
 export function ShopBrowser({
