@@ -38,6 +38,10 @@ export const orderError = (
   extra?: Omit<OrderError, 'code'>,
 ): { error: OrderError } => ({ error: { code, ...extra } })
 
-/** Medusa v2 totals are decimal euros; the storefront counts in cents. */
+/** Medusa v2 totals are decimal euros; the storefront counts in cents.
+ *  Rounded half-up on the DECIMAL value, as Stripe's amount is: a total like
+ *  €26,335 must become 2634, but 26.335 * 100 in floating point can come out as
+ *  2633.4999… and round the other way, failing the total check by a cent.
+ *  `toFixed(6)` lands the product back on the decimal it stands for. */
 export const eurToCents = (euros: number | string | null | undefined): number =>
-  Math.round(Number(euros ?? 0) * 100)
+  Math.round(Number((Number(euros ?? 0) * 100).toFixed(6)))

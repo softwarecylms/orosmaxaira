@@ -171,10 +171,24 @@ export async function prepareMedusaOrder(
     //    amount than the checkout displayed. Checked BEFORE a PaymentIntent
     //    exists, so a mismatch costs the customer nothing.
     const { cart: finalCart } = await sdk.store.cart.retrieve(cartId, {
-      fields: 'total,discount_total',
+      fields: 'total,discount_total,item_subtotal,shipping_total,items.variant_id,items.unit_price,items.quantity',
     })
     const serverTotalCents = eurToCents(finalCart?.total)
     if (serverTotalCents !== input.expectedTotalCents) {
+      // Every refusal leaves its reason in the logs (no customer details), so a
+      // new cause is found from one occurrence instead of guessed at.
+      console.warn('[checkout] total mismatch', JSON.stringify({
+        cartId,
+        expectedCents: input.expectedTotalCents,
+        serverCents: serverTotalCents,
+        serverTotal: finalCart?.total,
+        itemSubtotal: finalCart?.item_subtotal,
+        shippingTotal: finalCart?.shipping_total,
+        discountTotal: finalCart?.discount_total,
+        coupon: input.coupon ?? null,
+        shippingOption: input.shippingOptionName,
+        lines: (finalCart?.items ?? []).map((i) => [i.variant_id, i.unit_price, i.quantity]),
+      }))
       // A requested code that produced no discount is the likeliest cause, and
       // has a clearer remedy than "the total changed".
       // For a once-per-customer code with no minimum, on a cart already cleared

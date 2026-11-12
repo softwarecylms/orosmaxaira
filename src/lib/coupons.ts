@@ -66,6 +66,14 @@ export function couponDiscount(code: string | null, subtotal: number): number {
   const check = checkCoupon(code, subtotal)
   if (!check.ok) return 0
   const { coupon } = check
-  const raw = coupon.kind === 'pct' ? Math.round((subtotal * coupon.value) / 100) : coupon.value
+  // Medusa keeps the exact percentage (10% of €18,15 is €1,815) and Stripe then
+  // rounds the TOTAL half-up to whole cents. Rounding the discount on its own
+  // (Math.round(181.5) = 182) lands a cent the other way, and the order is
+  // refused as "total changed". So round what remains, as Stripe does: shipping
+  // is whole cents, so this is exactly the amount Stripe charges.
+  const raw =
+    coupon.kind === 'pct'
+      ? subtotal - Math.round((subtotal * (100 - coupon.value)) / 100)
+      : coupon.value
   return Math.min(subtotal, raw)
 }
