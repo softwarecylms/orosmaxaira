@@ -50,6 +50,9 @@ type CartContextValue = {
   setQty: (key: string, quantity: number) => void
   removeItem: (key: string) => void
   clear: () => void
+  /** Bring unit prices in line with Medusa's current ones (variant id → cents).
+   *  Returns how many lines changed. See lib/medusa/cart-prices.ts. */
+  syncPrices: (prices: Record<string, number>) => number
   /** Slide-out cart drawer visibility (opened from the header cart). */
   drawerOpen: boolean
   openDrawer: () => void
@@ -203,6 +206,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clear = useCallback(() => setItems([]), [])
 
+  // A line keeps the price it was added at; a price changed in the admin since
+  // then would make the checkout total disagree with Medusa's. Lines whose
+  // variant Medusa did not return are left alone.
+  const syncPrices = useCallback((prices: Record<string, number>) => {
+    const stale = (i: CartItem) =>
+      !!i.variantId && prices[i.variantId] != null && prices[i.variantId] !== i.unitPrice
+    const changed = itemsRef.current.filter(stale).length
+    if (changed) {
+      setItems((prev) =>
+        prev.map((i) =>
+          stale(i)
+            ? { ...i, unitPrice: prices[i.variantId!], priceLabel: formatCents(prices[i.variantId!]) }
+            : i,
+        ),
+      )
+    }
+    return changed
+  }, [])
+
   const { count, subtotal } = useMemo(() => {
     let count = 0
     let subtotal = 0
@@ -223,6 +245,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setQty,
       removeItem,
       clear,
+      syncPrices,
       drawerOpen,
       openDrawer,
       closeDrawer,
@@ -238,6 +261,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setQty,
       removeItem,
       clear,
+      syncPrices,
       drawerOpen,
       openDrawer,
       closeDrawer,

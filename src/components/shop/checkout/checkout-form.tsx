@@ -45,6 +45,7 @@ import {
 } from '@/lib/shipping'
 import { checkCoupon, couponDiscount } from '@/lib/coupons'
 import { cartHasSaleItems } from '@/lib/medusa/coupon-check'
+import { currentCartPrices } from '@/lib/medusa/cart-prices'
 
 const HOME_SHIPPING = 500 // €5,00 home delivery (Cyprus, below threshold)
 const ACS_SHIPPING = 250 // €2,50 ACS pickup (Cyprus)
@@ -258,7 +259,19 @@ function CheckoutFormInner() {
   const router = useRouter()
   const locale = useLocale()
   const t = getCheckoutUi(locale)
-  const { items, subtotal, ready, clear, setQty } = useCart()
+  const { items, subtotal, ready, clear, setQty, syncPrices } = useCart()
+  // The cart keeps the price each product had when it was added; re-price it
+  // against Medusa on arrival so a price changed since then cannot surface as
+  // "your order total changed" at payment (see lib/medusa/cart-prices.ts).
+  const [pricesUpdated, setPricesUpdated] = useState(false)
+  const pricesChecked = useRef(false)
+  useEffect(() => {
+    if (!ready || pricesChecked.current || items.length === 0) return
+    pricesChecked.current = true
+    currentCartPrices(items).then((prices) => {
+      if (syncPrices(prices)) setPricesUpdated(true)
+    })
+  }, [ready, items, syncPrices])
   // Google Analytics: checkout was started — once, on arrival.
   const checkoutTracked = useRef(false)
   useEffect(() => {
@@ -485,12 +498,22 @@ function CheckoutFormInner() {
       setPhase('idle')
       setOrderError(message)
     }
+    // A total mismatch is most often a price changed while the customer was
+    // here: re-price the cart, so the summary shows the real total and the next
+    // press goes through.
+    const failWith = async (e: OrderError) => {
+      if (e.code === 'total_mismatch' && syncPrices(await currentCartPrices(items))) {
+        setPricesUpdated(true)
+        return fail(t.pricesUpdatedError)
+      }
+      fail(errorMessage(e))
+    }
 
     // ── No card configured: the manual provider auto-authorizes, so prepare and
     //    complete run back to back exactly as they did before Stripe. ─────────
     if (!stripeConfigured) {
       const res = await placeMedusaOrder(orderInput)
-      if ('error' in res) return fail(errorMessage(res.error))
+      if ('error' in res) return failWith(res.error)
       finish(res.orderId)
       return
     }
@@ -538,7 +561,7 @@ function CheckoutFormInner() {
         ...orderInput,
         cartId: sameItems ? prepared.current?.cartId : undefined,
       })
-      if ('error' in res) return fail(errorMessage(res.error))
+      if ('error' in res) return failWith(res.error)
       if (!res.clientSecret) return fail(t.noPaymentError)
 
       // Stripe's own figure is authoritative — if it ever disagrees with the
@@ -741,6 +764,11 @@ function CheckoutFormInner() {
       {/* Order summary — items, delivery, payment, totals, submit */}
       <aside className="flex h-fit min-w-0 flex-col gap-5 rounded-[4px] border border-border bg-white p-6">
         <h2 className="text-[20px] font-semibold text-foreground">{t.orderSummary}</h2>
+        {pricesUpdated ? (
+          <p className="rounded-[4px] bg-offwhite px-3 py-2.5 text-[13px] leading-[18px] text-foreground">
+            {t.pricesUpdatedNotice}
+          </p>
+        ) : null}
 
         <div className="flex flex-col divide-y divide-border">
           {items.map((item) => (

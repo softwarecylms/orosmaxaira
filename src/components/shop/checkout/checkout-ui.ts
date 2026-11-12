@@ -110,6 +110,9 @@ export type CheckoutUi = {
   couponSaleItemsError: string
   couponUsedError: string
   totalMismatchError: string
+  /** Shown when the cart was re-priced to Medusa's current prices. */
+  pricesUpdatedNotice: string
+  pricesUpdatedError: string
   cardDeclinedError: string
   /** @param ref the Stripe payment reference, for support to trace the charge. */
   orderFinalisationError: (ref: string) => string
@@ -223,6 +226,10 @@ const EL: CheckoutUi = {
     'Ο κωδικός έχει ήδη χρησιμοποιηθεί με αυτό το email — ισχύει μία φορά ανά πελάτη. Αφαιρέστε τον και δοκιμάστε ξανά.',
   totalMismatchError:
     'Το σύνολο της παραγγελίας άλλαξε. Ανανεώστε τη σελίδα και δοκιμάστε ξανά.',
+  pricesUpdatedNotice:
+    'Οι τιμές ορισμένων προϊόντων στο καλάθι σας άλλαξαν από τότε που τα προσθέσατε — το σύνολο παρακάτω είναι ενημερωμένο.',
+  pricesUpdatedError:
+    'Οι τιμές ορισμένων προϊόντων άλλαξαν και το σύνολο ενημερώθηκε. Ελέγξτε το νέο σύνολο και πατήστε ξανά για να ολοκληρώσετε.',
   cardDeclinedError:
     'Η πληρωμή δεν ολοκληρώθηκε. Ελέγξτε τα στοιχεία της κάρτας ή δοκιμάστε άλλη κάρτα.',
   orderFinalisationError: (ref) =>
@@ -350,6 +357,10 @@ const EN: CheckoutUi = {
   couponUsedError:
     'This code has already been used with this email — it is valid once per customer. Remove it and try again.',
   totalMismatchError: 'Your order total changed. Refresh the page and try again.',
+  pricesUpdatedNotice:
+    'Some prices in your cart have changed since you added them — the total below is up to date.',
+  pricesUpdatedError:
+    'Some prices have changed and your total has been updated. Check the new total and press again to complete your order.',
   cardDeclinedError:
     'Payment was not completed. Check your card details or try another card.',
   orderFinalisationError: (ref) =>
