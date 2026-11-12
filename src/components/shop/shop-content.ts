@@ -70,7 +70,7 @@ export type ShopProduct = {
   variantId?: string
   /** Medusa `metadata.hidden` — buyable by direct link only (e.g. the €1 test
    *  product): left out of the shop grid, categories, search and sitemap. */
-  /** Admin-set position within its category (`metadata.sort_rank`); lower first. */
+  /** Admin-set position in the one overall shop order (`metadata.sort_rank`); lower first. */
   sortRank?: number
   hidden?: boolean
   /** A partner product's brand (its Medusa collection); unset = Όρος Μαχαιρά. */

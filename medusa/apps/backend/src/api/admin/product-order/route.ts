@@ -5,15 +5,36 @@ import { revalidateStorefront } from "../../../lib/storefront"
 /**
  * The shop's own product order («Σειρά προϊόντων» panel on the Products page).
  *
- * The position lives in `metadata.sort_rank` on the product itself — one number
- * per product, not per language, so /en always shows the order /el does. The
- * storefront's default sort is category first, then this rank; a product with
- * no rank keeps its old place after the ranked ones.
+ * ONE overall order: the position lives in `metadata.sort_rank` on the product
+ * itself — one number per product, not per language, so /en always shows the
+ * order /el does. The shop page follows it as is; a category page shows its
+ * own products in the same relative order. A product with no rank comes after
+ * the ranked ones, in the shop's old order (category, then the lead rule below).
  *
- * GET  → every product with what the panel needs to draw it.
+ * GET  → every product, already in the order the shop shows them now, so the
+ *   panel opens on exactly what customers see.
  * POST { ids } → those products get ranks 10, 20, 30… in that order. The panel
- *   sends one category at a time, and ranks only matter within a category.
+ *   always sends the whole list.
  */
+
+/** The shop's category order — keep in step with SHOP_CATEGORIES in the
+ *  storefront (src/components/shop/shop-content.ts). */
+const CATEGORY_ORDER = [
+  "Μέλι", "Προϊόντα Μέλισσας", "Καλλυντικά", "Πακέτα Δώρων", "Αξεσουάρ",
+  "Συνεργαζόμενες μάρκες", "Σπρέι", "Μέλι με βότανα", "Κρέμες", "Σιρόπια", "Παστίλιες",
+]
+
+/** The storefront's order for a product nobody has ranked yet (mirrors
+ *  `defaultOrderRank` in shop-browser.tsx). */
+function legacyRank(title: string, categories: string[]): number {
+  const category = categories.find((c) => CATEGORY_ORDER.includes(c)) ?? categories[0]
+  const i = category ? CATEGORY_ORDER.indexOf(category) : -1
+  const cat = i < 0 ? CATEGORY_ORDER.length : i
+  const lead =
+    category === "Προϊόντα Μέλισσας" && (title === "Υδρόμελο" || title.startsWith("Γύρη Μελισσών")) ? 0 : 1
+  return cat * 10 + lead
+}
+
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
   const { data } = await query.graph({
@@ -21,16 +42,23 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
     fields: ["id", "title", "thumbnail", "status", "metadata", "categories.name"],
     pagination: { take: 1000 },
   })
-  res.json({
-    products: data.map((p: any) => ({
+  const rows = data.map((p: any) => {
+    const categories: string[] = (p.categories ?? []).map((c: any) => c?.name).filter(Boolean)
+    const rank = typeof p.metadata?.sort_rank === "number" ? p.metadata.sort_rank : null
+    return {
       id: p.id,
       title: p.title,
       thumbnail: p.thumbnail,
       status: p.status,
-      categories: (p.categories ?? []).map((c: any) => c?.name).filter(Boolean),
-      sort_rank: typeof p.metadata?.sort_rank === "number" ? p.metadata.sort_rank : null,
-    })),
+      hidden: p.metadata?.hidden === true || p.metadata?.hidden === "true",
+      category: categories.find((c) => CATEGORY_ORDER.includes(c)) ?? categories[0] ?? null,
+      sort_rank: rank,
+      order: rank ?? 1_000_000_000 + legacyRank(p.title, categories),
+    }
   })
+  // Stable: equal keys keep Medusa's own listing order, as the shop does.
+  rows.sort((a, b) => a.order - b.order)
+  res.json({ products: rows.map(({ order, ...r }) => r) })
 }
 
 export async function POST(req: MedusaRequest<{ ids?: unknown }>, res: MedusaResponse) {

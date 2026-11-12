@@ -49,13 +49,16 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
 const PAGE_SIZE = 12
 const PAGE_STEP = 8
 
-// Default catalogue order: honey (Μέλι) first, then bee products (Προϊόντα Μέλισσας)
-// with Υδρόμελο + bee pollen (Γύρη Μελισσών) leading, then cosmetics, gift sets and
-// accessories, then the partner brands' categories (SHOP_CATEGORIES order).
-// Within a category, the order set in the Medusa admin («Σειρά προϊόντων»,
-// `sortRank`) comes first; products never arranged there follow, as before.
-// Stable sort keeps each group's existing relative order.
+// Default catalogue order: the one overall order set in the Medusa admin
+// («Σειρά προϊόντων», `sortRank`) — the shop page shows it as is, a category
+// page its own products in the same relative order. Products never arranged
+// there follow, in the old order: honey (Μέλι) first, then bee products
+// (Προϊόντα Μέλισσας) with Υδρόμελο + bee pollen (Γύρη Μελισσών) leading, then
+// cosmetics, gift sets and accessories, then the partner brands' categories
+// (SHOP_CATEGORIES order). The admin panel mirrors that fallback, so it opens on
+// what customers see. Stable sort keeps each group's existing relative order.
 function defaultOrderRank(p: ShopProduct): number {
+  if (p.sortRank != null) return p.sortRank
   const rank = SHOP_CATEGORIES.indexOf(p.category)
   const cat = rank < 0 ? SHOP_CATEGORIES.length : rank
   const lead =
@@ -63,8 +66,7 @@ function defaultOrderRank(p: ShopProduct): number {
     (p.title === 'Υδρόμελο' || p.title.startsWith('Γύρη Μελισσών'))
       ? 0
       : 1
-  const within = p.sortRank ?? 1_000_000 + lead
-  return cat * 10_000_000 + within
+  return 1_000_000_000 + cat * 10 + lead
 }
 
 export function ShopBrowser({
